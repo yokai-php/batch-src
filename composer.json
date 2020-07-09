@@ -60,10 +60,5 @@
       "Yokai\\Batch\\Tests\\Integration\\": "tests/integration/",
       "Yokai\\Batch\\Tests\\Unit\\": "tests/unit/"
     }
-  },
-  "extra": {
-    "branch-alias": {
-      "dev-master": "0.x-dev"
-    }
   }
 }
