@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yokai\Batch\Bridge\Symfony\Serializer;
 
 use Symfony\Component\Serializer\Exception\ExceptionInterface;

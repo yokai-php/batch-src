@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yokai\Batch\Bridge\Symfony\Messenger;
 
 final class LaunchJobMessage

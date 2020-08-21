@@ -1,0 +1,21 @@
+{
+  "name": "yokai/batch-box-spout",
+  "description": "Bridge of box/spout for yokai/batch",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Yann Eugoné",
+      "email": "eugone.yann@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^7.2",
+    "box/spout": "^3.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Yokai\\Batch\\Bridge\\Box\\Spout\\": "src/"
+    }
+  }
+}

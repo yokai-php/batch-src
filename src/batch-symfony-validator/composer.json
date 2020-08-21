@@ -1,0 +1,21 @@
+{
+  "name": "yokai/batch-symfony-validator",
+  "description": "Bridge of symfony/validator for yokai/batch",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Yann Eugoné",
+      "email": "eugone.yann@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^7.2",
+    "symfony/validator": "^4.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "Yokai\\Batch\\Bridge\\Symfony\\Validator\\": "src/"
+    }
+  }
+}

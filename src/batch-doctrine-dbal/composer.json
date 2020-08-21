@@ -1,0 +1,22 @@
+{
+  "name": "yokai/batch-doctrine-dbal",
+  "description": "Bridge of doctrine/dbal for yokai/batch",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Yann Eugoné",
+      "email": "eugone.yann@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^7.2",
+    "ext-json": "*",
+    "doctrine/dbal": "^2.10"
+  },
+  "autoload": {
+    "psr-4": {
+      "Yokai\\Batch\\Bridge\\Doctrine\\DBAL\\": "src/"
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "yokai/batch-symfony-console",
+  "description": "Bridge of symfony/console for yokai/batch",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Yann Eugoné",
+      "email": "eugone.yann@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^7.2",
+    "ext-json": "*",
+    "symfony/console": "^4.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "Yokai\\Batch\\Bridge\\Symfony\\Console\\": "src/"
+    }
+  },
+  "suggest": {
+    "symfony/process": "Used to determine PHP bin location when using command job launcher (^4.4)"
+  },
+  "conflict": {
+    "symfony/process": "<4.4"
+  }
+}

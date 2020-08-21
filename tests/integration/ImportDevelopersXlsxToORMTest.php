@@ -10,7 +10,7 @@ use Doctrine\ORM\Tools\Setup;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Yokai\Batch\Bridge\Box\Spout\FlatFileReader;
-use Yokai\Batch\Bridge\Doctrine\Common\ObjectWriter;
+use Yokai\Batch\Bridge\Doctrine\Persistence\ObjectWriter;
 use Yokai\Batch\Job\Item\ItemJob;
 use Yokai\Batch\Job\JobInterface;
 use Yokai\Batch\Job\JobWithChildJobs;

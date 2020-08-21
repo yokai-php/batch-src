@@ -1,10 +1,10 @@
-# Yokai Batch
+# Yokai Batch Development Monorepo
 
-[![Latest Stable Version](https://poser.pugx.org/yokai/batch/v/stable)](https://packagist.org/packages/yokai/batch)
-[![Latest Unstable Version](https://poser.pugx.org/yokai/batch/v/unstable)](https://packagist.org/packages/yokai/batch)
-[![Total Downloads](https://poser.pugx.org/yokai/batch/downloads)](https://packagist.org/packages/yokai/batch)
-[![License](https://poser.pugx.org/yokai/batch/license)](https://packagist.org/packages/yokai/batch)
+[![Tests](https://img.shields.io/github/workflow/status/yokai-php/batch-src/Tests?style=flat-square&label=tests)](https://github.com/yokai-php/batch-src/actions)
+[![Coverage](https://img.shields.io/codecov/c/github/yokai-php/batch-src?style=flat-square)](https://codecov.io/gh/yokai-php/batch-src)
+[![Contributors](https://img.shields.io/github/contributors/yokai-php/batch-src?style=flat-square)](https://github.com/yokai-php/batch-src/graphs/contributors)
 
+This repository contains sources for all packages from `yokai/batch` suite.
 
 ## Development
 
@@ -29,7 +29,7 @@ License can be found [here](LICENSE).
 ## Authors
 
 The library was originally created by [Yann Eugoné](https://github.com/yann-eugone).
-See the list of [contributors](https://github.com/yokai-php/batch/contributors).
+See the list of [contributors](https://github.com/yokai-php/batch-src/contributors).
 
 
 ---

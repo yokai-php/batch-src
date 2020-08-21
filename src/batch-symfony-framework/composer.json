@@ -1,0 +1,21 @@
+{
+  "name": "yokai/batch-symfony-framework",
+  "description": "Bridge of symfony/framework-bundle for yokai/batch",
+  "type": "symfony-bundle",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Yann Eugoné",
+      "email": "eugone.yann@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^7.2",
+    "symfony/framework-bundle": "^4.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "Yokai\\Batch\\Bridge\\Symfony\\Framework\\": "src/"
+    }
+  }
+}

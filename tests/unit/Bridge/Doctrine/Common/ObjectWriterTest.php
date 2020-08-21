@@ -7,7 +7,7 @@ use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
-use Yokai\Batch\Bridge\Doctrine\Common\ObjectWriter;
+use Yokai\Batch\Bridge\Doctrine\Persistence\ObjectWriter;
 use Yokai\Batch\Tests\Unit\Bridge\Doctrine\Group;
 use Yokai\Batch\Tests\Unit\Bridge\Doctrine\Product;
 use Yokai\Batch\Tests\Unit\Bridge\Doctrine\User;

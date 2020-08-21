@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yokai\Batch\Bridge\Doctrine\Common;
+namespace Yokai\Batch\Bridge\Doctrine\Persistence;
 
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;

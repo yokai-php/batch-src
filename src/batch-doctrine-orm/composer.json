@@ -1,0 +1,21 @@
+{
+  "name": "yokai/batch-doctrine-orm",
+  "description": "Bridge of doctrine/orm for yokai/batch",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Yann Eugoné",
+      "email": "eugone.yann@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^7.2",
+    "doctrine/orm": "^2.7"
+  },
+  "autoload": {
+    "psr-4": {
+      "Yokai\\Batch\\Bridge\\Doctrine\\Orm\\": "src/"
+    }
+  }
+}
