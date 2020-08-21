@@ -11,7 +11,8 @@
   ],
   "require": {
     "php": "^7.2",
-    "doctrine/persistence": "^2.0"
+    "doctrine/persistence": "^2.0",
+    "yokai/batch": "self.version"
   },
   "autoload": {
     "psr-4": {

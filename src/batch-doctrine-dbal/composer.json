@@ -12,7 +12,8 @@
   "require": {
     "php": "^7.2",
     "ext-json": "*",
-    "doctrine/dbal": "^2.10"
+    "doctrine/dbal": "^2.10",
+    "yokai/batch": "self.version"
   },
   "autoload": {
     "psr-4": {

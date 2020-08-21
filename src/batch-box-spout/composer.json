@@ -11,7 +11,8 @@
   ],
   "require": {
     "php": "^7.2",
-    "box/spout": "^3.0"
+    "box/spout": "^3.0",
+    "yokai/batch": "self.version"
   },
   "autoload": {
     "psr-4": {

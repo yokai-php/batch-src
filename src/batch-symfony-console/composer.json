@@ -12,7 +12,8 @@
   "require": {
     "php": "^7.2",
     "ext-json": "*",
-    "symfony/console": "^4.4"
+    "symfony/console": "^4.4",
+    "yokai/batch": "self.version"
   },
   "autoload": {
     "psr-4": {
