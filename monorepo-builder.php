@@ -12,4 +12,12 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $parameters->set(Option::DIRECTORIES_TO_REPOSITORIES, [
         'src/*' => 'git@github.com:yokai-php/*.git',
     ]);
+    $parameters->set(Option::DATA_TO_APPEND, [
+        'authors' => [
+            [
+                'name' => 'Yann Eugoné',
+                'email' => 'eugone.yann@gmail.com',
+            ],
+        ],
+    ]);
 };
