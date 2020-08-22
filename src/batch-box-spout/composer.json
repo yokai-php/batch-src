@@ -1,6 +1,7 @@
 {
   "name": "yokai/batch-box-spout",
-  "description": "Bridge of box/spout for yokai/batch",
+  "description": "box/spout bridge for yokai/batch",
+  "keywords": ["batch", "job", "reader", "writer", "flat", "csv", "xlsx", "ods"],
   "type": "library",
   "license": "MIT",
   "authors": [

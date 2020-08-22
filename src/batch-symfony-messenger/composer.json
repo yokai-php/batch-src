@@ -1,6 +1,7 @@
 {
   "name": "yokai/batch-symfony-messenger",
-  "description": "Bridge of symfony/messenger for yokai/batch",
+  "description": "symfony/messenger bridge for yokai/batch",
+  "keywords": ["batch", "job", "execution", "async", "message"],
   "type": "library",
   "license": "MIT",
   "authors": [

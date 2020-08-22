@@ -1,6 +1,7 @@
 {
   "name": "yokai/batch-symfony-framework",
-  "description": "Bridge of symfony/framework-bundle for yokai/batch",
+  "description": "symfony/framework-bundle bridge for yokai/batch",
+  "keywords": ["batch", "job", "framework", "symfony"],
   "type": "symfony-bundle",
   "license": "MIT",
   "authors": [
