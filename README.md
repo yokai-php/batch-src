@@ -6,10 +6,6 @@
 
 This repository contains sources for all packages from `yokai/batch` suite.
 
-## BETA
-
-:warning: **this library is following semver, but in the early stages of development, you should stick to a `0.[minor].*` requirement, because we may decide to  break things in minor versions** :warning:
-
 
 ## Packages
 
@@ -24,27 +20,17 @@ This repository contains sources for all packages from `yokai/batch` suite.
 - [**Symfony serializer bridge**](https://github.com/yokai-php/batch-symfony-serializer): Process items using (de)normalization, serialize job execution for certain storages
 - [**Symfony validator bridge**](https://github.com/yokai-php/batch-symfony-validator): Skip invalid items during process
 
-## Introduction
 
-todo
+## Contribution
 
-
-## Documentation
-
-todo
-
-
-## MIT License
-
-License can be found [here](LICENSE).
-
-
-## Authors
+Please feel free to open an [issue](https://github.com/yokai-php/batch-src/issues)
+or a [pull request](https://github.com/yokai-php/batch-src/pulls)
+in the [main repository](https://github.com/yokai-php/batch-src).
 
 The library was originally created by [Yann Eugoné](https://github.com/yann-eugone).
 See the list of [contributors](https://github.com/yokai-php/batch-src/contributors).
 
 
----
+## License
 
-Thank's to [Prestaconcept](https://github.com/prestaconcept) for supporting this library.
+This library is under MIT [LICENSE](LICENSE).
