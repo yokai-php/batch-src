@@ -33,8 +33,10 @@ final class Configuration implements ConfigurationInterface
         $node = (new TreeBuilder('storage'))->getRootNode();
 
         $node
+            ->addDefaultsIfNotSet()
             ->children()
                 ->arrayNode('filesystem')
+                    ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('dir')
                             ->defaultValue('%kernel.project_dir%/var/batch')

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Bridge\Symfony\Framework\DependencyInjection;
 
+use Composer\InstalledVersions;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader as ConfigLoader;
 use Symfony\Component\Console\Application;
@@ -34,15 +35,13 @@ final class YokaiBatchExtension extends Extension
 
         $loader = $this->getLoader($container);
         $loader->load('global/');
-        $bundles = $container->getParameter('kernel.bundles');
 
         $bridges = [
-            'doctrine/orm/' => isset($bundles['DoctrineBundle']),
-            'doctrine/mongodb/' => isset($bundles['DoctrineMongoDBBundle']),
-            'symfony/console/' => class_exists(Application::class),
-            'symfony/messenger/' => class_exists(MessageBusInterface::class),
-            'symfony/serializer/' => interface_exists(SerializerInterface::class),
-            'symfony/validator/' => interface_exists(ValidatorInterface::class),
+            'doctrine/orm/' => $this->installed('doctrine-orm'),
+            'symfony/console/' => $this->installed('symfony-console'),
+            'symfony/messenger/' => $this->installed('symfony-messenger'),
+            'symfony/serializer/' => $this->installed('symfony-serializer'),
+            'symfony/validator/' => $this->installed('symfony-validator'),
         ];
 
         foreach (array_keys(array_filter($bridges)) as $resource) {
@@ -58,6 +57,15 @@ final class YokaiBatchExtension extends Extension
             $launcher = 'yokai_batch.job_launcher.run_command';
         }
         $container->setAlias(JobLauncherInterface::class, $launcher);
+    }
+
+    private function installed(string $package): bool
+    {
+        if (InstalledVersions::isInstalled('yokai/batch-src')) {
+            return true;
+        }
+
+        return InstalledVersions::isInstalled('yokai/batch-' . $package);
     }
 
     private function getLoader(ContainerBuilder $container): ConfigLoader\LoaderInterface
@@ -89,7 +97,7 @@ final class YokaiBatchExtension extends Extension
             ;
 
             $defaultStorage = 'yokai_batch.storage.dbal';
-        } elseif (isset($config['filesystem'])) {
+        } else {
             $container
                 ->register('yokai_batch.storage.filesystem', FilesystemJobExecutionStorage::class)
                 ->setArguments(
@@ -101,8 +109,6 @@ final class YokaiBatchExtension extends Extension
             ;
 
             $defaultStorage = 'yokai_batch.storage.filesystem';
-        } else {
-            throw new \LogicException();//todo
         }
 
         try {
