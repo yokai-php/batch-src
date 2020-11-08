@@ -39,7 +39,9 @@ final class Configuration implements ConfigurationInterface
                         ->scalarNode('dir')
                             ->defaultValue('%kernel.project_dir%/var/batch')
                         ->end()
-                        ->append($this->serializer())
+                        ->scalarNode('serializer')
+                            ->defaultValue('yokai_batch.job_execution_serializer.json')
+                        ->end()
                     ->end()
                 ->end()
                 ->arrayNode('dbal')
@@ -54,48 +56,6 @@ final class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->scalarNode('service')
-                ->end()
-            ->end()
-        ;
-
-        return $node;
-    }
-
-    private function serializer(): ArrayNodeDefinition
-    {
-        /** @var ArrayNodeDefinition $node */
-        $node = (new TreeBuilder('serializer'))->getRootNode();
-
-        $node
-            ->addDefaultsIfNotSet()
-            ->children()
-                ->scalarNode('format')
-                    ->defaultValue('json')
-                ->end()
-                ->scalarNode('service')
-                    ->defaultNull()
-                ->end()
-                ->arrayNode('symfony')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->arrayNode('context')
-                            ->addDefaultsIfNotSet()
-                            ->children()
-                                ->arrayNode('common')
-                                    ->useAttributeAsKey('name')
-                                    ->variablePrototype()->end()
-                                ->end()
-                                ->arrayNode('serialize')
-                                    ->useAttributeAsKey('name')
-                                    ->variablePrototype()->end()
-                                ->end()
-                                ->arrayNode('deserialize')
-                                    ->useAttributeAsKey('name')
-                                    ->variablePrototype()->end()
-                                ->end()
-                            ->end()
-                        ->end()
-                    ->end()
                 ->end()
             ->end()
         ;

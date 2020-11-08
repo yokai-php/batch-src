@@ -4,17 +4,14 @@ namespace Yokai\Batch\Tests\Integration;
 
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\Encoder;
 use Yokai\Batch\BatchStatus;
-use Yokai\Batch\Bridge\Symfony\Serializer\JobExecutionNormalizer;
-use Yokai\Batch\Bridge\Symfony\Serializer\SerializerJobExecutionSerializer;
 use Yokai\Batch\Factory\JobExecutionFactory;
 use Yokai\Batch\Failure;
 use Yokai\Batch\Job\JobInterface;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\Launcher\SimpleJobLauncher;
 use Yokai\Batch\Registry\JobRegistry;
+use Yokai\Batch\Serializer\JsonJobExecutionSerializer;
 use Yokai\Batch\Storage\FilesystemJobExecutionStorage;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
 use Yokai\Batch\Warning;
@@ -134,12 +131,9 @@ abstract class JobTestCase extends TestCase
 
     private function storages(): \Iterator
     {
-        $serializer = new Serializer([new JobExecutionNormalizer()], [new Encoder\JsonEncoder()]);
-
         yield new FilesystemJobExecutionStorage(
-            new SerializerJobExecutionSerializer($serializer, 'json'),
-            self::STORAGE_DIR,
-            'json'
+            new JsonJobExecutionSerializer(),
+            self::STORAGE_DIR
         );
     }
 

@@ -24,6 +24,8 @@ class FilesystemJobExecutionStorageTest extends TestCase
     protected function setUp()
     {
         $this->serializer = $this->prophesize(JobExecutionSerializerInterface::class);
+        $this->serializer->extension()
+            ->willReturn('txt');
     }
 
     protected function tearDown()
@@ -31,12 +33,11 @@ class FilesystemJobExecutionStorageTest extends TestCase
         unset($this->serializer);
     }
 
-    private function createStorage(string $dir = self::STORAGE_DIR, string $extension = 'txt')
+    private function createStorage(string $dir = self::STORAGE_DIR)
     {
         return new FilesystemJobExecutionStorage(
             $this->serializer->reveal(),
-            $dir,
-            $extension
+            $dir
         );
     }
 

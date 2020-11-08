@@ -1,13 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
-namespace Yokai\Batch\Bridge\Symfony\Serializer;
+namespace Yokai\Batch\Serializer;
 
 use DateTimeImmutable;
 use DateTimeInterface;
-use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Failure;
 use Yokai\Batch\JobExecution;
@@ -16,40 +12,30 @@ use Yokai\Batch\JobParameters;
 use Yokai\Batch\Summary;
 use Yokai\Batch\Warning;
 
-final class JobExecutionNormalizer implements
-    NormalizerInterface,
-    DenormalizerInterface
+final class JsonJobExecutionSerializer implements JobExecutionSerializerInterface
 {
     /**
      * @inheritdoc
      */
-    public function supportsNormalization($data, $format = null): bool
+    public function serialize(JobExecution $jobExecution): string
     {
-        return $data instanceof JobExecution;
+        return \json_encode($this->toArray($jobExecution), \JSON_THROW_ON_ERROR);
     }
 
     /**
      * @inheritdoc
      */
-    public function normalize($object, $format = null, array $context = []): array
+    public function unserialize(string $serializedJobExecution): JobExecution
     {
-        return $this->toArray($object);
+        return $this->fromArray(\json_decode($serializedJobExecution, \JSON_THROW_ON_ERROR));
     }
 
     /**
      * @inheritdoc
      */
-    public function supportsDenormalization($data, $type, $format = null): bool
+    public function extension(): string
     {
-        return $type === JobExecution::class;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function denormalize($data, $class, $format = null, array $context = []): JobExecution
-    {
-        return $this->fromArray($data);
+        return 'json';
     }
 
     private function toArray(JobExecution $jobExecution): array

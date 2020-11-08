@@ -16,7 +16,6 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Yokai\Batch\Bridge\Doctrine\DBAL\DoctrineDBALJobExecutionStorage;
-use Yokai\Batch\Bridge\Symfony\Serializer\SerializerJobExecutionSerializer;
 use Yokai\Batch\Launcher\JobLauncherInterface;
 use Yokai\Batch\Storage\FilesystemJobExecutionStorage;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
@@ -91,40 +90,12 @@ final class YokaiBatchExtension extends Extension
 
             $defaultStorage = 'yokai_batch.storage.dbal';
         } elseif (isset($config['filesystem'])) {
-            $serializer = $config['filesystem']['serializer'];
-            $format = $serializer['format'];
-
-            if (isset($serializer['service'])) {
-                $serializerId = $serializer['service'];
-            } elseif (isset($serializer['symfony'])) {
-                if (!interface_exists(SerializerInterface::class)) {
-                    throw new \LogicException(); //todo
-                }
-
-                $serializerId = 'yokai_batch.job_execution_serializer.filesystem_storage';
-                $container
-                    ->register($serializerId, SerializerJobExecutionSerializer::class)
-                    ->setArguments(
-                        [
-                            new Reference(SerializerInterface::class),
-                            $format,
-                            $serializer['symfony']['context']['common'],
-                            $serializer['symfony']['context']['serialize'],
-                            $serializer['symfony']['context']['deserialize'],
-                        ]
-                    )
-                ;
-            } else {
-                throw new \LogicException(); //todo
-            }
-
             $container
                 ->register('yokai_batch.storage.filesystem', FilesystemJobExecutionStorage::class)
                 ->setArguments(
                     [
-                        new Reference($serializerId),
+                        new Reference($config['filesystem']['serializer']),
                         $config['filesystem']['dir'],
-                        $format,
                     ]
                 )
             ;
