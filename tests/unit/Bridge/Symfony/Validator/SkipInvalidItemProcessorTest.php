@@ -29,10 +29,11 @@ class SkipInvalidItemProcessorTest extends TestCase
 
     /**
      * @dataProvider groups
-     * @expectedException \Yokai\Batch\Job\Item\InvalidItemException
      */
     public function testProcessInvalid(array $groups = null): void
     {
+        $this->expectException(InvalidItemException::class);
+
         $violations = new ConstraintViolationList([]);
         /** @var ObjectProphecy|ConstraintViolationInterface $stringViolation */
         $stringViolation = $this->prophesize(ConstraintViolationInterface::class);

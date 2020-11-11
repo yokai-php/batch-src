@@ -8,6 +8,7 @@ use Generator;
 use PHPUnit\Framework\TestCase;
 use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Bridge\Doctrine\DBAL\DoctrineDBALJobExecutionStorage;
+use Yokai\Batch\Exception\JobExecutionNotFoundException;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\Storage\Query;
 use Yokai\Batch\Storage\QueryBuilder;
@@ -150,11 +151,10 @@ class DoctrineDBALJobExecutionStorageTest extends TestCase
         self::assertSame('456', $execution456->getId());
     }
 
-    /**
-     * @expectedException \Yokai\Batch\Exception\JobExecutionNotFoundException
-     */
     public function testRetrieveNotFound(): void
     {
+        $this->expectException(JobExecutionNotFoundException::class);
+
         $storage = $this->createStorage();
         $storage->createSchema();
         $storage->store(JobExecution::createRoot('123', 'export'));

@@ -3,6 +3,7 @@
 namespace Yokai\Batch\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
+use Yokai\Batch\Exception\UndefinedJobParameterException;
 use Yokai\Batch\JobParameters;
 
 class JobParametersTest extends TestCase
@@ -36,11 +37,10 @@ class JobParametersTest extends TestCase
         self::assertSame(0.000, $parameters->get('float'));
     }
 
-    /**
-     * @expectedException \Yokai\Batch\Exception\UndefinedJobParameterException
-     */
     public function testGetUndefinedParameter()
     {
+        $this->expectException(UndefinedJobParameterException::class);
+
         $parameters = new JobParameters(
             ['null' => null, 'string' => 'foo', 'array' => [], 'bool' => false, 'int' => 0, 'float' => 0.000]
         );

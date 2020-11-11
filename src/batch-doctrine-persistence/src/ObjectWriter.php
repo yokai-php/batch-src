@@ -6,6 +6,7 @@ namespace Yokai\Batch\Bridge\Doctrine\Persistence;
 
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
+use Yokai\Batch\Exception\InvalidArgumentException;
 use Yokai\Batch\Job\Item\ItemWriterInterface;
 
 final class ObjectWriter implements ItemWriterInterface
@@ -73,9 +74,9 @@ final class ObjectWriter implements ItemWriterInterface
         return $manager;
     }
 
-    private function createInvalidItemException($item): \LogicException
+    private function createInvalidItemException($item): InvalidArgumentException
     {
-        return new \LogicException(
+        return new InvalidArgumentException(
             sprintf(
                 'Items to write must be object managed by Doctrine. Got "%s".',
                 is_object($item) ? get_class($item) : gettype($item)

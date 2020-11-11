@@ -8,6 +8,8 @@ use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 use Box\Spout\Writer\Common\Creator\WriterFactory;
 use Box\Spout\Writer\CSV\Writer as CsvWriter;
 use Box\Spout\Writer\WriterInterface;
+use Yokai\Batch\Exception\RuntimeException;
+use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\Job\Item\FlushableInterface;
 use Yokai\Batch\Job\Item\InitializableInterface;
 use Yokai\Batch\Job\Item\ItemWriterInterface;
@@ -70,7 +72,9 @@ final class FlatFileWriter implements
         $path = $this->getFilePath();
         $dir = dirname($path);
         if (!@is_dir($dir) && !@mkdir($dir, 0777, true)) {
-            throw new \RuntimeException();//todo
+            throw new RuntimeException(
+                \sprintf('Cannot create dir "%s".', $dir)
+            );
         }
 
         $this->writer = WriterFactory::createFromType($this->type);
@@ -95,7 +99,7 @@ final class FlatFileWriter implements
 
         foreach ($items as $row) {
             if (!is_array($row)) {
-                throw new \RuntimeException();//todo
+                throw UnexpectedValueException::type('array', $row);
             }
             $this->writer->addRow(WriterEntityFactory::createRowFromArray($row));
         }

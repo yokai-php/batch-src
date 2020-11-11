@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Yokai\Batch\Bridge\Doctrine\Persistence\ObjectWriter;
+use Yokai\Batch\Exception\InvalidArgumentException;
 use Yokai\Batch\Tests\Unit\Bridge\Doctrine\Group;
 use Yokai\Batch\Tests\Unit\Bridge\Doctrine\Product;
 use Yokai\Batch\Tests\Unit\Bridge\Doctrine\User;
@@ -67,11 +68,10 @@ class ObjectWriterTest extends TestCase
         $writer->write([$user1, $user2, $group1]);
     }
 
-    /**
-     * @expectedException \LogicException
-     */
     public function testWriteThrowExceptionWithNonObject()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         /** @var ObjectProphecy|ManagerRegistry $doctrine */
         $doctrine = $this->prophesize(ManagerRegistry::class);
 
@@ -79,11 +79,10 @@ class ObjectWriterTest extends TestCase
         $writer->write(['string']);
     }
 
-    /**
-     * @expectedException \LogicException
-     */
     public function testWriteThrowExceptionWithNonManagedObjects()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         /** @var ObjectProphecy|ManagerRegistry $doctrine */
         $doctrine = $this->prophesize(ManagerRegistry::class);
         $doctrine->getManagerForClass(User::class)

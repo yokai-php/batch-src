@@ -2,13 +2,14 @@
 
 namespace Yokai\Batch\Tests\Unit\Bridge\Doctrine\Orm;
 
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\ManagerRegistry;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Yokai\Batch\Bridge\Doctrine\Orm\EntityReader;
+use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\Tests\Unit\Bridge\Doctrine\User;
 
 class EntityReaderTest extends TestCase
@@ -57,11 +58,10 @@ class EntityReaderTest extends TestCase
         self::assertSame([$user1, $user2, $user3], iterator_to_array($entities));
     }
 
-    /**
-     * @expectedException \LogicException
-     */
     public function testReadExceptionWithUnknownEntityClass()
     {
+        $this->expectException(UnexpectedValueException::class);
+
         /** @var ObjectProphecy|ManagerRegistry $doctrine */
         $doctrine = $this->prophesize(ManagerRegistry::class);
         $doctrine->getManagerForClass(self::ENTITY)

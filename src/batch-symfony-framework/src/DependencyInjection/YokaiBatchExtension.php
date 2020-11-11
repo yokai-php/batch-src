@@ -9,13 +9,12 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader as ConfigLoader;
 use Symfony\Component\Console\Application;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\Loader as DependencyInjectionLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Yokai\Batch\Bridge\Doctrine\DBAL\DoctrineDBALJobExecutionStorage;
 use Yokai\Batch\Launcher\JobLauncherInterface;
 use Yokai\Batch\Storage\FilesystemJobExecutionStorage;
@@ -114,7 +113,7 @@ final class YokaiBatchExtension extends Extension
         try {
             $defaultStorageDefinition = $container->getDefinition($defaultStorage);
         } catch (ServiceNotFoundException $exception) {
-            throw new \LogicException(
+            throw new LogicException(
                 sprintf('Configured default job execution storage service "%s" does not exists.', $defaultStorage),
                 0,
                 $exception
@@ -130,7 +129,14 @@ final class YokaiBatchExtension extends Extension
         foreach ($interfaces as $interface => $required) {
             if (!is_a($defaultStorageClass, $interface, true)) {
                 if ($required) {
-                    throw new \LogicException();//todo
+                    throw new LogicException(
+                        \sprintf(
+                            'Job execution storage service "%s", is of class "%s", and must implements interface "%s".',
+                            $defaultStorage,
+                            $defaultStorageClass,
+                            $interface
+                        )
+                    );
                 }
                 continue;
             }

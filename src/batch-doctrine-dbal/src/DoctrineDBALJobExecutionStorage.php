@@ -11,6 +11,8 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Type;
 use Yokai\Batch\Exception\CannotStoreJobExecutionException;
 use Yokai\Batch\Exception\JobExecutionNotFoundException;
+use Yokai\Batch\Exception\RuntimeException;
+use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\Storage\Query;
 use Yokai\Batch\Storage\QueryableJobExecutionStorageInterface;
@@ -196,9 +198,7 @@ DROP TABLE {$this->table}
 SQL;
                 break;
             default:
-                throw new \DomainException(
-                    sprintf('Platform "%s" is not supported.', $platform)
-                );
+                throw UnexpectedValueException::enum(['mysql', 'sqlite'], $platform, 'Platform is not supported.');
         }
 
         return [$dropTable];
@@ -212,7 +212,7 @@ SQL;
         try {
             $this->fetchRow($execution->getJobName(), $execution->getId());
             $stored = true;
-        } catch (\InvalidArgumentException $exception) {
+        } catch (RuntimeException $exception) {
             $stored = false;
         }
 
@@ -248,7 +248,7 @@ SQL;
     {
         try {
             $row = $this->fetchRow($jobName, $executionId);
-        } catch (\InvalidArgumentException $exception) {
+        } catch (RuntimeException $exception) {
             throw new JobExecutionNotFoundException($jobName, $executionId, $exception);
         }
 
@@ -339,9 +339,7 @@ SQL;
                 $limit = "LIMIT {$offset}, {$count}";
                 break;
             default:
-                throw new \DomainException(
-                    sprintf('Platform "%s" is not supported.', $platform)
-                );
+                throw UnexpectedValueException::enum(['mysql', 'sqlite'], $platform, 'Platform is not supported.');
         }
 
         yield from $this->queryList(
@@ -371,9 +369,13 @@ SQL;
             case 1:
                 return array_shift($rows);
             case 0:
-                throw new \InvalidArgumentException();//todo
+                throw new RuntimeException(
+                    \sprintf('No row found for job %s#%s.', $jobName, $id)
+                );
             default:
-                throw new \InvalidArgumentException();//todo
+                throw new RuntimeException(
+                    \sprintf('Expecting exactly 1 row for job %s#%s, but got %d.', $jobName, $id, count($rows))
+                );
         }
     }
 
