@@ -6,6 +6,7 @@ use Box\Spout\Common\Type;
 use Box\Spout\Reader\Wrapper\XMLReader;
 use PHPUnit\Framework\TestCase;
 use Yokai\Batch\Bridge\Box\Spout\FlatFileWriter;
+use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\JobParameters;
 
@@ -22,10 +23,11 @@ class FlatFileWriterTest extends TestCase
 
     /**
      * @dataProvider types
-     * @expectedException \RuntimeException
      */
     public function testSomethingThatIsNotAnArray(string $type): void
     {
+        $this->expectException(UnexpectedValueException::class);
+
         $file = self::WRITE_DIR.'/not-an-array.'.$type;
 
         $writer = new FlatFileWriter($type);
@@ -94,7 +96,7 @@ Jane,Doe
 Jack,Doe
 CSV;
 
-        foreach ($this->types() as list($type)) {
+        foreach ($this->types() as [$type]) {
             yield [
                 $type,
                 "header-in-items.$type",

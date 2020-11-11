@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Container\ContainerInterface;
+use Yokai\Batch\Exception\UndefinedJobException;
 use Yokai\Batch\Job\JobInterface;
 use Yokai\Batch\Registry\JobRegistry;
 
@@ -30,11 +31,10 @@ class JobRegistryTest extends TestCase
         self::assertSame($import->reveal(), $registry->get('import'));
     }
 
-    /**
-     * @expectedException \Yokai\Batch\Exception\UndefinedJobException
-     */
     public function testGetNotFound()
     {
+        $this->expectException(UndefinedJobException::class);
+
         /** @var ContainerInterface|ObjectProphecy $container */
         $container = $this->prophesize(ContainerInterface::class);
         $container->has(Argument::any())->willReturn(false);

@@ -5,6 +5,7 @@ namespace Yokai\Batch\Tests\Unit\Bridge\Symfony\Console;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
+use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
 use Yokai\Batch\BatchStatus;
@@ -48,11 +49,12 @@ class RunJobCommandTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Console\Exception\InvalidArgumentException
      * @dataProvider invalidJson
      */
     public function testRunWithMalformedConfiguration(string $invalidJson): void
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->jobLauncher->launch(Argument::cetera())->shouldNotBeCalled();
         $this->execute($invalidJson);
     }
@@ -69,7 +71,7 @@ class RunJobCommandTest extends TestCase
             ->shouldBeCalledTimes(1)
             ->willReturn($jobExecution);
 
-        list($code, $display) = $this->execute(null, $verbosity);
+        [$code, $display] = $this->execute(null, $verbosity);
 
         self::assertSame(RunJobCommand::EXIT_ERROR_CODE, $code);
 
@@ -101,7 +103,7 @@ class RunJobCommandTest extends TestCase
             ->shouldBeCalledTimes(1)
             ->willReturn($jobExecution);
 
-        list($code, $display) = $this->execute(null, $verbosity);
+        [$code, $display] = $this->execute(null, $verbosity);
 
         self::assertSame(RunJobCommand::EXIT_WARNING_CODE, $code);
 
@@ -129,7 +131,7 @@ class RunJobCommandTest extends TestCase
             ->shouldBeCalledTimes(1)
             ->willReturn($jobExecution);
 
-        list($code, $display) = $this->execute(null, $verbosity);
+        [$code, $display] = $this->execute(null, $verbosity);
 
         self::assertSame(RunJobCommand::EXIT_SUCCESS_CODE, $code);
     }

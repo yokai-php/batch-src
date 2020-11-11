@@ -3,9 +3,11 @@
 namespace Yokai\Batch\Tests\Unit\Storage;
 
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Yokai\Batch\BatchStatus;
+use Yokai\Batch\Exception\CannotRemoveJobExecutionException;
+use Yokai\Batch\Exception\CannotStoreJobExecutionException;
+use Yokai\Batch\Exception\JobExecutionNotFoundException;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\Serializer\JobExecutionSerializerInterface;
 use Yokai\Batch\Storage\FilesystemJobExecutionStorage;
@@ -57,11 +59,10 @@ class FilesystemJobExecutionStorageTest extends TestCase
         self::assertEquals('serialized job execution', file_get_contents($file));
     }
 
-    /**
-     * @expectedException \Yokai\Batch\Exception\CannotStoreJobExecutionException
-     */
     public function testStoreFilePathNotFound(): void
     {
+        $this->expectException(CannotStoreJobExecutionException::class);
+
         $jobExecution = JobExecution::createRoot('123456789', 'export');
 
         $this->createStorage('/path/not/found')->store($jobExecution);
@@ -177,19 +178,17 @@ class FilesystemJobExecutionStorageTest extends TestCase
         self::assertSame([$pendingExport2019, $completedImport2017], $id123);
     }
 
-    /**
-     * @expectedException \Yokai\Batch\Exception\JobExecutionNotFoundException
-     */
     public function testRetrieveFilePathNotFound(): void
     {
+        $this->expectException(JobExecutionNotFoundException::class);
+
         $this->createStorage('/path/not/found')->retrieve('123456789', 'export');
     }
 
-    /**
-     * @expectedException \Yokai\Batch\Exception\CannotRemoveJobExecutionException
-     */
     public function testRemoveFilePathNotFound(): void
     {
+        $this->expectException(CannotRemoveJobExecutionException::class);
+
         $jobExecution = JobExecution::createRoot('123456789', 'export');
         $this->createStorage('/path/not/found')->remove($jobExecution);
     }

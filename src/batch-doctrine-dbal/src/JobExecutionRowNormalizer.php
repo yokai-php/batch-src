@@ -7,6 +7,7 @@ namespace Yokai\Batch\Bridge\Doctrine\DBAL;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Yokai\Batch\BatchStatus;
+use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\Failure;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\JobExecutionLogs;
@@ -191,7 +192,7 @@ final class JobExecutionRowNormalizer
         }
 
         if (!is_array($value)) {
-            throw new \LogicException(); //todo
+            throw UnexpectedValueException::type('array', $value);
         }
 
         return $value;

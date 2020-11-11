@@ -4,6 +4,8 @@ namespace Yokai\Batch\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Yokai\Batch\BatchStatus;
+use Yokai\Batch\Exception\ImmutablePropertyException;
+use Yokai\Batch\Exception\UndefinedJobParameterException;
 use Yokai\Batch\Failure;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\JobParameters;
@@ -70,11 +72,10 @@ class JobExecutionTest extends TestCase
         self::assertSame(0.000, $jobExecution->getParameter('float'));
     }
 
-    /**
-     * @expectedException \Yokai\Batch\Exception\UndefinedJobParameterException
-     */
     public function testGetUndefinedParameter()
     {
+        $this->expectException(UndefinedJobParameterException::class);
+
         $jobExecution = JobExecution::createRoot(
             '123456789',
             'export',
@@ -95,11 +96,10 @@ class JobExecutionTest extends TestCase
         self::assertSame($time, $jobExecution->getStartTime());
     }
 
-    /**
-     * @expectedException \Yokai\Batch\Exception\ImmutablePropertyException
-     */
     public function testStartTimeIsImmutable(): void
     {
+        $this->expectException(ImmutablePropertyException::class);
+
         $jobExecution = JobExecution::createRoot('123456789', 'export');
         $jobExecution->setStartTime(new \DateTime());
         $jobExecution->setStartTime(new \DateTime());
@@ -113,11 +113,10 @@ class JobExecutionTest extends TestCase
         self::assertSame($time, $jobExecution->getEndTime());
     }
 
-    /**
-     * @expectedException \Yokai\Batch\Exception\ImmutablePropertyException
-     */
     public function testEndTimeIsImmutable(): void
     {
+        $this->expectException(ImmutablePropertyException::class);
+
         $jobExecution = JobExecution::createRoot('123456789', 'export');
         $jobExecution->setEndTime(new \DateTime());
         $jobExecution->setEndTime(new \DateTime());

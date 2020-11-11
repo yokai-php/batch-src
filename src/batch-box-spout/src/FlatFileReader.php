@@ -8,7 +8,9 @@ use Box\Spout\Common\Entity\Row;
 use Box\Spout\Reader\Common\Creator\ReaderFactory;
 use Box\Spout\Reader\CSV\Reader as CsvReader;
 use Box\Spout\Reader\SheetInterface;
+use Yokai\Batch\Exception\InvalidArgumentException;
 use Yokai\Batch\Exception\UndefinedJobParameterException;
+use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\Job\Item\ItemReaderInterface;
 use Yokai\Batch\Job\JobExecutionAwareInterface;
 use Yokai\Batch\Job\JobExecutionAwareTrait;
@@ -63,16 +65,10 @@ final class FlatFileReader implements
         string $filePath = null
     ) {
         if (!in_array($headersMode, self::AVAILABLE_HEADERS_MODES, true)) {
-            throw new \LogicException(
-                sprintf(
-                    '"%s" is not a valid header mode. Expecting one of "%s"',
-                    $headersMode,
-                    implode('", "', self::AVAILABLE_HEADERS_MODES)
-                )
-            );
+            throw UnexpectedValueException::enum(self::AVAILABLE_HEADERS_MODES, $headersMode, 'Invalid header mode.');
         }
         if ($headers !== null && $headersMode === self::HEADERS_MODE_COMBINE) {
-            throw new \LogicException(
+            throw new InvalidArgumentException(
                 sprintf('In "%s" header mode you should not provide header by yourself', self::HEADERS_MODE_COMBINE)
             );
         }

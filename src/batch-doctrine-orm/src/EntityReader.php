@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Bridge\Doctrine\Orm;
 
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
+use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\Job\Item\ItemReaderInterface;
 
 final class EntityReader implements ItemReaderInterface
@@ -33,8 +34,10 @@ final class EntityReader implements ItemReaderInterface
     {
         $manager = $this->doctrine->getManagerForClass($this->class);
         if (!$manager instanceof EntityManagerInterface) {
-            throw new \LogicException(
-                sprintf('Provided class must be a valid Doctrine entity. Got "%s".', $this->class)
+            throw UnexpectedValueException::type(
+                EntityManagerInterface::class,
+                $manager,
+                'Provided class must be a valid Doctrine entity.'
             );
         }
 

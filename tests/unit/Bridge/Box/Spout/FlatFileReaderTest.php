@@ -5,6 +5,8 @@ namespace Yokai\Batch\Tests\Unit\Bridge\Box\Spout;
 use Box\Spout\Common\Type;
 use PHPUnit\Framework\TestCase;
 use Yokai\Batch\Bridge\Box\Spout\FlatFileReader;
+use Yokai\Batch\Exception\InvalidArgumentException;
+use Yokai\Batch\Exception\UndefinedJobParameterException;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\JobParameters;
 
@@ -32,19 +34,21 @@ class FlatFileReaderTest extends TestCase
 
     /**
      * @dataProvider types
-     * @expectedException \LogicException
      */
     public function testInvalidConstruction(string $type)
     {
+        $this->expectException(InvalidArgumentException::class);
+
         new FlatFileReader($type, [], FlatFileReader::HEADERS_MODE_COMBINE, ['nom', 'prenom']);
     }
 
     /**
      * @dataProvider types
-     * @expectedException \Yokai\Batch\Exception\UndefinedJobParameterException
      */
     public function testMissingFileToRead(string $type)
     {
+        $this->expectException(UndefinedJobParameterException::class);
+
         $reader = new FlatFileReader($type);
         $reader->setJobExecution(JobExecution::createRoot('123456789', 'parent'));
 
@@ -60,7 +64,7 @@ class FlatFileReaderTest extends TestCase
 
     public function combination()
     {
-        foreach ($this->types() as list($type)) {
+        foreach ($this->types() as [$type]) {
             yield [
                 $type,
                 FlatFileReader::HEADERS_MODE_NONE,
