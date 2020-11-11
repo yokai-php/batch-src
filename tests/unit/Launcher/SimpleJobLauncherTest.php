@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yokai\Batch\Tests\Unit\Launcher;
 
 use PHPUnit\Framework\TestCase;
@@ -86,7 +88,7 @@ class SimpleJobLauncherTest extends TestCase
         $job->execute($jobExecutionAssertions)
             ->shouldBeCalledTimes(1)
             ->will(function () {
-                $var = 10/0;
+                $var = 10 / 0;
             });
 
         /** @var ContainerInterface|ObjectProphecy $container */

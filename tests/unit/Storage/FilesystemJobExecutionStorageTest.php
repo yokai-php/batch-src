@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yokai\Batch\Tests\Unit\Storage;
 
 use PHPUnit\Framework\TestCase;
@@ -16,7 +18,7 @@ use Yokai\Batch\Storage\QueryBuilder;
 
 class FilesystemJobExecutionStorageTest extends TestCase
 {
-    private const STORAGE_DIR = UNIT_ARTIFACT_DIR.'/filesystem-storage';
+    private const STORAGE_DIR = UNIT_ARTIFACT_DIR . '/filesystem-storage';
 
     /**
      * @var JobExecutionSerializerInterface|ObjectProphecy
@@ -53,7 +55,7 @@ class FilesystemJobExecutionStorageTest extends TestCase
 
         $this->createStorage()->store($jobExecution);
 
-        $file = self::STORAGE_DIR.'/export/123456789.txt';
+        $file = self::STORAGE_DIR . '/export/123456789.txt';
         self::assertFileExists($file);
         self::assertIsReadable($file);
         self::assertEquals('serialized job execution', file_get_contents($file));
@@ -71,7 +73,7 @@ class FilesystemJobExecutionStorageTest extends TestCase
     public function testRetrieve(): void
     {
         $jobExecution = JobExecution::createRoot('123456789', 'export');
-        file_put_contents(self::STORAGE_DIR.'/export/123456789.txt', 'serialized and stored job execution');
+        file_put_contents(self::STORAGE_DIR . '/export/123456789.txt', 'serialized and stored job execution');
 
         $this->serializer->unserialize('serialized and stored job execution')
             ->shouldBeCalledTimes(1)
@@ -82,17 +84,17 @@ class FilesystemJobExecutionStorageTest extends TestCase
 
     public function testList(): void
     {
-        $dir = self::STORAGE_DIR.'/list';
+        $dir = self::STORAGE_DIR . '/list';
 
         $expected = [];
         foreach (['import', 'export'] as $jobName) {
-            @mkdir($dir."/$jobName", 0755, true);
+            @mkdir($dir . "/$jobName", 0755, true);
             foreach (['123', '456'] as $executionId) {
                 $execution = JobExecution::createRoot($executionId, $jobName);
                 if ($jobName === 'export') {
                     $expected[] = $execution;
                 }
-                file_put_contents($dir."/$jobName/$executionId.txt", "$jobName/$executionId");
+                file_put_contents($dir . "/$jobName/$executionId.txt", "$jobName/$executionId");
                 $this->serializer->unserialize("$jobName/$executionId")
                     ->shouldBeCalledTimes($jobName === 'export' ? 1 : 0)
                     ->willReturn($execution);
@@ -107,7 +109,7 @@ class FilesystemJobExecutionStorageTest extends TestCase
 
     public function testQuery(): void
     {
-        $dir = self::STORAGE_DIR.'/query';
+        $dir = self::STORAGE_DIR . '/query';
         $storage = $this->createStorage($dir);
 
         /** @var JobExecution[] $executions */
@@ -145,8 +147,8 @@ class FilesystemJobExecutionStorageTest extends TestCase
             $jobName = $execution->getJobName();
             $executionId = $execution->getId();
 
-            @mkdir($dir."/$jobName", 0755, true);
-            file_put_contents($dir."/$jobName/$executionId.txt", "$jobName/$executionId");
+            @mkdir($dir . "/$jobName", 0755, true);
+            file_put_contents($dir . "/$jobName/$executionId.txt", "$jobName/$executionId");
             $this->serializer->unserialize("$jobName/$executionId")
                 ->willReturn($execution);
         }

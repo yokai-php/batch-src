@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yokai\Batch\Tests\Integration;
 
 use Box\Spout\Common\Type;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\Setup;
+use Doctrine\Persistence\ManagerRegistry;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Yokai\Batch\Bridge\Box\Spout\FlatFileReader;
@@ -26,11 +28,11 @@ use Yokai\Batch\Tests\Integration\Processor\RepositoryProcessor;
 
 class ImportDevelopersXlsxToORMTest extends JobTestCase
 {
-    private const OUTPUT_BASE_DIR = self::OUTPUT_DIR.'/multi-tab-xlsx-to-objects';
-    private const OUTPUT_BADGE_FILE = self::OUTPUT_BASE_DIR.'/badge.csv';
-    private const OUTPUT_REPOSITORY_FILE = self::OUTPUT_BASE_DIR.'/repository.csv';
-    private const OUTPUT_DEVELOPER_FILE = self::OUTPUT_BASE_DIR.'/developer.csv';
-    private const INPUT_FILE = __DIR__.'/fixtures/multi-tab-xlsx-to-objects.xslx';
+    private const OUTPUT_BASE_DIR = self::OUTPUT_DIR . '/multi-tab-xlsx-to-objects';
+    private const OUTPUT_BADGE_FILE = self::OUTPUT_BASE_DIR . '/badge.csv';
+    private const OUTPUT_REPOSITORY_FILE = self::OUTPUT_BASE_DIR . '/repository.csv';
+    private const OUTPUT_DEVELOPER_FILE = self::OUTPUT_BASE_DIR . '/developer.csv';
+    private const INPUT_FILE = __DIR__ . '/fixtures/multi-tab-xlsx-to-objects.xslx';
 
     private $persisted;
 
@@ -48,7 +50,7 @@ class ImportDevelopersXlsxToORMTest extends JobTestCase
     {
         $this->persisted = [];
 
-        $config = Setup::createAnnotationMetadataConfiguration([__DIR__.'/Entity'], true, null, null, false);
+        $config = Setup::createAnnotationMetadataConfiguration([__DIR__ . '/Entity'], true, null, null, false);
         $this->entityManager = EntityManager::create(['url' => getenv('DATABASE_URL')], $config);
 
         (new SchemaTool($this->entityManager))

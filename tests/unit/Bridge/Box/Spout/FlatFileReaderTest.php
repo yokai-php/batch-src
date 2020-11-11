@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yokai\Batch\Tests\Unit\Bridge\Box\Spout;
 
 use Box\Spout\Common\Type;

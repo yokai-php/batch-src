@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Failure;
 use Yokai\Batch\JobExecution;
@@ -12,7 +14,13 @@ $hash = ['null' => null, 'string' => 'foo', 'array' => [], 'bool' => true, 'int'
 
 $warning = new Warning('Please pay attention', $hash);
 
-$failure = new Failure('InvalidArgumentException', 'An error occurred', 666, $hash, "A stack trace\nSomething that indicates\nWhere the error occurred\nIn application code");
+$failure = new Failure(
+    'InvalidArgumentException',
+    'An error occurred',
+    666,
+    $hash,
+    "A stack trace\nSomething that indicates\nWhere the error occurred\nIn application code"
+);
 
 $jobExecution = JobExecution::createRoot(
     '123456789',

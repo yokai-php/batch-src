@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yokai\Batch\Tests\Unit\Bridge\Symfony\Console;
 
 use PHPUnit\Framework\MockObject\MockObject;
@@ -30,7 +32,10 @@ class CommandRunnerTest extends TestCase
         $runner = $this->createRunner();
         $runner->expects($this->once())
             ->method('exec')
-            ->with('/usr/bin/php /path/to/bin/console yokai:testing:test 1 \'{"json":["value",2]}"\' --opt --option=foo');
+            ->with(
+                '/usr/bin/php /path/to/bin/console yokai:testing:test 1 ' .
+                '\'{"json":["value",2]}"\' --opt --option=foo'
+            );
 
         $runner->run(
             'yokai:testing:test',
@@ -43,7 +48,10 @@ class CommandRunnerTest extends TestCase
         $runner = $this->createRunner();
         $runner->expects($this->once())
             ->method('exec')
-            ->with('/usr/bin/php /path/to/bin/console yokai:testing:test 1 \'{"json":["value",2]}"\' --opt --option=foo >> /path/to/logs/test.log 2>&1 &');
+            ->with(
+                '/usr/bin/php /path/to/bin/console yokai:testing:test 1 ' .
+                '\'{"json":["value",2]}"\' --opt --option=foo >> /path/to/logs/test.log 2>&1 &'
+            );
 
         $runner->runAsync(
             'yokai:testing:test',

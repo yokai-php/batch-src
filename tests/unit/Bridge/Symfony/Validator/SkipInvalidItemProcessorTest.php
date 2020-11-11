@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yokai\Batch\Tests\Unit\Bridge\Symfony\Validator;
 
 use PHPUnit\Framework\TestCase;
@@ -50,7 +52,14 @@ class SkipInvalidItemProcessorTest extends TestCase
         /** @var ObjectProphecy|ConstraintViolationInterface $objectToStringViolation */
         $objectToStringViolation = $this->prophesize(ConstraintViolationInterface::class);
         $objectToStringViolation->getPropertyPath()->willReturn('objectToStringProperty');
-        $objectToStringViolation->getInvalidValue()->willReturn(new class { function __toString(){return 'invalid object';}});
+        $objectToStringViolation->getInvalidValue()->willReturn(
+            new class {
+                public function __toString(): string
+                {
+                    return 'invalid object';
+                }
+            }
+        );
         $objectToStringViolation->getMessage()->willReturn('"object with __toString" is invalid');
 
         /** @var ObjectProphecy|ConstraintViolationInterface $dateViolation */
@@ -62,7 +71,9 @@ class SkipInvalidItemProcessorTest extends TestCase
         /** @var ObjectProphecy|ConstraintViolationInterface $arrayViolation */
         $arrayViolation = $this->prophesize(ConstraintViolationInterface::class);
         $arrayViolation->getPropertyPath()->willReturn('arrayProperty');
-        $arrayViolation->getInvalidValue()->willReturn([null, new \stdClass(), [1, new \DateTime(), new \ArrayIterator(['string', 2.3])]]);
+        $arrayViolation->getInvalidValue()->willReturn(
+            [null, new \stdClass(), [1, new \DateTime(), new \ArrayIterator(['string', 2.3])]]
+        );
         $arrayViolation->getMessage()->willReturn('"array" is invalid');
 
         $violations->add($stringViolation->reveal());

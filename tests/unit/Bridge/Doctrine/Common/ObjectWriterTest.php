@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yokai\Batch\Tests\Unit\Bridge\Doctrine\Common;
 
 use Doctrine\Persistence\ManagerRegistry;
@@ -17,9 +19,9 @@ class ObjectWriterTest extends TestCase
 {
     public function testWrite()
     {
-        $user1 = new User(1);
-        $user2 = new User(2);
-        $group1 = new Group(1);
+        $user1 = new User('1');
+        $user2 = new User('2');
+        $group1 = new Group('1');
 
         /** @var ObjectProphecy|ObjectManager $userManager */
         $userManager = $this->prophesize(ObjectManager::class);
@@ -89,6 +91,6 @@ class ObjectWriterTest extends TestCase
             ->willReturn(null);
 
         $writer = new ObjectWriter($doctrine->reveal());
-        $writer->write([new User(1)]);
+        $writer->write([new User('1')]);
     }
 }
