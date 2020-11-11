@@ -24,18 +24,13 @@ final class JsonJobExecutionSerializer implements JobExecutionSerializerInterfac
     public function serialize(JobExecution $jobExecution): string
     {
         try {
-            $data = $this->toArray($jobExecution);
+            $json = \json_encode($this->toArray($jobExecution));
+            if (!\is_string($json) || \json_last_error() !== JSON_ERROR_NONE) {
+                throw new Exception(\json_last_error_msg());
+            }
         } catch (Throwable $exception) {
             throw RuntimeException::error(
                 $exception,
-                'Cannot serialize job execution to JSON.'
-            );
-        }
-
-        $json = \json_encode($data);
-        if (!\is_string($json)) {
-            throw RuntimeException::error(
-                new Exception(\json_last_error_msg()),
                 'Cannot serialize job execution to JSON.'
             );
         }
@@ -48,16 +43,15 @@ final class JsonJobExecutionSerializer implements JobExecutionSerializerInterfac
      */
     public function unserialize(string $serializedJobExecution): JobExecution
     {
-        $data = \json_decode($serializedJobExecution, true);
-        if (!\is_array($data)) {
-            throw UnexpectedValueException::type(
-                'array',
-                $data,
-                'Cannot unserialize job execution from JSON.'
-            );
-        }
-
         try {
+            $data = \json_decode($serializedJobExecution, true);
+            if (\json_last_error() !== \JSON_ERROR_NONE) {
+                throw new Exception(null, \json_last_error_msg());
+            }
+            if (!\is_array($data)) {
+                throw UnexpectedValueException::type('array', $data);
+            }
+
             return $this->fromArray($data);
         } catch (Throwable $exception) {
             throw RuntimeException::error(
