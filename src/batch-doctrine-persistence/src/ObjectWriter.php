@@ -24,6 +24,11 @@ final class ObjectWriter implements ItemWriterInterface
     /**
      * @var ObjectManager[]
      */
+    private $encounteredClasses = [];
+
+    /**
+     * @var ObjectManager[]
+     */
     private $managerForClass = [];
 
     public function __construct(ManagerRegistry $doctrine)
@@ -44,11 +49,12 @@ final class ObjectWriter implements ItemWriterInterface
             $manager->flush();
         }
 
-        foreach ($items as $item) {
-            $this->getManagerForClass($item)->detach($item);
+        foreach ($this->encounteredClasses as $class => $manager) {
+            $manager->clear($class);
         }
 
         $this->encounteredManagers = [];
+        $this->encounteredClasses = [];
     }
 
     private function getManagerForClass($item): ObjectManager
@@ -69,6 +75,7 @@ final class ObjectWriter implements ItemWriterInterface
             $this->managerForClass[$class] = $manager;
         }
 
+        $this->encounteredClasses[$class] = $manager;
         $this->encounteredManagers[spl_object_id($manager)] = $manager;
 
         return $manager;
