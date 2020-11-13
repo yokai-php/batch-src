@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yokai\Batch\Tests\Unit\Job\Item;
 
 use PHPUnit\Framework\TestCase;
@@ -108,18 +110,18 @@ LOGS;
         $element->willImplement(FlushableInterface::class);
         $element->setJobExecution(Argument::type(JobExecution::class))
             ->shouldBeCalled()
-            ->will(Util::createVarLogger($role.'::setJobExecution', $log));
+            ->will(Util::createVarLogger($role . '::setJobExecution', $log));
         $element->setJobParameters(Argument::type(JobParameters::class))
             ->shouldBeCalled()
-            ->will(Util::createVarLogger($role.'::setJobParameters', $log));
+            ->will(Util::createVarLogger($role . '::setJobParameters', $log));
         $element->setSummary(Argument::type(Summary::class))
             ->shouldBeCalled()
-            ->will(Util::createVarLogger($role.'::setSummary', $log));
+            ->will(Util::createVarLogger($role . '::setSummary', $log));
         $element->initialize()
             ->shouldBeCalled()
-            ->will(Util::createVarLogger($role.'::initialize', $log));
+            ->will(Util::createVarLogger($role . '::initialize', $log));
         $element->flush()
             ->shouldBeCalled()
-            ->will(Util::createVarLogger($role.'::flush', $log));
+            ->will(Util::createVarLogger($role . '::flush', $log));
     }
 }

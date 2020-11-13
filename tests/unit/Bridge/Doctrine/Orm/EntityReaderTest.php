@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yokai\Batch\Tests\Unit\Bridge\Doctrine\Orm;
 
 use Doctrine\ORM\AbstractQuery;
@@ -22,7 +24,9 @@ class EntityReaderTest extends TestCase
         $query = $this->prophesize(AbstractQuery::class);
         $query->iterate()
             ->shouldBeCalledTimes(1)
-            ->willReturn(new \ArrayIterator([[$user1 = new User(1)], [$user2 = new User(2)], [$user3 = new User(3)]]));
+            ->willReturn(
+                new \ArrayIterator([[$user1 = new User('1')], [$user2 = new User('2')], [$user3 = new User('3')]])
+            );
 
         $queryBuilder = $this->getMockBuilder(QueryBuilder::class)
             ->disableOriginalConstructor()

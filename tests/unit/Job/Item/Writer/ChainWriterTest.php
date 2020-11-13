@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yokai\Batch\Tests\Unit\Job\Item\Writer;
 
 use PHPUnit\Framework\TestCase;

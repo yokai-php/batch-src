@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yokai\Batch\Tests\Integration\Processor;
 
 use Yokai\Batch\Job\Item\ItemProcessorInterface;

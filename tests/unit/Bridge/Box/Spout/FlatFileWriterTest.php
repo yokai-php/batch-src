@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yokai\Batch\Tests\Unit\Bridge\Box\Spout;
 
 use Box\Spout\Common\Type;
@@ -12,7 +14,7 @@ use Yokai\Batch\JobParameters;
 
 class FlatFileWriterTest extends TestCase
 {
-    private const WRITE_DIR = UNIT_ARTIFACT_DIR.'/flat-file-writer';
+    private const WRITE_DIR = UNIT_ARTIFACT_DIR . '/flat-file-writer';
 
     public static function setUpBeforeClass()
     {
@@ -28,7 +30,7 @@ class FlatFileWriterTest extends TestCase
     {
         $this->expectException(UnexpectedValueException::class);
 
-        $file = self::WRITE_DIR.'/not-an-array.'.$type;
+        $file = self::WRITE_DIR . '/not-an-array.' . $type;
 
         $writer = new FlatFileWriter($type);
         $writer->setJobExecution(
@@ -54,7 +56,7 @@ class FlatFileWriterTest extends TestCase
         iterable $itemsToWrite,
         string $expectedContent
     ): void {
-        $file = self::WRITE_DIR.'/'.$filename;
+        $file = self::WRITE_DIR . '/' . $filename;
 
         self::assertFileNotExists($file);
 
@@ -127,8 +129,8 @@ CSV;
                 break;
 
             case Type::XLSX:
-                $pathToSheetFile = $filePath.'#xl/worksheets/sheet1.xml';
-                $xmlContents = file_get_contents('zip://'.$pathToSheetFile);
+                $pathToSheetFile = $filePath . '#xl/worksheets/sheet1.xml';
+                $xmlContents = file_get_contents('zip://' . $pathToSheetFile);
                 foreach ($strings as $string) {
                     self::assertContains($string, $xmlContents);
                 }

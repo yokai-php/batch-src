@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
+// phpcs:disable PSR1.Files.SideEffects
+
 use Symfony\Component\Filesystem\Filesystem;
 
-require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 $artifactDir = @getenv('ARTIFACT_DIR');
 if (false === $artifactDir) {
@@ -13,5 +17,5 @@ if (is_dir($artifactDir)) {
     (new Filesystem())->remove($artifactDir);
 }
 
-define('UNIT_ARTIFACT_DIR', $artifactDir.'/unit');
-define('INTEGRATION_ARTIFACT_DIR', $artifactDir.'/integration');
+define('UNIT_ARTIFACT_DIR', $artifactDir . '/unit');
+define('INTEGRATION_ARTIFACT_DIR', $artifactDir . '/integration');

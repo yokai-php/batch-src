@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 $hash = ['null' => null, 'string' => 'foo', 'array' => [], 'bool' => true, 'int' => 1, 'float' => 0.999];
 $failures = [
     [

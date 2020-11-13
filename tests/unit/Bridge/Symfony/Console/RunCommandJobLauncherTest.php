@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yokai\Batch\Tests\Unit\Bridge\Symfony\Console;
 
 use PHPUnit\Framework\TestCase;
@@ -38,7 +40,12 @@ class RunCommandJobLauncherTest extends TestCase
         );
         $storage->store($jobExecutionAssertions)->shouldBeCalledTimes(1);
 
-        $launcher = new RunCommandJobLauncher(new JobExecutionFactory(), $commandRunner->reveal(), $storage->reveal(), 'test.log');
+        $launcher = new RunCommandJobLauncher(
+            new JobExecutionFactory(),
+            $commandRunner->reveal(),
+            $storage->reveal(),
+            'test.log'
+        );
         $launcher->launch('testing', $config);
     }
 }
