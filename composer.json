@@ -46,7 +46,7 @@
       "Yokai\\Batch\\": "src/batch/src/",
       "Yokai\\Batch\\Bridge\\Box\\Spout\\": "src/batch-box-spout/src/",
       "Yokai\\Batch\\Bridge\\Doctrine\\DBAL\\": "src/batch-doctrine-dbal/src/",
-      "Yokai\\Batch\\Bridge\\Doctrine\\Orm\\": "src/batch-doctrine-orm/src/",
+      "Yokai\\Batch\\Bridge\\Doctrine\\ORM\\": "src/batch-doctrine-orm/src/",
       "Yokai\\Batch\\Bridge\\Doctrine\\Persistence\\": "src/batch-doctrine-persistence/src/",
       "Yokai\\Batch\\Bridge\\Symfony\\Console\\": "src/batch-symfony-console/src/",
       "Yokai\\Batch\\Bridge\\Symfony\\Framework\\": "src/batch-symfony-framework/src/",
