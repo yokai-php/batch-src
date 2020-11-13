@@ -11,7 +11,7 @@
     }
   ],
   "require": {
-    "php": "^7.2",
+    "php": "^7.4",
     "composer-runtime-api": "^2.0",
     "symfony/framework-bundle": "^4.4|^5.0",
     "yokai/batch": "self.version"
