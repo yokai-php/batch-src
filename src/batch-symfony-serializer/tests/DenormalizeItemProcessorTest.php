@@ -9,6 +9,7 @@ use DateTimeImmutable;
 use Generator;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -17,6 +18,8 @@ use Yokai\Batch\Job\Item\InvalidItemException;
 
 final class DenormalizeItemProcessorTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ObjectProphecy|DenormalizerInterface
      */

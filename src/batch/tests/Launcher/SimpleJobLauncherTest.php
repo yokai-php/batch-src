@@ -6,6 +6,7 @@ namespace Yokai\Batch\Tests\Launcher;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Container\ContainerInterface;
 use Yokai\Batch\Factory\JobExecutionFactory;
@@ -17,6 +18,8 @@ use Yokai\Batch\Storage\JobExecutionStorageInterface;
 
 class SimpleJobLauncherTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testLaunch(): void
     {
         $jobExecutionAssertions = Argument::allOf(

@@ -9,12 +9,15 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Yokai\Batch\Bridge\Doctrine\ORM\EntityReader;
 use Yokai\Batch\Exception\UnexpectedValueException;
 
 class EntityReaderTest extends TestCase
 {
+    use ProphecyTrait;
+
     private const ENTITY = 'App\Entity\User';
 
     public function testRead()

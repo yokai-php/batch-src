@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yokai\Batch\Tests\Bridge\Symfony\Validator;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
@@ -14,6 +15,8 @@ use Yokai\Batch\Job\Item\InvalidItemException;
 
 class SkipInvalidItemProcessorTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @dataProvider groups
      */

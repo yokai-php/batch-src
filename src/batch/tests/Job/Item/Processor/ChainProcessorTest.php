@@ -6,6 +6,7 @@ namespace Yokai\Batch\Tests\Job\Item\Processor;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Yokai\Batch\Job\Item\FlushableInterface;
 use Yokai\Batch\Job\Item\InitializableInterface;
@@ -21,6 +22,8 @@ use Yokai\Batch\Tests\Util;
 
 class ChainProcessorTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testProcess(): void
     {
         $log = '';

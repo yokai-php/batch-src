@@ -6,6 +6,7 @@ namespace Yokai\Batch\Tests\Job\Item\Writer;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Yokai\Batch\Job\Item\FlushableInterface;
 use Yokai\Batch\Job\Item\InitializableInterface;
@@ -21,6 +22,8 @@ use Yokai\Batch\Tests\Util;
 
 class ChainWriterTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testWrite()
     {
         $items = [1, 2, 3];

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yokai\Batch\Tests\Bridge\Symfony\Messenger;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Yokai\Batch\Bridge\Symfony\Messenger\LaunchJobMessage;
 use Yokai\Batch\Bridge\Symfony\Messenger\LaunchJobMessageHandler;
 use Yokai\Batch\JobExecution;
@@ -12,6 +13,8 @@ use Yokai\Batch\Launcher\JobLauncherInterface;
 
 final class LaunchJobMessageHandlerTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testInvoke(): void
     {
         $jobLauncher = $this->prophesize(JobLauncherInterface::class);

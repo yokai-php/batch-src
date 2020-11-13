@@ -6,6 +6,7 @@ namespace Yokai\Batch\Tests\Bridge\Symfony\Console;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -19,6 +20,8 @@ use Yokai\Batch\Warning;
 
 class RunJobCommandTest extends TestCase
 {
+    use ProphecyTrait;
+
     private const JOBNAME = 'testing';
 
     /**

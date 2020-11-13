@@ -6,6 +6,7 @@ namespace Yokai\Batch\Tests\Bridge\Symfony\Console;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Bridge\Symfony\Console\CommandRunner;
@@ -16,6 +17,8 @@ use Yokai\Batch\Storage\JobExecutionStorageInterface;
 
 class RunCommandJobLauncherTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testLaunch(): void
     {
         $config = ['_id' => '123456789', 'foo' => ['bar']];

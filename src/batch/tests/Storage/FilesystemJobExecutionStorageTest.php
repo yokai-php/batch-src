@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yokai\Batch\Tests\Storage;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Exception\CannotRemoveJobExecutionException;
@@ -18,6 +19,8 @@ use Yokai\Batch\Storage\QueryBuilder;
 
 class FilesystemJobExecutionStorageTest extends TestCase
 {
+    use ProphecyTrait;
+
     private const STORAGE_DIR = ARTIFACT_DIR . '/filesystem-storage';
 
     /**

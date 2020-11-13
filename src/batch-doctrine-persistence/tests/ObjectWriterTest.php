@@ -8,12 +8,15 @@ use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecny;
 use Yokai\Batch\Bridge\Doctrine\Persistence\ObjectWriter;
 use Yokai\Batch\Exception\InvalidArgumentException;
 
 class ObjectWriterTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testWrite()
     {
         $user1 = new User('1');

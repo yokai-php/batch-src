@@ -6,12 +6,15 @@ namespace Yokai\Batch\Tests\Bridge\Symfony\Console;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Yokai\Batch\Bridge\Symfony\Console\CommandRunner;
 
 class CommandRunnerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @return MockObject|CommandRunner
      */

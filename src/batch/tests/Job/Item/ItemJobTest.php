@@ -6,6 +6,7 @@ namespace Yokai\Batch\Tests\Job\Item;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Yokai\Batch\Job\Item\FlushableInterface;
 use Yokai\Batch\Job\Item\InitializableInterface;
@@ -25,6 +26,8 @@ use Yokai\Batch\Tests\Util;
 
 class ItemJobTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testExecute(): void
     {
         $jobExecution = JobExecution::createRoot('123456789', 'export');

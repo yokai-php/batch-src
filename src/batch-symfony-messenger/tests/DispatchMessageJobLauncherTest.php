@@ -6,6 +6,7 @@ namespace Yokai\Batch\Tests\Bridge\Symfony\Messenger;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -18,6 +19,8 @@ use Yokai\Batch\Storage\JobExecutionStorageInterface;
 
 final class DispatchMessageJobLauncherTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testLaunch(): void
     {
         $storage = $this->prophesize(JobExecutionStorageInterface::class);

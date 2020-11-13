@@ -21,7 +21,8 @@
     }
   },
   "require-dev": {
-    "phpunit/phpunit": "^7.5"
+    "phpspec/prophecy-phpunit": "^2.0",
+    "phpunit/phpunit": "^9.4"
   },
   "autoload-dev": {
     "psr-4": {

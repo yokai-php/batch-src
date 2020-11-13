@@ -6,6 +6,7 @@ namespace Yokai\Batch\Tests\Registry;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Container\ContainerInterface;
 use Yokai\Batch\Exception\UndefinedJobException;
@@ -14,6 +15,8 @@ use Yokai\Batch\Registry\JobRegistry;
 
 class JobRegistryTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testRegistry()
     {
         /** @var ObjectProphecy|JobInterface $export */

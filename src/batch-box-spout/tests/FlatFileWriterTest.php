@@ -58,7 +58,7 @@ class FlatFileWriterTest extends TestCase
     ): void {
         $file = self::WRITE_DIR . '/' . $filename;
 
-        self::assertFileNotExists($file);
+        self::assertFileDoesNotExist($file);
 
         $writer = new FlatFileWriter($type, $headers);
         $writer->setJobExecution(

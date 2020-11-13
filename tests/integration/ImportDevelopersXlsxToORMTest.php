@@ -10,6 +10,7 @@ use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\Persistence\ManagerRegistry;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Yokai\Batch\Bridge\Box\Spout\FlatFileReader;
 use Yokai\Batch\Bridge\Doctrine\Persistence\ObjectWriter;
@@ -28,6 +29,8 @@ use Yokai\Batch\Sources\Tests\Integration\Processor\RepositoryProcessor;
 
 class ImportDevelopersXlsxToORMTest extends JobTestCase
 {
+    use ProphecyTrait;
+
     private const OUTPUT_BASE_DIR = self::OUTPUT_DIR . '/multi-tab-xlsx-to-objects';
     private const OUTPUT_BADGE_FILE = self::OUTPUT_BASE_DIR . '/badge.csv';
     private const OUTPUT_REPOSITORY_FILE = self::OUTPUT_BASE_DIR . '/repository.csv';
