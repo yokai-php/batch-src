@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yokai\Batch\Tests\Unit\Bridge\Doctrine\Orm;
+namespace Yokai\Batch\Tests\Unit\Bridge\Doctrine\ORM;
 
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
@@ -10,7 +10,7 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
-use Yokai\Batch\Bridge\Doctrine\Orm\EntityReader;
+use Yokai\Batch\Bridge\Doctrine\ORM\EntityReader;
 use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\Tests\Unit\Bridge\Doctrine\User;
 
