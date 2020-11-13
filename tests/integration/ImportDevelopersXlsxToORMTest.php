@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yokai\Batch\Tests\Integration;
+namespace Yokai\Batch\Sources\Tests\Integration;
 
 use Box\Spout\Common\Type;
 use Doctrine\ORM\EntityManager;
@@ -18,13 +18,13 @@ use Yokai\Batch\Job\JobInterface;
 use Yokai\Batch\Job\JobWithChildJobs;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
-use Yokai\Batch\Tests\Integration\Entity\Badge;
-use Yokai\Batch\Tests\Integration\Entity\Developer;
-use Yokai\Batch\Tests\Integration\Entity\Repository;
-use Yokai\Batch\Tests\Integration\Job\SplitDeveloperXlsxJob;
-use Yokai\Batch\Tests\Integration\Processor\BadgeProcessor;
-use Yokai\Batch\Tests\Integration\Processor\DeveloperProcessor;
-use Yokai\Batch\Tests\Integration\Processor\RepositoryProcessor;
+use Yokai\Batch\Sources\Tests\Integration\Entity\Badge;
+use Yokai\Batch\Sources\Tests\Integration\Entity\Developer;
+use Yokai\Batch\Sources\Tests\Integration\Entity\Repository;
+use Yokai\Batch\Sources\Tests\Integration\Job\SplitDeveloperXlsxJob;
+use Yokai\Batch\Sources\Tests\Integration\Processor\BadgeProcessor;
+use Yokai\Batch\Sources\Tests\Integration\Processor\DeveloperProcessor;
+use Yokai\Batch\Sources\Tests\Integration\Processor\RepositoryProcessor;
 
 class ImportDevelopersXlsxToORMTest extends JobTestCase
 {

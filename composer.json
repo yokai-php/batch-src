@@ -57,8 +57,16 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Yokai\\Batch\\Tests\\Integration\\": "tests/integration/",
-      "Yokai\\Batch\\Tests\\Unit\\": "tests/unit/"
+      "Yokai\\Batch\\Sources\\Tests\\Integration\\": "tests/integration/",
+      "Yokai\\Batch\\Tests\\": "src/batch/tests/",
+      "Yokai\\Batch\\Tests\\Bridge\\Box\\Spout\\": "src/batch-box-spout/tests/",
+      "Yokai\\Batch\\Tests\\Bridge\\Doctrine\\DBAL\\": "src/batch-doctrine-dbal/tests/",
+      "Yokai\\Batch\\Tests\\Bridge\\Doctrine\\ORM\\": "src/batch-doctrine-orm/tests/",
+      "Yokai\\Batch\\Tests\\Bridge\\Doctrine\\Persistence\\": "src/batch-doctrine-persistence/tests/",
+      "Yokai\\Batch\\Tests\\Bridge\\Symfony\\Console\\": "src/batch-symfony-console/tests/",
+      "Yokai\\Batch\\Tests\\Bridge\\Symfony\\Framework\\": "src/batch-symfony-framework/tests/",
+      "Yokai\\Batch\\Tests\\Bridge\\Symfony\\Messenger\\": "src/batch-symfony-messenger/tests/",
+      "Yokai\\Batch\\Tests\\Bridge\\Symfony\\Serializer\\": "src/batch-symfony-serializer/tests/"
     }
   }
 }

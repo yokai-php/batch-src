@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yokai\Batch\Tests\Integration;
+namespace Yokai\Batch\Sources\Tests\Integration;
 
 use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Job\AbstractJob;

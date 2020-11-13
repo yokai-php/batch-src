@@ -13,8 +13,8 @@
     </php>
 
     <testsuites>
-        <testsuite name="Unit">
-            <directory>./tests/unit</directory>
+        <testsuite name="Package">
+            <directory>./src/*/tests</directory>
         </testsuite>
         <testsuite name="Integration">
             <directory>./tests/integration</directory>
@@ -23,7 +23,7 @@
 
     <filter>
         <whitelist>
-            <directory>./src</directory>
+            <directory>./src/*/src</directory>
         </whitelist>
     </filter>
 </phpunit>

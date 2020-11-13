@@ -17,5 +17,6 @@ if (is_dir($artifactDir)) {
     (new Filesystem())->remove($artifactDir);
 }
 
-define('UNIT_ARTIFACT_DIR', $artifactDir . '/unit');
-define('INTEGRATION_ARTIFACT_DIR', $artifactDir . '/integration');
+(new Filesystem())->mkdir($artifactDir);
+
+define('ARTIFACT_DIR', $artifactDir);
