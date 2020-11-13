@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yokai\Batch\Tests\Unit\Bridge\Symfony\Messenger;
 
 use PHPUnit\Framework\TestCase;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yokai\Batch\Tests\Integration\Job;
 
 use Box\Spout\Common\Entity\Row;
@@ -41,15 +43,15 @@ final class SplitDeveloperXlsxJob extends AbstractJob
         $reader = ReaderFactory::createFromType(Type::XLSX);
         $reader->open($this->inputFile);
         $sheets = iterator_to_array($reader->getSheetIterator(), false);
-        list($badgeSheet, $repositorySheet) = $sheets;
+        [$badgeSheet, $repositorySheet] = $sheets;
 
         foreach ($this->sheetToArray($badgeSheet) as $row) {
-            list($firstName, $lastName, $badgeLabel, $badgeRank) = $row;
+            [$firstName, $lastName, $badgeLabel, $badgeRank] = $row;
 
             $badgeData = ['label' => $badgeLabel, 'rank' => $badgeRank];
             $badgeKey = $badgeLabel;
             $developerData = ['firstName' => $firstName, 'lastName' => $lastName, 'badges' => [], 'repositories' => []];
-            $developerKey = $firstName.'/'.$lastName;
+            $developerKey = $firstName . '/' . $lastName;
 
             $badges[$badgeKey] = $badges[$badgeKey] ?? $badgeData;
             $developers[$developerKey] = $developers[$developerKey] ?? $developerData;
@@ -57,12 +59,12 @@ final class SplitDeveloperXlsxJob extends AbstractJob
         }
 
         foreach ($this->sheetToArray($repositorySheet) as $row) {
-            list($firstName, $lastName, $repositoryLabel, $repositoryUrl) = $row;
+            [$firstName, $lastName, $repositoryLabel, $repositoryUrl] = $row;
 
             $repositoryData = ['label' => $repositoryLabel, 'url' => $repositoryUrl];
             $repositoryKey = $repositoryUrl;
             $developerData = ['firstName' => $firstName, 'lastName' => $lastName, 'badges' => [], 'repositories' => []];
-            $developerKey = $firstName.'/'.$lastName;
+            $developerKey = $firstName . '/' . $lastName;
 
             $repositories[$repositoryKey] = $repositories[$repositoryKey] ?? $repositoryData;
             $developers[$developerKey] = $developers[$developerKey] ?? $developerData;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yokai\Batch\Tests\Unit\Job\Item\Reader;
 
 use PHPUnit\Framework\TestCase;
@@ -26,8 +28,7 @@ class StaticIterableReaderTest extends TestCase
     {
         $items = [1, 2, 3];
 
-        $aggregate = new class($items) implements \IteratorAggregate
-        {
+        $aggregate = new class ($items) implements \IteratorAggregate {
             /**
              * @var array
              */

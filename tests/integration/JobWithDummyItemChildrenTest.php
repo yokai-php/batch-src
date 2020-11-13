@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yokai\Batch\Tests\Integration;
 
 use Yokai\Batch\BatchStatus;
@@ -14,14 +16,13 @@ use Yokai\Batch\Storage\JobExecutionStorageInterface;
 
 class JobWithDummyItemChildrenTest extends JobTestCase
 {
-    private const OUTPUT_FILE = self::OUTPUT_DIR.'/job-with-dummy-item-children.txt';
+    private const OUTPUT_FILE = self::OUTPUT_DIR . '/job-with-dummy-item-children.txt';
 
     protected function createJob(JobExecutionStorageInterface $executionStorage): JobInterface
     {
         $output = self::OUTPUT_FILE;
 
-        $fileLineWriter = new class($output) implements ItemWriterInterface
-        {
+        $fileLineWriter = new class ($output) implements ItemWriterInterface {
             /**
              * @var string
              */
@@ -35,7 +36,7 @@ class JobWithDummyItemChildrenTest extends JobTestCase
             public function write(iterable $items): void
             {
                 foreach ($items as $item) {
-                    file_put_contents($this->file, $item.PHP_EOL, FILE_APPEND);
+                    file_put_contents($this->file, $item . PHP_EOL, FILE_APPEND);
                 }
             }
         };
