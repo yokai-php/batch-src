@@ -10,7 +10,7 @@ use Yokai\Batch\Bridge\Symfony\Framework\DependencyInjection\CompilerPass\Regist
 
 final class YokaiBatchBundle extends Bundle
 {
-    public function build(ContainerBuilder $container)
+    public function build(ContainerBuilder $container): void
     {
         $container->addCompilerPass(new RegisterJobsCompilerPass());
     }

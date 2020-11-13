@@ -17,7 +17,7 @@ final class NormalizeItemProcessor implements ItemProcessorInterface
     private $normalizer;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $format;
 

@@ -8,6 +8,7 @@ use Box\Spout\Common\Type;
 use Box\Spout\Reader\Wrapper\XMLReader;
 use PHPUnit\Framework\TestCase;
 use Yokai\Batch\Bridge\Box\Spout\FlatFileWriter;
+use Yokai\Batch\Exception\BadMethodCallException;
 use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\JobParameters;
@@ -74,6 +75,28 @@ class FlatFileWriterTest extends TestCase
         $writer->write($itemsToWrite);
         $writer->flush();
         $this->assertFileContents($type, $file, $expectedContent);
+    }
+
+    /**
+     * @dataProvider types
+     */
+    public function testShouldInitializeBeforeWrite(string $type): void
+    {
+        $this->expectException(BadMethodCallException::class);
+
+        $writer = new FlatFileWriter($type);
+        $writer->write([true]);
+    }
+
+    /**
+     * @dataProvider types
+     */
+    public function testShouldInitializeBeforeFlush(string $type): void
+    {
+        $this->expectException(BadMethodCallException::class);
+
+        $writer = new FlatFileWriter($type);
+        $writer->flush();
     }
 
     public function types(): \Generator

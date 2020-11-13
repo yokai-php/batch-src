@@ -185,6 +185,11 @@ final class JobExecutionRowNormalizer
         ];
     }
 
+    /**
+     * @param array|string $value
+     *
+     * @return array
+     */
     private function jsonFromString($value): array
     {
         if (is_string($value)) {

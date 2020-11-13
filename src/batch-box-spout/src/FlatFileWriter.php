@@ -8,6 +8,7 @@ use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 use Box\Spout\Writer\Common\Creator\WriterFactory;
 use Box\Spout\Writer\CSV\Writer as CsvWriter;
 use Box\Spout\Writer\WriterInterface;
+use Yokai\Batch\Exception\BadMethodCallException;
 use Yokai\Batch\Exception\RuntimeException;
 use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\Job\Item\FlushableInterface;
@@ -90,6 +91,10 @@ final class FlatFileWriter implements
      */
     public function write(iterable $items): void
     {
+        if ($this->writer === null) {
+            throw BadMethodCallException::itemComponentNotInitialized($this);
+        }
+
         if (!$this->headersAdded) {
             $this->headersAdded = true;
             if ($this->headers !== null) {
@@ -110,6 +115,10 @@ final class FlatFileWriter implements
      */
     public function flush(): void
     {
+        if ($this->writer === null) {
+            throw BadMethodCallException::itemComponentNotInitialized($this);
+        }
+
         $this->writer->close();
         $this->writer = null;
         $this->headersAdded = false;
