@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Yokai\Batch\Bridge\Doctrine\DBAL;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Schema\AbstractAsset;
 use Doctrine\DBAL\Schema\Schema;
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Yokai\Batch\Exception\CannotStoreJobExecutionException;
 use Yokai\Batch\Exception\JobExecutionNotFoundException;
 use Yokai\Batch\Exception\RuntimeException;
@@ -117,43 +117,43 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
         $this->logsCol = $options['logs_col'] ?? $this->logsCol;
 
         $this->types = [
-            $this->idCol => Type::STRING,
-            $this->jobNameCol => Type::STRING,
-            $this->statusCol => Type::INTEGER,
-            $this->parametersCol => Type::JSON,
-            $this->startTimeCol => Type::DATETIME_IMMUTABLE,
-            $this->endTimeCol => Type::DATETIME_IMMUTABLE,
-            $this->summaryCol => Type::JSON,
-            $this->failuresCol => Type::JSON,
-            $this->warningsCol => Type::JSON,
-            $this->childExecutionsCol => Type::JSON,
-            $this->logsCol => Type::TEXT,
+            $this->idCol => Types::STRING,
+            $this->jobNameCol => Types::STRING,
+            $this->statusCol => Types::INTEGER,
+            $this->parametersCol => Types::JSON,
+            $this->startTimeCol => Types::DATETIME_IMMUTABLE,
+            $this->endTimeCol => Types::DATETIME_IMMUTABLE,
+            $this->summaryCol => Types::JSON,
+            $this->failuresCol => Types::JSON,
+            $this->warningsCol => Types::JSON,
+            $this->childExecutionsCol => Types::JSON,
+            $this->logsCol => Types::TEXT,
         ];
 
         $this->schema = new Schema();
         $executionTable = $this->schema->createTable($this->table);
-        $executionTable->addColumn($this->idCol, Type::STRING)
+        $executionTable->addColumn($this->idCol, Types::STRING)
             ->setLength(128);
-        $executionTable->addColumn($this->jobNameCol, Type::STRING)
+        $executionTable->addColumn($this->jobNameCol, Types::STRING)
             ->setLength(255);
-        $executionTable->addColumn($this->statusCol, Type::INTEGER);
-        $executionTable->addColumn($this->parametersCol, Type::JSON);
-        $executionTable->addColumn($this->startTimeCol, Type::DATETIME)
+        $executionTable->addColumn($this->statusCol, Types::INTEGER);
+        $executionTable->addColumn($this->parametersCol, Types::JSON);
+        $executionTable->addColumn($this->startTimeCol, Types::DATETIME_IMMUTABLE)
             ->setNotnull(false);
-        $executionTable->addColumn($this->endTimeCol, Type::DATETIME)
+        $executionTable->addColumn($this->endTimeCol, Types::DATETIME_IMMUTABLE)
             ->setNotnull(false);
-        $executionTable->addColumn($this->summaryCol, Type::JSON);
-        $executionTable->addColumn($this->failuresCol, Type::JSON);
-        $executionTable->addColumn($this->warningsCol, Type::JSON);
-        $executionTable->addColumn($this->childExecutionsCol, Type::JSON);
-        $executionTable->addColumn($this->logsCol, Type::TEXT);
+        $executionTable->addColumn($this->summaryCol, Types::JSON);
+        $executionTable->addColumn($this->failuresCol, Types::JSON);
+        $executionTable->addColumn($this->warningsCol, Types::JSON);
+        $executionTable->addColumn($this->childExecutionsCol, Types::JSON);
+        $executionTable->addColumn($this->logsCol, Types::TEXT);
         $executionTable->setPrimaryKey([$this->idCol]);
     }
 
     public function createSchema(): void
     {
         foreach ($this->createSchemaSql() as $sql) {
-            $this->connection->exec($sql);
+            $this->connection->executeStatement($sql);
         }
     }
 
@@ -182,7 +182,7 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
     public function dropSchema(): void
     {
         foreach ($this->dropSchemaSql() as $sql) {
-            $this->connection->exec($sql);
+            $this->connection->executeStatement($sql);
         }
     }
 
@@ -263,7 +263,7 @@ SQL;
         yield from $this->queryList(
             "SELECT * FROM {$this->table} WHERE {$this->jobNameCol} = :jobName",
             ['jobName' => $jobName],
-            ['jobName' => Type::STRING]
+            ['jobName' => Types::STRING]
         );
     }
 
@@ -280,7 +280,7 @@ SQL;
         if (count($names) === 1) {
             $queryConditions[] = "{$this->jobNameCol} = :jobName";
             $queryParameters['jobName'] = array_shift($names);
-            $queryTypes['jobName'] = Type::STRING;
+            $queryTypes['jobName'] = Types::STRING;
         } elseif (count($names) > 1) {
             $queryConditions[] = "{$this->jobNameCol} IN (:jobNames)";
             $queryParameters['jobNames'] = $names;
@@ -291,7 +291,7 @@ SQL;
         if (count($ids) === 1) {
             $queryConditions[] = "{$this->idCol} = :id";
             $queryParameters['id'] = array_shift($ids);
-            $queryTypes['id'] = Type::STRING;
+            $queryTypes['id'] = Types::STRING;
         } elseif (count($ids) > 1) {
             $queryConditions[] = "{$this->idCol} IN (:ids)";
             $queryParameters['ids'] = $ids;
@@ -302,7 +302,7 @@ SQL;
         if (count($statuses) === 1) {
             $queryConditions[] = "{$this->statusCol} = :status";
             $queryParameters['status'] = array_shift($statuses);
-            $queryTypes['status'] = Type::INTEGER;
+            $queryTypes['status'] = Types::INTEGER;
         } elseif (count($statuses) > 1) {
             $queryConditions[] = "{$this->statusCol} IN (:statuses)";
             $queryParameters['statuses'] = $statuses;
@@ -362,9 +362,9 @@ SQL;
         $statement = $this->connection->executeQuery(
             "SELECT * FROM {$this->table} WHERE {$this->jobNameCol} = :jobName AND {$this->idCol} = :id",
             ['jobName' => $jobName, 'id' => $id],
-            ['jobName' => Type::STRING, 'id' => Type::STRING]
+            ['jobName' => Types::STRING, 'id' => Types::STRING]
         );
-        $rows = $statement->fetchAll();
+        $rows = $statement->fetchAllAssociative();
         switch (count($rows)) {
             case 1:
                 return array_shift($rows);
@@ -383,11 +383,11 @@ SQL;
     {
         $statement = $this->connection->executeQuery($query, $parameters, $types);
 
-        while ($row = $statement->fetch()) {
+        while ($row = $statement->fetchAssociative()) {
             yield $this->fromRow($row);
         }
 
-        $statement->closeCursor();
+        $statement->free();
     }
 
     private function toRow(JobExecution $jobExecution): array
