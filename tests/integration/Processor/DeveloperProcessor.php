@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Yokai\Batch\Tests\Integration\Processor;
+namespace Yokai\Batch\Sources\Tests\Integration\Processor;
 
 use Doctrine\ORM\EntityManager;
 use Yokai\Batch\Job\Item\ItemProcessorInterface;
-use Yokai\Batch\Tests\Integration\Entity\Badge;
-use Yokai\Batch\Tests\Integration\Entity\Developer;
-use Yokai\Batch\Tests\Integration\Entity\Repository;
+use Yokai\Batch\Sources\Tests\Integration\Entity\Badge;
+use Yokai\Batch\Sources\Tests\Integration\Entity\Developer;
+use Yokai\Batch\Sources\Tests\Integration\Entity\Repository;
 
 final class DeveloperProcessor implements ItemProcessorInterface
 {

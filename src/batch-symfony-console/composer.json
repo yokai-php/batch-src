@@ -21,6 +21,15 @@
       "Yokai\\Batch\\Bridge\\Symfony\\Console\\": "src/"
     }
   },
+  "require-dev": {
+    "phpspec/prophecy-phpunit": "^2.0",
+    "phpunit/phpunit": "^9.4"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Yokai\\Batch\\Tests\\Bridge\\Symfony\\Console\\": "tests/"
+    }
+  },
   "suggest": {
     "symfony/process": "Used to determine PHP bin location when using command job launcher (^4.4)"
   },

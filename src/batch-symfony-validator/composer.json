@@ -19,5 +19,9 @@
     "psr-4": {
       "Yokai\\Batch\\Bridge\\Symfony\\Validator\\": "src/"
     }
+  },
+  "require-dev": {
+    "phpspec/prophecy-phpunit": "^2.0",
+    "phpunit/phpunit": "^9.4"
   }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yokai\Batch\Tests\Integration\Entity;
+namespace Yokai\Batch\Sources\Tests\Integration\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
