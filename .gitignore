@@ -1,4 +1,5 @@
-/build/
+/.phpcs-cache
+/.phpunit.result.cache
 /tests/.artifacts/
 /vendor/
-/*.lock
+/composer.lock

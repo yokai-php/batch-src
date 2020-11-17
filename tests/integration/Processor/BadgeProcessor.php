@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Yokai\Batch\Tests\Integration\Processor;
+namespace Yokai\Batch\Sources\Tests\Integration\Processor;
 
 use Yokai\Batch\Job\Item\ItemProcessorInterface;
-use Yokai\Batch\Tests\Integration\Entity\Badge;
+use Yokai\Batch\Sources\Tests\Integration\Entity\Badge;
 
 final class BadgeProcessor implements ItemProcessorInterface
 {

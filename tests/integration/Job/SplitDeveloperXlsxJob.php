@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yokai\Batch\Tests\Integration\Job;
+namespace Yokai\Batch\Sources\Tests\Integration\Job;
 
 use Box\Spout\Common\Entity\Row;
 use Box\Spout\Common\Type;

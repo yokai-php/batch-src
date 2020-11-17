@@ -19,5 +19,14 @@
     "psr-4": {
       "Yokai\\Batch\\Bridge\\Doctrine\\ORM\\": "src/"
     }
+  },
+  "require-dev": {
+    "phpspec/prophecy-phpunit": "^2.0",
+    "phpunit/phpunit": "^9.4"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Yokai\\Batch\\Tests\\Bridge\\Doctrine\\ORM\\": "tests/"
+    }
   }
 }

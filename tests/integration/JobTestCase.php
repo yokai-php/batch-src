@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yokai\Batch\Tests\Integration;
+namespace Yokai\Batch\Sources\Tests\Integration;
 
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
@@ -20,7 +20,7 @@ use Yokai\Batch\Warning;
 
 abstract class JobTestCase extends TestCase
 {
-    private const ARTIFACTS_DIR = INTEGRATION_ARTIFACT_DIR;
+    private const ARTIFACTS_DIR = ARTIFACT_DIR;
     protected const STORAGE_DIR = self::ARTIFACTS_DIR . '/storage';
     protected const OUTPUT_DIR = self::ARTIFACTS_DIR . '/output';
 
@@ -29,7 +29,7 @@ abstract class JobTestCase extends TestCase
     /**
      * @inheritDoc
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         if (!self::$run) {
             self::$run = true;
