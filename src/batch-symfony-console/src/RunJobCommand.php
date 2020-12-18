@@ -36,7 +36,7 @@ final class RunJobCommand extends Command
     /**
      * @inheritDoc
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('yokai:batch:run')
@@ -47,10 +47,14 @@ final class RunJobCommand extends Command
     /**
      * @inheritDoc
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        /** @var string $jobName */
         $jobName = $input->getArgument('job');
-        $configuration = $this->decodeConfiguration($input->getArgument('configuration') ?? '[]');
+        /** @var string $configurationJson */
+        $configurationJson = $input->getArgument('configuration') ?? '[]';
+
+        $configuration = $this->decodeConfiguration($configurationJson);
 
         $execution = $this->jobLauncher->launch($jobName, $configuration);
 
@@ -115,7 +119,7 @@ final class RunJobCommand extends Command
      * @throws InvalidArgumentException
      * @return array
      */
-    private function decodeConfiguration($data): array
+    private function decodeConfiguration(string $data): array
     {
         $config = json_decode($data, true);
 

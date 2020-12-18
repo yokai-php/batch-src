@@ -20,7 +20,7 @@ class CommandRunner
     private $logDir;
 
     /**
-     * @var PhpExecutableFinder
+     * @var PhpExecutableFinder|null
      */
     private $phpLocator;
 

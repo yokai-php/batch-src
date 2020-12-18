@@ -126,6 +126,11 @@ final class YokaiBatchExtension extends Extension
             QueryableJobExecutionStorageInterface::class => false,
         ];
         $defaultStorageClass = $defaultStorageDefinition->getClass();
+        if ($defaultStorageClass === null) {
+            throw new LogicException(
+                \sprintf('Job execution storage service "%s", has no class.', $defaultStorage)
+            );
+        }
         foreach ($interfaces as $interface => $required) {
             if (!is_a($defaultStorageClass, $interface, true)) {
                 if ($required) {

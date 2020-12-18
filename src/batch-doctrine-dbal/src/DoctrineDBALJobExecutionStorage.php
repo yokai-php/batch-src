@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yokai\Batch\Bridge\Doctrine\DBAL;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Result;
 use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Schema\AbstractAsset;
 use Doctrine\DBAL\Schema\Schema;
@@ -359,6 +360,7 @@ SQL;
 
     private function fetchRow(string $jobName, string $id): array
     {
+        /** @var Result $statement */
         $statement = $this->connection->executeQuery(
             "SELECT * FROM {$this->table} WHERE {$this->jobNameCol} = :jobName AND {$this->idCol} = :id",
             ['jobName' => $jobName, 'id' => $id],
@@ -367,7 +369,12 @@ SQL;
         $rows = $statement->fetchAllAssociative();
         switch (count($rows)) {
             case 1:
-                return array_shift($rows);
+                $row = array_shift($rows);
+                if (!\is_array($row)) {
+                    throw UnexpectedValueException::type('array', $row);
+                }
+
+                return $row;
             case 0:
                 throw new RuntimeException(
                     \sprintf('No row found for job %s#%s.', $jobName, $id)
@@ -381,6 +388,7 @@ SQL;
 
     private function queryList(string $query, array $parameters, array $types): iterable
     {
+        /** @var Result $statement */
         $statement = $this->connection->executeQuery($query, $parameters, $types);
 
         while ($row = $statement->fetchAssociative()) {

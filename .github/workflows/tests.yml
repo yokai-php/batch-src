@@ -43,6 +43,40 @@ jobs:
       - name: "Run tests with phpunit/phpunit"
         run: vendor/bin/phpunit
 
+  phpstan:
+    name: "PhpStan"
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        include:
+          - php-version: 7.4
+            symfony-version: 5.1.*
+
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+
+      - name: "Setup PHP"
+        uses: shivammathur/setup-php@v2
+        with:
+          coverage: none
+          php-version: ${{ matrix.php-version }}
+
+      - name: "Install dependencies with composer"
+        run: |
+          composer require --no-update "symfony/console:${{ matrix.symfony-version }}"
+          composer require --no-update "symfony/filesystem:${{ matrix.symfony-version }}"
+          composer require --no-update "symfony/framework-bundle:${{ matrix.symfony-version }}"
+          composer require --no-update "symfony/messenger:${{ matrix.symfony-version }}"
+          composer require --no-update "symfony/process:${{ matrix.symfony-version }}"
+          composer require --no-update "symfony/serializer:${{ matrix.symfony-version }}"
+          composer require --no-update "symfony/validator:${{ matrix.symfony-version }}"
+          composer update --no-interaction --no-progress --no-suggest
+
+      - name: "Run static analyzis with phpstan/phpstan"
+        run: vendor/bin/phpstan analyze
+
   checkstyke:
     name: "Checkstyle"
     runs-on: ubuntu-latest
