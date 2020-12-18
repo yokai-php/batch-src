@@ -42,6 +42,10 @@ final class ObjectWriter implements ItemWriterInterface
     public function write(iterable $items): void
     {
         foreach ($items as $item) {
+            if (!is_object($item)) {
+                throw $this->createInvalidItemException($item);
+            }
+
             $this->getManagerForClass($item)->persist($item);
         }
 
@@ -57,12 +61,8 @@ final class ObjectWriter implements ItemWriterInterface
         $this->encounteredClasses = [];
     }
 
-    private function getManagerForClass($item): ObjectManager
+    private function getManagerForClass(object $item): ObjectManager
     {
-        if (!is_object($item)) {
-            throw $this->createInvalidItemException($item);
-        }
-
         $class = get_class($item);
 
         $manager = $this->managerForClass[$class] ?? null;
@@ -81,6 +81,11 @@ final class ObjectWriter implements ItemWriterInterface
         return $manager;
     }
 
+    /**
+     * @param mixed $item
+     *
+     * @return InvalidArgumentException
+     */
     private function createInvalidItemException($item): InvalidArgumentException
     {
         return new InvalidArgumentException(

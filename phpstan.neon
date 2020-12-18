@@ -1,0 +1,20 @@
+parameters:
+  level: max
+  checkMissingIterableValueType: false
+  checkGenericClassInNonGenericObjectType: false
+  paths:
+    - src/batch/src/
+    - src/batch-box-spout/src/
+    - src/batch-doctrine-dbal/src/
+    - src/batch-doctrine-orm/src/
+    - src/batch-doctrine-persistence/src/
+    - src/batch-symfony-console/src/
+    - src/batch-symfony-framework/src/
+    - src/batch-symfony-messenger/src/
+    - src/batch-symfony-serializer/src/
+    - src/batch-symfony-validator/src/
+
+  ignoreErrors:
+    # The DependencyInjection returns are complex to deal with
+    - message: '#.*NodeParentInterface\|null.*#'
+      path: ./src/batch-symfony-framework/src/DependencyInjection
