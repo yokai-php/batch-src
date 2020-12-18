@@ -14,17 +14,17 @@ final class NormalizeItemProcessor implements ItemProcessorInterface
     /**
      * @var NormalizerInterface
      */
-    private $normalizer;
+    private NormalizerInterface $normalizer;
 
     /**
      * @var string|null
      */
-    private $format;
+    private ?string $format;
 
     /**
      * @var array
      */
-    private $context;
+    private array $context;
 
     public function __construct(NormalizerInterface $normalizer, string $format = null, array $context = [])
     {

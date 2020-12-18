@@ -6,7 +6,7 @@ namespace Yokai\Batch\Tests\Bridge\Doctrine\Persistence;
 
 class Product
 {
-    public $id;
+    public string $id;
 
     public function __construct(string $id)
     {

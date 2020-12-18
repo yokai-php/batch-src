@@ -17,12 +17,12 @@ final class FilesystemJobExecutionStorage implements QueryableJobExecutionStorag
     /**
      * @var JobExecutionSerializerInterface
      */
-    private $serializer;
+    private JobExecutionSerializerInterface $serializer;
 
     /**
      * @var string
      */
-    private $directory;
+    private string $directory;
 
     /**
      * @param JobExecutionSerializerInterface $serializer

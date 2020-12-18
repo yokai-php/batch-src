@@ -14,22 +14,22 @@ final class DenormalizeItemProcessor implements ItemProcessorInterface
     /**
      * @var DenormalizerInterface
      */
-    private $denormalizer;
+    private DenormalizerInterface $denormalizer;
 
     /**
      * @var string
      */
-    private $type;
+    private string $type;
 
     /**
      * @var string|null
      */
-    private $format;
+    private ?string $format;
 
     /**
      * @var array
      */
-    private $context;
+    private array $context;
 
     public function __construct(
         DenormalizerInterface $denormalizer,

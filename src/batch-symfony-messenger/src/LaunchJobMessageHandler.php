@@ -12,7 +12,7 @@ final class LaunchJobMessageHandler implements MessageHandlerInterface
     /**
      * @var JobLauncherInterface
      */
-    private $jobLauncher;
+    private JobLauncherInterface $jobLauncher;
 
     public function __construct(JobLauncherInterface $jobLauncher)
     {

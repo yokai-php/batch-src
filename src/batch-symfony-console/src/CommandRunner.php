@@ -12,17 +12,17 @@ class CommandRunner
     /**
      * @var string
      */
-    private $consolePath;
+    private string $consolePath;
 
     /**
      * @var string
      */
-    private $logDir;
+    private string $logDir;
 
     /**
      * @var PhpExecutableFinder|null
      */
-    private $phpLocator;
+    private ?PhpExecutableFinder $phpLocator;
 
     public function __construct(string $binDir, string $logDir, PhpExecutableFinder $phpLocator = null)
     {

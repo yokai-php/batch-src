@@ -15,22 +15,22 @@ final class RunCommandJobLauncher implements JobLauncherInterface
     /**
      * @var JobExecutionFactory
      */
-    private $jobExecutionFactory;
+    private JobExecutionFactory $jobExecutionFactory;
 
     /**
      * @var CommandRunner
      */
-    private $commandRunner;
+    private CommandRunner $commandRunner;
 
     /**
      * @var string
      */
-    private $logFilename;
+    private string $logFilename;
 
     /**
      * @var JobExecutionStorageInterface
      */
-    private $jobExecutionStorage;
+    private JobExecutionStorageInterface $jobExecutionStorage;
 
     public function __construct(
         JobExecutionFactory $jobExecutionFactory,

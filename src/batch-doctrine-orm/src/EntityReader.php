@@ -14,12 +14,12 @@ final class EntityReader implements ItemReaderInterface
     /**
      * @var ManagerRegistry
      */
-    private $doctrine;
+    private ManagerRegistry $doctrine;
 
     /**
      * @var string
      */
-    private $class;
+    private string $class;
 
     public function __construct(ManagerRegistry $doctrine, string $class)
     {

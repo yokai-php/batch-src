@@ -35,7 +35,7 @@ class DoctrineDBALJobExecutionStorageTest extends TestCase
     /**
      * @var Connection
      */
-    private $connection;
+    private Connection $connection;
 
     protected function setUp(): void
     {
