@@ -14,6 +14,7 @@ use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Bridge\Symfony\Messenger\DispatchMessageJobLauncher;
 use Yokai\Batch\Bridge\Symfony\Messenger\LaunchJobMessage;
 use Yokai\Batch\Factory\JobExecutionFactory;
+use Yokai\Batch\Factory\UniqidJobExecutionIdGenerator;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
 
@@ -52,7 +53,7 @@ final class DispatchMessageJobLauncherTest extends TestCase
             ->willReturn(new Envelope(new LaunchJobMessage('unused')));
 
         $jobLauncher = new DispatchMessageJobLauncher(
-            new JobExecutionFactory(),
+            new JobExecutionFactory(new UniqidJobExecutionIdGenerator()),
             $storage->reveal(),
             $messageBus->reveal()
         );

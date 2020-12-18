@@ -8,6 +8,11 @@
         <defaults public="false"/>
 
         <service id="yokai_batch.job_execution_factory"
-                 class="Yokai\Batch\Factory\JobExecutionFactory"/>
+                 class="Yokai\Batch\Factory\JobExecutionFactory">
+            <argument type="service" id="Yokai\Batch\Factory\JobExecutionIdGeneratorInterface"/>
+        </service>
+
+        <service id="yokai_batch.job_execution_id_generator.uniqid"
+                 class="Yokai\Batch\Factory\UniqidJobExecutionIdGenerator"/>
     </services>
 </container>
