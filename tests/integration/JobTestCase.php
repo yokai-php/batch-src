@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Factory\JobExecutionFactory;
+use Yokai\Batch\Factory\UniqidJobExecutionIdGenerator;
 use Yokai\Batch\Failure;
 use Yokai\Batch\Job\JobInterface;
 use Yokai\Batch\JobExecution;
@@ -52,7 +53,7 @@ abstract class JobTestCase extends TestCase
 
         $launcher = new SimpleJobLauncher(
             self::createJobRegistry([$jobName => $job]),
-            new JobExecutionFactory(),
+            new JobExecutionFactory(new UniqidJobExecutionIdGenerator()),
             $jobExecutionStorage,
             null
         );

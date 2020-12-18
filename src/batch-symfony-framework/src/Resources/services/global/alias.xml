@@ -12,5 +12,8 @@
 
         <service id="Yokai\Batch\Registry\JobRegistry"
                  alias="yokai_batch.job_registry"/>
+
+        <service id="Yokai\Batch\Factory\JobExecutionIdGeneratorInterface"
+                 alias="yokai_batch.job_execution_id_generator.uniqid"/>
     </services>
 </container>
