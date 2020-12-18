@@ -165,7 +165,7 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
         $config = $this->connection->getConfiguration();
         $previousFilter = $config->getSchemaAssetsFilter();
 
-        $config->setSchemaAssetsFilter(function ($asset) use ($previousFilter, $toSchema): bool {
+        $config->setSchemaAssetsFilter(static function ($asset) use ($previousFilter, $toSchema): bool {
             $assetName = $asset instanceof AbstractAsset ? $asset->getName() : $asset;
 
             return $toSchema->hasTable($assetName)

@@ -133,7 +133,7 @@ final class FilesystemJobExecutionStorage implements QueryableJobExecutionStorag
         $order = null;
         switch ($query->sort()) {
             case Query::SORT_BY_START_ASC:
-                $order = function (JobExecution $left, JobExecution $right): int {
+                $order = static function (JobExecution $left, JobExecution $right): int {
                     return $left->getStartTime() <=> $right->getStartTime();
                 };
                 break;

@@ -26,7 +26,7 @@ final class DispatchMessageJobLauncherTest extends TestCase
     {
         $storage = $this->prophesize(JobExecutionStorageInterface::class);
         $jobExecutionAssertions = Argument::that(
-            function ($jobExecution): bool {
+            static function ($jobExecution): bool {
                 return $jobExecution instanceof JobExecution
                     && $jobExecution->getJobName() === 'testing'
                     && $jobExecution->getId() === '123456789'
@@ -42,7 +42,7 @@ final class DispatchMessageJobLauncherTest extends TestCase
 
         $messageBus = $this->prophesize(MessageBusInterface::class);
         $messageAssertions = Argument::that(
-            function ($message): bool {
+            static function ($message): bool {
                 return $message instanceof LaunchJobMessage
                     && $message->getJobName() === 'testing'
                     && $message->getConfiguration() === ['_id' => '123456789', 'foo' => ['bar']];
