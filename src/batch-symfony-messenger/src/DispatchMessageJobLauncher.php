@@ -40,8 +40,6 @@ final class DispatchMessageJobLauncher implements JobLauncherInterface
 
     public function launch(string $name, array $configuration = []): JobExecution
     {
-        $configuration['_id'] = $configuration['_id'] ?? uniqid();
-
         // create and store execution before dispatching message
         // guarantee job execution exists if message bus transport is asynchronous
         $jobExecution = $this->jobExecutionFactory->create($name, $configuration);
