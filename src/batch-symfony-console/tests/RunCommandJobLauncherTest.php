@@ -12,6 +12,7 @@ use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Bridge\Symfony\Console\CommandRunner;
 use Yokai\Batch\Bridge\Symfony\Console\RunCommandJobLauncher;
 use Yokai\Batch\Factory\JobExecutionFactory;
+use Yokai\Batch\Factory\UniqidJobExecutionIdGenerator;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
 
@@ -44,7 +45,7 @@ class RunCommandJobLauncherTest extends TestCase
         $storage->store($jobExecutionAssertions)->shouldBeCalledTimes(1);
 
         $launcher = new RunCommandJobLauncher(
-            new JobExecutionFactory(),
+            new JobExecutionFactory(new UniqidJobExecutionIdGenerator()),
             $commandRunner->reveal(),
             $storage->reveal(),
             'test.log'
