@@ -1,0 +1,58 @@
+name: Monorepo Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  # prepare monorepo packages list for next job
+  provide_packages_json:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.3
+          coverage: none
+      - uses: ramsey/composer-install@v1
+      - id: output_data
+        run: echo "::set-output name=matrix::$(vendor/bin/monorepo-builder packages-json)"
+
+    outputs:
+      matrix: ${{ steps.output_data.outputs.matrix }}
+
+  # split monorepo : push tag on child repositories
+  release_monorepo:
+    needs: provide_packages_json
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{ fromJson(needs.provide_packages_json.outputs.matrix) }}
+
+    steps:
+      - uses: actions/checkout@v2
+        # this is required for "WyriHaximus/github-action-get-previous-tag" workflow
+        # see https://github.com/actions/checkout#fetch-all-history-for-all-tags-and-branches
+        with:
+          fetch-depth: 0
+      # see https://github.com/WyriHaximus/github-action-get-previous-tag
+      - id: current_branch
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      - id: previous_tag
+        uses: WyriHaximus/github-action-get-previous-tag@master
+      - name: Monorepo Release of ${{ matrix.package }}
+        uses: symplify/github-action-monorepo-split@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        with:
+          package-directory: 'src/${{ matrix.package }}'
+          split-repository-organization: 'yokai-php'
+          split-repository-name: '${{ matrix.package }}'
+          branch: ${{ steps.current_branch.outputs.branch }}
+          tag: ${{ steps.previous_tag.outputs.tag }}
+          user-name: 'yann-eugone'
+          user-email: 'eugone.yann@gmail.com'

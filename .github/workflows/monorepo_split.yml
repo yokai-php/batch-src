@@ -1,0 +1,51 @@
+name: Monorepo Split
+
+on:
+  pull_request:
+  push:
+    branches:
+      - "0.*"
+
+jobs:
+  # prepare monorepo packages list for next job
+  provide_packages_json:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.3
+          coverage: none
+      - uses: ramsey/composer-install@v1
+      - id: output_data
+        run: echo "::set-output name=matrix::$(vendor/bin/monorepo-builder packages-json)"
+
+    outputs:
+      matrix: ${{ steps.output_data.outputs.matrix }}
+
+  # split monorepo : push branch on child repositories
+  split_monorepo:
+    needs: provide_packages_json
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{ fromJson(needs.provide_packages_json.outputs.matrix) }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - id: current_branch
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      - name: Monorepo Split of ${{ matrix.package }}
+        uses: symplify/github-action-monorepo-split@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        with:
+          package-directory: 'src/${{ matrix.package }}'
+          split-repository-organization: 'yokai-php'
+          split-repository-name: '${{ matrix.package }}'
+          branch: ${{ steps.current_branch.outputs.branch }}
+          user-name: 'yann-eugone'
+          user-email: 'eugone.yann@gmail.com'
