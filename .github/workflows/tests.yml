@@ -4,7 +4,7 @@ on:
   pull_request:
   push:
     branches:
-      - "0.x"
+      - "0.*"
 
 jobs:
   phpunit:
@@ -14,11 +14,11 @@ jobs:
     strategy:
       matrix:
         include:
-          - php-version: 7.2
+          - php-version: 7.3
             symfony-version: 4.4.*
           - php-version: 7.4
             symfony-version: 4.4.*
-          - php-version: 7.2
+          - php-version: 7.3
             symfony-version: 5.1.*
           - php-version: 7.4
             symfony-version: 5.1.*
