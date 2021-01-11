@@ -1,6 +1,9 @@
 /.idea/
+/.led/
 /.phpcs-cache
 /.phpunit.result.cache
+/config/
 /tests/.artifacts/
 /vendor/
 /composer.lock
+/docker-compose.yml
