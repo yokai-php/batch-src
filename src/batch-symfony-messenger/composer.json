@@ -1,32 +1,32 @@
 {
-  "name": "yokai/batch-symfony-messenger",
-  "description": "symfony/messenger bridge for yokai/batch",
-  "keywords": ["batch", "job", "execution", "async", "message"],
-  "type": "library",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Yann Eugoné",
-      "email": "eugone.yann@gmail.com"
+    "name": "yokai/batch-symfony-messenger",
+    "description": "symfony/messenger bridge for yokai/batch",
+    "keywords": ["batch", "job", "execution", "async", "message"],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Yann Eugoné",
+            "email": "eugone.yann@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.3",
+        "symfony/messenger": "^4.4|^5.0",
+        "yokai/batch": "^0.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Yokai\\Batch\\Bridge\\Symfony\\Messenger\\": "src/"
+        }
+    },
+    "require-dev": {
+        "phpspec/prophecy-phpunit": "^2.0",
+        "phpunit/phpunit": "^9.4"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Yokai\\Batch\\Tests\\Bridge\\Symfony\\Messenger\\": "tests/"
+        }
     }
-  ],
-  "require": {
-    "php": "^7.3",
-    "symfony/messenger": "^4.4|^5.0",
-    "yokai/batch": "self.version"
-  },
-  "autoload": {
-    "psr-4": {
-      "Yokai\\Batch\\Bridge\\Symfony\\Messenger\\": "src/"
-    }
-  },
-  "require-dev": {
-    "phpspec/prophecy-phpunit": "^2.0",
-    "phpunit/phpunit": "^9.4"
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Yokai\\Batch\\Tests\\Bridge\\Symfony\\Messenger\\": "tests/"
-    }
-  }
 }
