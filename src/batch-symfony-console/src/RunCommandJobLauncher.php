@@ -50,6 +50,7 @@ final class RunCommandJobLauncher implements JobLauncherInterface
     public function launch(string $name, array $configuration = []): JobExecution
     {
         $jobExecution = $this->jobExecutionFactory->create($name, $configuration);
+        $configuration['_id'] = $configuration['_id'] ?? $jobExecution->getId();
         $jobExecution->setStatus(BatchStatus::PENDING);
         $this->jobExecutionStorage->store($jobExecution);
 
