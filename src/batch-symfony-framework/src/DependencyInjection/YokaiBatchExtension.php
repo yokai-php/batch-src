@@ -89,8 +89,11 @@ final class YokaiBatchExtension extends Extension
                 ->register('yokai_batch.storage.dbal', DoctrineDBALJobExecutionStorage::class)
                 ->setArguments(
                     [
-                        new Reference("doctrine.dbal.{$config['dbal']['connection']}_connection"),
-                        $config['dbal']['options'],
+                        new Reference('doctrine'),
+                        [
+                            'connection' => $config['dbal']['connection'],
+                            'table' => $config['dbal']['table'],
+                        ],
                     ]
                 )
             ;

@@ -25,7 +25,7 @@ class CommandRunnerTest extends TestCase
         $phpLocator->find()->willReturn('/usr/bin/php');
 
         return $this->getMockBuilder(CommandRunner::class)
-            ->setMethods(['exec'])
+            ->onlyMethods(['exec'])
             ->setConstructorArgs(['/path/to/bin', '/path/to/logs', $phpLocator->reveal()])
             ->getMock();
     }

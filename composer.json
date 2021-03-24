@@ -14,7 +14,7 @@
     "composer-runtime-api": "^2.0",
     "box/spout": "^3.0",
     "doctrine/dbal": "^2.11",
-    "doctrine/orm": "^2.7",
+    "doctrine/orm": "^2.8",
     "doctrine/persistence": "^2.0",
     "psr/container": "^1.0",
     "psr/event-dispatcher": "^1.0",

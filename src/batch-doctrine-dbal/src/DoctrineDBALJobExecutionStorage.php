@@ -7,9 +7,10 @@ namespace Yokai\Batch\Bridge\Doctrine\DBAL;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Result;
 use Doctrine\DBAL\Exception as DBALException;
-use Doctrine\DBAL\Schema\AbstractAsset;
+use Doctrine\DBAL\Schema\Comparator;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\Persistence\ConnectionRegistry;
 use Yokai\Batch\Exception\CannotStoreJobExecutionException;
 use Yokai\Batch\Exception\JobExecutionNotFoundException;
 use Yokai\Batch\Exception\RuntimeException;
@@ -20,6 +21,11 @@ use Yokai\Batch\Storage\QueryableJobExecutionStorageInterface;
 
 final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStorageInterface
 {
+    private const DEFAULT_OPTIONS = [
+        'table' => 'yokai_batch_job_execution',
+        'connection' => null,
+    ];
+
     /**
      * @var Connection
      */
@@ -28,181 +34,38 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
     /**
      * @var string
      */
-    private string $table = 'yokai_batch_job_execution';
-
-    /**
-     * @var string
-     */
-    private string $idCol = 'id';
-
-    /**
-     * @var string
-     */
-    private string $jobNameCol = 'job_name';
-
-    /**
-     * @var string
-     */
-    private string $statusCol = 'status';
-
-    /**
-     * @var string
-     */
-    private string $parametersCol = 'parameters';
-
-    /**
-     * @var string
-     */
-    private string $startTimeCol = 'start_time';
-
-    /**
-     * @var string
-     */
-    private string $endTimeCol = 'end_time';
-
-    /**
-     * @var string
-     */
-    private string $summaryCol = 'summary';
-
-    /**
-     * @var string
-     */
-    private string $failuresCol = 'failures';
-
-    /**
-     * @var string
-     */
-    private string $warningsCol = 'warnings';
-
-    /**
-     * @var string
-     */
-    private string $childExecutionsCol = 'child_executions';
-
-    /**
-     * @var string
-     */
-    private string $logsCol = 'logs';
-
-    /**
-     * @var array
-     */
-    private array $types;
-
-    /**
-     * @var Schema
-     */
-    private Schema $schema;
+    private string $table;
 
     /**
      * @var JobExecutionRowNormalizer|null
      */
     private ?JobExecutionRowNormalizer $normalizer = null;
 
-    public function __construct(Connection $connection, array $options)
+    public function __construct(ConnectionRegistry $doctrine, array $options)
     {
+        $options = array_filter($options) + self::DEFAULT_OPTIONS;
+        $options['connection'] = $options['connection'] ?? $doctrine->getDefaultConnectionName();
+
+        $this->table = $options['table'];
+
+        /** @var Connection $connection */
+        $connection = $doctrine->getConnection($options['connection']);
         $this->connection = $connection;
-
-        $this->table = $options['table'] ?? $this->table;
-        $this->idCol = $options['id_col'] ?? $this->idCol;
-        $this->jobNameCol = $options['job_name_col'] ?? $this->jobNameCol;
-        $this->statusCol = $options['status_col'] ?? $this->statusCol;
-        $this->parametersCol = $options['parameters_col'] ?? $this->parametersCol;
-        $this->startTimeCol = $options['start_time_col'] ?? $this->startTimeCol;
-        $this->endTimeCol = $options['end_time_col'] ?? $this->endTimeCol;
-        $this->summaryCol = $options['summary_col'] ?? $this->summaryCol;
-        $this->failuresCol = $options['failures_col'] ?? $this->failuresCol;
-        $this->warningsCol = $options['warnings_col'] ?? $this->warningsCol;
-        $this->childExecutionsCol = $options['child_executions_col'] ?? $this->childExecutionsCol;
-        $this->logsCol = $options['logs_col'] ?? $this->logsCol;
-
-        $this->types = [
-            $this->idCol => Types::STRING,
-            $this->jobNameCol => Types::STRING,
-            $this->statusCol => Types::INTEGER,
-            $this->parametersCol => Types::JSON,
-            $this->startTimeCol => Types::DATETIME_IMMUTABLE,
-            $this->endTimeCol => Types::DATETIME_IMMUTABLE,
-            $this->summaryCol => Types::JSON,
-            $this->failuresCol => Types::JSON,
-            $this->warningsCol => Types::JSON,
-            $this->childExecutionsCol => Types::JSON,
-            $this->logsCol => Types::TEXT,
-        ];
-
-        $this->schema = new Schema();
-        $executionTable = $this->schema->createTable($this->table);
-        $executionTable->addColumn($this->idCol, Types::STRING)
-            ->setLength(128);
-        $executionTable->addColumn($this->jobNameCol, Types::STRING)
-            ->setLength(255);
-        $executionTable->addColumn($this->statusCol, Types::INTEGER);
-        $executionTable->addColumn($this->parametersCol, Types::JSON);
-        $executionTable->addColumn($this->startTimeCol, Types::DATETIME_IMMUTABLE)
-            ->setNotnull(false);
-        $executionTable->addColumn($this->endTimeCol, Types::DATETIME_IMMUTABLE)
-            ->setNotnull(false);
-        $executionTable->addColumn($this->summaryCol, Types::JSON);
-        $executionTable->addColumn($this->failuresCol, Types::JSON);
-        $executionTable->addColumn($this->warningsCol, Types::JSON);
-        $executionTable->addColumn($this->childExecutionsCol, Types::JSON);
-        $executionTable->addColumn($this->logsCol, Types::TEXT);
-        $executionTable->setPrimaryKey([$this->idCol]);
     }
 
     public function createSchema(): void
     {
-        foreach ($this->createSchemaSql() as $sql) {
+        $assetFilter = $this->connection->getConfiguration()->getSchemaAssetsFilter();
+        $this->connection->getConfiguration()->setSchemaAssetsFilter(null);
+
+        $comparator = new Comparator();
+        $schemaDiff = $comparator->compare($this->connection->getSchemaManager()->createSchema(), $this->getSchema());
+
+        foreach ($schemaDiff->toSaveSql($this->connection->getDatabasePlatform()) as $sql) {
             $this->connection->executeStatement($sql);
         }
-    }
 
-    public function createSchemaSql(): array
-    {
-        $toSchema = $this->schema;
-
-        $config = $this->connection->getConfiguration();
-        $previousFilter = $config->getSchemaAssetsFilter();
-
-        $config->setSchemaAssetsFilter(static function ($asset) use ($previousFilter, $toSchema): bool {
-            $assetName = $asset instanceof AbstractAsset ? $asset->getName() : $asset;
-
-            return $toSchema->hasTable($assetName)
-                || $toSchema->hasSequence($assetName)
-                || ($previousFilter && $previousFilter($asset));
-        });
-
-        $fromSchema = $this->connection->getSchemaManager()->createSchema();
-
-        $config->setSchemaAssetsFilter($previousFilter);
-
-        return $fromSchema->getMigrateToSql($toSchema, $this->connection->getDatabasePlatform());
-    }
-
-    public function dropSchema(): void
-    {
-        foreach ($this->dropSchemaSql() as $sql) {
-            $this->connection->executeStatement($sql);
-        }
-    }
-
-    public function dropSchemaSql(): array
-    {
-        $platform = $this->connection->getDatabasePlatform()->getName();
-
-        switch ($platform) {
-            case 'mysql':
-            case 'sqlite':
-                $dropTable = <<<SQL
-DROP TABLE {$this->table}
-SQL;
-                break;
-            default:
-                throw UnexpectedValueException::enum(['mysql', 'sqlite'], $platform, 'Platform is not supported.');
-        }
-
-        return [$dropTable];
+        $this->connection->getConfiguration()->setSchemaAssetsFilter($assetFilter);
     }
 
     /**
@@ -221,9 +84,9 @@ SQL;
 
         try {
             if ($stored) {
-                $this->connection->update($this->table, $data, $this->identity($execution), $this->types);
+                $this->connection->update($this->table, $data, $this->identity($execution), $this->types());
             } else {
-                $this->connection->insert($this->table, $data, $this->types);
+                $this->connection->insert($this->table, $data, $this->types());
             }
         } catch (DBALException $exception) {
             throw new CannotStoreJobExecutionException($execution->getJobName(), $execution->getId(), $exception);
@@ -261,8 +124,13 @@ SQL;
      */
     public function list(string $jobName): iterable
     {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('*')
+            ->from($this->table)
+            ->where($qb->expr()->eq('job_name', ':jobName'));
+
         yield from $this->queryList(
-            "SELECT * FROM {$this->table} WHERE {$this->jobNameCol} = :jobName",
+            $qb->getSQL(),
             ['jobName' => $jobName],
             ['jobName' => Types::STRING]
         );
@@ -273,96 +141,131 @@ SQL;
      */
     public function query(Query $query): iterable
     {
-        $queryConditions = [];
         $queryParameters = [];
         $queryTypes = [];
 
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('*')
+            ->from($this->table);
+
         $names = $query->jobs();
         if (count($names) === 1) {
-            $queryConditions[] = "{$this->jobNameCol} = :jobName";
+            $qb->andWhere($qb->expr()->eq('job_name', ':jobName'));
             $queryParameters['jobName'] = array_shift($names);
             $queryTypes['jobName'] = Types::STRING;
         } elseif (count($names) > 1) {
-            $queryConditions[] = "{$this->jobNameCol} IN (:jobNames)";
+            $qb->andWhere($qb->expr()->in('job_name', ':jobNames'));
             $queryParameters['jobNames'] = $names;
             $queryTypes['jobNames'] = Connection::PARAM_STR_ARRAY;
         }
 
         $ids = $query->ids();
         if (count($ids) === 1) {
-            $queryConditions[] = "{$this->idCol} = :id";
+            $qb->andWhere($qb->expr()->eq('id', ':id'));
             $queryParameters['id'] = array_shift($ids);
             $queryTypes['id'] = Types::STRING;
         } elseif (count($ids) > 1) {
-            $queryConditions[] = "{$this->idCol} IN (:ids)";
+            $qb->andWhere($qb->expr()->in('id', ':ids'));
             $queryParameters['ids'] = $ids;
             $queryTypes['ids'] = Connection::PARAM_STR_ARRAY;
         }
 
         $statuses = $query->statuses();
         if (count($statuses) === 1) {
-            $queryConditions[] = "{$this->statusCol} = :status";
+            $qb->andWhere($qb->expr()->eq('status', ':status'));
             $queryParameters['status'] = array_shift($statuses);
             $queryTypes['status'] = Types::INTEGER;
         } elseif (count($statuses) > 1) {
-            $queryConditions[] = "{$this->statusCol} IN (:statuses)";
+            $qb->andWhere($qb->expr()->in('status', ':statuses'));
             $queryParameters['statuses'] = $statuses;
             $queryTypes['statuses'] = Connection::PARAM_INT_ARRAY;
         }
 
-        $conditions = '';
-        if (count($queryConditions) > 0) {
-            $conditions = 'WHERE ' . implode(' AND ', $queryConditions);
-        }
-
-        $order = '';
         switch ($query->sort()) {
             case Query::SORT_BY_START_ASC:
-                $order = "ORDER BY {$this->startTimeCol} ASC";
+                $qb->orderBy('start_time', 'asc');
                 break;
             case Query::SORT_BY_START_DESC:
-                $order = "ORDER BY {$this->startTimeCol} DESC";
+                $qb->orderBy('start_time', 'desc');
                 break;
             case Query::SORT_BY_END_ASC:
-                $order = "ORDER BY {$this->endTimeCol} ASC";
+                $qb->orderBy('end_time', 'asc');
                 break;
             case Query::SORT_BY_END_DESC:
-                $order = "ORDER BY {$this->endTimeCol} DESC";
+                $qb->orderBy('end_time', 'desc');
                 break;
         }
 
-        $count = $query->limit();
-        $offset = $query->offset();
-        $platform = $this->connection->getDatabasePlatform()->getName();
-        switch ($platform) {
-            case 'mysql':
-            case 'sqlite':
-                $limit = "LIMIT {$offset}, {$count}";
-                break;
-            default:
-                throw UnexpectedValueException::enum(['mysql', 'sqlite'], $platform, 'Platform is not supported.');
-        }
+        $qb->setMaxResults($query->limit());
+        $qb->setFirstResult($query->offset());
 
-        yield from $this->queryList(
-            "SELECT * FROM {$this->table} {$conditions} {$order} {$limit}",
-            $queryParameters,
-            $queryTypes
-        );
+        yield from $this->queryList($qb->getSQL(), $queryParameters, $queryTypes);
+    }
+
+    private function getSchema(): Schema
+    {
+        $schema = new Schema();
+        $table = $schema->createTable($this->table);
+        $table->addColumn('id', Types::STRING)
+            ->setLength(128);
+        $table->addColumn('job_name', Types::STRING)
+            ->setLength(255);
+        $table->addColumn('status', Types::INTEGER);
+        $table->addColumn('parameters', Types::JSON);
+        $table->addColumn('start_time', Types::DATETIME_IMMUTABLE)
+            ->setNotnull(false);
+        $table->addColumn('end_time', Types::DATETIME_IMMUTABLE)
+            ->setNotnull(false);
+        $table->addColumn('summary', Types::JSON);
+        $table->addColumn('failures', Types::JSON);
+        $table->addColumn('warnings', Types::JSON);
+        $table->addColumn('child_executions', Types::JSON);
+        $table->addColumn('logs', Types::TEXT);
+        $table->setPrimaryKey(['id']);
+        $table->addIndex(['job_name']);
+        $table->addIndex(['status']);
+        $table->addIndex(['start_time']);
+        $table->addIndex(['end_time']);
+
+        return $schema;
+    }
+
+    private function types(): array
+    {
+        return [
+            'id' => Types::STRING,
+            'job_name' => Types::STRING,
+            'status' => Types::INTEGER,
+            'parameters' => Types::JSON,
+            'start_time' => Types::DATETIME_IMMUTABLE,
+            'end_time' => Types::DATETIME_IMMUTABLE,
+            'summary' => Types::JSON,
+            'failures' => Types::JSON,
+            'warnings' => Types::JSON,
+            'child_executions' => Types::JSON,
+            'logs' => Types::TEXT,
+        ];
     }
 
     private function identity(JobExecution $execution): array
     {
         return [
-            $this->jobNameCol => $execution->getJobName(),
-            $this->idCol => $execution->getId(),
+            'job_name' => $execution->getJobName(),
+            'id' => $execution->getId(),
         ];
     }
 
     private function fetchRow(string $jobName, string $id): array
     {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('*')
+            ->from($this->table)
+            ->where($qb->expr()->eq('job_name', ':jobName'))
+            ->andWhere($qb->expr()->eq('id', ':id'));
+
         /** @var Result $statement */
         $statement = $this->connection->executeQuery(
-            "SELECT * FROM {$this->table} WHERE {$this->jobNameCol} = :jobName AND {$this->idCol} = :id",
+            $qb->getSQL(),
             ['jobName' => $jobName, 'id' => $id],
             ['jobName' => Types::STRING, 'id' => Types::STRING]
         );
@@ -411,20 +314,7 @@ SQL;
     private function getNormalizer(): JobExecutionRowNormalizer
     {
         if ($this->normalizer === null) {
-            $this->normalizer = new JobExecutionRowNormalizer(
-                $this->idCol,
-                $this->jobNameCol,
-                $this->statusCol,
-                $this->parametersCol,
-                $this->startTimeCol,
-                $this->endTimeCol,
-                $this->summaryCol,
-                $this->failuresCol,
-                $this->warningsCol,
-                $this->childExecutionsCol,
-                $this->logsCol,
-                $this->connection->getDatabasePlatform()->getDateTimeFormatString()
-            );
+            $this->normalizer = new JobExecutionRowNormalizer($this->connection->getDatabasePlatform());
         }
 
         return $this->normalizer;
