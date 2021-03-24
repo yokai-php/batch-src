@@ -6,6 +6,7 @@ namespace Yokai\Batch\Bridge\Doctrine\DBAL;
 
 use DateTimeImmutable;
 use DateTimeInterface;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\Failure;
@@ -21,149 +22,71 @@ use Yokai\Batch\Warning;
 final class JobExecutionRowNormalizer
 {
     /**
-     * @var string
+     * @var AbstractPlatform
      */
-    private string $idCol;
+    private AbstractPlatform $platform;
 
-    /**
-     * @var string
-     */
-    private string $jobNameCol;
-
-    /**
-     * @var string
-     */
-    private string $statusCol;
-
-    /**
-     * @var string
-     */
-    private string $parametersCol;
-
-    /**
-     * @var string
-     */
-    private string $startTimeCol;
-
-    /**
-     * @var string
-     */
-    private string $endTimeCol;
-
-    /**
-     * @var string
-     */
-    private string $summaryCol;
-
-    /**
-     * @var string
-     */
-    private string $failuresCol;
-
-    /**
-     * @var string
-     */
-    private string $warningsCol;
-
-    /**
-     * @var string
-     */
-    private string $childExecutionsCol;
-
-    /**
-     * @var string
-     */
-    private string $logsCol;
-
-    /**
-     * @var string
-     */
-    private string $dateFormat;
-
-    public function __construct(
-        string $idCol,
-        string $jobNameCol,
-        string $statusCol,
-        string $parametersCol,
-        string $startTimeCol,
-        string $endTimeCol,
-        string $summaryCol,
-        string $failuresCol,
-        string $warningsCol,
-        string $childExecutionsCol,
-        string $logsCol,
-        string $dateFormat
-    ) {
-        $this->idCol = $idCol;
-        $this->jobNameCol = $jobNameCol;
-        $this->statusCol = $statusCol;
-        $this->parametersCol = $parametersCol;
-        $this->startTimeCol = $startTimeCol;
-        $this->endTimeCol = $endTimeCol;
-        $this->summaryCol = $summaryCol;
-        $this->failuresCol = $failuresCol;
-        $this->warningsCol = $warningsCol;
-        $this->childExecutionsCol = $childExecutionsCol;
-        $this->logsCol = $logsCol;
-        $this->dateFormat = $dateFormat;
+    public function __construct(AbstractPlatform $platform)
+    {
+        $this->platform = $platform;
     }
 
     public function toRow(JobExecution $jobExecution): array
     {
         return [
-            $this->idCol => $jobExecution->getId(),
-            $this->jobNameCol => $jobExecution->getJobName(),
-            $this->statusCol => $jobExecution->getStatus()->getValue(),
-            $this->parametersCol => iterator_to_array($jobExecution->getParameters()),
-            $this->startTimeCol => $jobExecution->getStartTime(),
-            $this->endTimeCol => $jobExecution->getEndTime(),
-            $this->summaryCol => $jobExecution->getSummary()->all(),
-            $this->failuresCol => array_map([$this, 'failureToArray'], $jobExecution->getFailures()),
-            $this->warningsCol => array_map([$this, 'warningToArray'], $jobExecution->getWarnings()),
-            $this->childExecutionsCol => array_map([$this, 'toChildRow'], $jobExecution->getChildExecutions()),
-            $this->logsCol => $jobExecution->getParentExecution() === null ? (string)$jobExecution->getLogs() : null,
+            'id' => $jobExecution->getId(),
+            'job_name' => $jobExecution->getJobName(),
+            'status' => $jobExecution->getStatus()->getValue(),
+            'parameters' => iterator_to_array($jobExecution->getParameters()),
+            'start_time' => $jobExecution->getStartTime(),
+            'end_time' => $jobExecution->getEndTime(),
+            'summary' => $jobExecution->getSummary()->all(),
+            'failures' => array_map([$this, 'failureToArray'], $jobExecution->getFailures()),
+            'warnings' => array_map([$this, 'warningToArray'], $jobExecution->getWarnings()),
+            'child_executions' => array_map([$this, 'toChildRow'], $jobExecution->getChildExecutions()),
+            'logs' => $jobExecution->getParentExecution() === null ? (string)$jobExecution->getLogs() : null,
         ];
     }
 
     public function fromRow(array $data, JobExecution $parent = null): JobExecution
     {
-        $data[$this->statusCol] = intval($data[$this->statusCol]);
-        $data[$this->parametersCol] = $this->jsonFromString($data[$this->parametersCol]);
-        $data[$this->summaryCol] = $this->jsonFromString($data[$this->summaryCol]);
-        $data[$this->failuresCol] = $this->jsonFromString($data[$this->failuresCol]);
-        $data[$this->warningsCol] = $this->jsonFromString($data[$this->warningsCol]);
-        $data[$this->childExecutionsCol] = $this->jsonFromString($data[$this->childExecutionsCol]);
+        $data['status'] = intval($data['status']);
+        $data['parameters'] = $this->jsonFromString($data['parameters']);
+        $data['summary'] = $this->jsonFromString($data['summary']);
+        $data['failures'] = $this->jsonFromString($data['failures']);
+        $data['warnings'] = $this->jsonFromString($data['warnings']);
+        $data['child_executions'] = $this->jsonFromString($data['child_executions']);
 
-        $name = $data[$this->jobNameCol];
-        $status = new BatchStatus(intval($data[$this->statusCol]));
-        $parameters = new JobParameters($data[$this->parametersCol]);
-        $summary = new Summary($data[$this->summaryCol]);
+        $name = $data['job_name'];
+        $status = new BatchStatus(intval($data['status']));
+        $parameters = new JobParameters($data['parameters']);
+        $summary = new Summary($data['summary']);
 
         if ($parent !== null) {
             $jobExecution = JobExecution::createChild($parent, $name, $status, $parameters, $summary);
             $parent->addChildExecution($jobExecution);
         } else {
             $jobExecution = JobExecution::createRoot(
-                $data[$this->idCol],
+                $data['id'],
                 $name,
                 $status,
                 $parameters,
                 $summary,
-                new JobExecutionLogs($data[$this->logsCol])
+                new JobExecutionLogs($data['logs'])
             );
         }
 
-        $jobExecution->setStartTime($this->dateFromString($data[$this->startTimeCol]));
-        $jobExecution->setEndTime($this->dateFromString($data[$this->endTimeCol]));
+        $jobExecution->setStartTime($this->dateFromString($data['start_time']));
+        $jobExecution->setEndTime($this->dateFromString($data['end_time']));
 
-        foreach ($data[$this->failuresCol] as $failureData) {
+        foreach ($data['failures'] as $failureData) {
             $jobExecution->addFailure($this->failureFromArray($failureData));
         }
-        foreach ($data[$this->warningsCol] as $warningData) {
+        foreach ($data['warnings'] as $warningData) {
             $jobExecution->addWarning($this->warningFromArray($warningData));
         }
 
-        foreach ($data[$this->childExecutionsCol] as $childExecutionData) {
+        foreach ($data['child_executions'] as $childExecutionData) {
             $jobExecution->addChildExecution($this->fromRow($childExecutionData, $jobExecution));
         }
 
@@ -173,15 +96,15 @@ final class JobExecutionRowNormalizer
     public function toChildRow(JobExecution $jobExecution): array
     {
         return [
-            $this->jobNameCol => $jobExecution->getJobName(),
-            $this->statusCol => $jobExecution->getStatus()->getValue(),
-            $this->parametersCol => iterator_to_array($jobExecution->getParameters()),
-            $this->startTimeCol => $this->toDateString($jobExecution->getStartTime()),
-            $this->endTimeCol => $this->toDateString($jobExecution->getEndTime()),
-            $this->summaryCol => $jobExecution->getSummary()->all(),
-            $this->failuresCol => array_map([$this, 'failureToArray'], $jobExecution->getFailures()),
-            $this->warningsCol => array_map([$this, 'warningToArray'], $jobExecution->getWarnings()),
-            $this->childExecutionsCol => array_map([$this, 'toChildRow'], $jobExecution->getChildExecutions()),
+            'job_name' => $jobExecution->getJobName(),
+            'status' => $jobExecution->getStatus()->getValue(),
+            'parameters' => iterator_to_array($jobExecution->getParameters()),
+            'start_time' => $this->toDateString($jobExecution->getStartTime()),
+            'end_time' => $this->toDateString($jobExecution->getEndTime()),
+            'summary' => $jobExecution->getSummary()->all(),
+            'failures' => array_map([$this, 'failureToArray'], $jobExecution->getFailures()),
+            'warnings' => array_map([$this, 'warningToArray'], $jobExecution->getWarnings()),
+            'child_executions' => array_map([$this, 'toChildRow'], $jobExecution->getChildExecutions()),
         ];
     }
 
@@ -209,7 +132,7 @@ final class JobExecutionRowNormalizer
             return null;
         }
 
-        return DateTimeImmutable::createFromFormat($this->dateFormat, $date) ?: null;
+        return DateTimeImmutable::createFromFormat($this->platform->getDateTimeFormatString(), $date) ?: null;
     }
 
     private function failureToArray(Failure $failure): array
@@ -254,6 +177,6 @@ final class JobExecutionRowNormalizer
             return null;
         }
 
-        return $date->format($this->dateFormat);
+        return $date->format($this->platform->getDateTimeFormatString());
     }
 }

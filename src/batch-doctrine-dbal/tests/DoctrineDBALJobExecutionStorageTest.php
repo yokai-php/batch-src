@@ -6,6 +6,7 @@ namespace Yokai\Batch\Tests\Bridge\Doctrine\DBAL;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
+use Doctrine\Persistence\ConnectionRegistry;
 use Generator;
 use PHPUnit\Framework\TestCase;
 use Yokai\Batch\BatchStatus;
@@ -17,29 +18,25 @@ use Yokai\Batch\Storage\QueryBuilder;
 
 class DoctrineDBALJobExecutionStorageTest extends TestCase
 {
-    private const TABLE = 'yokai_batch_job_execution';
-    private const COLUMNS = [
-        'id',
-        'job_name',
-        'status',
-        'parameters',
-        'start_time',
-        'end_time',
-        'summary',
-        'failures',
-        'warnings',
-        'child_executions',
-        'logs',
-    ];
-
     /**
      * @var Connection
      */
     private Connection $connection;
 
+    /**
+     * @var ConnectionRegistry
+     */
+    private ConnectionRegistry $connections;
+
     protected function setUp(): void
     {
         $this->connection = DriverManager::getConnection(['url' => getenv('DATABASE_URL')]);
+        $this->connections = $this->createMock(ConnectionRegistry::class);
+        $this->connections->method('getDefaultConnectionName')
+            ->willReturn('default');
+        $this->connections->method('getConnection')
+            ->with('default')
+            ->willReturn($this->connection);
     }
 
     protected function tearDown(): void
@@ -49,66 +46,61 @@ class DoctrineDBALJobExecutionStorageTest extends TestCase
 
     private function createStorage(array $options = []): DoctrineDBALJobExecutionStorage
     {
-        return new DoctrineDBALJobExecutionStorage($this->connection, $options);
+        return new DoctrineDBALJobExecutionStorage($this->connections, $options);
     }
 
     public function testCreateStandardTable(): void
     {
         $schemaManager = $this->connection->getSchemaManager();
 
-        self::assertFalse($schemaManager->tablesExist([self::TABLE]));
+        self::assertFalse($schemaManager->tablesExist(['yokai_batch_job_execution']));
         $this->createStorage()->createSchema();
-        self::assertTrue($schemaManager->tablesExist([self::TABLE]));
+        self::assertTrue($schemaManager->tablesExist(['yokai_batch_job_execution']));
 
-        $columns = $schemaManager->listTableColumns(self::TABLE);
-        self::assertEquals(self::COLUMNS, array_keys($columns));
+        $columns = $schemaManager->listTableColumns('yokai_batch_job_execution');
+        self::assertEquals(
+            [
+                'id',
+                'job_name',
+                'status',
+                'parameters',
+                'start_time',
+                'end_time',
+                'summary',
+                'failures',
+                'warnings',
+                'child_executions',
+                'logs',
+            ],
+            array_keys($columns)
+        );
     }
 
     public function testCreateCustomTable(): void
     {
-        $table = 'acme_job_executions';
-        $cols = [
-            'uid',
-            'job',
-            'state',
-            'config',
-            'started',
-            'ended',
-            'info',
-            'errors',
-            'warns',
-            'children',
-            'logging',
-        ];
-
-        $options = array_merge(
-            ['table' => $table],
-            array_combine(
-                [
-                    'id_col',
-                    'job_name_col',
-                    'status_col',
-                    'parameters_col',
-                    'start_time_col',
-                    'end_time_col',
-                    'summary_col',
-                    'failures_col',
-                    'warnings_col',
-                    'child_executions_col',
-                    'logs_col',
-                ],
-                $cols
-            )
-        );
-
         $schemaManager = $this->connection->getSchemaManager();
 
-        self::assertFalse($schemaManager->tablesExist([$table]));
-        $this->createStorage($options)->createSchema();
-        self::assertTrue($schemaManager->tablesExist([$table]));
+        self::assertFalse($schemaManager->tablesExist(['acme_job_executions']));
+        $this->createStorage(['table' => 'acme_job_executions'])->createSchema();
+        self::assertTrue($schemaManager->tablesExist(['acme_job_executions']));
 
-        $columns = $schemaManager->listTableColumns($table);
-        self::assertEquals($cols, array_keys($columns));
+        $columns = $schemaManager->listTableColumns('acme_job_executions');
+        self::assertEquals(
+            [
+                'id',
+                'job_name',
+                'status',
+                'parameters',
+                'start_time',
+                'end_time',
+                'summary',
+                'failures',
+                'warnings',
+                'child_executions',
+                'logs',
+            ],
+            array_keys($columns)
+        );
     }
 
     public function testStoreInsert(): void
