@@ -31,7 +31,7 @@ class ObjectWriterTest extends TestCase
             ->shouldBeCalledTimes(1);
         $userManager->flush()
             ->shouldBeCalledTimes(1);
-        $userManager->clear(User::class)
+        $userManager->clear()
             ->shouldBeCalledTimes(1);
 
         /** @var ObjectProphecy|ObjectManager $groupManager */
@@ -40,7 +40,7 @@ class ObjectWriterTest extends TestCase
             ->shouldBeCalledTimes(1);
         $groupManager->flush()
             ->shouldBeCalledTimes(1);
-        $groupManager->clear(Group::class)
+        $groupManager->clear()
             ->shouldBeCalledTimes(1);
 
         /** @var ObjectProphecy|ObjectManager $productManager */
@@ -49,7 +49,7 @@ class ObjectWriterTest extends TestCase
             ->shouldNotBeCalled();
         $productManager->flush()
             ->shouldNotBeCalled();
-        $productManager->clear(Argument::any())
+        $productManager->clear()
             ->shouldNotBeCalled();
 
         /** @var ObjectProphecy|ManagerRegistry $doctrine */

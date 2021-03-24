@@ -45,8 +45,8 @@ final class EntityReader implements ItemReaderInterface
             ->select('e')
             ->from($this->class, 'e');
 
-        foreach ($query->getQuery()->iterate() as $row) {
-            yield $row[0];
+        foreach ($query->getQuery()->toIterable() as [$entity]) {
+            yield $entity;
         }
     }
 }

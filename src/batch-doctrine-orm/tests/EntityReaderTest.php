@@ -24,7 +24,7 @@ class EntityReaderTest extends TestCase
     {
         /** @var ObjectProphecy|AbstractQuery $query */
         $query = $this->prophesize(AbstractQuery::class);
-        $query->iterate()
+        $query->toIterable()
             ->shouldBeCalledTimes(1)
             ->willReturn(
                 new \ArrayIterator([[$user1 = new User('1')], [$user2 = new User('2')], [$user3 = new User('3')]])
