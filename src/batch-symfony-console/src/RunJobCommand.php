@@ -22,7 +22,7 @@ final class RunJobCommand extends Command
     /**
      * @var JobLauncherInterface
      */
-    private $jobLauncher;
+    private JobLauncherInterface $jobLauncher;
 
     /**
      * @param JobLauncherInterface $jobLauncher

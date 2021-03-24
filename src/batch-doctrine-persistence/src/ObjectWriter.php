@@ -14,22 +14,22 @@ final class ObjectWriter implements ItemWriterInterface
     /**
      * @var ManagerRegistry
      */
-    private $doctrine;
+    private ManagerRegistry $doctrine;
 
     /**
      * @var ObjectManager[]
      */
-    private $encounteredManagers = [];
+    private array $encounteredManagers = [];
 
     /**
      * @var ObjectManager[]
      */
-    private $encounteredClasses = [];
+    private array $encounteredClasses = [];
 
     /**
      * @var ObjectManager[]
      */
-    private $managerForClass = [];
+    private array $managerForClass = [];
 
     public function __construct(ManagerRegistry $doctrine)
     {

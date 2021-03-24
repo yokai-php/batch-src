@@ -6,7 +6,7 @@ namespace Yokai\Batch\Tests\Bridge\Doctrine\ORM;
 
 class User
 {
-    public $id;
+    public string $id;
 
     public function __construct(string $id)
     {

@@ -34,7 +34,7 @@ class RunCommandJobLauncherTest extends TestCase
         $storage = $this->prophesize(JobExecutionStorageInterface::class);
 
         $jobExecutionAssertions = Argument::that(
-            function ($jobExecution): bool {
+            static function ($jobExecution): bool {
                 return $jobExecution instanceof JobExecution
                     && $jobExecution->getJobName() === 'testing'
                     && $jobExecution->getId() === '123456789'

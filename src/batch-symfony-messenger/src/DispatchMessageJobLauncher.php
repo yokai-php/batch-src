@@ -16,17 +16,17 @@ final class DispatchMessageJobLauncher implements JobLauncherInterface
     /**
      * @var JobExecutionFactory
      */
-    private $jobExecutionFactory;
+    private JobExecutionFactory $jobExecutionFactory;
 
     /**
      * @var JobExecutionStorageInterface
      */
-    private $jobExecutionStorage;
+    private JobExecutionStorageInterface $jobExecutionStorage;
 
     /**
      * @var MessageBusInterface
      */
-    private $messageBus;
+    private MessageBusInterface $messageBus;
 
     public function __construct(
         JobExecutionFactory $jobExecutionFactory,

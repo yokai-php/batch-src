@@ -23,82 +23,82 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
     /**
      * @var Connection
      */
-    private $connection;
+    private Connection $connection;
 
     /**
      * @var string
      */
-    private $table = 'yokai_batch_job_execution';
+    private string $table = 'yokai_batch_job_execution';
 
     /**
      * @var string
      */
-    private $idCol = 'id';
+    private string $idCol = 'id';
 
     /**
      * @var string
      */
-    private $jobNameCol = 'job_name';
+    private string $jobNameCol = 'job_name';
 
     /**
      * @var string
      */
-    private $statusCol = 'status';
+    private string $statusCol = 'status';
 
     /**
      * @var string
      */
-    private $parametersCol = 'parameters';
+    private string $parametersCol = 'parameters';
 
     /**
      * @var string
      */
-    private $startTimeCol = 'start_time';
+    private string $startTimeCol = 'start_time';
 
     /**
      * @var string
      */
-    private $endTimeCol = 'end_time';
+    private string $endTimeCol = 'end_time';
 
     /**
      * @var string
      */
-    private $summaryCol = 'summary';
+    private string $summaryCol = 'summary';
 
     /**
      * @var string
      */
-    private $failuresCol = 'failures';
+    private string $failuresCol = 'failures';
 
     /**
      * @var string
      */
-    private $warningsCol = 'warnings';
+    private string $warningsCol = 'warnings';
 
     /**
      * @var string
      */
-    private $childExecutionsCol = 'child_executions';
+    private string $childExecutionsCol = 'child_executions';
 
     /**
      * @var string
      */
-    private $logsCol = 'logs';
+    private string $logsCol = 'logs';
 
     /**
      * @var array
      */
-    private $types;
+    private array $types;
 
     /**
      * @var Schema
      */
-    private $schema;
+    private Schema $schema;
 
     /**
      * @var JobExecutionRowNormalizer|null
      */
-    private $normalizer;
+    private ?JobExecutionRowNormalizer $normalizer = null;
 
     public function __construct(Connection $connection, array $options)
     {
@@ -165,7 +165,7 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
         $config = $this->connection->getConfiguration();
         $previousFilter = $config->getSchemaAssetsFilter();
 
-        $config->setSchemaAssetsFilter(function ($asset) use ($previousFilter, $toSchema): bool {
+        $config->setSchemaAssetsFilter(static function ($asset) use ($previousFilter, $toSchema): bool {
             $assetName = $asset instanceof AbstractAsset ? $asset->getName() : $asset;
 
             return $toSchema->hasTable($assetName)

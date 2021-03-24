@@ -35,27 +35,27 @@ final class FlatFileReader implements
     /**
      * @var string
      */
-    private $type;
+    private string $type;
 
     /**
      * @var array
      */
-    private $options;
+    private array $options;
 
     /**
      * @var string
      */
-    private $headersMode;
+    private string $headersMode;
 
     /**
      * @var array|null
      */
-    private $headers;
+    private ?array $headers;
 
     /**
      * @var string|null
      */
-    private $filePath;
+    private ?string $filePath;
 
     public function __construct(
         string $type,

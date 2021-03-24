@@ -23,62 +23,62 @@ final class JobExecutionRowNormalizer
     /**
      * @var string
      */
-    private $idCol = 'id';
+    private string $idCol;
 
     /**
      * @var string
      */
-    private $jobNameCol = 'job_name';
+    private string $jobNameCol;
 
     /**
      * @var string
      */
-    private $statusCol = 'status';
+    private string $statusCol;
 
     /**
      * @var string
      */
-    private $parametersCol = 'parameters';
+    private string $parametersCol;
 
     /**
      * @var string
      */
-    private $startTimeCol = 'start_time';
+    private string $startTimeCol;
 
     /**
      * @var string
      */
-    private $endTimeCol = 'end_time';
+    private string $endTimeCol;
 
     /**
      * @var string
      */
-    private $summaryCol = 'summary';
+    private string $summaryCol;
 
     /**
      * @var string
      */
-    private $failuresCol = 'failures';
+    private string $failuresCol;
 
     /**
      * @var string
      */
-    private $warningsCol = 'warnings';
+    private string $warningsCol;
 
     /**
      * @var string
      */
-    private $childExecutionsCol = 'child_executions';
+    private string $childExecutionsCol;
 
     /**
      * @var string
      */
-    private $logsCol;
+    private string $logsCol;
 
     /**
      * @var string
      */
-    private $dateFormat;
+    private string $dateFormat;
 
     public function __construct(
         string $idCol,

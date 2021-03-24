@@ -15,12 +15,12 @@ final class SkipInvalidItemProcessor implements ItemProcessorInterface
     /**
      * @var ValidatorInterface
      */
-    private $validator;
+    private ValidatorInterface $validator;
 
     /**
      * @var array|null
      */
-    private $groups;
+    private ?array $groups;
 
     public function __construct(ValidatorInterface $validator, array $groups = null)
     {

@@ -30,32 +30,32 @@ final class FlatFileWriter implements
     /**
      * @var string
      */
-    private $type;
+    private string $type;
 
     /**
      * @var array|null
      */
-    private $headers;
+    private ?array $headers;
 
     /**
      * @var WriterInterface|null
      */
-    private $writer;
+    private ?WriterInterface $writer = null;
 
     /**
      * @var bool
      */
-    private $headersAdded = false;
+    private bool $headersAdded = false;
 
     /**
      * @var string|null
      */
-    private $filePath;
+    private ?string $filePath;
 
     /**
      * @var array
      */
-    private $options;
+    private array $options;
 
     public function __construct(string $type, array $headers = null, string $filePath = null, array $options = [])
     {

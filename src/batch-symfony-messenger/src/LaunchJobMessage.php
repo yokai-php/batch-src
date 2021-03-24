@@ -9,12 +9,12 @@ final class LaunchJobMessage
     /**
      * @var string
      */
-    private $jobName;
+    private string $jobName;
 
     /**
      * @var array
      */
-    private $configuration;
+    private array $configuration;
 
     public function __construct(string $jobName, array $configuration = [])
     {
