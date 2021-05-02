@@ -1,0 +1,50 @@
+services:
+  php80:
+    container_name: yokai-batch-php80
+    environment:
+      PHP_XDEBUG: 1
+    extends:
+      file: ~/.led/docker-base.yaml
+      service: localuser
+    hostname: php80
+    image: ledup/php:8.0
+    volumes:
+      - .:/src
+    working_dir: /src
+  php74:
+    container_name: yokai-batch-php74
+    environment:
+      PHP_XDEBUG: 1
+    extends:
+      file: ~/.led/docker-base.yaml
+      service: localuser
+    hostname: php74
+    image: ledup/php:7.4
+    volumes:
+    - .:/src
+    working_dir: /src
+  php73:
+    container_name: yokai-batch-php73
+    environment:
+      PHP_XDEBUG: 1
+    extends:
+      file: ~/.led/docker-base.yaml
+      service: localuser
+    hostname: php73
+    image: ledup/php:7.3
+    volumes:
+    - .:/src
+    working_dir: /src
+  php72:
+    container_name: yokai-batch-php72
+    environment:
+      PHP_XDEBUG: 1
+    extends:
+      file: ~/.led/docker-base.yaml
+      service: localuser
+    hostname: php72
+    image: ledup/php:7.2
+    volumes:
+    - .:/src
+    working_dir: /src
+version: '2'

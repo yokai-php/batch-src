@@ -1,27 +1,27 @@
 {
-  "name": "yokai/batch-symfony-validator",
-  "description": "symfony/validator bridge for yokai/batch",
-  "keywords": ["batch", "job", "processor", "validation"],
-  "type": "library",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Yann Eugoné",
-      "email": "eugone.yann@gmail.com"
+    "name": "yokai/batch-symfony-validator",
+    "description": "symfony/validator bridge for yokai/batch",
+    "keywords": ["batch", "job", "processor", "validation"],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Yann Eugoné",
+            "email": "eugone.yann@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.4",
+        "symfony/validator": "^4.4|^5.0",
+        "yokai/batch": "^0.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Yokai\\Batch\\Bridge\\Symfony\\Validator\\": "src/"
+        }
+    },
+    "require-dev": {
+        "phpspec/prophecy-phpunit": "^2.0",
+        "phpunit/phpunit": "^9.4"
     }
-  ],
-  "require": {
-    "php": "^7.4",
-    "symfony/validator": "^4.4|^5.0",
-    "yokai/batch": "self.version"
-  },
-  "autoload": {
-    "psr-4": {
-      "Yokai\\Batch\\Bridge\\Symfony\\Validator\\": "src/"
-    }
-  },
-  "require-dev": {
-    "phpspec/prophecy-phpunit": "^2.0",
-    "phpunit/phpunit": "^9.4"
-  }
 }

@@ -1,0 +1,138 @@
+#!/usr/bin/env php
+<?php
+
+use Doctrine\Inflector\InflectorFactory;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Yaml\Yaml;
+
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+class Skeleton
+{
+    private const SKELETON_DIR = __DIR__ . '/../config/skeleton';
+    private const SRC_DIR = __DIR__ . '/../src';
+
+    public static function synchronize(string $packageName): void
+    {
+        $packageDir = self::SRC_DIR . $packageName;
+
+        if (is_dir($packageDir)) {
+            throw new RuntimeException(sprintf('Package %s already exists.', $packageDir));
+        }
+        if (!@mkdir($packageDir)) {
+            throw new RuntimeException(sprintf('Cannot create dir %s.', $packageDir));
+        }
+
+        foreach (glob(self::SKELETON_DIR . '/*') as $skeletonFile) {
+            $packageFile = $packageDir . '/' . basename($skeletonFile);
+            file_put_contents($packageFile, strtr(file_get_contents($skeletonFile), $vars));
+        }
+    }
+}
+
+class Config
+{
+    private const CONFIG = __DIR__ . '/../config/config.yaml';
+    private const PACKAGES = __DIR__ . '/../config/packages.yaml';
+
+    public static function bridge(string $bridgePackage, string $bridgeVersion): array
+    {
+        $inflector = InflectorFactory::create()->build();
+        [$bridgePackageVendor, $bridgePackageName] = explode('/', $bridgePackage);
+        $namespace = $inflector->camelize($bridgePackageVendor) . '\\\\' . $inflector->camelize($bridgePackageName);
+
+        return [
+            'requires' => [
+                $bridgePackage => $bridgeVersion,
+            ],
+            'namespace' => $namespace,
+            'introduction' => '',
+            'documentation' => '',
+        ];
+    }
+
+    public static function set(string $packageName, array $config): void
+    {
+        $file = Yaml::parseFile(self::PACKAGES);
+        $file[$packageName] = $config;
+        file_put_contents(self::PACKAGES, Yaml::dump($file));
+    }
+
+    public static function get(string $packageName): array
+    {
+        return Yaml::parseFile(self::PACKAGES)[$packageName];
+    }
+}
+
+$application = new Application();
+
+$application->add(
+    new class extends Command {
+        protected static $defaultName = 'new';
+
+        protected function configure(): void
+        {
+            $this->addArgument('name', InputArgument::REQUIRED);
+            $this->addArgument('package', InputArgument::REQUIRED);
+            $this->addOption('foo', null, InputOption::VALUE_OPTIONAL);
+        }
+
+        protected function execute(InputInterface $input, OutputInterface $output): int
+        {
+            $packageName = $input->getArgument('name');
+            $bridgePackage = $input->getArgument('package');
+            $bridgeVersion = $input->getOption('version') ?: '*';
+
+            $inflector = InflectorFactory::create()->build();
+            [$bridgePackageVendor, $bridgePackageName] = explode('/', $bridgePackage);
+            $namespace = $inflector->camelize($bridgePackageVendor) . '\\\\' . $inflector->camelize($bridgePackageName);
+
+            $this->sources($packageName, $bridgePackage, $bridgeVersion, $namespace);
+
+            return 1;
+        }
+
+        private function sources(
+            string $packageName,
+            string $bridgePackage,
+            string $bridgeVersion,
+            string $namespace
+        ): void {
+            $config = Config::get($packageName);
+            $vars = [
+                '{name}' => $packageName,
+                '{package}' => $bridgePackage,
+                '{version}' => $bridgeVersion,
+                '{namespace}' => $namespace,
+            ];
+
+
+            $skeletonDir = dirname(__DIR__) . '/config/skeleton';
+            $packageDir = dirname(__DIR__) . '/src/' . $packageName;
+
+            if (is_dir($packageDir)) {
+                throw new RuntimeException(sprintf('Package %s already exists.', $packageDir));
+            }
+            if (!@mkdir($packageDir)) {
+                throw new RuntimeException(sprintf('Cannot create dir %s.', $packageDir));
+            }
+
+            foreach (glob($skeletonDir . '/*') as $skeletonFile) {
+                $packageFile = $packageDir . '/' . basename($skeletonFile);
+                file_put_contents($packageFile, strtr(file_get_contents($skeletonFile), $vars));
+            }
+
+            if (!@mkdir($packageDir . '/src')) {
+                throw new RuntimeException(sprintf('Cannot create dir %s/src.', $packageDir));
+            }
+        }
+    }
+);
+
+$application->run(new ArgvInput());

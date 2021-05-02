@@ -1,0 +1,90 @@
+parameters:
+  app.artifacts_dir: "%kernel.project_dir%/../../.artifacts/integration/symfony/init"
+  app.filepath.badge: "%app.artifacts_dir%/badge.csv"
+  app.filepath.repository: "%app.artifacts_dir%/repository.csv"
+  app.filepath.developer: "%app.artifacts_dir%/developer.csv"
+
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  # Import Jobs
+  app.job.import_badges:
+    class: Yokai\Batch\Job\Item\ItemJob
+    tags:
+      - { name: yokai_batch.job, job: import.badges }
+    arguments:
+      $batchSize: !php/const PHP_INT_MAX
+      $reader: !service
+        class: Yokai\Batch\Bridge\Box\Spout\FlatFileReader
+        arguments:
+          $type: !php/const Box\Spout\Common\Type::CSV
+          $headersMode: !php/const Yokai\Batch\Bridge\Box\Spout\FlatFileReader::HEADERS_MODE_COMBINE
+          $headers: null
+          $filePath: "%app.filepath.badge%"
+      $processor: '@App\Batch\Import\ImportBadgesProcessor'
+      $writer: '@yokai_batch.item_writer.doctrine_orm_object_writer'
+
+  app.job.import_repositories:
+    class: Yokai\Batch\Job\Item\ItemJob
+    tags:
+      - { name: yokai_batch.job, job: import.repositories }
+    arguments:
+      $batchSize: !php/const PHP_INT_MAX
+      $reader: !service
+        class: Yokai\Batch\Bridge\Box\Spout\FlatFileReader
+        arguments:
+          $type: !php/const Box\Spout\Common\Type::CSV
+          $headersMode: !php/const Yokai\Batch\Bridge\Box\Spout\FlatFileReader::HEADERS_MODE_COMBINE
+          $headers: null
+          $filePath: "%app.filepath.repository%"
+      $processor: '@App\Batch\Import\ImportRepositoriesProcessor'
+      $writer: '@yokai_batch.item_writer.doctrine_orm_object_writer'
+
+  app.job.import_developers:
+    class: Yokai\Batch\Job\Item\ItemJob
+    tags:
+      - { name: yokai_batch.job, job: import.developers }
+    arguments:
+      $batchSize: !php/const PHP_INT_MAX
+      $reader: !service
+        class: Yokai\Batch\Bridge\Box\Spout\FlatFileReader
+        arguments:
+          $type: !php/const Box\Spout\Common\Type::CSV
+          $headersMode: !php/const Yokai\Batch\Bridge\Box\Spout\FlatFileReader::HEADERS_MODE_COMBINE
+          $headers: null
+          $filePath: "%app.filepath.developer%"
+      $processor: '@App\Batch\Import\ImportDevelopersProcessor'
+      $writer: '@yokai_batch.item_writer.doctrine_orm_object_writer'
+
+  # Init Jobs
+  app.job.init:
+    class: Yokai\Batch\Job\JobWithChildJobs
+    tags:
+      - { name: yokai_batch.job, job: init }
+    arguments:
+      $childJobs:
+        - init.split
+        - init.import
+
+  app.job.init.split:
+    class: App\Batch\Init\SplitJob
+    tags:
+      - { name: yokai_batch.job, job: init.split }
+    arguments:
+      $outputBadgeFile: '%app.filepath.badge%'
+      $outputRepositoryFile: '%app.filepath.repository%'
+      $outputDeveloperFile: '%app.filepath.developer%'
+
+
+  app.job.init.import:
+    class: Yokai\Batch\Job\JobWithChildJobs
+    tags:
+      - { name: yokai_batch.job, job: init.import }
+    arguments:
+      $childJobs:
+        - import.badges
+        - import.repositories
+        - import.developers

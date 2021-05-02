@@ -1,32 +1,32 @@
 {
-  "name": "yokai/batch-box-spout",
-  "description": "box/spout bridge for yokai/batch",
-  "keywords": ["batch", "job", "reader", "writer", "flat", "csv", "xlsx", "ods"],
-  "type": "library",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Yann Eugoné",
-      "email": "eugone.yann@gmail.com"
+    "name": "yokai/batch-box-spout",
+    "description": "box/spout bridge for yokai/batch",
+    "keywords": ["batch", "job", "reader", "writer", "flat", "csv", "xlsx", "ods"],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Yann Eugoné",
+            "email": "eugone.yann@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.4",
+        "box/spout": "^3.0",
+        "yokai/batch": "^0.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Yokai\\Batch\\Bridge\\Box\\Spout\\": "src/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.4",
+        "symfony/filesystem": "^4.4|^5.0"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Yokai\\Batch\\Tests\\Bridge\\Box\\Spout\\": "tests/"
+        }
     }
-  ],
-  "require": {
-    "php": "^7.4",
-    "box/spout": "^3.0",
-    "yokai/batch": "self.version"
-  },
-  "autoload": {
-    "psr-4": {
-      "Yokai\\Batch\\Bridge\\Box\\Spout\\": "src/"
-    }
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^9.4",
-    "symfony/filesystem": "^4.4|^5.0"
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Yokai\\Batch\\Tests\\Bridge\\Box\\Spout\\": "tests/"
-    }
-  }
 }

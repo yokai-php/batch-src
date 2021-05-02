@@ -1,32 +1,32 @@
 {
-  "name": "yokai/batch-doctrine-persistence",
-  "description": "doctrine/persistence bridge for yokai/batch",
-  "keywords": ["batch", "job", "writer", "object"],
-  "type": "library",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Yann Eugoné",
-      "email": "eugone.yann@gmail.com"
+    "name": "yokai/batch-doctrine-persistence",
+    "description": "doctrine/persistence bridge for yokai/batch",
+    "keywords": ["batch", "job", "writer", "object"],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Yann Eugoné",
+            "email": "eugone.yann@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.4",
+        "doctrine/persistence": "^2.0",
+        "yokai/batch": "^0.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Yokai\\Batch\\Bridge\\Doctrine\\Persistence\\": "src/"
+        }
+    },
+    "require-dev": {
+        "phpspec/prophecy-phpunit": "^2.0",
+        "phpunit/phpunit": "^9.4"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Yokai\\Batch\\Tests\\Bridge\\Doctrine\\Persistence\\": "tests/"
+        }
     }
-  ],
-  "require": {
-    "php": "^7.4",
-    "doctrine/persistence": "^2.0",
-    "yokai/batch": "self.version"
-  },
-  "autoload": {
-    "psr-4": {
-      "Yokai\\Batch\\Bridge\\Doctrine\\Persistence\\": "src/"
-    }
-  },
-  "require-dev": {
-    "phpspec/prophecy-phpunit": "^2.0",
-    "phpunit/phpunit": "^9.4"
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Yokai\\Batch\\Tests\\Bridge\\Doctrine\\Persistence\\": "tests/"
-    }
-  }
 }

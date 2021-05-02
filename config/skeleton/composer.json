@@ -1,0 +1,21 @@
+{
+  "name": "yokai/{name}",
+  "description": "Bridge of {package} for yokai/batch",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Yann Eugoné",
+      "email": "eugone.yann@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^7.2",
+    "{package}": "{version}"
+  },
+  "autoload": {
+    "psr-4": {
+      "Yokai\\Batch\\Bridge\\{namespace}\\": "src/"
+    }
+  }
+}

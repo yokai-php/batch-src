@@ -1,0 +1,100 @@
+batch:
+  requires: []
+  namespace: ''
+  introduction: |
+    Batch architecture library inspired by Spring Batch.
+  documentation: |
+
+batch-box-spout:
+  requires:
+    box/spout: '^3.0'
+  introduction: |
+  documentation: |
+    This package provides:
+
+      - a [item reader](docs/flat-file-item-reader.md) that read from CSV/XLSX/ODS files
+      - a [item writer](docs/flat-file-item-writer.md) that write to CSV/XLSX/ODS files
+
+batch-doctrine-dbal:
+  requires:
+    ext-json: '*'
+    doctrine/dbal: '^2.10'
+  introduction: |
+  documentation: |
+    This package provides:
+
+      - a [job execution storage](docs/job-execution-storage.md) that stores job executions to a relational database
+
+batch-doctrine-orm:
+  requires:
+    doctrine/orm: '^2.0'
+  namespace: ''
+  introduction: |
+  documentation: |
+    This package provides:
+
+      - an [item reader](docs/entity-item-reader.md) that read entities from entity manager
+
+batch-doctrine-persistence:
+  requires:
+    doctrine/orm: '^2.7'
+  namespace: ''
+  introduction: |
+  documentation: |
+    This package provides:
+
+      - an [item writer](docs/object-item-writer.md) that persists objects through object manager
+
+batch-symfony-console:
+  requires:
+    ext-json: '*'
+    symfony/console: '^4.4'
+  namespace: ''
+  introduction: |
+  documentation: |
+    This package provides:
+
+      - a [job launcher](docs/job-launcher.md) that uses command to launch jobs
+      - a [command](docs/command.md) to launch jobs
+
+batch-symfony-framework:
+  requires:
+    symfony/framework-bundle: '^4.4'
+  namespace: ''
+  introduction: |
+  documentation: |
+    This package provides:
+
+      - [integration](docs/integration.md) with Symfony framework
+
+batch-symfony-messenger:
+  requires:
+    symfony/messenger: '^4.4'
+  namespace: ''
+  introduction: |
+  documentation: |
+    This package provides:
+
+      - a [job launcher](docs/job-launcher.md) that uses messages to launch jobs
+
+batch-symfony-serializer:
+  requires:
+    symfony/serializer: '^4.4'
+  namespace: ''
+  introduction: |
+  documentation: |
+    This package provides:
+
+      - an [item processor](docs/normalize-item-processor.md) that uses normalization
+      - an [item processor](docs/denormalize-item-processor.md) that uses denormalization
+      - a [job execution serializer](docs/job-execution-serializer.md) that uses serialization
+
+batch-symfony-validator:
+  requires:
+    symfony/validator: '^4.4'
+  namespace: ''
+  introduction: |
+  documentation: |
+    This package provides:
+
+      - an [item processor](docs/skip-invalid-item-processor.md) that skip invalid items

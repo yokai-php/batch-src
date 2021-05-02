@@ -1,32 +1,32 @@
 {
-  "name": "yokai/batch-symfony-serializer",
-  "description": "symfony/serializer bridge for yokai/batch",
-  "keywords": ["batch", "job", "processor", "normalize", "denormalize"],
-  "type": "library",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Yann Eugoné",
-      "email": "eugone.yann@gmail.com"
+    "name": "yokai/batch-symfony-serializer",
+    "description": "symfony/serializer bridge for yokai/batch",
+    "keywords": ["batch", "job", "processor", "normalize", "denormalize"],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Yann Eugoné",
+            "email": "eugone.yann@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.4",
+        "symfony/serializer": "^4.4|^5.0",
+        "yokai/batch": "^0.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Yokai\\Batch\\Bridge\\Symfony\\Serializer\\": "src/"
+        }
+    },
+    "require-dev": {
+        "phpspec/prophecy-phpunit": "^2.0",
+        "phpunit/phpunit": "^9.4"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Yokai\\Batch\\Tests\\Bridge\\Symfony\\Serializer\\": "tests/"
+        }
     }
-  ],
-  "require": {
-    "php": "^7.4",
-    "symfony/serializer": "^4.4|^5.0",
-    "yokai/batch": "self.version"
-  },
-  "autoload": {
-    "psr-4": {
-      "Yokai\\Batch\\Bridge\\Symfony\\Serializer\\": "src/"
-    }
-  },
-  "require-dev": {
-    "phpspec/prophecy-phpunit": "^2.0",
-    "phpunit/phpunit": "^9.4"
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Yokai\\Batch\\Tests\\Bridge\\Symfony\\Serializer\\": "tests/"
-    }
-  }
 }
