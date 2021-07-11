@@ -11,7 +11,7 @@ namespace Yokai\Batch\Routing;
  * @psalm-template T of object
  * @template-extends CallbackRouting<T>
  */
-final class ClassMapRouting extends CallbackRouting
+class ClassMapRouting extends CallbackRouting
 {
     /**
      * @phpstan-param array<class-string, T> $classMap
