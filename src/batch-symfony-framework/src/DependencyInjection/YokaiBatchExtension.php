@@ -47,13 +47,14 @@ final class YokaiBatchExtension extends Extension
 
         $this->configureStorage($container, $config['storage']);
 
-        $launcher = 'yokai_batch.job_launcher.simple';
-        if ($this->installed('symfony-messenger')) {
-            $launcher = 'yokai_batch.job_launcher.dispatch_message';
-        } elseif ($this->installed('symfony-console')) {
-            $launcher = 'yokai_batch.job_launcher.run_command';
-        }
-        $container->setAlias(JobLauncherInterface::class, $launcher);
+        $launchers = [
+            'yokai_batch.job_launcher.dispatch_message' => $this->installed('symfony-messenger'),
+            'yokai_batch.job_launcher.run_command' => $this->installed('symfony-console'),
+        ];
+        $container->setAlias(
+            JobLauncherInterface::class,
+            \array_keys(\array_filter($launchers))[0] ?? 'yokai_batch.job_launcher.simple'
+        );
     }
 
     private function installed(string $package): bool
