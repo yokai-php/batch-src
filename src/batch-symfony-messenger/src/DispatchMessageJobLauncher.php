@@ -43,6 +43,7 @@ final class DispatchMessageJobLauncher implements JobLauncherInterface
         // create and store execution before dispatching message
         // guarantee job execution exists if message bus transport is asynchronous
         $jobExecution = $this->jobExecutionFactory->create($name, $configuration);
+        $configuration['_id'] = $configuration['_id'] ?? $jobExecution->getId();
         $jobExecution->setStatus(BatchStatus::PENDING);
         $this->jobExecutionStorage->store($jobExecution);
 
