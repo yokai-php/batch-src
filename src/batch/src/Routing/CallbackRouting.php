@@ -8,16 +8,23 @@ namespace Yokai\Batch\Routing;
  * This routing implementation uses a callback, component couple to determine matching component.
  * The callback must return truthy value in order to the component to match.
  *
- * @psalm-template T
+ * @psalm-template T of object
  * @template-implements RoutingInterface<T>
  */
 class CallbackRouting implements RoutingInterface
 {
+    /**
+     * @phpstan-var list<array{0: callable, 1: T}>
+     */
     private array $strategies;
+
+    /**
+     * @phpstan-var T
+     */
     private object $default;
 
     /**
-     * @phpstan-param array{0: callable, 1: T}
+     * @phpstan-param list<array{0: callable, 1: T}> $strategies
      * @phpstan-param T $default
      */
     public function __construct(array $strategies, object $default)

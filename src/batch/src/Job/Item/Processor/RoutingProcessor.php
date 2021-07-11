@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Job\Item\Processor;
 
+use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\Job\Item\ElementConfiguratorTrait;
 use Yokai\Batch\Job\Item\FlushableInterface;
 use Yokai\Batch\Job\Item\InitializableInterface;
@@ -38,11 +39,14 @@ final class RoutingProcessor implements
      */
     public function process($item)
     {
-        /** @var ItemProcessorInterface $processor */
         $processor = $this->routing->get($item);
+        if (!$processor instanceof ItemProcessorInterface) {
+            throw UnexpectedValueException::type(ItemProcessorInterface::class, $processor);
+        }
+
         $processorId = \spl_object_hash($processor);
 
-        if (!isset($this->writers[$processorId])) {
+        if (!isset($this->processors[$processorId])) {
             $this->processors[$processorId] = $processor;
             $this->configureElementJobContext($processor, $this->jobExecution);
             $this->initializeElement($processor);

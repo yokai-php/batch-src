@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Job\Item\Writer;
 
+use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\Job\Item\ElementConfiguratorTrait;
 use Yokai\Batch\Job\Item\FlushableInterface;
 use Yokai\Batch\Job\Item\InitializableInterface;
@@ -40,8 +41,10 @@ final class RoutingWriter implements
     {
         $writerAndItems = [];
         foreach ($items as $item) {
-            /** @var ItemWriterInterface $writer */
             $writer = $this->routing->get($item);
+            if (!$writer instanceof ItemWriterInterface) {
+                throw UnexpectedValueException::type(ItemWriterInterface::class, $writer);
+            }
 
             $writerId = \spl_object_hash($writer);
 
