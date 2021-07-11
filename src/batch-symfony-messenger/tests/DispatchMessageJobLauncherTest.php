@@ -7,7 +7,6 @@ namespace Yokai\Batch\Tests\Bridge\Symfony\Messenger;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Yokai\Batch\BatchStatus;
@@ -17,6 +16,7 @@ use Yokai\Batch\Factory\JobExecutionFactory;
 use Yokai\Batch\Factory\UniqidJobExecutionIdGenerator;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
+use Yokai\Batch\Test\Factory\SequenceJobExecutionIdGenerator;
 
 final class DispatchMessageJobLauncherTest extends TestCase
 {
@@ -61,6 +61,46 @@ final class DispatchMessageJobLauncherTest extends TestCase
         self::assertSame(
             $jobExecution,
             $jobLauncher->launch('testing', ['_id' => '123456789', 'foo' => ['bar']])
+        );
+    }
+
+    public function testLaunchWithNoId(): void
+    {
+        $storage = $this->prophesize(JobExecutionStorageInterface::class);
+        $jobExecutionAssertions = Argument::that(
+            static function ($jobExecution): bool {
+                return $jobExecution instanceof JobExecution
+                    && $jobExecution->getJobName() === 'testing'
+                    && $jobExecution->getId() === '123456789';
+            }
+        );
+        $storage->store($jobExecutionAssertions)
+            ->shouldBeCalled();
+        $storage->retrieve('testing', '123456789')
+            ->shouldBeCalled()
+            ->willReturn($jobExecution = JobExecution::createRoot('123456789-refreshed', 'testing'));
+
+        $messageBus = $this->prophesize(MessageBusInterface::class);
+        $messageAssertions = Argument::that(
+            static function ($message): bool {
+                return $message instanceof LaunchJobMessage
+                    && $message->getJobName() === 'testing'
+                    && $message->getConfiguration() === ['_id' => '123456789'];
+            }
+        );
+        $messageBus->dispatch($messageAssertions)
+            ->shouldBeCalled()
+            ->willReturn(new Envelope(new LaunchJobMessage('unused')));
+
+        $jobLauncher = new DispatchMessageJobLauncher(
+            new JobExecutionFactory(new SequenceJobExecutionIdGenerator(['123456789'])),
+            $storage->reveal(),
+            $messageBus->reveal()
+        );
+
+        self::assertSame(
+            $jobExecution,
+            $jobLauncher->launch('testing')
         );
     }
 }
