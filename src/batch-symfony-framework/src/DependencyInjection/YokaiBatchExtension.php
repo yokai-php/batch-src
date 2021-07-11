@@ -7,14 +7,12 @@ namespace Yokai\Batch\Bridge\Symfony\Framework\DependencyInjection;
 use Composer\InstalledVersions;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader as ConfigLoader;
-use Symfony\Component\Console\Application;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\Loader as DependencyInjectionLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Yokai\Batch\Bridge\Doctrine\DBAL\DoctrineDBALJobExecutionStorage;
 use Yokai\Batch\Launcher\JobLauncherInterface;
 use Yokai\Batch\Storage\FilesystemJobExecutionStorage;
@@ -50,9 +48,9 @@ final class YokaiBatchExtension extends Extension
         $this->configureStorage($container, $config['storage']);
 
         $launcher = 'yokai_batch.job_launcher.simple';
-        if (class_exists(MessageBusInterface::class)) {
+        if ($this->installed('symfony-messenger')) {
             $launcher = 'yokai_batch.job_launcher.dispatch_message';
-        } elseif (class_exists(Application::class)) {
+        } elseif ($this->installed('symfony-console')) {
             $launcher = 'yokai_batch.job_launcher.run_command';
         }
         $container->setAlias(JobLauncherInterface::class, $launcher);
