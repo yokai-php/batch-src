@@ -11,7 +11,7 @@ use Yokai\Batch\Job\Item\InitializableInterface;
 use Yokai\Batch\Job\Item\ItemProcessorInterface;
 use Yokai\Batch\Job\JobExecutionAwareInterface;
 use Yokai\Batch\Job\JobExecutionAwareTrait;
-use Yokai\Batch\Routing\RoutingInterface;
+use Yokai\Batch\Finder\FinderInterface;
 
 final class RoutingProcessor implements
     ItemProcessorInterface,
@@ -22,16 +22,22 @@ final class RoutingProcessor implements
     use ElementConfiguratorTrait;
     use JobExecutionAwareTrait;
 
-    private RoutingInterface $routing;
+    /**
+     * @phpstan-var FinderInterface<ItemProcessorInterface>
+     */
+    private FinderInterface $finder;
 
     /**
      * @var ItemProcessorInterface[]
      */
     private array $processors = [];
 
-    public function __construct(RoutingInterface $routing)
+    /**
+     * @phpstan-param FinderInterface<ItemProcessorInterface> $finder
+     */
+    public function __construct(FinderInterface $finder)
     {
-        $this->routing = $routing;
+        $this->finder = $finder;
     }
 
     /**
@@ -39,7 +45,7 @@ final class RoutingProcessor implements
      */
     public function process($item)
     {
-        $processor = $this->routing->get($item);
+        $processor = $this->finder->find($item);
         if (!$processor instanceof ItemProcessorInterface) {
             throw UnexpectedValueException::type(ItemProcessorInterface::class, $processor);
         }

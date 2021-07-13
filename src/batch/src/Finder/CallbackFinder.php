@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Yokai\Batch\Routing;
+namespace Yokai\Batch\Finder;
 
 /**
- * This routing implementation uses a callback, component couple to determine matching component.
+ * This finder implementation uses a callback, component couple to determine matching component.
  * The callback must return truthy value in order to the component to match.
  *
  * @psalm-template T of object
- * @template-implements RoutingInterface<T>
+ * @template-implements FinderInterface<T>
  */
-class CallbackRouting implements RoutingInterface
+class CallbackFinder implements FinderInterface
 {
     /**
      * @phpstan-var list<array{0: callable, 1: T}>
@@ -36,7 +36,7 @@ class CallbackRouting implements RoutingInterface
     /**
      * @inheritdoc
      */
-    public function get($subject)
+    public function find($subject)
     {
         foreach ($this->strategies as [$callback, $component]) {
             if ($callback($subject)) {

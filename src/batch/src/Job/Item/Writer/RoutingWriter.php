@@ -11,7 +11,7 @@ use Yokai\Batch\Job\Item\InitializableInterface;
 use Yokai\Batch\Job\Item\ItemWriterInterface;
 use Yokai\Batch\Job\JobExecutionAwareInterface;
 use Yokai\Batch\Job\JobExecutionAwareTrait;
-use Yokai\Batch\Routing\RoutingInterface;
+use Yokai\Batch\Finder\FinderInterface;
 
 final class RoutingWriter implements
     ItemWriterInterface,
@@ -22,16 +22,22 @@ final class RoutingWriter implements
     use ElementConfiguratorTrait;
     use JobExecutionAwareTrait;
 
-    private RoutingInterface $routing;
+    /**
+     * @phpstan-var FinderInterface<ItemWriterInterface>
+     */
+    private FinderInterface $finder;
 
     /**
      * @var ItemWriterInterface[]
      */
     private array $writers = [];
 
-    public function __construct(RoutingInterface $routing)
+    /**
+     * @phpstan-param FinderInterface<ItemWriterInterface> $finder
+     */
+    public function __construct(FinderInterface $finder)
     {
-        $this->routing = $routing;
+        $this->finder = $finder;
     }
 
     /**
@@ -41,7 +47,7 @@ final class RoutingWriter implements
     {
         $writerAndItems = [];
         foreach ($items as $item) {
-            $writer = $this->routing->get($item);
+            $writer = $this->finder->find($item);
             if (!$writer instanceof ItemWriterInterface) {
                 throw UnexpectedValueException::type(ItemWriterInterface::class, $writer);
             }

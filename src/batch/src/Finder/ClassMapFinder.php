@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Yokai\Batch\Routing;
+namespace Yokai\Batch\Finder;
 
 /**
- * This routing implementation uses a class => component map
+ * This finder implementation uses a class => component map
  * in conjonction with instanceof test to determine matching component.
  *
  * @psalm-template T of object
- * @template-extends CallbackRouting<T>
+ * @template-extends CallbackFinder<T>
  */
-class ClassMapRouting extends CallbackRouting
+class ClassMapFinder extends CallbackFinder
 {
     /**
      * @phpstan-param array<class-string, T> $classMap

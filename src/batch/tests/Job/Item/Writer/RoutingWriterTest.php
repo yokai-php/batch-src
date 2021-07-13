@@ -13,7 +13,7 @@ use Throwable;
 use Traversable;
 use Yokai\Batch\Job\Item\Writer\RoutingWriter;
 use Yokai\Batch\JobExecution;
-use Yokai\Batch\Routing\ClassMapRouting;
+use Yokai\Batch\Finder\ClassMapFinder;
 use Yokai\Batch\Test\Job\Item\Writer\InMemoryWriter;
 use Yokai\Batch\Test\Job\Item\Writer\TestDebugWriter;
 
@@ -25,7 +25,7 @@ class RoutingWriterTest extends TestCase
         $traversableWriter = new TestDebugWriter($traversableWriterInner = new InMemoryWriter());
         $notCalledWriter = new TestDebugWriter($notCalledWriterInner = new InMemoryWriter());
         $defaultWriter = new TestDebugWriter($defaultWriterInner = new InMemoryWriter());
-        $writer = new RoutingWriter(new ClassMapRouting([
+        $writer = new RoutingWriter(new ClassMapFinder([
             DateTime::class => $datesWriter,
             DateTimeImmutable::class => $datesWriter,
             Traversable::class => $traversableWriter,

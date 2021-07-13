@@ -9,7 +9,7 @@ use Yokai\Batch\Job\Item\Processor\CallbackProcessor;
 use Yokai\Batch\Job\Item\Processor\NullProcessor;
 use Yokai\Batch\Job\Item\Processor\RoutingProcessor;
 use Yokai\Batch\JobExecution;
-use Yokai\Batch\Routing\CallbackRouting;
+use Yokai\Batch\Finder\CallbackFinder;
 use Yokai\Batch\Test\Job\Item\Processor\TestDebugProcessor;
 
 class RoutingProcessorTest extends TestCase
@@ -20,7 +20,7 @@ class RoutingProcessorTest extends TestCase
         $multiplyProcessor = new TestDebugProcessor(new CallbackProcessor(fn(float $item) => (int)\round($item * 100)));
         $notCalledProcessor = new TestDebugProcessor(new NullProcessor());
         $defaultProcessor = new TestDebugProcessor(new NullProcessor());
-        $processor = new RoutingProcessor(new CallbackRouting([
+        $processor = new RoutingProcessor(new CallbackFinder([
             [fn($item) => \is_string($item), $upperProcessor],
             [fn($item) => \is_float($item), $multiplyProcessor],
             [fn($item) => false, $notCalledProcessor],
