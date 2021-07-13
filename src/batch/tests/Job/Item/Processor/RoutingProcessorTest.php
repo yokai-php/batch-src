@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Yokai\Batch\Tests\Job\Item\Processor;
 
 use PHPUnit\Framework\TestCase;
+use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\Job\Item\Processor\CallbackProcessor;
 use Yokai\Batch\Job\Item\Processor\NullProcessor;
 use Yokai\Batch\Job\Item\Processor\RoutingProcessor;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\Finder\CallbackFinder;
+use Yokai\Batch\Test\Finder\DummyFinder;
 use Yokai\Batch\Test\Job\Item\Processor\TestDebugProcessor;
 
 class RoutingProcessorTest extends TestCase
@@ -47,5 +49,15 @@ class RoutingProcessorTest extends TestCase
         self::assertTrue($defaultProcessor->wasInitialized());
         self::assertTrue($defaultProcessor->wasFlushed());
         self::assertTrue($defaultProcessor->wasProcessed());
+    }
+
+    /**
+     * Finder must return ItemProcessorInterface, otherwise an exception will be thrown.
+     */
+    public function testMisconfiguredFinder(): void
+    {
+        $this->expectException(UnexpectedValueException::class);
+        $processor = new RoutingProcessor(new DummyFinder(new \stdClass()));
+        $processor->process('anything');
     }
 }

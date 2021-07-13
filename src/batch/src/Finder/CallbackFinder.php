@@ -36,7 +36,7 @@ class CallbackFinder implements FinderInterface
     /**
      * @inheritdoc
      */
-    public function find($subject)
+    public function find($subject): object
     {
         foreach ($this->strategies as [$callback, $component]) {
             if ($callback($subject)) {

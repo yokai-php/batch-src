@@ -11,9 +11,11 @@ use IteratorIterator;
 use PHPUnit\Framework\TestCase;
 use Throwable;
 use Traversable;
+use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\Job\Item\Writer\RoutingWriter;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\Finder\ClassMapFinder;
+use Yokai\Batch\Test\Finder\DummyFinder;
 use Yokai\Batch\Test\Job\Item\Writer\InMemoryWriter;
 use Yokai\Batch\Test\Job\Item\Writer\TestDebugWriter;
 
@@ -66,5 +68,15 @@ class RoutingWriterTest extends TestCase
         self::assertTrue($defaultWriter->wasInitialized());
         self::assertTrue($defaultWriter->wasFlushed());
         self::assertTrue($defaultWriter->wasWritten());
+    }
+
+    /**
+     * Finder must return ItemProcessorInterface, otherwise an exception will be thrown.
+     */
+    public function testMisconfiguredFinder(): void
+    {
+        $this->expectException(UnexpectedValueException::class);
+        $writer = new RoutingWriter(new DummyFinder(new \stdClass()));
+        $writer->write(['anything']);
     }
 }

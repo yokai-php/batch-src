@@ -18,5 +18,5 @@ interface FinderInterface
      * @return mixed
      * @phpstan-return T
      */
-    public function find($subject);
+    public function find($subject): object;
 }
