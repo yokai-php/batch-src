@@ -80,10 +80,10 @@ final class JobExecutionRowNormalizer
         $jobExecution->setEndTime($this->dateFromString($data['end_time']));
 
         foreach ($data['failures'] as $failureData) {
-            $jobExecution->addFailure($this->failureFromArray($failureData));
+            $jobExecution->addFailure($this->failureFromArray($failureData), false);
         }
         foreach ($data['warnings'] as $warningData) {
-            $jobExecution->addWarning($this->warningFromArray($warningData));
+            $jobExecution->addWarning($this->warningFromArray($warningData), false);
         }
 
         foreach ($data['child_executions'] as $childExecutionData) {
