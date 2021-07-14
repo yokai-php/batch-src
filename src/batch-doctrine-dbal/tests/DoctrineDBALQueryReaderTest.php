@@ -6,6 +6,7 @@ namespace Yokai\Batch\Tests\Bridge\Doctrine\DBAL;
 
 use Doctrine\DBAL\Types\Types;
 use Yokai\Batch\Bridge\Doctrine\DBAL\DoctrineDBALQueryReader;
+use Yokai\Batch\Exception\InvalidArgumentException;
 
 class DoctrineDBALQueryReaderTest extends DoctrineDBALTestCase
 {
@@ -45,5 +46,28 @@ class DoctrineDBALQueryReaderTest extends DoctrineDBALTestCase
             ['as_int' => '8', 'as_string' => 'Height'],
             ['as_int' => '9', 'as_string' => 'Nine'],
         ], \iterator_to_array($reader->read(), false));
+    }
+
+    public function testQueryMustContainsLimitPlaceholder(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        new DoctrineDBALQueryReader($this->doctrine, 'SELECT * FROM some table LIMIT 1 OFFSET {offset};');
+    }
+
+    public function testQueryMustContainsOffsetPlaceholder(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        new DoctrineDBALQueryReader($this->doctrine, 'SELECT * FROM some table LIMIT {limit} OFFSET 0;');
+    }
+
+    public function testBatchMustBePositiveInteger(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        new DoctrineDBALQueryReader(
+            $this->doctrine,
+            'SELECT * FROM some table LIMIT {limit} OFFSET {offset};',
+            null,
+            0 // must be > 0
+        );
     }
 }

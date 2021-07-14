@@ -7,6 +7,7 @@ namespace Yokai\Batch\Tests\Bridge\Doctrine\DBAL;
 use Doctrine\DBAL\Types\Types;
 use Yokai\Batch\Bridge\Doctrine\DBAL\DoctrineDBALUpsert;
 use Yokai\Batch\Bridge\Doctrine\DBAL\DoctrineDBALUpsertWriter;
+use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\JobExecution;
 
 class DoctrineDBALUpsertWriterTest extends DoctrineDBALTestCase
@@ -69,5 +70,12 @@ class DoctrineDBALUpsertWriterTest extends DoctrineDBALTestCase
             ['table' => 'food', 'identity' => ['type' => 'fruit'], 'count' => 2],
             $warnings[0]->getContext()
         );
+    }
+
+    public function testMustBeUsedWithModelObject(): void
+    {
+        $this->expectException(UnexpectedValueException::class);
+        $writer = new DoctrineDBALUpsertWriter($this->doctrine);
+        $writer->write(['anything else but an instance of ' . DoctrineDBALUpsert::class]);
     }
 }
