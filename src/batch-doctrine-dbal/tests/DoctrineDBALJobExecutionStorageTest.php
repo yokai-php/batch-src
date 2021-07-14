@@ -4,11 +4,7 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Tests\Bridge\Doctrine\DBAL;
 
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\DriverManager;
-use Doctrine\Persistence\ConnectionRegistry;
 use Generator;
-use PHPUnit\Framework\TestCase;
 use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Bridge\Doctrine\DBAL\DoctrineDBALJobExecutionStorage;
 use Yokai\Batch\Exception\JobExecutionNotFoundException;
@@ -16,37 +12,11 @@ use Yokai\Batch\JobExecution;
 use Yokai\Batch\Storage\Query;
 use Yokai\Batch\Storage\QueryBuilder;
 
-class DoctrineDBALJobExecutionStorageTest extends TestCase
+class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
 {
-    /**
-     * @var Connection
-     */
-    private Connection $connection;
-
-    /**
-     * @var ConnectionRegistry
-     */
-    private ConnectionRegistry $connections;
-
-    protected function setUp(): void
-    {
-        $this->connection = DriverManager::getConnection(['url' => getenv('DATABASE_URL')]);
-        $this->connections = $this->createMock(ConnectionRegistry::class);
-        $this->connections->method('getDefaultConnectionName')
-            ->willReturn('default');
-        $this->connections->method('getConnection')
-            ->with('default')
-            ->willReturn($this->connection);
-    }
-
-    protected function tearDown(): void
-    {
-        unset($this->connection);
-    }
-
     private function createStorage(array $options = []): DoctrineDBALJobExecutionStorage
     {
-        return new DoctrineDBALJobExecutionStorage($this->connections, $options);
+        return new DoctrineDBALJobExecutionStorage($this->doctrine, $options);
     }
 
     public function testCreateStandardTable(): void
