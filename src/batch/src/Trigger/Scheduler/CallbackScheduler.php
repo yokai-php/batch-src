@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yokai\Batch\Trigger\Scheduler;
 
 use Generator;
+use Yokai\Batch\JobExecution;
 
 class CallbackScheduler implements SchedulerInterface
 {
@@ -29,14 +30,14 @@ class CallbackScheduler implements SchedulerInterface
         }
     }
 
-    public function get(): Generator
+    public function get(JobExecution $execution): Generator
     {
         /** @var callable $callback */
         /** @var string $job */
         /** @var array $parameters */
         /** @var string|null $id */
         foreach ($this->config as [$callback, $job, $parameters, $id]) {
-            if ($callback()) {
+            if ($callback($execution)) {
                 yield new ScheduledJob($job, $parameters, $id);
             }
         }

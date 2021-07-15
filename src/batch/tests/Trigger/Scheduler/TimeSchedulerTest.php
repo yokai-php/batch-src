@@ -6,6 +6,7 @@ namespace Yokai\Batch\Tests\Trigger\Scheduler;
 
 use DateTime;
 use DateTimeImmutable;
+use Yokai\Batch\JobExecution;
 use Yokai\Batch\Trigger\Scheduler\ScheduledJob;
 use Yokai\Batch\Trigger\Scheduler\TimeScheduler;
 use PHPUnit\Framework\TestCase;
@@ -20,8 +21,11 @@ class TimeSchedulerTest extends TestCase
             [new DateTime('1 second ago'), 'just_now'],
         ]);
 
+        $execution = JobExecution::createRoot('123', 'testing');
+        $execution->setStartTime(new DateTimeImmutable());
+
         /** @var ScheduledJob[] $scheduled */
-        $scheduled = \iterator_to_array($scheduler->get());
+        $scheduled = \iterator_to_array($scheduler->get($execution));
         self::assertCount(2, $scheduled);
         self::assertSame('yesterday', $scheduled[0]->getJobName());
         self::assertSame(['config' => 'value'], $scheduled[0]->getParameters());

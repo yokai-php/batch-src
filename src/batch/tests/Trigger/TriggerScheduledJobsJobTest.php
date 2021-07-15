@@ -33,6 +33,7 @@ class TriggerScheduledJobsJobTest extends TestCase
         );
 
         $job->execute($jobExecution = JobExecution::createRoot('123456', 'testing'));
+
         self::assertCount(2, $launcher->getExecutions());
         self::assertSame('triggered_with_defaults', $launcher->getExecutions()[0]->getJobName());
         self::assertSame('123', $launcher->getExecutions()[0]->getId());

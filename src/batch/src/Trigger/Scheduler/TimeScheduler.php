@@ -6,6 +6,7 @@ namespace Yokai\Batch\Trigger\Scheduler;
 
 use DateTimeImmutable;
 use DateTimeInterface;
+use Yokai\Batch\JobExecution;
 
 final class TimeScheduler extends CallbackScheduler
 {
@@ -17,7 +18,7 @@ final class TimeScheduler extends CallbackScheduler
         $parentConfig = [];
         foreach ($config as $entry) {
             $parentConfig[] = [
-                fn () => $entry[0] <= new DateTimeImmutable(),
+                fn (JobExecution $execution) => $entry[0] <= $execution->getStartTime() ?? new DateTimeImmutable(),
                 $entry[1],
                 $entry[2] ?? [],
                 $entry[3] ?? null,

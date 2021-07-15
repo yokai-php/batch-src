@@ -36,7 +36,7 @@ final class TriggerScheduledJobsJob extends AbstractJob
         $jobs = [];
 
         foreach ($this->schedulers as $scheduler) {
-            foreach ($scheduler->get() as $scheduledJob) {
+            foreach ($scheduler->get($jobExecution) as $scheduledJob) {
                 $configuration = $scheduledJob->getParameters();
                 if ($scheduledJob->getId() !== null) {
                     $configuration['_id'] = $scheduledJob->getId();

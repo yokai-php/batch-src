@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Trigger\Scheduler;
 
+use Yokai\Batch\JobExecution;
+
 interface SchedulerInterface
 {
     /**
      * @return ScheduledJob[]
      * @phpstan-return iterable<ScheduledJob>
      */
-    public function get(): iterable;
+    public function get(JobExecution $execution): iterable;
 }
