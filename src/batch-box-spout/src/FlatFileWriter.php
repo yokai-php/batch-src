@@ -16,6 +16,7 @@ use Yokai\Batch\Job\Item\InitializableInterface;
 use Yokai\Batch\Job\Item\ItemWriterInterface;
 use Yokai\Batch\Job\JobExecutionAwareInterface;
 use Yokai\Batch\Job\JobExecutionAwareTrait;
+use Yokai\Batch\Job\Parameters\JobParameterAccessorInterface;
 
 final class FlatFileWriter implements
     ItemWriterInterface,
@@ -25,12 +26,15 @@ final class FlatFileWriter implements
 {
     use JobExecutionAwareTrait;
 
-    public const OUTPUT_FILE_PARAMETER = 'outputFile';
-
     /**
      * @var string
      */
     private string $type;
+
+    /**
+     * @var JobParameterAccessorInterface
+     */
+    private JobParameterAccessorInterface $filePath;
 
     /**
      * @phpstan-var list<string>|null
@@ -48,11 +52,6 @@ final class FlatFileWriter implements
     private bool $headersAdded = false;
 
     /**
-     * @var string|null
-     */
-    private ?string $filePath;
-
-    /**
      * @phpstan-var array{delimiter?: string, enclosure?: string}
      */
     private array $options;
@@ -61,11 +60,15 @@ final class FlatFileWriter implements
      * @phpstan-param list<string>|null                             $headers
      * @phpstan-param array{delimiter?: string, enclosure?: string} $options
      */
-    public function __construct(string $type, array $headers = null, string $filePath = null, array $options = [])
-    {
+    public function __construct(
+        string $type,
+        JobParameterAccessorInterface $filePath,
+        array $headers = null,
+        array $options = []
+    ) {
         $this->type = $type;
-        $this->headers = $headers;
         $this->filePath = $filePath;
+        $this->headers = $headers;
         $this->options = $options;
     }
 
@@ -74,7 +77,7 @@ final class FlatFileWriter implements
      */
     public function initialize(): void
     {
-        $path = $this->getFilePath();
+        $path = (string)$this->filePath->get($this->jobExecution);
         $dir = dirname($path);
         if (!@is_dir($dir) && !@mkdir($dir, 0777, true)) {
             throw new RuntimeException(
@@ -126,10 +129,5 @@ final class FlatFileWriter implements
         $this->writer->close();
         $this->writer = null;
         $this->headersAdded = false;
-    }
-
-    protected function getFilePath(): string
-    {
-        return $this->filePath ?: (string)$this->jobExecution->getParameter(self::OUTPUT_FILE_PARAMETER);
     }
 }

@@ -9,19 +9,17 @@ use Box\Spout\Reader\Common\Creator\ReaderFactory;
 use Box\Spout\Reader\CSV\Reader as CsvReader;
 use Box\Spout\Reader\SheetInterface;
 use Yokai\Batch\Exception\InvalidArgumentException;
-use Yokai\Batch\Exception\UndefinedJobParameterException;
 use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\Job\Item\ItemReaderInterface;
 use Yokai\Batch\Job\JobExecutionAwareInterface;
 use Yokai\Batch\Job\JobExecutionAwareTrait;
+use Yokai\Batch\Job\Parameters\JobParameterAccessorInterface;
 
 final class FlatFileReader implements
     ItemReaderInterface,
     JobExecutionAwareInterface
 {
     use JobExecutionAwareTrait;
-
-    public const SOURCE_FILE_PARAMETER = 'sourceFile';
 
     public const HEADERS_MODE_SKIP = 'skip';
     public const HEADERS_MODE_COMBINE = 'combine';
@@ -53,9 +51,9 @@ final class FlatFileReader implements
     private ?array $headers;
 
     /**
-     * @var string|null
+     * @var JobParameterAccessorInterface
      */
-    private ?string $filePath;
+    private JobParameterAccessorInterface $filePath;
 
     /**
      * @phpstan-param array{delimiter?: string, enclosure?: string} $options
@@ -63,10 +61,10 @@ final class FlatFileReader implements
      */
     public function __construct(
         string $type,
+        JobParameterAccessorInterface $filePath,
         array $options = [],
         string $headersMode = self::HEADERS_MODE_NONE,
-        array $headers = null,
-        string $filePath = null
+        array $headers = null
     ) {
         if (!in_array($headersMode, self::AVAILABLE_HEADERS_MODES, true)) {
             throw UnexpectedValueException::enum(self::AVAILABLE_HEADERS_MODES, $headersMode, 'Invalid header mode.');
@@ -78,10 +76,10 @@ final class FlatFileReader implements
         }
 
         $this->type = $type;
+        $this->filePath = $filePath;
         $this->options = $options;
         $this->headersMode = $headersMode;
         $this->headers = $headers;
-        $this->filePath = $filePath;
     }
 
     /**
@@ -93,7 +91,7 @@ final class FlatFileReader implements
         if ($reader instanceof CsvReader && isset($this->options['delimiter'])) {
             $reader->setFieldDelimiter($this->options['delimiter']);
         }
-        $reader->open($this->getFilePath());
+        $reader->open((string)$this->filePath->get($this->jobExecution));
 
         $headers = $this->headers;
 
@@ -122,18 +120,5 @@ final class FlatFileReader implements
         }
 
         $reader->close();
-    }
-
-    protected function getFilePath(): string
-    {
-        if ($this->filePath) {
-            return $this->filePath;
-        }
-
-        try {
-            return (string)$this->jobExecution->getParameter(self::SOURCE_FILE_PARAMETER);
-        } catch (UndefinedJobParameterException $exception) {
-            return (string)$this->jobExecution->getRootExecution()->getParameter(self::SOURCE_FILE_PARAMETER);
-        }
     }
 }

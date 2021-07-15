@@ -7,10 +7,11 @@ namespace Yokai\Batch\Tests\Bridge\Box\Spout;
 use Box\Spout\Common\Type;
 use PHPUnit\Framework\TestCase;
 use Yokai\Batch\Bridge\Box\Spout\FlatFileReader;
+use Yokai\Batch\Exception\CannotAccessParameterException;
 use Yokai\Batch\Exception\InvalidArgumentException;
-use Yokai\Batch\Exception\UndefinedJobParameterException;
+use Yokai\Batch\Job\Parameters\JobExecutionParameterAccessor;
+use Yokai\Batch\Job\Parameters\StaticValueParameterAccessor;
 use Yokai\Batch\JobExecution;
-use Yokai\Batch\JobParameters;
 
 class FlatFileReaderTest extends TestCase
 {
@@ -19,13 +20,14 @@ class FlatFileReaderTest extends TestCase
      */
     public function testRead(string $type, string $headersMode, ?array $headers, array $expected)
     {
-        $jobExecution = JobExecution::createRoot(
-            '123456789',
-            'parent',
-            null,
-            new JobParameters([FlatFileReader::SOURCE_FILE_PARAMETER => __DIR__ . '/fixtures/sample.' . $type])
+        $jobExecution = JobExecution::createRoot('123456789', 'parent');
+        $reader = new FlatFileReader(
+            $type,
+            new StaticValueParameterAccessor(__DIR__ . '/fixtures/sample.' . $type),
+            [],
+            $headersMode,
+            $headers
         );
-        $reader = new FlatFileReader($type, [], $headersMode, $headers);
         $reader->setJobExecution($jobExecution);
 
         /** @var \Iterator $got */
@@ -41,7 +43,13 @@ class FlatFileReaderTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        new FlatFileReader($type, [], FlatFileReader::HEADERS_MODE_COMBINE, ['nom', 'prenom']);
+        new FlatFileReader(
+            $type,
+            new StaticValueParameterAccessor('/path/to/file'),
+            [],
+            FlatFileReader::HEADERS_MODE_COMBINE,
+            ['nom', 'prenom']
+        );
     }
 
     /**
@@ -49,9 +57,9 @@ class FlatFileReaderTest extends TestCase
      */
     public function testMissingFileToRead(string $type)
     {
-        $this->expectException(UndefinedJobParameterException::class);
+        $this->expectException(CannotAccessParameterException::class);
 
-        $reader = new FlatFileReader($type);
+        $reader = new FlatFileReader($type, new JobExecutionParameterAccessor('undefined'));
         $reader->setJobExecution(JobExecution::createRoot('123456789', 'parent'));
 
         iterator_to_array($reader->read());

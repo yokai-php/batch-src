@@ -9,9 +9,11 @@ use Box\Spout\Reader\Wrapper\XMLReader;
 use PHPUnit\Framework\TestCase;
 use Yokai\Batch\Bridge\Box\Spout\FlatFileWriter;
 use Yokai\Batch\Exception\BadMethodCallException;
+use Yokai\Batch\Exception\CannotAccessParameterException;
 use Yokai\Batch\Exception\UnexpectedValueException;
+use Yokai\Batch\Job\Parameters\JobExecutionParameterAccessor;
+use Yokai\Batch\Job\Parameters\StaticValueParameterAccessor;
 use Yokai\Batch\JobExecution;
-use Yokai\Batch\JobParameters;
 
 class FlatFileWriterTest extends TestCase
 {
@@ -33,15 +35,8 @@ class FlatFileWriterTest extends TestCase
 
         $file = self::WRITE_DIR . '/not-an-array.' . $type;
 
-        $writer = new FlatFileWriter($type);
-        $writer->setJobExecution(
-            JobExecution::createRoot(
-                '123456789',
-                'export',
-                null,
-                new JobParameters([FlatFileWriter::OUTPUT_FILE_PARAMETER => $file])
-            )
-        );
+        $writer = new FlatFileWriter($type, new StaticValueParameterAccessor($file));
+        $writer->setJobExecution(JobExecution::createRoot('123456789', 'export'));
 
         $writer->initialize();
         $writer->write([true]);
@@ -61,15 +56,8 @@ class FlatFileWriterTest extends TestCase
 
         self::assertFileDoesNotExist($file);
 
-        $writer = new FlatFileWriter($type, $headers);
-        $writer->setJobExecution(
-            JobExecution::createRoot(
-                '123456789',
-                'export',
-                null,
-                new JobParameters([FlatFileWriter::OUTPUT_FILE_PARAMETER => $file])
-            )
-        );
+        $writer = new FlatFileWriter($type, new StaticValueParameterAccessor($file), $headers);
+        $writer->setJobExecution(JobExecution::createRoot('123456789', 'export'));
 
         $writer->initialize();
         $writer->write($itemsToWrite);
@@ -84,7 +72,7 @@ class FlatFileWriterTest extends TestCase
     {
         $this->expectException(BadMethodCallException::class);
 
-        $writer = new FlatFileWriter($type);
+        $writer = new FlatFileWriter($type, new StaticValueParameterAccessor('/path/to/file'));
         $writer->write([true]);
     }
 
@@ -95,8 +83,21 @@ class FlatFileWriterTest extends TestCase
     {
         $this->expectException(BadMethodCallException::class);
 
-        $writer = new FlatFileWriter($type);
+        $writer = new FlatFileWriter($type, new StaticValueParameterAccessor('/path/to/file'));
         $writer->flush();
+    }
+
+    /**
+     * @dataProvider types
+     */
+    public function testMissingFileToWriter(string $type)
+    {
+        $this->expectException(CannotAccessParameterException::class);
+
+        $reader = new FlatFileWriter($type, new JobExecutionParameterAccessor('undefined'));
+        $reader->setJobExecution(JobExecution::createRoot('123456789', 'parent'));
+
+        $reader->initialize();
     }
 
     public function types(): \Generator
