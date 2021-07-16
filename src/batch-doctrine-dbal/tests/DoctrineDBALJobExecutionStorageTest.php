@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Yokai\Batch\Tests\Bridge\Doctrine\DBAL;
 
 use Generator;
+use RuntimeException;
 use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Bridge\Doctrine\DBAL\DoctrineDBALJobExecutionStorage;
 use Yokai\Batch\Exception\JobExecutionNotFoundException;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\Storage\Query;
 use Yokai\Batch\Storage\QueryBuilder;
+use Yokai\Batch\Warning;
 
 class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
 {
@@ -77,12 +79,28 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
     {
         $storage = $this->createStorage();
         $storage->createSchema();
-        $storage->store($execution = JobExecution::createRoot('123', 'export'));
 
-        $retrievedExecution = $storage->retrieve('export', '123');
-        self::assertSame('export', $retrievedExecution->getJobName());
-        self::assertSame('123', $retrievedExecution->getId());
-        self::assertSame(BatchStatus::PENDING, $retrievedExecution->getStatus()->getValue());
+        $export = JobExecution::createRoot('123', 'export');
+        $export->addChildExecution($extract = JobExecution::createChild($export, 'extract'));
+        $export->addChildExecution($upload = JobExecution::createChild($export, 'upload'));
+        $extract->addWarning(new Warning('Test warning'));
+        $upload->addFailureException(new RuntimeException('Test failure'));
+        $storage->store($export);
+
+        $retrievedExport = $storage->retrieve('export', '123');
+        self::assertSame('export', $retrievedExport->getJobName());
+        self::assertSame('123', $retrievedExport->getId());
+        self::assertSame(BatchStatus::PENDING, $retrievedExport->getStatus()->getValue());
+        $retrievedExtract = $retrievedExport->getChildExecution('extract');
+        self::assertNotNull($retrievedExtract);
+        self::assertCount(1, $retrievedExtract->getWarnings());
+        self::assertSame('Test warning', $retrievedExtract->getWarnings()[0]->getMessage());
+        self::assertCount(0, $retrievedExtract->getFailures());
+        $retrievedUpload = $retrievedExport->getChildExecution('upload');
+        self::assertNotNull($retrievedUpload);
+        self::assertCount(0, $retrievedUpload->getWarnings());
+        self::assertCount(1, $retrievedUpload->getFailures());
+        self::assertSame('Test failure', $retrievedUpload->getFailures()[0]->getMessage());
     }
 
     public function testStoreUpdate(): void
