@@ -40,6 +40,7 @@ final class DoctrineDBALQueryReader implements ItemReaderInterface
 
     /**
      * @inheritdoc
+     * @phpstan-return Generator<array<string, string>>
      */
     public function read(): Generator
     {

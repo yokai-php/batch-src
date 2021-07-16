@@ -11,6 +11,7 @@ use Doctrine\DBAL\Schema\Comparator;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\Persistence\ConnectionRegistry;
+use Generator;
 use Yokai\Batch\Exception\CannotStoreJobExecutionException;
 use Yokai\Batch\Exception\JobExecutionNotFoundException;
 use Yokai\Batch\Exception\RuntimeException;
@@ -36,11 +37,11 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
      */
     private string $table;
 
-    /**
-     * @var JobExecutionRowNormalizer|null
-     */
-    private ?JobExecutionRowNormalizer $normalizer = null;
+    private JobExecutionRowNormalizer $normalizer;
 
+    /**
+     * @phpstan-param array{connection?: string, table?: string} $options
+     */
     public function __construct(ConnectionRegistry $doctrine, array $options)
     {
         $options = array_filter($options) + self::DEFAULT_OPTIONS;
@@ -230,6 +231,9 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
         return $schema;
     }
 
+    /**
+     * @phpstan-return array<string, string>
+     */
     private function types(): array
     {
         return [
@@ -247,6 +251,9 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
         ];
     }
 
+    /**
+     * @phpstan-return array<string, string>
+     */
     private function identity(JobExecution $execution): array
     {
         return [
@@ -255,6 +262,9 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
         ];
     }
 
+    /**
+     * @phpstan-return array<string, string>
+     */
     private function fetchRow(string $jobName, string $id): array
     {
         $qb = $this->connection->createQueryBuilder();
@@ -289,7 +299,13 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
         }
     }
 
-    private function queryList(string $query, array $parameters, array $types): iterable
+    /**
+     * @phpstan-param array<string, mixed>      $parameters
+     * @phpstan-param array<string, int|string> $types
+     *
+     * @phpstan-return Generator<JobExecution>
+     */
+    private function queryList(string $query, array $parameters, array $types): Generator
     {
         /** @var Result $statement */
         $statement = $this->connection->executeQuery($query, $parameters, $types);
@@ -301,11 +317,17 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
         $statement->free();
     }
 
+    /**
+     * @phpstan-return array<string, mixed>
+     */
     private function toRow(JobExecution $jobExecution): array
     {
         return $this->getNormalizer()->toRow($jobExecution);
     }
 
+    /**
+     * @phpstan-param array<string, mixed> $row
+     */
     private function fromRow(array $row): JobExecution
     {
         return $this->getNormalizer()->fromRow($row);
@@ -313,9 +335,7 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
 
     private function getNormalizer(): JobExecutionRowNormalizer
     {
-        if ($this->normalizer === null) {
-            $this->normalizer = new JobExecutionRowNormalizer($this->connection->getDatabasePlatform());
-        }
+        $this->normalizer ??= new JobExecutionRowNormalizer($this->connection->getDatabasePlatform());
 
         return $this->normalizer;
     }

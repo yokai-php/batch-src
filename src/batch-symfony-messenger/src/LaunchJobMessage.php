@@ -12,10 +12,13 @@ final class LaunchJobMessage
     private string $jobName;
 
     /**
-     * @var array
+     * @phpstan-var array<string, mixed>
      */
     private array $configuration;
 
+    /**
+     * @phpstan-param array<string, mixed> $configuration
+     */
     public function __construct(string $jobName, array $configuration = [])
     {
         $this->jobName = $jobName;
@@ -27,6 +30,9 @@ final class LaunchJobMessage
         return $this->jobName;
     }
 
+    /**
+     * @phpstan-return array<string, mixed>
+     */
     public function getConfiguration(): array
     {
         return $this->configuration;

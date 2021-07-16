@@ -1,7 +1,5 @@
 parameters:
   level: max
-  checkMissingIterableValueType: false
-  checkGenericClassInNonGenericObjectType: false
   paths:
     - src/batch/src/
     - src/batch-box-spout/src/

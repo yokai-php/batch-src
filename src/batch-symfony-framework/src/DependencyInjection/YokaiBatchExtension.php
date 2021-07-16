@@ -24,6 +24,7 @@ final class YokaiBatchExtension extends Extension
 {
     /**
      * @inheritDoc
+     * @phpstan-param list<array<string, mixed>> $configs
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
@@ -79,6 +80,9 @@ final class YokaiBatchExtension extends Extension
         return new ConfigLoader\DelegatingLoader($resolver);
     }
 
+    /**
+     * @param array<string, mixed> $config
+     */
     private function configureStorage(ContainerBuilder $container, array $config): void
     {
         if (isset($config['service'])) {

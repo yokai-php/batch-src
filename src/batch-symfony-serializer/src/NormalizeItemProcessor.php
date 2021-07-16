@@ -22,10 +22,13 @@ final class NormalizeItemProcessor implements ItemProcessorInterface
     private ?string $format;
 
     /**
-     * @var array
+     * @phpstan-var array<string, mixed>
      */
     private array $context;
 
+    /**
+     * @phpstan-param array<string, mixed> $context
+     */
     public function __construct(NormalizerInterface $normalizer, string $format = null, array $context = [])
     {
         $this->normalizer = $normalizer;

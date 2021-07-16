@@ -27,10 +27,13 @@ final class DenormalizeItemProcessor implements ItemProcessorInterface
     private ?string $format;
 
     /**
-     * @var array
+     * @phpstan-var array<string, mixed>
      */
     private array $context;
 
+    /**
+     * @phpstan-param array<string, mixed> $context
+     */
     public function __construct(
         DenormalizerInterface $denormalizer,
         string $type,

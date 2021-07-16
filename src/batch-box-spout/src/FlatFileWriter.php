@@ -33,7 +33,7 @@ final class FlatFileWriter implements
     private string $type;
 
     /**
-     * @var array|null
+     * @phpstan-var list<string>|null
      */
     private ?array $headers;
 
@@ -53,10 +53,14 @@ final class FlatFileWriter implements
     private ?string $filePath;
 
     /**
-     * @var array
+     * @phpstan-var array{delimiter?: string, enclosure?: string}
      */
     private array $options;
 
+    /**
+     * @phpstan-param list<string>|null                             $headers
+     * @phpstan-param array{delimiter?: string, enclosure?: string} $options
+     */
     public function __construct(string $type, array $headers = null, string $filePath = null, array $options = [])
     {
         $this->type = $type;
