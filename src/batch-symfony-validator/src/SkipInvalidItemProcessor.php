@@ -18,10 +18,13 @@ final class SkipInvalidItemProcessor implements ItemProcessorInterface
     private ValidatorInterface $validator;
 
     /**
-     * @var array|null
+     * @var string[]|null
      */
     private ?array $groups;
 
+    /**
+     * @param string[]|null $groups
+     */
     public function __construct(ValidatorInterface $validator, array $groups = null)
     {
         $this->validator = $validator;

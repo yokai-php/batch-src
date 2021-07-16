@@ -15,6 +15,8 @@ use Yokai\Batch\Launcher\JobLauncherInterface;
 
 final class RunJobCommand extends Command
 {
+    protected static $defaultName = 'yokai:batch:run';
+
     public const EXIT_SUCCESS_CODE = 0;
     public const EXIT_ERROR_CODE = 1;
     public const EXIT_WARNING_CODE = 2;
@@ -29,7 +31,7 @@ final class RunJobCommand extends Command
      */
     public function __construct(JobLauncherInterface $jobLauncher)
     {
-        parent::__construct(null);
+        parent::__construct();
         $this->jobLauncher = $jobLauncher;
     }
 
@@ -38,10 +40,8 @@ final class RunJobCommand extends Command
      */
     protected function configure(): void
     {
-        $this
-            ->setName('yokai:batch:run')
-            ->addArgument('job', InputArgument::REQUIRED)
-            ->addArgument('configuration', InputArgument::OPTIONAL);
+        $this->addArgument('job', InputArgument::REQUIRED);
+        $this->addArgument('configuration', InputArgument::OPTIONAL);
     }
 
     /**
@@ -118,6 +118,8 @@ final class RunJobCommand extends Command
      *
      * @throws InvalidArgumentException
      * @return array
+     *
+     * @phpstan-return array<string, mixed>
      */
     private function decodeConfiguration(string $data): array
     {

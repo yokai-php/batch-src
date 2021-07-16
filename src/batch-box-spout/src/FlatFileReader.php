@@ -38,7 +38,7 @@ final class FlatFileReader implements
     private string $type;
 
     /**
-     * @var array
+     * @phpstan-var array{delimiter?: string, enclosure?: string}
      */
     private array $options;
 
@@ -48,7 +48,7 @@ final class FlatFileReader implements
     private string $headersMode;
 
     /**
-     * @var array|null
+     * @phpstan-var list<string>|null
      */
     private ?array $headers;
 
@@ -57,6 +57,10 @@ final class FlatFileReader implements
      */
     private ?string $filePath;
 
+    /**
+     * @phpstan-param array{delimiter?: string, enclosure?: string} $options
+     * @phpstan-param list<string>|null                             $headers
+     */
     public function __construct(
         string $type,
         array $options = [],

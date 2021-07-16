@@ -31,6 +31,9 @@ final class JobExecutionRowNormalizer
         $this->platform = $platform;
     }
 
+    /**
+     * @phpstan-return array<string, mixed>
+     */
     public function toRow(JobExecution $jobExecution): array
     {
         return [
@@ -48,6 +51,9 @@ final class JobExecutionRowNormalizer
         ];
     }
 
+    /**
+     * @phpstan-param array<string, mixed> $data
+     */
     public function fromRow(array $data, JobExecution $parent = null): JobExecution
     {
         $data['status'] = intval($data['status']);
@@ -93,6 +99,9 @@ final class JobExecutionRowNormalizer
         return $jobExecution;
     }
 
+    /**
+     * @phpstan-return array<string, mixed>
+     */
     public function toChildRow(JobExecution $jobExecution): array
     {
         return [
@@ -112,6 +121,9 @@ final class JobExecutionRowNormalizer
      * @param array|string $value
      *
      * @return array
+     *
+     * @phpstan-param array<int|string, mixed>|string $value
+     * @phpstan-return array<int|string, mixed>
      */
     private function jsonFromString($value): array
     {
@@ -135,6 +147,9 @@ final class JobExecutionRowNormalizer
         return DateTimeImmutable::createFromFormat($this->platform->getDateTimeFormatString(), $date) ?: null;
     }
 
+    /**
+     * @phpstan-return array<string, mixed>
+     */
     private function failureToArray(Failure $failure): array
     {
         return [
@@ -146,6 +161,9 @@ final class JobExecutionRowNormalizer
         ];
     }
 
+    /**
+     * @phpstan-param array<string, mixed> $array
+     */
     private function failureFromArray(array $array): Failure
     {
         return new Failure(
@@ -157,6 +175,9 @@ final class JobExecutionRowNormalizer
         );
     }
 
+    /**
+     * @phpstan-return array<string, mixed>
+     */
     private function warningToArray(Warning $warning): array
     {
         return [
@@ -166,6 +187,9 @@ final class JobExecutionRowNormalizer
         ];
     }
 
+    /**
+     * @phpstan-param array<string, mixed> $array
+     */
     private function warningFromArray(array $array): Warning
     {
         return new Warning($array['message'], $array['parameters'], $array['context']);
