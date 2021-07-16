@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Trigger\Scheduler;
 
+/**
+ * This model class is used by schedulers to hold information about a job that should be triggered.
+ */
 final class ScheduledJob
 {
     private string $jobName;
@@ -17,16 +20,31 @@ final class ScheduledJob
         $this->id = $id;
     }
 
+    /**
+     * The job name to trigger.
+     *
+     * @return string
+     */
     public function getJobName(): string
     {
         return $this->jobName;
     }
 
+    /**
+     * The job parameters for the job to trigger.
+     *
+     * @return array
+     */
     public function getParameters(): array
     {
         return $this->parameters;
     }
 
+    /**
+     * An optional job execution id for the job to trigger.
+     *
+     * @return string|null
+     */
     public function getId(): ?string
     {
         return $this->id;

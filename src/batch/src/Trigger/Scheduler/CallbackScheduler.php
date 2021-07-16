@@ -7,6 +7,19 @@ namespace Yokai\Batch\Trigger\Scheduler;
 use Generator;
 use Yokai\Batch\JobExecution;
 
+/**
+ * This scheduler implementation uses constructor settings to compute schedules.
+ * The main setting is a callback that must return a boolean,
+ * if the callback return true, the associated job schedule will be triggered.
+ *
+ * Example :
+ *
+ *     new CallbackScheduler([
+ *         [fn() => true, 'job.name'],
+ *         [fn() => true, 'job.name', ['with' => 'parameters']],
+ *         [fn() => true, 'job.name', [], 'job_id'],
+ *     ]);
+ */
 class CallbackScheduler implements SchedulerInterface
 {
     /**

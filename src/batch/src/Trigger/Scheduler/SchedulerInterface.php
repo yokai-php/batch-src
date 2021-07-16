@@ -6,6 +6,9 @@ namespace Yokai\Batch\Trigger\Scheduler;
 
 use Yokai\Batch\JobExecution;
 
+/**
+ * A schedule is a component responsible to tell what jobs should be run at the moment.
+ */
 interface SchedulerInterface
 {
     /**
