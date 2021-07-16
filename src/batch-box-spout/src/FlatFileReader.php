@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yokai\Batch\Bridge\Box\Spout;
 
 use Box\Spout\Common\Entity\Row;
+use Box\Spout\Common\Type;
 use Box\Spout\Reader\Common\Creator\ReaderFactory;
 use Box\Spout\Reader\CSV\Reader as CsvReader;
 use Box\Spout\Reader\SheetInterface;
@@ -24,11 +25,14 @@ final class FlatFileReader implements
     public const HEADERS_MODE_SKIP = 'skip';
     public const HEADERS_MODE_COMBINE = 'combine';
     public const HEADERS_MODE_NONE = 'none';
-    public const AVAILABLE_HEADERS_MODES = [
+
+    private const HEADERS_MODES = [
         self::HEADERS_MODE_SKIP,
         self::HEADERS_MODE_COMBINE,
         self::HEADERS_MODE_NONE,
     ];
+
+    private const TYPES = [Type::CSV, Type::XLSX, Type::ODS];
 
     /**
      * @var string
@@ -66,8 +70,11 @@ final class FlatFileReader implements
         string $headersMode = self::HEADERS_MODE_NONE,
         array $headers = null
     ) {
-        if (!in_array($headersMode, self::AVAILABLE_HEADERS_MODES, true)) {
-            throw UnexpectedValueException::enum(self::AVAILABLE_HEADERS_MODES, $headersMode, 'Invalid header mode.');
+        if (!in_array($type, self::TYPES, true)) {
+            throw UnexpectedValueException::enum(self::TYPES, $type, 'Invalid type.');
+        }
+        if (!in_array($headersMode, self::HEADERS_MODES, true)) {
+            throw UnexpectedValueException::enum(self::HEADERS_MODES, $headersMode, 'Invalid header mode.');
         }
         if ($headers !== null && $headersMode === self::HEADERS_MODE_COMBINE) {
             throw new InvalidArgumentException(
@@ -88,8 +95,9 @@ final class FlatFileReader implements
     public function read(): iterable
     {
         $reader = ReaderFactory::createFromType($this->type);
-        if ($reader instanceof CsvReader && isset($this->options['delimiter'])) {
-            $reader->setFieldDelimiter($this->options['delimiter']);
+        if ($reader instanceof CsvReader) {
+            $reader->setFieldDelimiter($this->options['delimiter'] ?? ',');
+            $reader->setFieldEnclosure($this->options['enclosure'] ?? '"');
         }
         $reader->open((string)$this->filePath->get($this->jobExecution));
 

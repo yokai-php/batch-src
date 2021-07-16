@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Bridge\Box\Spout;
 
+use Box\Spout\Common\Type;
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 use Box\Spout\Writer\Common\Creator\WriterFactory;
 use Box\Spout\Writer\CSV\Writer as CsvWriter;
@@ -25,6 +26,8 @@ final class FlatFileWriter implements
     FlushableInterface
 {
     use JobExecutionAwareTrait;
+
+    private const TYPES = [Type::CSV, Type::XLSX, Type::ODS];
 
     /**
      * @var string
@@ -66,6 +69,10 @@ final class FlatFileWriter implements
         array $headers = null,
         array $options = []
     ) {
+        if (!in_array($type, self::TYPES, true)) {
+            throw UnexpectedValueException::enum(self::TYPES, $type, 'Invalid type.');
+        }
+
         $this->type = $type;
         $this->filePath = $filePath;
         $this->headers = $headers;

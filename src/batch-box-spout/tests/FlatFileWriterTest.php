@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 use Yokai\Batch\Bridge\Box\Spout\FlatFileWriter;
 use Yokai\Batch\Exception\BadMethodCallException;
 use Yokai\Batch\Exception\CannotAccessParameterException;
+use Yokai\Batch\Exception\RuntimeException;
 use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\Job\Parameters\JobExecutionParameterAccessor;
 use Yokai\Batch\Job\Parameters\StaticValueParameterAccessor;
@@ -24,6 +25,37 @@ class FlatFileWriterTest extends TestCase
         if (!is_dir(self::WRITE_DIR)) {
             mkdir(self::WRITE_DIR, 0777, true);
         }
+    }
+
+    /**
+     * @dataProvider combination
+     */
+    public function testWrite(
+        string $type,
+        string $filename,
+        ?array $headers,
+        iterable $itemsToWrite,
+        string $expectedContent,
+        array $options = []
+    ): void {
+        $file = self::WRITE_DIR . '/' . $filename;
+
+        self::assertFileDoesNotExist($file);
+
+        $writer = new FlatFileWriter($type, new StaticValueParameterAccessor($file), $headers, $options);
+        $writer->setJobExecution(JobExecution::createRoot('123456789', 'export'));
+
+        $writer->initialize();
+        $writer->write($itemsToWrite);
+        $writer->flush();
+        $this->assertFileContents($type, $file, $expectedContent);
+    }
+
+    public function testInvalidType(): void
+    {
+        $this->expectException(UnexpectedValueException::class);
+
+        new FlatFileWriter('invalid type', new StaticValueParameterAccessor('/path/to/file'));
     }
 
     /**
@@ -43,26 +75,18 @@ class FlatFileWriterTest extends TestCase
     }
 
     /**
-     * @dataProvider combination
+     * @dataProvider types
      */
-    public function testWrite(
-        string $type,
-        string $filename,
-        ?array $headers,
-        iterable $itemsToWrite,
-        string $expectedContent
-    ): void {
-        $file = self::WRITE_DIR . '/' . $filename;
+    public function testCannotCreateFile(string $type): void
+    {
+        $this->expectException(RuntimeException::class);
 
-        self::assertFileDoesNotExist($file);
+        $file = '/path/to/a/dir/that/do/not/exists/and/not/creatable/file.' . $type;
 
-        $writer = new FlatFileWriter($type, new StaticValueParameterAccessor($file), $headers);
+        $writer = new FlatFileWriter($type, new StaticValueParameterAccessor($file));
         $writer->setJobExecution(JobExecution::createRoot('123456789', 'export'));
 
         $writer->initialize();
-        $writer->write($itemsToWrite);
-        $writer->flush();
-        $this->assertFileContents($type, $file, $expectedContent);
     }
 
     /**
@@ -121,6 +145,12 @@ John,Doe
 Jane,Doe
 Jack,Doe
 CSV;
+        $contentPipe = <<<CSV
+firstName|lastName
+John|Doe
+Jane|Doe
+Jack|Doe
+CSV;
 
         foreach ($this->types() as [$type]) {
             yield [
@@ -137,6 +167,24 @@ CSV;
                 $items,
                 $content,
             ];
+            if ($type === Type::CSV) {
+                yield [
+                    $type,
+                    "header-in-items-with-pipes.$type",
+                    null,
+                    array_merge([$headers], $items),
+                    $contentPipe,
+                    ['delimiter' => '|'],
+                ];
+                yield [
+                    $type,
+                    "header-in-constructor-with-pipes.$type",
+                    $headers,
+                    $items,
+                    $contentPipe,
+                    ['delimiter' => '|'],
+                ];
+            }
         }
     }
 
