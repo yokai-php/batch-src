@@ -35,12 +35,10 @@ class SiblingJobExecutionAccessorTest extends TestCase
         $this->expectException(CannotAccessParameterException::class);
 
         $root = JobExecution::createRoot('123', 'root');
-        $do = JobExecution::createChild($root, 'do');
-        $root->addChildExecution($do);
 
         $accessor = new SiblingJobExecutionAccessor(new JobExecutionSummaryAccessor('prepared'), 'prepare');
 
-        $accessor->get($do);
+        $accessor->get($root);
     }
 
     public function testSiblingNotFound(): void
@@ -48,9 +46,11 @@ class SiblingJobExecutionAccessorTest extends TestCase
         $this->expectException(CannotAccessParameterException::class);
 
         $root = JobExecution::createRoot('123', 'root');
+        $do = JobExecution::createChild($root, 'do');
+        $root->addChildExecution($do);
 
         $accessor = new SiblingJobExecutionAccessor(new JobExecutionSummaryAccessor('prepared'), 'prepare');
 
-        $accessor->get($root);
+        $accessor->get($do);
     }
 }
