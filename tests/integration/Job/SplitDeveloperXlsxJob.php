@@ -10,6 +10,7 @@ use Box\Spout\Reader\Common\Creator\ReaderFactory;
 use Box\Spout\Reader\SheetInterface;
 use Yokai\Batch\Bridge\Box\Spout\FlatFileWriter;
 use Yokai\Batch\Job\AbstractJob;
+use Yokai\Batch\Job\Parameters\StaticValueParameterAccessor;
 use Yokai\Batch\JobExecution;
 
 final class SplitDeveloperXlsxJob extends AbstractJob
@@ -91,7 +92,8 @@ final class SplitDeveloperXlsxJob extends AbstractJob
 
     private function writeToCsv(string $filename, array $data, array $headers): void
     {
-        $writer = new FlatFileWriter(Type::CSV, $headers, $filename);
+        $writer = new FlatFileWriter(Type::CSV, new StaticValueParameterAccessor($filename), $headers);
+        $writer->setJobExecution(JobExecution::createRoot('fake', 'fake'));
         $writer->initialize();
         $writer->write($data);
         $writer->flush();

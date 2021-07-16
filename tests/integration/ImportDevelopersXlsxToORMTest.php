@@ -17,8 +17,8 @@ use Yokai\Batch\Bridge\Doctrine\Persistence\ObjectWriter;
 use Yokai\Batch\Job\Item\ItemJob;
 use Yokai\Batch\Job\JobInterface;
 use Yokai\Batch\Job\JobWithChildJobs;
+use Yokai\Batch\Job\Parameters\StaticValueParameterAccessor;
 use Yokai\Batch\JobExecution;
-use Yokai\Batch\Storage\JobExecutionStorageInterface;
 use Yokai\Batch\Sources\Tests\Integration\Entity\Badge;
 use Yokai\Batch\Sources\Tests\Integration\Entity\Developer;
 use Yokai\Batch\Sources\Tests\Integration\Entity\Repository;
@@ -26,6 +26,7 @@ use Yokai\Batch\Sources\Tests\Integration\Job\SplitDeveloperXlsxJob;
 use Yokai\Batch\Sources\Tests\Integration\Processor\BadgeProcessor;
 use Yokai\Batch\Sources\Tests\Integration\Processor\DeveloperProcessor;
 use Yokai\Batch\Sources\Tests\Integration\Processor\RepositoryProcessor;
+use Yokai\Batch\Storage\JobExecutionStorageInterface;
 
 class ImportDevelopersXlsxToORMTest extends JobTestCase
 {
@@ -80,7 +81,12 @@ class ImportDevelopersXlsxToORMTest extends JobTestCase
         $outputDeveloperFile = self::OUTPUT_DEVELOPER_FILE;
 
         $csvReader = function (string $file): FlatFileReader {
-            return new FlatFileReader(Type::CSV, [], FlatFileReader::HEADERS_MODE_COMBINE, null, $file);
+            return new FlatFileReader(
+                Type::CSV,
+                new StaticValueParameterAccessor($file),
+                [],
+                FlatFileReader::HEADERS_MODE_COMBINE
+            );
         };
 
         return new JobWithChildJobs(

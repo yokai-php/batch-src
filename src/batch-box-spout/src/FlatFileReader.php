@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace Yokai\Batch\Bridge\Box\Spout;
 
 use Box\Spout\Common\Entity\Row;
+use Box\Spout\Common\Type;
 use Box\Spout\Reader\Common\Creator\ReaderFactory;
 use Box\Spout\Reader\CSV\Reader as CsvReader;
 use Box\Spout\Reader\SheetInterface;
 use Yokai\Batch\Exception\InvalidArgumentException;
-use Yokai\Batch\Exception\UndefinedJobParameterException;
 use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\Job\Item\ItemReaderInterface;
 use Yokai\Batch\Job\JobExecutionAwareInterface;
 use Yokai\Batch\Job\JobExecutionAwareTrait;
+use Yokai\Batch\Job\Parameters\JobParameterAccessorInterface;
 
 final class FlatFileReader implements
     ItemReaderInterface,
@@ -21,16 +22,17 @@ final class FlatFileReader implements
 {
     use JobExecutionAwareTrait;
 
-    public const SOURCE_FILE_PARAMETER = 'sourceFile';
-
     public const HEADERS_MODE_SKIP = 'skip';
     public const HEADERS_MODE_COMBINE = 'combine';
     public const HEADERS_MODE_NONE = 'none';
-    public const AVAILABLE_HEADERS_MODES = [
+
+    private const HEADERS_MODES = [
         self::HEADERS_MODE_SKIP,
         self::HEADERS_MODE_COMBINE,
         self::HEADERS_MODE_NONE,
     ];
+
+    private const TYPES = [Type::CSV, Type::XLSX, Type::ODS];
 
     /**
      * @var string
@@ -53,9 +55,9 @@ final class FlatFileReader implements
     private ?array $headers;
 
     /**
-     * @var string|null
+     * @var JobParameterAccessorInterface
      */
-    private ?string $filePath;
+    private JobParameterAccessorInterface $filePath;
 
     /**
      * @phpstan-param array{delimiter?: string, enclosure?: string} $options
@@ -63,13 +65,16 @@ final class FlatFileReader implements
      */
     public function __construct(
         string $type,
+        JobParameterAccessorInterface $filePath,
         array $options = [],
         string $headersMode = self::HEADERS_MODE_NONE,
-        array $headers = null,
-        string $filePath = null
+        array $headers = null
     ) {
-        if (!in_array($headersMode, self::AVAILABLE_HEADERS_MODES, true)) {
-            throw UnexpectedValueException::enum(self::AVAILABLE_HEADERS_MODES, $headersMode, 'Invalid header mode.');
+        if (!in_array($type, self::TYPES, true)) {
+            throw UnexpectedValueException::enum(self::TYPES, $type, 'Invalid type.');
+        }
+        if (!in_array($headersMode, self::HEADERS_MODES, true)) {
+            throw UnexpectedValueException::enum(self::HEADERS_MODES, $headersMode, 'Invalid header mode.');
         }
         if ($headers !== null && $headersMode === self::HEADERS_MODE_COMBINE) {
             throw new InvalidArgumentException(
@@ -78,10 +83,10 @@ final class FlatFileReader implements
         }
 
         $this->type = $type;
+        $this->filePath = $filePath;
         $this->options = $options;
         $this->headersMode = $headersMode;
         $this->headers = $headers;
-        $this->filePath = $filePath;
     }
 
     /**
@@ -90,10 +95,11 @@ final class FlatFileReader implements
     public function read(): iterable
     {
         $reader = ReaderFactory::createFromType($this->type);
-        if ($reader instanceof CsvReader && isset($this->options['delimiter'])) {
-            $reader->setFieldDelimiter($this->options['delimiter']);
+        if ($reader instanceof CsvReader) {
+            $reader->setFieldDelimiter($this->options['delimiter'] ?? ',');
+            $reader->setFieldEnclosure($this->options['enclosure'] ?? '"');
         }
-        $reader->open($this->getFilePath());
+        $reader->open((string)$this->filePath->get($this->jobExecution));
 
         $headers = $this->headers;
 
@@ -122,18 +128,5 @@ final class FlatFileReader implements
         }
 
         $reader->close();
-    }
-
-    protected function getFilePath(): string
-    {
-        if ($this->filePath) {
-            return $this->filePath;
-        }
-
-        try {
-            return (string)$this->jobExecution->getParameter(self::SOURCE_FILE_PARAMETER);
-        } catch (UndefinedJobParameterException $exception) {
-            return (string)$this->jobExecution->getRootExecution()->getParameter(self::SOURCE_FILE_PARAMETER);
-        }
     }
 }
