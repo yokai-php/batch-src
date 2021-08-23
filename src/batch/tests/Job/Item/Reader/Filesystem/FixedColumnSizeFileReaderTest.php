@@ -59,7 +59,7 @@ class FixedColumnSizeFileReaderTest extends TestCase
                 ['firstName' => 'John', 'lastName' => 'Doe', 'country' => 'USA', 'city' => 'Washington'],
                 ['firstName' => 'Jane', 'lastName' => 'Doe', 'country' => 'USA', 'city' => 'Seattle'],
                 ['firstName' => 'Jack', 'lastName' => 'Doe', 'country' => 'USA', 'city' => 'San Francisco'],
-            ]
+            ],
         ];
         yield [
             $columnsWithNames,
@@ -68,7 +68,7 @@ class FixedColumnSizeFileReaderTest extends TestCase
                 ['firstName' => 'John', 'lastName' => 'Doe', 'country' => 'USA', 'city' => 'Washington'],
                 ['firstName' => 'Jane', 'lastName' => 'Doe', 'country' => 'USA', 'city' => 'Seattle'],
                 ['firstName' => 'Jack', 'lastName' => 'Doe', 'country' => 'USA', 'city' => 'San Francisco'],
-            ]
+            ],
         ];
         yield [
             $columnsWithoutNames,
@@ -78,7 +78,7 @@ class FixedColumnSizeFileReaderTest extends TestCase
                 ['John', 'Doe', 'USA', 'Washington'],
                 ['Jane', 'Doe', 'USA', 'Seattle'],
                 ['Jack', 'Doe', 'USA', 'San Francisco'],
-            ]
+            ],
         ];
         yield [
             $columnsWithoutNames,
@@ -87,7 +87,7 @@ class FixedColumnSizeFileReaderTest extends TestCase
                 ['John', 'Doe', 'USA', 'Washington'],
                 ['Jane', 'Doe', 'USA', 'Seattle'],
                 ['Jack', 'Doe', 'USA', 'San Francisco'],
-            ]
+            ],
         ];
     }
 }
