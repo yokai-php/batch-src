@@ -2,23 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Yokai\Batch\Job\Item\Reader;
+namespace Yokai\Batch\Job\Item\Reader\Filesystem;
 
 use Generator;
 use Yokai\Batch\Exception\RuntimeException;
-use Yokai\Batch\Exception\UndefinedJobParameterException;
 use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\Job\Item\ItemReaderInterface;
 use Yokai\Batch\Job\JobExecutionAwareInterface;
 use Yokai\Batch\Job\JobExecutionAwareTrait;
+use Yokai\Batch\Job\Parameters\JobParameterAccessorInterface;
 
 final class FixedColumnSizeFileReader implements
     ItemReaderInterface,
     JobExecutionAwareInterface
 {
     use JobExecutionAwareTrait;
-
-    public const SOURCE_FILE_PARAMETER = 'sourceFile';
 
     public const HEADERS_MODE_SKIP = 'skip';
     public const HEADERS_MODE_COMBINE = 'combine';
@@ -40,14 +38,14 @@ final class FixedColumnSizeFileReader implements
     private string $headersMode;
 
     /**
-     * @var string|null
+     * @var JobParameterAccessorInterface
      */
-    private ?string $filePath;
+    private JobParameterAccessorInterface $filePath;
 
     public function __construct(
         array $columns,
-        string $headersMode = self::HEADERS_MODE_NONE,
-        string $filePath = null
+        JobParameterAccessorInterface $filePath,
+        string $headersMode = self::HEADERS_MODE_NONE
     ) {
         if (!\in_array($headersMode, self::AVAILABLE_HEADERS_MODES, true)) {
             throw UnexpectedValueException::enum(self::AVAILABLE_HEADERS_MODES, $headersMode, 'Invalid header mode.');
@@ -63,7 +61,8 @@ final class FixedColumnSizeFileReader implements
      */
     public function read(): Generator
     {
-        $handle = \fopen($path = $this->getFilePath(), 'r');
+        $path = (string)$this->filePath->get($this->jobExecution);
+        $handle = @\fopen($path, 'r');
         if ($handle === false) {
             throw new RuntimeException(\sprintf('Cannot read %s.', $path));
         }
@@ -99,18 +98,5 @@ final class FixedColumnSizeFileReader implements
         }
 
         \fclose($handle);
-    }
-
-    private function getFilePath(): string
-    {
-        if ($this->filePath !== null) {
-            return $this->filePath;
-        }
-
-        try {
-            return (string)$this->jobExecution->getParameter(self::SOURCE_FILE_PARAMETER);
-        } catch (UndefinedJobParameterException $exception) {
-            return (string)$this->jobExecution->getRootExecution()->getParameter(self::SOURCE_FILE_PARAMETER);
-        }
     }
 }

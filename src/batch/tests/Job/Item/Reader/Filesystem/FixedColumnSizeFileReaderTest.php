@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Yokai\Batch\Tests\Job\Item\Reader;
+namespace Yokai\Batch\Tests\Job\Item\Reader\Filesystem;
 
 use Generator;
 use PHPUnit\Framework\TestCase;
-use Yokai\Batch\Exception\UndefinedJobParameterException;
+use Yokai\Batch\Exception\RuntimeException;
 use Yokai\Batch\Exception\UnexpectedValueException;
-use Yokai\Batch\Job\Item\Reader\FixedColumnSizeFileReader;
+use Yokai\Batch\Job\Item\Reader\Filesystem\FixedColumnSizeFileReader;
+use Yokai\Batch\Job\Parameters\StaticValueParameterAccessor;
 use Yokai\Batch\JobExecution;
-use Yokai\Batch\JobParameters;
 
 class FixedColumnSizeFileReaderTest extends TestCase
 {
@@ -19,20 +19,12 @@ class FixedColumnSizeFileReaderTest extends TestCase
      */
     public function test(array $columns, string $headersMode, array $expected): void
     {
-        // accessing file via constructor argument
-        $reader = new FixedColumnSizeFileReader($columns, $headersMode, __DIR__ . '/fixtures/fixed-column-size.txt');
-        self::assertSame($expected, \iterator_to_array($reader->read()));
-
-        // accessing file via job execution parameter
-        $execution = JobExecution::createRoot(
-            '123456',
-            'testing',
-            null,
-            new JobParameters(
-                [FixedColumnSizeFileReader::SOURCE_FILE_PARAMETER => __DIR__ . '/fixtures/fixed-column-size.txt']
-            )
+        $execution = JobExecution::createRoot('123456', 'testing');
+        $reader = new FixedColumnSizeFileReader(
+            $columns,
+            new StaticValueParameterAccessor(__DIR__ . '/fixtures/fixed-column-size.txt'),
+            $headersMode
         );
-        $reader = new FixedColumnSizeFileReader($columns, $headersMode);
         $reader->setJobExecution($execution);
         self::assertSame($expected, \iterator_to_array($reader->read()));
     }
@@ -40,14 +32,17 @@ class FixedColumnSizeFileReaderTest extends TestCase
     public function testInvalidHeaderMode(): void
     {
         $this->expectException(UnexpectedValueException::class);
-        new FixedColumnSizeFileReader([10, 10], 'wrong header mode');
+        new FixedColumnSizeFileReader([10, 10], new StaticValueParameterAccessor(null), 'wrong header mode');
     }
 
     public function testFileNotFound(): void
     {
-        $this->expectException(UndefinedJobParameterException::class);
+        $this->expectException(RuntimeException::class);
         $execution = JobExecution::createRoot('123456', 'testing');
-        $reader = new FixedColumnSizeFileReader([10, 10]);
+        $reader = new FixedColumnSizeFileReader(
+            [10, 10],
+            new StaticValueParameterAccessor(__DIR__ . '/fixtures/unknown-file.ext')
+        );
         $reader->setJobExecution($execution);
         \iterator_to_array($reader->read());
     }
