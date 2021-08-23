@@ -28,7 +28,7 @@ final class FixedColumnSizeFileReader implements
     ];
 
     /**
-     * @var array
+     * @var int[]
      */
     private array $columns;
 
@@ -42,6 +42,9 @@ final class FixedColumnSizeFileReader implements
      */
     private JobParameterAccessorInterface $filePath;
 
+    /**
+     * @param int[] $columns
+     */
     public function __construct(
         array $columns,
         JobParameterAccessorInterface $filePath,
