@@ -4,21 +4,25 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Job\Item\Reader;
 
+use Closure;
 use Yokai\Batch\Job\Item\ItemReaderInterface;
 
+/**
+ * An {@see ItemReaderInterface} that decorates another {@see ItemReaderInterface}
+ * and extract item index of each item using a {@see Closure}.
+ *
+ * Provided {@see Closure} must accept a single argument (the read item)
+ * and must return a value (preferably unique) that will be item index.
+ */
 final class IndexWithReader implements ItemReaderInterface
 {
     private ItemReaderInterface $reader;
+    private Closure $extractItemIndex;
 
-    /**
-     * @var callable
-     */
-    private $getIndex;
-
-    public function __construct(ItemReaderInterface $reader, callable $getIndex)
+    public function __construct(ItemReaderInterface $reader, Closure $extractItemIndex)
     {
         $this->reader = $reader;
-        $this->getIndex = $getIndex;
+        $this->extractItemIndex = $extractItemIndex;
     }
 
     public static function withArrayKey(ItemReaderInterface $reader, string $key): self
@@ -42,7 +46,7 @@ final class IndexWithReader implements ItemReaderInterface
     public function read(): iterable
     {
         foreach ($this->reader->read() as $item) {
-            yield ($this->getIndex)($item) => $item;
+            yield ($this->extractItemIndex)($item) => $item;
         }
     }
 }
