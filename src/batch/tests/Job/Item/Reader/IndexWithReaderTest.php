@@ -56,5 +56,13 @@ class IndexWithReaderTest extends TestCase
             ),
             [3 => $three, 6 => $six],
         ];
+
+        yield 'Index with arbitrary closure' => [
+            new IndexWithReader(
+                new StaticIterableReader([1, 2, 3]),
+                fn(int $value) => $value * $value
+            ),
+            [1 => 1, 4 => 2, 9 => 3],
+        ];
     }
 }
