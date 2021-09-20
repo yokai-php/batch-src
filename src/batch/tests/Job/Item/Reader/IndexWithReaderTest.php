@@ -9,6 +9,7 @@ use Generator;
 use PHPUnit\Framework\TestCase;
 use Yokai\Batch\Job\Item\Reader\IndexWithReader;
 use Yokai\Batch\Job\Item\Reader\StaticIterableReader;
+use Yokai\Batch\JobExecution;
 
 class IndexWithReaderTest extends TestCase
 {
@@ -17,10 +18,15 @@ class IndexWithReaderTest extends TestCase
      */
     public function test(IndexWithReader $reader, array $expected): void
     {
+        $reader->setJobExecution(JobExecution::createRoot('123456', 'testing'));
+        $reader->initialize();
+
         $actual = [];
         foreach ($reader->read() as $index => $item) {
             $actual[$index] = $item;
         }
+
+        $reader->flush();
 
         self::assertSame($expected, $actual);
     }
