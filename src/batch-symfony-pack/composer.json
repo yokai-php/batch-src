@@ -1,0 +1,18 @@
+{
+    "name": "yokai/batch-symfony-pack",
+    "description": "A yokai/batch minimal pack for Symfony Framework",
+    "keywords": ["batch", "job", "symfony"],
+    "type": "symfony-pack",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Yann Eugoné",
+            "email": "eugone.yann@gmail.com"
+        }
+    ],
+    "require": {
+        "yokai/batch": "^0.4.0",
+        "yokai/batch-symfony-console": "^0.4.0",
+        "yokai/batch-symfony-framework": "^0.4.0"
+    }
+}
