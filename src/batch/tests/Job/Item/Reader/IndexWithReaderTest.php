@@ -16,8 +16,10 @@ class IndexWithReaderTest extends TestCase
     /**
      * @dataProvider provider
      */
-    public function test(IndexWithReader $reader, array $expected): void
+    public function test(callable $factory, array $expected): void
     {
+        /** @var IndexWithReader $reader */
+        $reader = $factory();
         $reader->setJobExecution(JobExecution::createRoot('123456', 'testing'));
         $reader->initialize();
 
@@ -36,7 +38,7 @@ class IndexWithReaderTest extends TestCase
         $john = ['name' => 'John', 'location' => 'Washington'];
         $marie = ['name' => 'Marie', 'location' => 'London'];
         yield 'Index with array key' => [
-            IndexWithReader::withArrayKey(
+            fn() => IndexWithReader::withArrayKey(
                 new StaticIterableReader([$john, $marie]),
                 'name'
             ),
@@ -46,7 +48,7 @@ class IndexWithReaderTest extends TestCase
         $john = (object)$john;
         $marie = (object)$marie;
         yield 'Index with object property' => [
-            IndexWithReader::withProperty(
+            fn() => IndexWithReader::withProperty(
                 new StaticIterableReader([$john, $marie]),
                 'name'
             ),
@@ -56,7 +58,7 @@ class IndexWithReaderTest extends TestCase
         $three = new ArrayIterator([1, 2, 3]);
         $six = new ArrayIterator([1, 2, 3, 4, 5, 6]);
         yield 'Index with object method' => [
-            IndexWithReader::withGetter(
+            fn() => IndexWithReader::withGetter(
                 new StaticIterableReader([$three, $six]),
                 'count'
             ),
@@ -64,7 +66,7 @@ class IndexWithReaderTest extends TestCase
         ];
 
         yield 'Index with arbitrary closure' => [
-            new IndexWithReader(
+            fn() => new IndexWithReader(
                 new StaticIterableReader([1, 2, 3]),
                 fn(int $value) => $value * $value
             ),
