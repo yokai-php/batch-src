@@ -14,19 +14,16 @@ final class Failure
 {
     /**
      * The exception class
-     * @var string
      */
     private string $class;
 
     /**
      * The exception message {@see Throwable::getMessage}
-     * @var string
      */
     private string $message;
 
     /**
      * The exception code {@see Throwable::getCode}
-     * @var int
      */
     private int $code;
 
@@ -38,7 +35,6 @@ final class Failure
 
     /**
      * The exception trace {@see Throwable::getTraceAsString}
-     * @var string|null
      */
     private ?string $trace;
 
