@@ -114,9 +114,9 @@ class FlatFileReaderTest extends TestCase
         );
         self::assertSame(
             [
-                '{row}' => 3,
-                '{expected}' => 2,
-                '{actual}' => 3,
+                '{row}' => '3',
+                '{expected}' => '2',
+                '{actual}' => '3',
             ],
             $jobExecution->getWarnings()[0]->getParameters()
         );
