@@ -89,18 +89,23 @@ class FlatFileReaderTest extends TestCase
     {
         $file = __DIR__ . '/fixtures/wrong-line-size.csv';
         $jobExecution = JobExecution::createRoot('123456789', 'parent');
-        $reader = new FlatFileReader('csv', new StaticValueParameterAccessor($file), [], FlatFileReader::HEADERS_MODE_COMBINE);
+        $reader = new FlatFileReader(
+            'csv',
+            new StaticValueParameterAccessor($file),
+            [],
+            FlatFileReader::HEADERS_MODE_COMBINE
+        );
         $reader->setJobExecution($jobExecution);
 
         /** @var \Iterator $result */
         $result = $reader->read();
         self::assertInstanceOf(\Iterator::class, $result);
         self::assertSame(
-              [
-                  ['firstName' => 'John', 'lastName' => 'Doe'],
-                  ['firstName' => 'Jack', 'lastName' => 'Doe'],
-              ],
-              iterator_to_array($result)
+            [
+                ['firstName' => 'John', 'lastName' => 'Doe'],
+                ['firstName' => 'Jack', 'lastName' => 'Doe'],
+            ],
+            iterator_to_array($result)
         );
 
         self::assertSame(
