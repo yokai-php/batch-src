@@ -122,6 +122,7 @@ final class FlatFileReader implements
 
                 if (is_array($headers)) {
                     try {
+                        /** @var array<string, mixed>|false $combined */
                         $combined = @array_combine($headers, $row);
                         if ($combined === false) {
                             // Prior to PHP 8.0 array_combine only trigger a warning
@@ -136,9 +137,9 @@ final class FlatFileReader implements
                             new Warning(
                                 'Expecting row {row} to have exactly {expected} columns(s), but got {actual}.',
                                 [
-                                    '{row}' => $rowIndex,
-                                    '{expected}' => count($headers),
-                                    '{actual}' => count($row),
+                                    '{row}' => (string)$rowIndex,
+                                    '{expected}' => (string)count($headers),
+                                    '{actual}' => (string)count($row),
                                 ],
                                 ['headers' => $headers, 'row' => $row]
                             )
