@@ -39,9 +39,8 @@ class ChainProcessorTest extends TestCase
         $processor->flush();
 
         foreach ($chain as $decorated) {
-            self::assertTrue($decorated->wasInitialized());
-            self::assertTrue($decorated->wasProcessed());
-            self::assertTrue($decorated->wasFlushed());
+            $decorated->assertWasConfigured();
+            $decorated->assertWasUsed();
         }
     }
 }

@@ -32,9 +32,8 @@ class AddMetadataReaderTest extends TestCase
             $read
         );
 
-        self::assertTrue($decorated->wasInitialized());
-        self::assertTrue($decorated->wasRead());
-        self::assertTrue($decorated->wasFlushed());
+        $decorated->assertWasConfigured();
+        $decorated->assertWasUsed();
     }
 
     public function testReadDecoratedNotReturningAnArray(): void

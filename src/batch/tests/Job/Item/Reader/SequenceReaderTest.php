@@ -36,9 +36,8 @@ class SequenceReaderTest extends TestCase
         self::assertSame([1, 2, 3, 4, 5, 6, 7, 8, 9], \iterator_to_array($value));
 
         foreach ($sequence as $decorated) {
-            self::assertTrue($decorated->wasInitialized());
-            self::assertTrue($decorated->wasRead());
-            self::assertTrue($decorated->wasFlushed());
+            $decorated->assertWasConfigured();
+            $decorated->assertWasUsed();
         }
     }
 }

@@ -57,17 +57,14 @@ class ItemJobTest extends TestCase
             self::assertSame(['itemIndex' => $itemIdx], $warnings[$warningIdx]->getContext());
         }
 
-        self::assertTrue($reader->wasInitialized());
-        self::assertTrue($reader->wasRead());
-        self::assertTrue($reader->wasFlushed());
+        $reader->assertWasConfigured();
+        $reader->assertWasUsed();
 
-        self::assertTrue($processor->wasInitialized());
-        self::assertTrue($processor->wasProcessed());
-        self::assertTrue($processor->wasFlushed());
+        $processor->assertWasConfigured();
+        $processor->assertWasUsed();
 
-        self::assertTrue($debugWriter->wasInitialized());
-        self::assertTrue($debugWriter->wasWritten());
-        self::assertTrue($debugWriter->wasFlushed());
+        $debugWriter->assertWasConfigured();
+        $debugWriter->assertWasUsed();
     }
 
     public function testWithExpandItem(): void

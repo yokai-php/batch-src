@@ -30,9 +30,8 @@ class ChainWriterTest extends TestCase
         self::assertSame([1, 2, 3, 4, 5, 6], $writer2->getItems());
 
         foreach ($chain as $decorated) {
-            self::assertTrue($decorated->wasInitialized());
-            self::assertTrue($decorated->wasWritten());
-            self::assertTrue($decorated->wasFlushed());
+            $decorated->assertWasConfigured();
+            $decorated->assertWasUsed();
         }
     }
 }

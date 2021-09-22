@@ -34,9 +34,8 @@ class IndexWithReaderTest extends TestCase
 
         self::assertSame($expected, $actual);
 
-        self::assertTrue($decorated->wasInitialized());
-        self::assertTrue($decorated->wasRead());
-        self::assertTrue($decorated->wasFlushed());
+        $decorated->assertWasConfigured();
+        $decorated->assertWasUsed();
     }
 
     public function provider(): Generator
