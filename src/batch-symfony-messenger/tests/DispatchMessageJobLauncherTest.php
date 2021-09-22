@@ -14,9 +14,8 @@ use Yokai\Batch\Bridge\Symfony\Messenger\DispatchMessageJobLauncher;
 use Yokai\Batch\Bridge\Symfony\Messenger\LaunchJobMessage;
 use Yokai\Batch\Factory\JobExecutionFactory;
 use Yokai\Batch\Factory\UniqidJobExecutionIdGenerator;
-use Yokai\Batch\JobExecution;
-use Yokai\Batch\Storage\JobExecutionStorageInterface;
 use Yokai\Batch\Test\Factory\SequenceJobExecutionIdGenerator;
+use Yokai\Batch\Test\Storage\InMemoryJobExecutionStorage;
 
 final class DispatchMessageJobLauncherTest extends TestCase
 {
@@ -24,22 +23,6 @@ final class DispatchMessageJobLauncherTest extends TestCase
 
     public function testLaunch(): void
     {
-        $storage = $this->prophesize(JobExecutionStorageInterface::class);
-        $jobExecutionAssertions = Argument::that(
-            static function ($jobExecution): bool {
-                return $jobExecution instanceof JobExecution
-                    && $jobExecution->getJobName() === 'testing'
-                    && $jobExecution->getId() === '123456789'
-                    && $jobExecution->getStatus()->is(BatchStatus::PENDING)
-                    && $jobExecution->getParameters()->get('foo') === ['bar'];
-            }
-        );
-        $storage->store($jobExecutionAssertions)
-            ->shouldBeCalled();
-        $storage->retrieve('testing', '123456789')
-            ->shouldBeCalled()
-            ->willReturn($jobExecution = JobExecution::createRoot('123456789-refreshed', 'testing'));
-
         $messageBus = $this->prophesize(MessageBusInterface::class);
         $messageAssertions = Argument::that(
             static function ($message): bool {
@@ -54,32 +37,23 @@ final class DispatchMessageJobLauncherTest extends TestCase
 
         $jobLauncher = new DispatchMessageJobLauncher(
             new JobExecutionFactory(new UniqidJobExecutionIdGenerator()),
-            $storage->reveal(),
+            $storage = new InMemoryJobExecutionStorage(),
             $messageBus->reveal()
         );
 
-        self::assertSame(
-            $jobExecution,
-            $jobLauncher->launch('testing', ['_id' => '123456789', 'foo' => ['bar']])
-        );
+        $jobExecutionFromLauncher = $jobLauncher->launch('testing', ['_id' => '123456789', 'foo' => ['bar']]);
+
+        [$jobExecutionFromStorage] = $storage->getExecutions();
+        self::assertSame($jobExecutionFromLauncher, $jobExecutionFromStorage);
+
+        self::assertSame('testing', $jobExecutionFromStorage->getJobName());
+        self::assertSame('123456789', $jobExecutionFromStorage->getId());
+        self::assertSame(BatchStatus::PENDING, $jobExecutionFromStorage->getStatus()->getValue());
+        self::assertSame(['bar'], $jobExecutionFromStorage->getParameters()->get('foo'));
     }
 
     public function testLaunchWithNoId(): void
     {
-        $storage = $this->prophesize(JobExecutionStorageInterface::class);
-        $jobExecutionAssertions = Argument::that(
-            static function ($jobExecution): bool {
-                return $jobExecution instanceof JobExecution
-                    && $jobExecution->getJobName() === 'testing'
-                    && $jobExecution->getId() === '123456789';
-            }
-        );
-        $storage->store($jobExecutionAssertions)
-            ->shouldBeCalled();
-        $storage->retrieve('testing', '123456789')
-            ->shouldBeCalled()
-            ->willReturn($jobExecution = JobExecution::createRoot('123456789-refreshed', 'testing'));
-
         $messageBus = $this->prophesize(MessageBusInterface::class);
         $messageAssertions = Argument::that(
             static function ($message): bool {
@@ -94,13 +68,17 @@ final class DispatchMessageJobLauncherTest extends TestCase
 
         $jobLauncher = new DispatchMessageJobLauncher(
             new JobExecutionFactory(new SequenceJobExecutionIdGenerator(['123456789'])),
-            $storage->reveal(),
+            $storage = new InMemoryJobExecutionStorage(),
             $messageBus->reveal()
         );
 
-        self::assertSame(
-            $jobExecution,
-            $jobLauncher->launch('testing')
-        );
+        $jobExecutionFromLauncher = $jobLauncher->launch('testing');
+
+        [$jobExecutionFromStorage] = $storage->getExecutions();
+        self::assertSame($jobExecutionFromLauncher, $jobExecutionFromStorage);
+
+        self::assertSame('testing', $jobExecutionFromStorage->getJobName());
+        self::assertSame('123456789', $jobExecutionFromStorage->getId());
+        self::assertSame(BatchStatus::PENDING, $jobExecutionFromStorage->getStatus()->getValue());
     }
 }
