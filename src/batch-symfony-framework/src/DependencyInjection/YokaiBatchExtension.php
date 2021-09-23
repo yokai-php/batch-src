@@ -51,20 +51,15 @@ final class YokaiBatchExtension extends Extension
         $launchers = [
             'yokai_batch.job_launcher.dispatch_message' => $this->installed('symfony-messenger'),
             'yokai_batch.job_launcher.run_command' => $this->installed('symfony-console'),
+            'yokai_batch.job_launcher.simple' => true,
         ];
-        $container->setAlias(
-            JobLauncherInterface::class,
-            \array_keys(\array_filter($launchers))[0] ?? 'yokai_batch.job_launcher.simple'
-        );
+        $container->setAlias(JobLauncherInterface::class, \array_keys(\array_filter($launchers))[0]);
     }
 
     private function installed(string $package): bool
     {
-        if (InstalledVersions::isInstalled('yokai/batch-src')) {
-            return true;
-        }
-
-        return InstalledVersions::isInstalled('yokai/batch-' . $package);
+        return InstalledVersions::isInstalled('yokai/batch-src')
+            || InstalledVersions::isInstalled('yokai/batch-' . $package);
     }
 
     private function getLoader(ContainerBuilder $container): ConfigLoader\LoaderInterface
@@ -126,17 +121,18 @@ final class YokaiBatchExtension extends Extension
             );
         }
 
-        $interfaces = [
-            JobExecutionStorageInterface::class => true,
-            ListableJobExecutionStorageInterface::class => false,
-            QueryableJobExecutionStorageInterface::class => false,
-        ];
         $defaultStorageClass = $defaultStorageDefinition->getClass();
         if ($defaultStorageClass === null) {
             throw new LogicException(
                 \sprintf('Job execution storage service "%s", has no class.', $defaultStorage)
             );
         }
+
+        $interfaces = [
+            JobExecutionStorageInterface::class => true,
+            ListableJobExecutionStorageInterface::class => false,
+            QueryableJobExecutionStorageInterface::class => false,
+        ];
         foreach ($interfaces as $interface => $required) {
             if (!is_a($defaultStorageClass, $interface, true)) {
                 if ($required) {
