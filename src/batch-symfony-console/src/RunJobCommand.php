@@ -21,14 +21,8 @@ final class RunJobCommand extends Command
     public const EXIT_ERROR_CODE = 1;
     public const EXIT_WARNING_CODE = 2;
 
-    /**
-     * @var JobLauncherInterface
-     */
     private JobLauncherInterface $jobLauncher;
 
-    /**
-     * @param JobLauncherInterface $jobLauncher
-     */
     public function __construct(JobLauncherInterface $jobLauncher)
     {
         parent::__construct();
@@ -125,28 +119,10 @@ final class RunJobCommand extends Command
     {
         $config = json_decode($data, true);
 
-        $error = 'Cannot decode JSON';
-
-        switch (json_last_error()) {
-            case JSON_ERROR_DEPTH:
-                $error = 'Maximum stack depth exceeded';
-                break;
-            case JSON_ERROR_STATE_MISMATCH:
-                $error = 'Underflow or the modes mismatch';
-                break;
-            case JSON_ERROR_CTRL_CHAR:
-                $error = 'Unexpected control character found';
-                break;
-            case JSON_ERROR_SYNTAX:
-                $error = 'Syntax error, malformed JSON';
-                break;
-            case JSON_ERROR_UTF8:
-                $error = 'Malformed UTF-8 characters, possibly incorrectly encoded';
-                break;
-            case JSON_ERROR_NONE:
-                return $config;
+        if (json_last_error() === JSON_ERROR_NONE) {
+            return $config;
         }
 
-        throw new InvalidArgumentException($error);
+        throw new InvalidArgumentException('Cannot decode JSON : ' . \json_last_error_msg());
     }
 }
