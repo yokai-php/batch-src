@@ -12,10 +12,10 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\Persistence\ConnectionRegistry;
 use Generator;
+use Yokai\Batch\Exception\CannotRemoveJobExecutionException;
 use Yokai\Batch\Exception\CannotStoreJobExecutionException;
 use Yokai\Batch\Exception\JobExecutionNotFoundException;
 use Yokai\Batch\Exception\RuntimeException;
-use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\Storage\Query;
 use Yokai\Batch\Storage\QueryableJobExecutionStorageInterface;
@@ -27,16 +27,8 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
         'connection' => null,
     ];
 
-    /**
-     * @var Connection
-     */
     private Connection $connection;
-
-    /**
-     * @var string
-     */
     private string $table;
-
     private JobExecutionRowNormalizer $normalizer;
 
     /**
@@ -75,15 +67,15 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
     public function store(JobExecution $execution): void
     {
         try {
-            $this->fetchRow($execution->getJobName(), $execution->getId());
-            $stored = true;
-        } catch (RuntimeException $exception) {
-            $stored = false;
-        }
+            try {
+                $this->fetchRow($execution->getJobName(), $execution->getId());
+                $stored = true;
+            } catch (RuntimeException $exception) {
+                $stored = false;
+            }
 
-        $data = $this->toRow($execution);
+            $data = $this->toRow($execution);
 
-        try {
             if ($stored) {
                 $this->connection->update($this->table, $data, $this->identity($execution), $this->types());
             } else {
@@ -102,7 +94,7 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
         try {
             $this->connection->delete($this->table, $this->identity($execution));
         } catch (DBALException $exception) {
-            throw new CannotStoreJobExecutionException($execution->getJobName(), $execution->getId(), $exception);
+            throw new CannotRemoveJobExecutionException($execution->getJobName(), $execution->getId(), $exception);
         }
     }
 
@@ -113,7 +105,7 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
     {
         try {
             $row = $this->fetchRow($jobName, $executionId);
-        } catch (RuntimeException $exception) {
+        } catch (RuntimeException | DBALException $exception) {
             throw new JobExecutionNotFoundException($jobName, $executionId, $exception);
         }
 
@@ -150,33 +142,21 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
             ->from($this->table);
 
         $names = $query->jobs();
-        if (count($names) === 1) {
-            $qb->andWhere($qb->expr()->eq('job_name', ':jobName'));
-            $queryParameters['jobName'] = array_shift($names);
-            $queryTypes['jobName'] = Types::STRING;
-        } elseif (count($names) > 1) {
+        if (count($names) > 0) {
             $qb->andWhere($qb->expr()->in('job_name', ':jobNames'));
             $queryParameters['jobNames'] = $names;
             $queryTypes['jobNames'] = Connection::PARAM_STR_ARRAY;
         }
 
         $ids = $query->ids();
-        if (count($ids) === 1) {
-            $qb->andWhere($qb->expr()->eq('id', ':id'));
-            $queryParameters['id'] = array_shift($ids);
-            $queryTypes['id'] = Types::STRING;
-        } elseif (count($ids) > 1) {
+        if (count($ids) > 0) {
             $qb->andWhere($qb->expr()->in('id', ':ids'));
             $queryParameters['ids'] = $ids;
             $queryTypes['ids'] = Connection::PARAM_STR_ARRAY;
         }
 
         $statuses = $query->statuses();
-        if (count($statuses) === 1) {
-            $qb->andWhere($qb->expr()->eq('status', ':status'));
-            $queryParameters['status'] = array_shift($statuses);
-            $queryTypes['status'] = Types::INTEGER;
-        } elseif (count($statuses) > 1) {
+        if (count($statuses) > 0) {
             $qb->andWhere($qb->expr()->in('status', ':statuses'));
             $queryParameters['statuses'] = $statuses;
             $queryTypes['statuses'] = Connection::PARAM_INT_ARRAY;
@@ -264,6 +244,7 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
 
     /**
      * @phpstan-return array<string, string>
+     * @throws DBALException
      */
     private function fetchRow(string $jobName, string $id): array
     {
@@ -271,7 +252,8 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
         $qb->select('*')
             ->from($this->table)
             ->where($qb->expr()->eq('job_name', ':jobName'))
-            ->andWhere($qb->expr()->eq('id', ':id'));
+            ->andWhere($qb->expr()->eq('id', ':id'))
+            ->setMaxResults(1);
 
         /** @var Result $statement */
         $statement = $this->connection->executeQuery(
@@ -279,24 +261,15 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
             ['jobName' => $jobName, 'id' => $id],
             ['jobName' => Types::STRING, 'id' => Types::STRING]
         );
-        $rows = $statement->fetchAllAssociative();
-        switch (count($rows)) {
-            case 1:
-                $row = array_shift($rows);
-                if (!\is_array($row)) {
-                    throw UnexpectedValueException::type('array', $row);
-                }
+        $row = $statement->fetchAllAssociative()[0] ?? null;
 
-                return $row;
-            case 0:
-                throw new RuntimeException(
-                    \sprintf('No row found for job %s#%s.', $jobName, $id)
-                );
-            default:
-                throw new RuntimeException(
-                    \sprintf('Expecting exactly 1 row for job %s#%s, but got %d.', $jobName, $id, count($rows))
-                );
+        if ($row === null) {
+            throw new RuntimeException(
+                \sprintf('No row found for job %s#%s.', $jobName, $id)
+            );
         }
+
+        return $row;
     }
 
     /**

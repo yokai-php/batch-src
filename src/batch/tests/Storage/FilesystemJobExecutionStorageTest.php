@@ -17,10 +17,12 @@ use Yokai\Batch\Serializer\JsonJobExecutionSerializer;
 use Yokai\Batch\Storage\FilesystemJobExecutionStorage;
 use Yokai\Batch\Storage\Query;
 use Yokai\Batch\Storage\QueryBuilder;
+use Yokai\Batch\Test\Storage\JobExecutionStorageTestTrait;
 
 class FilesystemJobExecutionStorageTest extends TestCase
 {
     use ProphecyTrait;
+    use JobExecutionStorageTestTrait;
 
     private const STORAGE_DIR = ARTIFACT_DIR . '/filesystem-storage';
     private const READONLY_STORAGE_DIR = __DIR__ . '/fixtures/filesystem-job-execution-readonly';
@@ -148,6 +150,16 @@ class FilesystemJobExecutionStorageTest extends TestCase
 
     public function query(): \Generator
     {
+        yield 'No filter' => [
+            new QueryBuilder(),
+            [
+                ['export', '20210920'],
+                ['export', '20210922'],
+                ['list', '20210910'],
+                ['list', '20210915'],
+                ['list', '20210920'],
+            ],
+        ];
         yield 'Filter ids' => [
             (new QueryBuilder())
                 ->ids(['20210920']),
@@ -256,21 +268,5 @@ class FilesystemJobExecutionStorageTest extends TestCase
 
         $jobExecution = JobExecution::createRoot('123456789', 'export');
         $this->createStorage(self::READONLY_STORAGE_DIR)->remove($jobExecution);
-    }
-
-    private static function assertExecutions(array $expectedCouples, iterable $executions): void
-    {
-        $expected = [];
-        foreach ($expectedCouples as [$jobName, $executionId]) {
-            $expected[] = $jobName . '/' . $executionId;
-        }
-
-        $actual = [];
-        /** @var JobExecution $execution */
-        foreach ($executions as $execution) {
-            $actual[] = $execution->getJobName() . '/' . $execution->getId();
-        }
-
-        self::assertSame($expected, $actual);
     }
 }
