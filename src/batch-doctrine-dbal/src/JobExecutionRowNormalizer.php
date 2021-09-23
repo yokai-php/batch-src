@@ -21,9 +21,6 @@ use Yokai\Batch\Warning;
  */
 final class JobExecutionRowNormalizer
 {
-    /**
-     * @var AbstractPlatform
-     */
     private AbstractPlatform $platform;
 
     public function __construct(AbstractPlatform $platform)

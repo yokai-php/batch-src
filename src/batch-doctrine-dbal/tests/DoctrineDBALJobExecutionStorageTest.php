@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Tests\Bridge\Doctrine\DBAL;
 
+use DateTimeImmutable;
+use Exception;
 use Generator;
 use RuntimeException;
+use Throwable;
 use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Bridge\Doctrine\DBAL\DoctrineDBALJobExecutionStorage;
 use Yokai\Batch\Exception\CannotRemoveJobExecutionException;
 use Yokai\Batch\Exception\CannotStoreJobExecutionException;
 use Yokai\Batch\Exception\JobExecutionNotFoundException;
+use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\Storage\Query;
 use Yokai\Batch\Storage\QueryBuilder;
@@ -85,8 +89,10 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         $storage = $this->createStorage();
         $storage->createSchema();
 
-        $export = JobExecution::createRoot('123', 'export');
+        $export = JobExecution::createRoot('123', 'export', new BatchStatus(BatchStatus::RUNNING));
+        $export->setStartTime(new DateTimeImmutable('2021-09-23 11:05:00'));
         $export->addChildExecution($extract = JobExecution::createChild($export, 'extract'));
+        $extract->setStartTime(new DateTimeImmutable('2021-09-23 11:05:01'));
         $export->addChildExecution($upload = JobExecution::createChild($export, 'upload'));
         $extract->addWarning(new Warning('Test warning'));
         $upload->addFailureException(new RuntimeException('Test failure'));
@@ -95,14 +101,20 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         $retrievedExport = $storage->retrieve('export', '123');
         self::assertSame('export', $retrievedExport->getJobName());
         self::assertSame('123', $retrievedExport->getId());
-        self::assertSame(BatchStatus::PENDING, $retrievedExport->getStatus()->getValue());
+        self::assertSame('2021-09-23 11:05:00', $retrievedExport->getStartTime()->format('Y-m-d H:i:s'));
+        self::assertNull($retrievedExport->getEndTime());
+        self::assertSame(BatchStatus::RUNNING, $retrievedExport->getStatus()->getValue());
         $retrievedExtract = $retrievedExport->getChildExecution('extract');
         self::assertNotNull($retrievedExtract);
+        self::assertSame('2021-09-23 11:05:01', $retrievedExtract->getStartTime()->format('Y-m-d H:i:s'));
+        self::assertNull($retrievedExtract->getEndTime());
         self::assertCount(1, $retrievedExtract->getWarnings());
         self::assertSame('Test warning', $retrievedExtract->getWarnings()[0]->getMessage());
         self::assertCount(0, $retrievedExtract->getFailures());
         $retrievedUpload = $retrievedExport->getChildExecution('upload');
         self::assertNotNull($retrievedUpload);
+        self::assertNull($retrievedUpload->getStartTime());
+        self::assertNull($retrievedUpload->getEndTime());
         self::assertCount(0, $retrievedUpload->getWarnings());
         self::assertCount(1, $retrievedUpload->getFailures());
         self::assertSame('Test failure', $retrievedUpload->getFailures()[0]->getMessage());
@@ -186,6 +198,53 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         $storage = $this->createStorage();
         /** not calling {@see DoctrineDBALJobExecutionStorage::createSchema} will cause table to not exists */
         $storage->retrieve('export', '456');
+    }
+
+    /**
+     * @dataProvider retrieveInvalid
+     */
+    public function testRetrieveInvalid(array $data, Throwable $error): void
+    {
+        $this->expectExceptionObject($error);
+
+        $data['id'] = '123';
+        $data['job_name'] = 'export';
+        $data['status'] ??= BatchStatus::COMPLETED;
+        $data['parameters'] ??= '[]';
+        $data['summary'] ??= '[]';
+        $data['failures'] ??= '[]';
+        $data['warnings'] ??= '[]';
+        $data['child_executions'] ??= '[]';
+        $data['logs'] ??= '';
+
+        $storage = $this->createStorage();
+        $storage->createSchema();
+        $this->connection->insert('yokai_batch_job_execution', $data);
+        $storage->retrieve('export', '123');
+    }
+
+    public function retrieveInvalid(): \Generator
+    {
+        yield '"parameters" column value is expected to be array' => [
+            ['parameters' => '"string"'],
+            UnexpectedValueException::type('array', 'string')
+        ];
+        yield '"summary" column value is expected to be array' => [
+            ['summary' => '"string"'],
+            UnexpectedValueException::type('array', 'string')
+        ];
+        yield '"failures" column value is expected to be array' => [
+            ['failures' => '"string"'],
+            UnexpectedValueException::type('array', 'string')
+        ];
+        yield '"warnings" column value is expected to be array' => [
+            ['warnings' => '"string"'],
+            UnexpectedValueException::type('array', 'string')
+        ];
+        yield '"child_executions" column value is expected to be array' => [
+            ['child_executions' => '"string"'],
+            UnexpectedValueException::type('array', 'string')
+        ];
     }
 
     public function testList(): void
