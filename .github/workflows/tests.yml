@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: false
       matrix:
         include:
           - php-version: 7.4
@@ -29,6 +30,8 @@ jobs:
           - php-version: 8.2
             symfony-version: 5.3.*
             experimental: true
+
+    continue-on-error: ${{ matrix.experimental }}
 
     steps:
       - name: "Checkout"
