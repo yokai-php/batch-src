@@ -52,7 +52,11 @@ class SkipInvalidItemProcessorTest extends TestCase
     {
         $this->expectException(InvalidItemException::class);
 
-        $processor = new SkipInvalidItemProcessor(self::$validator, [new Blank(['groups' => ['Default', 'Full']])], $groups);
+        $processor = new SkipInvalidItemProcessor(
+            self::$validator,
+            [new Blank(['groups' => ['Default', 'Full']])],
+            $groups
+        );
         $processor->process('invalid item not blank');
     }
 

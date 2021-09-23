@@ -75,7 +75,8 @@ class YokaiBatchExtensionTest extends TestCase
             fn(ContainerBuilder $container) => $container->register('service.without.required.interface', __CLASS__),
             new LogicException(
                 'Job execution storage service "service.without.required.interface",' .
-                ' is of class "Yokai\Batch\Tests\Bridge\Symfony\Framework\DependencyInjection\YokaiBatchExtensionTest",' .
+                ' is of class' .
+                ' "Yokai\Batch\Tests\Bridge\Symfony\Framework\DependencyInjection\YokaiBatchExtensionTest",' .
                 ' and must implements interface "Yokai\Batch\Storage\JobExecutionStorageInterface".'
             ),
         ];
