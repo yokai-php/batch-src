@@ -85,6 +85,47 @@ class FlatFileReaderTest extends TestCase
         iterator_to_array($reader->read());
     }
 
+    public function testReadWrongLineSize(): void
+    {
+        $file = __DIR__ . '/fixtures/wrong-line-size.csv';
+        $jobExecution = JobExecution::createRoot('123456789', 'parent');
+        $reader = new FlatFileReader(
+            'csv',
+            new StaticValueParameterAccessor($file),
+            [],
+            FlatFileReader::HEADERS_MODE_COMBINE
+        );
+        $reader->setJobExecution($jobExecution);
+
+        /** @var \Iterator $result */
+        $result = $reader->read();
+        self::assertInstanceOf(\Iterator::class, $result);
+        self::assertSame(
+            [
+                ['firstName' => 'John', 'lastName' => 'Doe'],
+                ['firstName' => 'Jack', 'lastName' => 'Doe'],
+            ],
+            iterator_to_array($result)
+        );
+
+        self::assertSame(
+            'Expecting row {row} to have exactly {expected} columns(s), but got {actual}.',
+            $jobExecution->getWarnings()[0]->getMessage()
+        );
+        self::assertSame(
+            [
+                '{row}' => '3',
+                '{expected}' => '2',
+                '{actual}' => '3',
+            ],
+            $jobExecution->getWarnings()[0]->getParameters()
+        );
+        self::assertSame(
+            ['headers' => ['firstName', 'lastName'], 'row' => ['Jane', 'Doe', 'too much data']],
+            $jobExecution->getWarnings()[0]->getContext()
+        );
+    }
+
     public function types(): Generator
     {
         foreach ([Type::CSV, Type::XLSX, Type::ODS] as $type) {

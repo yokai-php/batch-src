@@ -15,6 +15,7 @@ use Yokai\Batch\Job\Item\ItemReaderInterface;
 use Yokai\Batch\Job\JobExecutionAwareInterface;
 use Yokai\Batch\Job\JobExecutionAwareTrait;
 use Yokai\Batch\Job\Parameters\JobParameterAccessorInterface;
+use Yokai\Batch\Warning;
 
 final class FlatFileReader implements
     ItemReaderInterface,
@@ -120,7 +121,35 @@ final class FlatFileReader implements
                 }
 
                 if (is_array($headers)) {
-                    $row = array_combine($headers, $row);
+                    try {
+                        /** @var array<string, mixed>|false $combined */
+                        $combined = @array_combine($headers, $row);
+                        if ($combined === false) {
+                            // @codeCoverageIgnoreStart
+                            // Prior to PHP 8.0 array_combine only trigger a warning
+                            // Now it is throwing a ValueError
+                            throw new \ValueError(
+                                'array_combine(): Argument #1 ($keys) and argument #2 ($values) ' .
+                                'must have the same number of elements'
+                            );
+                            // @codeCoverageIgnoreEnd
+                        }
+                    } catch (\ValueError $exception) {
+                        $this->jobExecution->addWarning(
+                            new Warning(
+                                'Expecting row {row} to have exactly {expected} columns(s), but got {actual}.',
+                                [
+                                    '{row}' => (string)$rowIndex,
+                                    '{expected}' => (string)count($headers),
+                                    '{actual}' => (string)count($row),
+                                ],
+                                ['headers' => $headers, 'row' => $row]
+                            )
+                        );
+                        continue;
+                    }
+
+                    $row = $combined;
                 }
 
                 yield $row;
