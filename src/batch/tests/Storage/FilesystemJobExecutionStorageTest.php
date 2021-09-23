@@ -25,23 +25,27 @@ class FilesystemJobExecutionStorageTest extends TestCase
     use JobExecutionStorageTestTrait;
 
     private const STORAGE_DIR = ARTIFACT_DIR . '/filesystem-storage';
-    private const READONLY_STORAGE_DIR = __DIR__ . '/fixtures/filesystem-job-execution-readonly';
+    private const READONLY_STORAGE_DIR = ARTIFACT_DIR . '/filesystem-storage-readonly';
 
     /**
      * @var JobExecutionSerializerInterface|ObjectProphecy
      */
     private $serializer;
 
+    public static function setUpBeforeClass(): void
+    {
+        \mkdir(self::READONLY_STORAGE_DIR);
+        \mkdir(self::READONLY_STORAGE_DIR . '/export');
+        \file_put_contents(self::READONLY_STORAGE_DIR . '/export/123456789.txt', 'export/123456789');
+        \chmod(self::READONLY_STORAGE_DIR . '/export/123456789.txt', 555);
+        \chmod(self::READONLY_STORAGE_DIR . '/export', 0555);
+    }
+
     protected function setUp(): void
     {
         $this->serializer = $this->prophesize(JobExecutionSerializerInterface::class);
         $this->serializer->extension()
             ->willReturn('txt');
-    }
-
-    protected function tearDown(): void
-    {
-        unset($this->serializer);
     }
 
     private function createStorage(
