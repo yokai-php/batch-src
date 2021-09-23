@@ -124,11 +124,11 @@ class QueryBuilderTest extends TestCase
         ];
         yield 'QueryBuilder::limit $limit argument expect positive int' => [
             fn() => (new QueryBuilder())->limit(0, 0),
-            UnexpectedValueException::range(1, null, 0),
+            UnexpectedValueException::min(1, 0),
         ];
         yield 'QueryBuilder::limit $offset argument expect positive int or 0' => [
             fn() => (new QueryBuilder())->limit(1, -1),
-            UnexpectedValueException::range(0, null, -1),
+            UnexpectedValueException::min(0, -1),
         ];
     }
 }

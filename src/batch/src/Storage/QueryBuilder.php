@@ -123,10 +123,10 @@ final class QueryBuilder
     public function limit(int $limit, int $offset): self
     {
         if ($limit < 1) {
-            throw UnexpectedValueException::range(1, null, $limit);
+            throw UnexpectedValueException::min(1, $limit);
         }
         if ($offset < 0) {
-            throw UnexpectedValueException::range(0, null, $offset);
+            throw UnexpectedValueException::min(0, $offset);
         }
 
         $this->limit = $limit;
