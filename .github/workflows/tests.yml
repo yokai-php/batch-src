@@ -22,15 +22,10 @@ jobs:
             symfony-version: 4.4.*
           - php-version: 8.0
             symfony-version: 5.3.*
-          # Experimental (allowed to fail)
           - php-version: 8.1
             symfony-version: 5.3.*
-            experimental: true
           - php-version: 8.2
             symfony-version: 5.3.*
-            experimental: true
-
-    continue-on-error: ${{ matrix.experimental }}
 
     steps:
       - name: "Checkout"
