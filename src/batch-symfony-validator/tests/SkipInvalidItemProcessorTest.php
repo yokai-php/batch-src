@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Tests\Bridge\Symfony\Validator;
 
+use Composer\InstalledVersions;
+use Doctrine\Common\Annotations\AnnotationReader;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Component\Validator\Constraints\Blank;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Validation;
@@ -16,16 +17,23 @@ use Yokai\Batch\Tests\Bridge\Symfony\Validator\Fixtures\ObjectWithAnnotationVali
 
 class SkipInvalidItemProcessorTest extends TestCase
 {
-    use ProphecyTrait;
-
     private static ValidatorInterface $validator;
 
     public static function setUpBeforeClass(): void
     {
-        self::$validator = Validation::createValidatorBuilder()
-            ->enableAnnotationMapping(true)
-            ->addDefaultDoctrineAnnotationReader()
-            ->getValidator();
+        if (\version_compare(InstalledVersions::getVersion('symfony/validator'), '5.0.0') >= 0) {
+            self::$validator = Validation::createValidatorBuilder()
+                ->enableAnnotationMapping(true)
+                ->addDefaultDoctrineAnnotationReader()
+                ->getValidator();
+        } else {
+            // @codeCoverageIgnoreStart
+            // Symfony 4.x compatibility
+            self::$validator = Validation::createValidatorBuilder()
+                ->enableAnnotationMapping(new AnnotationReader())
+                ->getValidator();
+            // @codeCoverageIgnoreEnd
+        }
     }
 
     /**
