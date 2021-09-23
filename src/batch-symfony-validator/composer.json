@@ -23,5 +23,10 @@
     "require-dev": {
         "phpspec/prophecy-phpunit": "^2.0",
         "phpunit/phpunit": "^9.4"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Yokai\\Batch\\Tests\\Bridge\\Symfony\\Validator\\": "tests/"
+        }
     }
 }

@@ -70,7 +70,8 @@
       "Yokai\\Batch\\Tests\\Bridge\\Symfony\\Console\\": "src/batch-symfony-console/tests/",
       "Yokai\\Batch\\Tests\\Bridge\\Symfony\\Framework\\": "src/batch-symfony-framework/tests/",
       "Yokai\\Batch\\Tests\\Bridge\\Symfony\\Messenger\\": "src/batch-symfony-messenger/tests/",
-      "Yokai\\Batch\\Tests\\Bridge\\Symfony\\Serializer\\": "src/batch-symfony-serializer/tests/"
+      "Yokai\\Batch\\Tests\\Bridge\\Symfony\\Serializer\\": "src/batch-symfony-serializer/tests/",
+      "Yokai\\Batch\\Tests\\Bridge\\Symfony\\Validator\\": "src/batch-symfony-validator/tests/"
     }
   }
 }
