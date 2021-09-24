@@ -27,16 +27,11 @@ class RunJobCommandTest extends TestCase
     /**
      * @var JobLauncherInterface|ObjectProphecy
      */
-    private $jobLauncher;
+    private ObjectProphecy $jobLauncher;
 
     protected function setUp(): void
     {
         $this->jobLauncher = $this->prophesize(JobLauncherInterface::class);
-    }
-
-    protected function tearDown(): void
-    {
-        unset($this->jobLauncher);
     }
 
     private function execute(string $configuration = null, int $verbosity = OutputInterface::VERBOSITY_NORMAL): array
@@ -53,15 +48,12 @@ class RunJobCommandTest extends TestCase
         return [$tester->getStatusCode(), $tester->getDisplay()];
     }
 
-    /**
-     * @dataProvider invalidJson
-     */
-    public function testRunWithMalformedConfiguration(string $invalidJson): void
+    public function testRunWithMalformedConfiguration(): void
     {
         $this->expectException(InvalidArgumentException::class);
 
         $this->jobLauncher->launch(Argument::cetera())->shouldNotBeCalled();
-        $this->execute($invalidJson);
+        $this->execute('{]');
     }
 
     /**
@@ -139,11 +131,6 @@ class RunJobCommandTest extends TestCase
         [$code, $display] = $this->execute(null, $verbosity);
 
         self::assertSame(RunJobCommand::EXIT_SUCCESS_CODE, $code);
-    }
-
-    public function invalidJson(): \Generator
-    {
-        yield ['{]'];
     }
 
     public function verbosity(): \Generator

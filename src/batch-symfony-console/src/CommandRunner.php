@@ -9,37 +9,18 @@ use Symfony\Component\Process\PhpExecutableFinder;
 
 class CommandRunner
 {
-    /**
-     * @var string
-     */
     private string $consolePath;
-
-    /**
-     * @var string
-     */
     private string $logDir;
-
-    /**
-     * @var PhpExecutableFinder|null
-     */
     private ?PhpExecutableFinder $phpLocator;
 
     public function __construct(string $binDir, string $logDir, PhpExecutableFinder $phpLocator = null)
     {
         $this->consolePath = implode(DIRECTORY_SEPARATOR, [$binDir, 'console']);
         $this->logDir = $logDir;
-        if ($phpLocator === null && class_exists(PhpExecutableFinder::class)) {
-            $phpLocator = new PhpExecutableFinder();
+        if (class_exists(PhpExecutableFinder::class)) {
+            $phpLocator ??= new PhpExecutableFinder();
         }
         $this->phpLocator = $phpLocator;
-    }
-
-    /**
-     * @phpstan-param array<string, mixed> $arguments
-     */
-    public function run(string $commandName, array $arguments = []): void
-    {
-        $this->exec($this->buildCommand($commandName, $arguments));
     }
 
     /**
@@ -56,6 +37,9 @@ class CommandRunner
         );
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     protected function exec(string $command): void
     {
         exec($command);

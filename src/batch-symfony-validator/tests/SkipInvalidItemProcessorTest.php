@@ -4,101 +4,89 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Tests\Bridge\Symfony\Validator;
 
+use Composer\InstalledVersions;
+use Doctrine\Common\Annotations\AnnotationReader;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
-use Symfony\Component\Validator\ConstraintViolationInterface;
-use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\Constraints\Blank;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Yokai\Batch\Bridge\Symfony\Validator\SkipInvalidItemProcessor;
 use Yokai\Batch\Job\Item\InvalidItemException;
+use Yokai\Batch\Tests\Bridge\Symfony\Validator\Fixtures\ObjectWithAnnotationValidation;
 
 class SkipInvalidItemProcessorTest extends TestCase
 {
-    use ProphecyTrait;
+    private static ValidatorInterface $validator;
 
-    /**
-     * @dataProvider groups
-     */
-    public function testProcessValid(array $groups = null): void
+    public static function setUpBeforeClass(): void
     {
-        /** @var ObjectProphecy|ValidatorInterface $validator */
-        $validator = $this->prophesize(ValidatorInterface::class);
-        $validator->validate('item to validate', null, $groups)
-            ->shouldBeCalledTimes(1)
-            ->willReturn(new ConstraintViolationList([]));
-
-        $processor = new SkipInvalidItemProcessor($validator->reveal(), $groups);
-        self::assertSame('item to validate', $processor->process('item to validate'));
+        if (\version_compare(InstalledVersions::getVersion('symfony/validator'), '5.0.0') >= 0) {
+            self::$validator = Validation::createValidatorBuilder()
+                ->enableAnnotationMapping(true)
+                ->addDefaultDoctrineAnnotationReader()
+                ->getValidator();
+        } else {
+            // @codeCoverageIgnoreStart
+            // Symfony 4.x compatibility
+            self::$validator = Validation::createValidatorBuilder()
+                ->enableAnnotationMapping(new AnnotationReader())
+                ->getValidator();
+            // @codeCoverageIgnoreEnd
+        }
     }
 
     /**
      * @dataProvider groups
      */
-    public function testProcessInvalid(array $groups = null): void
+    public function testProcessValid(?array $groups): void
+    {
+        $processor = new SkipInvalidItemProcessor(self::$validator, [new NotBlank(['groups' => $groups])], $groups);
+        self::assertSame('valid item not blank', $processor->process('valid item not blank'));
+    }
+
+    /**
+     * @dataProvider groups
+     */
+    public function testProcessInvalid(?array $groups): void
     {
         $this->expectException(InvalidItemException::class);
 
-        $violations = new ConstraintViolationList([]);
-        /** @var ObjectProphecy|ConstraintViolationInterface $stringViolation */
-        $stringViolation = $this->prophesize(ConstraintViolationInterface::class);
-        $stringViolation->getPropertyPath()->willReturn('stringProperty');
-        $stringViolation->getInvalidValue()->willReturn('invalid string');
-        $stringViolation->getMessage()->willReturn('"invalid string" is invalid');
-
-        /** @var ObjectProphecy|ConstraintViolationInterface $dateViolation */
-        $dateViolation = $this->prophesize(ConstraintViolationInterface::class);
-        $dateViolation->getPropertyPath()->willReturn('dateProperty');
-        $dateViolation->getInvalidValue()->willReturn(new \DateTime());
-        $dateViolation->getMessage()->willReturn('"invalid date" is invalid');
-
-        /** @var ObjectProphecy|ConstraintViolationInterface $objectToStringViolation */
-        $objectToStringViolation = $this->prophesize(ConstraintViolationInterface::class);
-        $objectToStringViolation->getPropertyPath()->willReturn('objectToStringProperty');
-        $objectToStringViolation->getInvalidValue()->willReturn(
-            new class {
-                public function __toString(): string
-                {
-                    return 'invalid object';
-                }
-            }
+        $processor = new SkipInvalidItemProcessor(
+            self::$validator,
+            [new Blank(['groups' => ['Default', 'Full']])],
+            $groups
         );
-        $objectToStringViolation->getMessage()->willReturn('"object with __toString" is invalid');
+        $processor->process('invalid item not blank');
+    }
 
-        /** @var ObjectProphecy|ConstraintViolationInterface $dateViolation */
-        $objectViolation = $this->prophesize(ConstraintViolationInterface::class);
-        $objectViolation->getPropertyPath()->willReturn('objectProperty');
-        $objectViolation->getInvalidValue()->willReturn(new \stdClass());
-        $objectViolation->getMessage()->willReturn('"object" is invalid');
-
-        /** @var ObjectProphecy|ConstraintViolationInterface $arrayViolation */
-        $arrayViolation = $this->prophesize(ConstraintViolationInterface::class);
-        $arrayViolation->getPropertyPath()->willReturn('arrayProperty');
-        $arrayViolation->getInvalidValue()->willReturn(
-            [null, new \stdClass(), [1, new \DateTime(), new \ArrayIterator(['string', 2.3])]]
+    /**
+     * @dataProvider groups
+     */
+    public function testProcessNormalization(?array $groups): void
+    {
+        $this->expectException(InvalidItemException::class);
+        $this->expectExceptionMessageMatches(
+            <<<REGEXP
+#^emptyString: This value should be null\.: ""
+null: This value should not be null\.: NULL
+string: This value should be null\.: string
+int: This value should be null\.: 1
+date: This value should be null\.: 2021-09-23T12:09:32\+0200
+array: This collection should contain exactly 0 elements\.: 1, 2
+objectStringable: This value should be null\.: /.+/tests/Fixtures/ObjectWithAnnotationValidation\.php
+objectNotStringable: This value should be null\.: class@anonymous.+
+valueWithoutInterpretation: This value should be null\.: resource$#
+REGEXP
         );
-        $arrayViolation->getMessage()->willReturn('"array" is invalid');
 
-        $violations->add($stringViolation->reveal());
-        $violations->add($dateViolation->reveal());
-        $violations->add($objectToStringViolation->reveal());
-        $violations->add($objectViolation->reveal());
-        $violations->add($arrayViolation->reveal());
-
-        /** @var ObjectProphecy|ValidatorInterface $validator */
-        $validator = $this->prophesize(ValidatorInterface::class);
-        $validator->validate('item to validate', null, $groups)
-            ->shouldBeCalledTimes(1)
-            ->willReturn($violations);
-
-        $processor = new SkipInvalidItemProcessor($validator->reveal(), $groups);
-        $processor->process('item to validate');
+        $processor = new SkipInvalidItemProcessor(self::$validator, null, $groups);
+        $processor->process(new ObjectWithAnnotationValidation());
     }
 
     public function groups()
     {
-        yield [null];
-        yield [[]];
-        yield [['Full']];
+        yield 'No groups specified' => [null];
+        yield 'Group "Full" only' => [['Full']];
     }
 }

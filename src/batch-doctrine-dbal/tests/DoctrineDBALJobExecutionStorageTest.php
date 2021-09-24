@@ -4,18 +4,27 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Tests\Bridge\Doctrine\DBAL;
 
+use DateTimeImmutable;
+use Exception;
 use Generator;
 use RuntimeException;
+use Throwable;
 use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Bridge\Doctrine\DBAL\DoctrineDBALJobExecutionStorage;
+use Yokai\Batch\Exception\CannotRemoveJobExecutionException;
+use Yokai\Batch\Exception\CannotStoreJobExecutionException;
 use Yokai\Batch\Exception\JobExecutionNotFoundException;
+use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\Storage\Query;
 use Yokai\Batch\Storage\QueryBuilder;
+use Yokai\Batch\Test\Storage\JobExecutionStorageTestTrait;
 use Yokai\Batch\Warning;
 
 class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
 {
+    use JobExecutionStorageTestTrait;
+
     private function createStorage(array $options = []): DoctrineDBALJobExecutionStorage
     {
         return new DoctrineDBALJobExecutionStorage($this->doctrine, $options);
@@ -80,8 +89,10 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         $storage = $this->createStorage();
         $storage->createSchema();
 
-        $export = JobExecution::createRoot('123', 'export');
+        $export = JobExecution::createRoot('123', 'export', new BatchStatus(BatchStatus::RUNNING));
+        $export->setStartTime(new DateTimeImmutable('2021-09-23 11:05:00'));
         $export->addChildExecution($extract = JobExecution::createChild($export, 'extract'));
+        $extract->setStartTime(new DateTimeImmutable('2021-09-23 11:05:01'));
         $export->addChildExecution($upload = JobExecution::createChild($export, 'upload'));
         $extract->addWarning(new Warning('Test warning'));
         $upload->addFailureException(new RuntimeException('Test failure'));
@@ -90,14 +101,20 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         $retrievedExport = $storage->retrieve('export', '123');
         self::assertSame('export', $retrievedExport->getJobName());
         self::assertSame('123', $retrievedExport->getId());
-        self::assertSame(BatchStatus::PENDING, $retrievedExport->getStatus()->getValue());
+        self::assertSame('2021-09-23 11:05:00', $retrievedExport->getStartTime()->format('Y-m-d H:i:s'));
+        self::assertNull($retrievedExport->getEndTime());
+        self::assertSame(BatchStatus::RUNNING, $retrievedExport->getStatus()->getValue());
         $retrievedExtract = $retrievedExport->getChildExecution('extract');
         self::assertNotNull($retrievedExtract);
+        self::assertSame('2021-09-23 11:05:01', $retrievedExtract->getStartTime()->format('Y-m-d H:i:s'));
+        self::assertNull($retrievedExtract->getEndTime());
         self::assertCount(1, $retrievedExtract->getWarnings());
         self::assertSame('Test warning', $retrievedExtract->getWarnings()[0]->getMessage());
         self::assertCount(0, $retrievedExtract->getFailures());
         $retrievedUpload = $retrievedExport->getChildExecution('upload');
         self::assertNotNull($retrievedUpload);
+        self::assertNull($retrievedUpload->getStartTime());
+        self::assertNull($retrievedUpload->getEndTime());
         self::assertCount(0, $retrievedUpload->getWarnings());
         self::assertCount(1, $retrievedUpload->getFailures());
         self::assertSame('Test failure', $retrievedUpload->getFailures()[0]->getMessage());
@@ -115,6 +132,36 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         self::assertSame('export', $retrievedExecution->getJobName());
         self::assertSame('123', $retrievedExecution->getId());
         self::assertSame(BatchStatus::COMPLETED, $retrievedExecution->getStatus()->getValue());
+    }
+
+    public function testStoreFailing(): void
+    {
+        $this->expectException(CannotStoreJobExecutionException::class);
+
+        $storage = $this->createStorage();
+        /** not calling {@see DoctrineDBALJobExecutionStorage::createSchema} will cause table to not exists */
+        $storage->store(JobExecution::createRoot('123', 'export'));
+    }
+
+    public function testRemove(): void
+    {
+        $this->expectException(JobExecutionNotFoundException::class);
+
+        $storage = $this->createStorage();
+        $storage->createSchema();
+        $storage->store($execution = JobExecution::createRoot('123', 'export'));
+        $storage->remove($execution);
+
+        $storage->retrieve('export', '123');
+    }
+
+    public function testRemoveFailing(): void
+    {
+        $this->expectException(CannotRemoveJobExecutionException::class);
+
+        $storage = $this->createStorage();
+        /** not calling {@see DoctrineDBALJobExecutionStorage::createSchema} will cause table to not exists */
+        $storage->remove(JobExecution::createRoot('123', 'export'));
     }
 
     public function testRetrieve(): void
@@ -144,6 +191,62 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         $storage->retrieve('export', '456');
     }
 
+    public function testRetrieveFailing(): void
+    {
+        $this->expectException(JobExecutionNotFoundException::class);
+
+        $storage = $this->createStorage();
+        /** not calling {@see DoctrineDBALJobExecutionStorage::createSchema} will cause table to not exists */
+        $storage->retrieve('export', '456');
+    }
+
+    /**
+     * @dataProvider retrieveInvalid
+     */
+    public function testRetrieveInvalid(array $data, Throwable $error): void
+    {
+        $this->expectExceptionObject($error);
+
+        $data['id'] = '123';
+        $data['job_name'] = 'export';
+        $data['status'] ??= BatchStatus::COMPLETED;
+        $data['parameters'] ??= '[]';
+        $data['summary'] ??= '[]';
+        $data['failures'] ??= '[]';
+        $data['warnings'] ??= '[]';
+        $data['child_executions'] ??= '[]';
+        $data['logs'] ??= '';
+
+        $storage = $this->createStorage();
+        $storage->createSchema();
+        $this->connection->insert('yokai_batch_job_execution', $data);
+        $storage->retrieve('export', '123');
+    }
+
+    public function retrieveInvalid(): \Generator
+    {
+        yield '"parameters" column value is expected to be array' => [
+            ['parameters' => '"string"'],
+            UnexpectedValueException::type('array', 'string')
+        ];
+        yield '"summary" column value is expected to be array' => [
+            ['summary' => '"string"'],
+            UnexpectedValueException::type('array', 'string')
+        ];
+        yield '"failures" column value is expected to be array' => [
+            ['failures' => '"string"'],
+            UnexpectedValueException::type('array', 'string')
+        ];
+        yield '"warnings" column value is expected to be array' => [
+            ['warnings' => '"string"'],
+            UnexpectedValueException::type('array', 'string')
+        ];
+        yield '"child_executions" column value is expected to be array' => [
+            ['child_executions' => '"string"'],
+            UnexpectedValueException::type('array', 'string')
+        ];
+    }
+
     public function testList(): void
     {
         $storage = $this->createStorage();
@@ -157,39 +260,87 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
     /**
      * @dataProvider queries
      */
-    public function testQuery(QueryBuilder $queryBuilder, array $expected): void
+    public function testQuery(QueryBuilder $queryBuilder, array $expectedCouples): void
     {
         $storage = $this->createStorage();
         $storage->createSchema();
         $this->loadFixtures($storage);
 
-        self::assertExecutionIds($expected, $storage->query($queryBuilder->getQuery()));
+        self::assertExecutions($expectedCouples, $storage->query($queryBuilder->getQuery()));
     }
 
     public function queries(): Generator
     {
-        yield 'All' => [
+        yield 'No filter' => [
             new QueryBuilder(),
-            ['123', '456', '789', '987']
+            [
+                ['export', '123'],
+                ['import', '456'],
+                ['import', '789'],
+                ['import', '987'],
+            ],
         ];
-
-        yield 'By id : 123 & 789' => [
+        yield 'Filter ids' => [
             (new QueryBuilder())
-                ->ids(['123', '789']),
-            ['123', '789']
+                ->ids(['123', '987']),
+            [
+                ['export', '123'],
+                ['import', '987'],
+            ],
         ];
-
-        yield 'Pending' => [
+        yield 'Filter job names' => [
             (new QueryBuilder())
-                ->statuses([BatchStatus::PENDING]),
-            ['987']
+                ->jobs(['export']),
+            [
+                ['export', '123'],
+            ],
         ];
-
-        yield 'Completed & Failed started long ago' => [
+        yield 'Filter statuses' => [
             (new QueryBuilder())
-                ->statuses([BatchStatus::COMPLETED, BatchStatus::FAILED])
+                ->statuses([BatchStatus::FAILED]),
+            [
+                ['import', '456'],
+            ],
+        ];
+        yield 'Order by start ASC' => [
+            (new QueryBuilder())
                 ->sort(Query::SORT_BY_START_ASC),
-            ['123', '456']
+            [
+                ['import', '987'],
+                ['import', '789'],
+                ['export', '123'],
+                ['import', '456'],
+            ],
+        ];
+        yield 'Order by start DESC' => [
+            (new QueryBuilder())
+                ->sort(Query::SORT_BY_START_DESC),
+            [
+                ['import', '456'],
+                ['export', '123'],
+                ['import', '789'],
+                ['import', '987'],
+            ],
+        ];
+        yield 'Order by end ASC' => [
+            (new QueryBuilder())
+                ->sort(Query::SORT_BY_END_ASC),
+            [
+                ['import', '789'],
+                ['import', '987'],
+                ['export', '123'],
+                ['import', '456'],
+            ],
+        ];
+        yield 'Order by end DESC' => [
+            (new QueryBuilder())
+                ->sort(Query::SORT_BY_END_DESC),
+            [
+                ['import', '456'],
+                ['export', '123'],
+                ['import', '987'],
+                ['import', '789'],
+            ],
         ];
     }
 
@@ -203,6 +354,22 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         }
 
         self::assertSame($ids, $actualIds);
+    }
+
+    private static function assertExecutions(array $expectedCouples, iterable $executions): void
+    {
+        $expected = [];
+        foreach ($expectedCouples as [$jobName, $executionId]) {
+            $expected[] = $jobName . '/' . $executionId;
+        }
+
+        $actual = [];
+        /** @var JobExecution $execution */
+        foreach ($executions as $execution) {
+            $actual[] = $execution->getJobName() . '/' . $execution->getId();
+        }
+
+        self::assertSame($expected, $actual);
     }
 
     private function loadFixtures(DoctrineDBALJobExecutionStorage $storage): void

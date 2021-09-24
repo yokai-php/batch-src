@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yokai\Batch\Bridge\Symfony\Validator;
 
 use DateTimeInterface;
+use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Yokai\Batch\Job\Item\InvalidItemException;
@@ -12,10 +13,12 @@ use Yokai\Batch\Job\Item\ItemProcessorInterface;
 
 final class SkipInvalidItemProcessor implements ItemProcessorInterface
 {
-    /**
-     * @var ValidatorInterface
-     */
     private ValidatorInterface $validator;
+
+    /**
+     * @var Constraint[]|null
+     */
+    private ?array $contraints;
 
     /**
      * @var string[]|null
@@ -23,11 +26,13 @@ final class SkipInvalidItemProcessor implements ItemProcessorInterface
     private ?array $groups;
 
     /**
-     * @param string[]|null $groups
+     * @param Constraint[]|null $contraints
+     * @param string[]|null     $groups
      */
-    public function __construct(ValidatorInterface $validator, array $groups = null)
+    public function __construct(ValidatorInterface $validator, array $contraints = null, array $groups = null)
     {
         $this->validator = $validator;
+        $this->contraints = $contraints;
         $this->groups = $groups;
     }
 
@@ -36,7 +41,7 @@ final class SkipInvalidItemProcessor implements ItemProcessorInterface
      */
     public function process($item)
     {
-        $violations = $this->validator->validate($item, null, $this->groups);
+        $violations = $this->validator->validate($item, $this->contraints, $this->groups);
         if (count($violations) === 0) {
             return $item;
         }

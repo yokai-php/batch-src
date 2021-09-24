@@ -30,22 +30,6 @@ class CommandRunnerTest extends TestCase
             ->getMock();
     }
 
-    public function testRun(): void
-    {
-        $runner = $this->createRunner();
-        $runner->expects($this->once())
-            ->method('exec')
-            ->with(
-                '/usr/bin/php /path/to/bin/console yokai:testing:test 1 ' .
-                '\'{"json":["value",2]}"\' --opt --option=foo'
-            );
-
-        $runner->run(
-            'yokai:testing:test',
-            ['arg1' => '1', 'arg2' => '{"json":["value",2]}"', '--opt', '--option' => 'foo']
-        );
-    }
-
     public function testRunAsync(): void
     {
         $runner = $this->createRunner();
