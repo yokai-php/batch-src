@@ -40,13 +40,13 @@ jobs:
 
       - name: "Install dependencies with composer"
         run: |
-          composer require --no-update "symfony/console:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/filesystem:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/framework-bundle:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/messenger:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/process:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/serializer:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/validator:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/console:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/filesystem:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/framework-bundle:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/messenger:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/process:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/serializer:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/validator:${{ matrix.symfony-version }}"
           composer update --no-interaction --no-progress --no-suggest
 
       - name: "Run tests with phpunit/phpunit"
@@ -74,13 +74,13 @@ jobs:
 
       - name: "Install dependencies with composer"
         run: |
-          composer require --no-update "symfony/console:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/filesystem:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/framework-bundle:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/messenger:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/process:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/serializer:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/validator:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/console:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/filesystem:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/framework-bundle:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/messenger:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/process:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/serializer:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/validator:${{ matrix.symfony-version }}"
           composer update --no-interaction --no-progress --no-suggest
 
       - name: "Run static analyzis with phpstan/phpstan"
@@ -108,13 +108,13 @@ jobs:
 
       - name: "Install dependencies with composer"
         run: |
-          composer require --no-update "symfony/console:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/filesystem:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/framework-bundle:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/messenger:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/process:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/serializer:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/validator:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/console:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/filesystem:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/framework-bundle:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/messenger:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/process:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/serializer:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/validator:${{ matrix.symfony-version }}"
           composer update --no-interaction --no-progress --no-suggest
 
       - name: "Run checkstyle with squizlabs/php_codesniffer"
@@ -142,13 +142,13 @@ jobs:
 
       - name: "Install dependencies with composer"
         run: |
-          composer require --no-update "symfony/console:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/filesystem:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/framework-bundle:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/messenger:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/process:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/serializer:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/validator:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/console:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/filesystem:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/framework-bundle:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/messenger:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/process:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/serializer:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/validator:${{ matrix.symfony-version }}"
           composer update --no-interaction --no-progress --no-suggest
 
       - name: "Run tests with phpunit/phpunit"
