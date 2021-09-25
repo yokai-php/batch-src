@@ -2,6 +2,8 @@
 
 matrix=(
   "php74/4.4.*"
+  "php80/4.4.*"
+  "php74/5.3.*"
   "php80/5.3.*"
   "php81/5.4.x-dev@dev"
   "php81/6.0.x-dev@dev"
