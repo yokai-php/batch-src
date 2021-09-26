@@ -5,25 +5,15 @@ declare(strict_types=1);
 namespace Yokai\Batch\Bridge\Symfony\Serializer;
 
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use Symfony\Component\Serializer\Exception\UnsupportedException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Yokai\Batch\Job\Item\InvalidItemException;
+use Yokai\Batch\Job\Item\Exception\SkipItemException;
 use Yokai\Batch\Job\Item\ItemProcessorInterface;
 
 final class DenormalizeItemProcessor implements ItemProcessorInterface
 {
-    /**
-     * @var DenormalizerInterface
-     */
     private DenormalizerInterface $denormalizer;
-
-    /**
-     * @var string
-     */
     private string $type;
-
-    /**
-     * @var string|null
-     */
     private ?string $format;
 
     /**
@@ -51,28 +41,17 @@ final class DenormalizeItemProcessor implements ItemProcessorInterface
      */
     public function process($item)
     {
-        if (!$this->denormalizer->supportsDenormalization($item, $this->type, $this->format)) {
-            throw new InvalidItemException(
-                'Unable to denormalize item. Not supported.',
-                [
-                    'item' => is_object($item) ? get_class($item) : gettype($item),
-                    'format' => $this->format,
-                ]
-            );
-        }
-
         try {
+            if (!$this->denormalizer->supportsDenormalization($item, $this->type, $this->format)) {
+                throw new UnsupportedException('Unable to denormalize item. Not supported.');
+            }
+
             $object = $this->denormalizer->denormalize($item, $this->type, $this->format, $this->context);
         } catch (ExceptionInterface $exception) {
-            throw new InvalidItemException(
-                'Unable to denormalize item. An exception occurred.',
-                [
-                    'item' => is_object($item) ? get_class($item) : gettype($item),
-                    'format' => $this->format,
-                    'context' => $this->context,
-                ],
-                0,
-                $exception
+            throw SkipItemException::onError(
+                $item,
+                $exception,
+                ['format' => $this->format, 'context' => $this->context]
             );
         }
 

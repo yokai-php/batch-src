@@ -11,10 +11,11 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use Symfony\Component\Serializer\Exception\BadMethodCallException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Yokai\Batch\Bridge\Symfony\Serializer\NormalizeItemProcessor;
-use Yokai\Batch\Job\Item\InvalidItemException;
+use Yokai\Batch\Job\Item\Exception\SkipItemException;
+use Yokai\Batch\Job\Item\Exception\SkipItemOnError;
 
 final class NormalizeItemProcessorTest extends TestCase
 {
@@ -52,8 +53,6 @@ final class NormalizeItemProcessorTest extends TestCase
      */
     public function testUnsupported(?string $format, array $context, $item): void
     {
-        $this->expectException(InvalidItemException::class);
-
         $this->normalizer->supportsNormalization($item, $format)
             ->shouldBeCalled()
             ->willReturn(false);
@@ -62,7 +61,18 @@ final class NormalizeItemProcessorTest extends TestCase
 
         $processor = new NormalizeItemProcessor($this->normalizer->reveal(), $format, $context);
 
-        $processor->process($item);
+        $exception = null;
+        try {
+            $processor->process($item);
+        } catch (SkipItemException $exception) {
+            // just capture the exception
+        }
+
+        self::assertNotNull($exception, 'Processor has thrown an exception');
+        $cause = $exception->getCause();
+        self::assertInstanceOf(SkipItemOnError::class, $cause);
+        /** @var SkipItemOnError $cause */
+        self::assertSame('Unable to normalize item. Not supported.', $cause->getError()->getMessage());
     }
 
     /**
@@ -70,21 +80,27 @@ final class NormalizeItemProcessorTest extends TestCase
      */
     public function testException(?string $format, array $context, $item): void
     {
-        $this->expectException(InvalidItemException::class);
-
         $this->normalizer->supportsNormalization($item, $format)
             ->shouldBeCalled()
             ->willReturn(true);
         $this->normalizer->normalize($item, $format, $context)
             ->shouldBeCalled()
-            ->willThrow(
-                new class extends \Exception implements ExceptionInterface {
-                }
-            );
+            ->willThrow($exceptionThrown = new BadMethodCallException());
 
         $processor = new NormalizeItemProcessor($this->normalizer->reveal(), $format, $context);
 
-        $processor->process($item);
+        $exception = null;
+        try {
+            $processor->process($item);
+        } catch (SkipItemException $exception) {
+            // just capture the exception
+        }
+
+        self::assertNotNull($exception, 'Processor has thrown an exception');
+        $cause = $exception->getCause();
+        self::assertInstanceOf(SkipItemOnError::class, $cause);
+        /** @var SkipItemOnError $cause */
+        self::assertSame($exceptionThrown, $cause->getError());
     }
 
     public function sets(): Generator
