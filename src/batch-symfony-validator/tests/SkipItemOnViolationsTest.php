@@ -24,6 +24,7 @@ class SkipItemOnViolationsTest extends TestCase
         $cause = new SkipItemOnViolations(new ConstraintViolationList($violations));
         $cause->report($execution, 'itemIndex', 'item');
 
+        self::assertSame(1, $execution->getSummary()->get('invalid'));
         self::assertCount(1, $execution->getWarnings());
         self::assertSame('Violations were detected by validator.', $execution->getWarnings()[0]->getMessage());
         self::assertSame([], $execution->getWarnings()[0]->getParameters());

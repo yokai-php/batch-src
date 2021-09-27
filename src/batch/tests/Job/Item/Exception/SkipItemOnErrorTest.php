@@ -23,6 +23,7 @@ class SkipItemOnErrorTest extends TestCase
         $cause = new SkipItemOnError($error);
         $cause->report($execution, 'itemIndex', 'item');
 
+        self::assertSame(1, $execution->getSummary()->get('errored'));
         self::assertCount(1, $execution->getWarnings());
         self::assertSame('An error occurred.', $execution->getWarnings()[0]->getMessage());
         self::assertSame([], $execution->getWarnings()[0]->getParameters());
