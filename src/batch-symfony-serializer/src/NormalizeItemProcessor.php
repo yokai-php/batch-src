@@ -10,6 +10,9 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Yokai\Batch\Job\Item\Exception\SkipItemException;
 use Yokai\Batch\Job\Item\ItemProcessorInterface;
 
+/**
+ * This {@see ItemProcessorInterface} uses Symfony's serializer to normalize items.
+ */
 final class NormalizeItemProcessor implements ItemProcessorInterface
 {
     private NormalizerInterface $normalizer;

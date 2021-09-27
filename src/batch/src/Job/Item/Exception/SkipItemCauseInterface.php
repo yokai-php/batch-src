@@ -14,7 +14,7 @@ use Yokai\Batch\JobExecution;
 interface SkipItemCauseInterface
 {
     /**
-     * Record the cause of ite skip to a {@see JobExecution}.
+     * Record the cause of item skip to a {@see JobExecution}.
      * Called by {@see ItemJob} when {@see SkipItemException}
      * is thrown by any {@see ItemProcessorInterface}.
      *

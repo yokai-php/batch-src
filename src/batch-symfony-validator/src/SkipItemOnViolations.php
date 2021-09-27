@@ -11,6 +11,9 @@ use Yokai\Batch\Job\Item\Exception\SkipItemCauseInterface;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\Warning;
 
+/**
+ * Skip item when validation fails and leave a warning with violations to the {@see JobExecution}.
+ */
 final class SkipItemOnViolations implements SkipItemCauseInterface
 {
     /**

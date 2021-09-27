@@ -10,6 +10,10 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Yokai\Batch\Job\Item\Exception\SkipItemException;
 use Yokai\Batch\Job\Item\ItemProcessorInterface;
 
+/**
+ * This {@see ItemProcessorInterface} uses Symfony's validator to validate items.
+ * When an item is not valid, it throw a {@see SkipItemException} with a {@see SkipItemOnViolations} cause.
+ */
 final class SkipInvalidItemProcessor implements ItemProcessorInterface
 {
     private ValidatorInterface $validator;

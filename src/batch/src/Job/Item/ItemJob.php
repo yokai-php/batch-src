@@ -9,6 +9,15 @@ use Yokai\Batch\Job\Item\Exception\SkipItemException;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
 
+/**
+ * This job is at the very center of batch processing.
+ * It is built on an ETL (@link https://en.wikipedia.org/wiki/Extract,_transform,_load)
+ * architecture, with decoupled and reusable components.
+ *
+ * Items are Extracted using an {@see ItemReaderInterface}.
+ * Then Transformed using an {@see ItemProcessorInterface}.
+ * And finally Written using an {@see ItemWriterInterface}.
+ */
 class ItemJob extends AbstractJob
 {
     use ElementConfiguratorTrait;

@@ -9,7 +9,7 @@ use Yokai\Batch\JobExecution;
 use Yokai\Batch\Warning;
 
 /**
- * When an exception occurs when processing an item.
+ * Skip item when an exception occurs and leave a warning with exception to the {@see JobExecution}.
  */
 final class SkipItemOnError implements SkipItemCauseInterface
 {
