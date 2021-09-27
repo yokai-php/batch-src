@@ -14,7 +14,7 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Yokai\Batch\Bridge\Symfony\Serializer\DenormalizeItemProcessor;
-use Yokai\Batch\Job\Item\InvalidItemException;
+use Yokai\Batch\Job\Item\Exception\SkipItemException;
 
 final class DenormalizeItemProcessorTest extends TestCase
 {
@@ -52,7 +52,7 @@ final class DenormalizeItemProcessorTest extends TestCase
      */
     public function testUnsupported(string $type, ?string $format, array $context, $item): void
     {
-        $this->expectException(InvalidItemException::class);
+        $this->expectException(SkipItemException::class);
 
         $this->denormalizer->supportsDenormalization($item, $type, $format)
             ->shouldBeCalled()
@@ -70,7 +70,7 @@ final class DenormalizeItemProcessorTest extends TestCase
      */
     public function testException(string $type, ?string $format, array $context, $item): void
     {
-        $this->expectException(InvalidItemException::class);
+        $this->expectException(SkipItemException::class);
 
         $this->denormalizer->supportsDenormalization($item, $type, $format)
             ->shouldBeCalled()

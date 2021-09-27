@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Bridge\Symfony\Validator;
 
-use DateTimeInterface;
+use Iterator;
 use Symfony\Component\Validator\Constraint;
-use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Yokai\Batch\Job\Item\InvalidItemException;
+use Yokai\Batch\Job\Item\Exception\SkipItemException;
 use Yokai\Batch\Job\Item\ItemProcessorInterface;
 
+/**
+ * This {@see ItemProcessorInterface} uses Symfony's validator to validate items.
+ * When an item is not valid, it throw a {@see SkipItemException} with a {@see SkipItemOnViolations} cause.
+ */
 final class SkipInvalidItemProcessor implements ItemProcessorInterface
 {
     private ValidatorInterface $validator;
@@ -42,62 +45,25 @@ final class SkipInvalidItemProcessor implements ItemProcessorInterface
     public function process($item)
     {
         $violations = $this->validator->validate($item, $this->contraints, $this->groups);
-        if (count($violations) === 0) {
+        if (\count($violations) === 0) {
             return $item;
         }
 
-        $issues = [];
-        /** @var ConstraintViolationInterface $violation */
-        foreach ($violations as $violation) {
-            $issues[] = sprintf(
-                '%s: %s: %s',
-                $violation->getPropertyPath(),
-                $violation->getMessage(),
-                $this->normalizeInvalidValue($violation->getInvalidValue())
-            );
-        }
-
-        throw new InvalidItemException(implode(PHP_EOL, $issues));
+        throw new SkipItemException($item, new SkipItemOnViolations($violations), [
+            'constraints' => \iterator_to_array($this->normalizeConstraints($this->contraints)),
+            'groups' => $this->groups,
+        ]);
     }
 
     /**
-     * @param mixed $invalidValue
+     * @param Constraint[]|null $constraints
      *
-     * @return integer|float|string|boolean
+     * @phpstan-return Iterator<string>
      */
-    private function normalizeInvalidValue($invalidValue)
+    private function normalizeConstraints(?array $constraints): Iterator
     {
-        if ($invalidValue === '') {
-            return '""';
+        foreach ($constraints ?? [] as $constraint) {
+            yield \get_class($constraint);
         }
-        if ($invalidValue === null) {
-            return 'NULL';
-        }
-        if (is_scalar($invalidValue)) {
-            return $invalidValue;
-        }
-
-        if (is_iterable($invalidValue)) {
-            $invalidValues = [];
-            foreach ($invalidValue as $value) {
-                $invalidValues[] = $this->normalizeInvalidValue($value);
-            }
-
-            return implode(', ', $invalidValues);
-        }
-
-        if (is_object($invalidValue)) {
-            if ($invalidValue instanceof DateTimeInterface) {
-                return $invalidValue->format(DateTimeInterface::ISO8601);
-            }
-
-            if (method_exists($invalidValue, '__toString')) {
-                return (string)$invalidValue;
-            }
-
-            return sprintf('%s:%s', get_class($invalidValue), spl_object_hash($invalidValue));
-        }
-
-        return gettype($invalidValue);
     }
 }
