@@ -52,10 +52,7 @@ final class DoctrineDBALQueryReader implements ItemReaderInterface
                 \strtr($this->sql, ['{limit}' => $this->batch, '{offset}' => $iteration * $this->batch])
             );
 
-            $rows = \array_map(
-                fn(array $row) => \array_map('strval', $row),
-                $statement->fetchAllAssociative()
-            );
+            $rows = $statement->fetchAllAssociative();
 
             yield from $rows;
 
