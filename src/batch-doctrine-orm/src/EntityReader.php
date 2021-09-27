@@ -9,16 +9,12 @@ use Doctrine\Persistence\ManagerRegistry;
 use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\Job\Item\ItemReaderInterface;
 
+/**
+ * This {@see ItemReaderInterface} executes an SQL query to a Doctrine connection,
+ */
 final class EntityReader implements ItemReaderInterface
 {
-    /**
-     * @var ManagerRegistry
-     */
     private ManagerRegistry $doctrine;
-
-    /**
-     * @var string
-     */
     private string $class;
 
     public function __construct(ManagerRegistry $doctrine, string $class)

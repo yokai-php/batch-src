@@ -9,11 +9,12 @@ use Doctrine\Persistence\ObjectManager;
 use Yokai\Batch\Exception\InvalidArgumentException;
 use Yokai\Batch\Job\Item\ItemWriterInterface;
 
+/**
+ * This {@see ItemWriterInterface} will persist and flush all items,
+ * via a Doctrine {@see ObjectManager}.
+ */
 final class ObjectWriter implements ItemWriterInterface
 {
-    /**
-     * @var ManagerRegistry
-     */
     private ManagerRegistry $doctrine;
 
     /**
