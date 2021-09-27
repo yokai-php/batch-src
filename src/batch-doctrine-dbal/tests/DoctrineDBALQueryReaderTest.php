@@ -34,6 +34,11 @@ class DoctrineDBALQueryReaderTest extends DoctrineDBALTestCase
             4 // we will take 4 records at once : 3 queries expected
         );
 
+        $read = \array_map(
+            fn(array $row) => \array_map('strval', $row),
+            \iterator_to_array($reader->read(), false)
+        );
+
         self::assertSame([
             ['as_int' => '0', 'as_string' => 'Zero'],
             ['as_int' => '1', 'as_string' => 'One'],
@@ -45,7 +50,7 @@ class DoctrineDBALQueryReaderTest extends DoctrineDBALTestCase
             ['as_int' => '7', 'as_string' => 'Seven'],
             ['as_int' => '8', 'as_string' => 'Height'],
             ['as_int' => '9', 'as_string' => 'Nine'],
-        ], \iterator_to_array($reader->read(), false));
+        ], $read);
     }
 
     public function testQueryMustContainsLimitPlaceholder(): void

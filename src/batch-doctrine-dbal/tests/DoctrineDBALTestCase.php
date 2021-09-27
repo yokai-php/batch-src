@@ -41,6 +41,9 @@ abstract class DoctrineDBALTestCase extends TestCase
         /** @var Result $results */
         $results = $this->connection->executeQuery(\sprintf('SELECT * FROM %s;', $table));
 
-        return $results->fetchAllAssociative();
+        return \array_map(
+            fn(array $row) => \array_map('strval', $row),
+            $results->fetchAllAssociative()
+        );
     }
 }

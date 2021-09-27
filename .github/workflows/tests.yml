@@ -17,11 +17,16 @@ jobs:
           - php-version: 7.4
             symfony-version: 4.4.*
           - php-version: 7.4
-            symfony-version: 5.2.*
+            symfony-version: 5.3.*
           - php-version: 8.0
             symfony-version: 4.4.*
           - php-version: 8.0
-            symfony-version: 5.2.*
+            symfony-version: 5.3.*
+
+          - php-version: 8.1
+            symfony-version: 5.4.x-dev@dev
+          - php-version: 8.1
+            symfony-version: 6.0.x-dev@dev
 
     steps:
       - name: "Checkout"
@@ -35,13 +40,14 @@ jobs:
 
       - name: "Install dependencies with composer"
         run: |
-          composer require --no-update "symfony/console:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/filesystem:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/framework-bundle:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/messenger:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/process:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/serializer:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/validator:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/console:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/filesystem:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/framework-bundle:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/messenger:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/process:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/serializer:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/validator:${{ matrix.symfony-version }}"
+          composer remove  --quiet --no-update "symplify/monorepo-builder" --dev
           composer update --no-interaction --no-progress --no-suggest
 
       - name: "Run tests with phpunit/phpunit"
@@ -55,7 +61,7 @@ jobs:
       matrix:
         include:
           - php-version: 8.0
-            symfony-version: 5.2.*
+            symfony-version: 5.3.*
 
     steps:
       - name: "Checkout"
@@ -69,13 +75,13 @@ jobs:
 
       - name: "Install dependencies with composer"
         run: |
-          composer require --no-update "symfony/console:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/filesystem:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/framework-bundle:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/messenger:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/process:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/serializer:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/validator:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/console:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/filesystem:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/framework-bundle:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/messenger:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/process:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/serializer:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/validator:${{ matrix.symfony-version }}"
           composer update --no-interaction --no-progress --no-suggest
 
       - name: "Run static analyzis with phpstan/phpstan"
@@ -89,7 +95,7 @@ jobs:
       matrix:
         include:
           - php-version: 8.0
-            symfony-version: 5.2.*
+            symfony-version: 5.3.*
 
     steps:
       - name: "Checkout"
@@ -103,13 +109,13 @@ jobs:
 
       - name: "Install dependencies with composer"
         run: |
-          composer require --no-update "symfony/console:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/filesystem:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/framework-bundle:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/messenger:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/process:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/serializer:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/validator:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/console:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/filesystem:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/framework-bundle:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/messenger:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/process:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/serializer:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/validator:${{ matrix.symfony-version }}"
           composer update --no-interaction --no-progress --no-suggest
 
       - name: "Run checkstyle with squizlabs/php_codesniffer"
@@ -123,7 +129,7 @@ jobs:
       matrix:
         include:
           - php-version: 8.0
-            symfony-version: 5.2.*
+            symfony-version: 5.3.*
 
     steps:
       - name: "Checkout"
@@ -137,13 +143,13 @@ jobs:
 
       - name: "Install dependencies with composer"
         run: |
-          composer require --no-update "symfony/console:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/filesystem:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/framework-bundle:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/messenger:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/process:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/serializer:${{ matrix.symfony-version }}"
-          composer require --no-update "symfony/validator:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/console:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/filesystem:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/framework-bundle:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/messenger:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/process:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/serializer:${{ matrix.symfony-version }}"
+          composer require --quiet --no-update "symfony/validator:${{ matrix.symfony-version }}"
           composer update --no-interaction --no-progress --no-suggest
 
       - name: "Run tests with phpunit/phpunit"
