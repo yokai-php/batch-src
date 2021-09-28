@@ -34,8 +34,11 @@ final class RunJobCommand extends Command
      */
     protected function configure(): void
     {
-        $this->addArgument('job', InputArgument::REQUIRED);
-        $this->addArgument('configuration', InputArgument::OPTIONAL);
+        $this->setDescription('Execute any job.');
+        $this->addArgument('job', InputArgument::REQUIRED, 'The job name to run');
+        $this->addArgument('configuration', InputArgument::OPTIONAL, 'The job parameters as a JSON object');
+        $this->addUsage('import');
+        $this->addUsage('export \'{"toFile":"/path/to/file.xml"}\'');
     }
 
     /**
