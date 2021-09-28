@@ -10,26 +10,19 @@ use Yokai\Batch\JobExecution;
 use Yokai\Batch\Launcher\JobLauncherInterface;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
 
+/**
+ * This {@see JobLauncherInterface} will execute job via an asynchronous symfony command.
+ *
+ * Example, if you call {@see RunCommandJobLauncher::launch('import', ['foo'=>'bar'])},
+ * this command will run (with absolute pathes) :
+ *
+ *      php bin/console yokai:batch:run import '{"foo":"bar"}' >> var/log/batch_execute.log 2>&1 &
+ */
 final class RunCommandJobLauncher implements JobLauncherInterface
 {
-    /**
-     * @var JobExecutionFactory
-     */
     private JobExecutionFactory $jobExecutionFactory;
-
-    /**
-     * @var CommandRunner
-     */
     private CommandRunner $commandRunner;
-
-    /**
-     * @var string
-     */
     private string $logFilename;
-
-    /**
-     * @var JobExecutionStorageInterface
-     */
     private JobExecutionStorageInterface $jobExecutionStorage;
 
     public function __construct(
