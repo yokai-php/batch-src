@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Yokai\Batch\Tests\Bridge\Symfony\Framework\Job\Parameters;
+namespace Yokai\Batch\Tests\Job\Parameters;
 
+use PHPUnit\Framework\TestCase;
 use Yokai\Batch\Exception\CannotAccessParameterException;
 use Yokai\Batch\Job\Parameters\JobExecutionSummaryAccessor;
-use PHPUnit\Framework\TestCase;
 use Yokai\Batch\JobExecution;
 
 class JobExecutionSummaryAccessorTest extends TestCase
