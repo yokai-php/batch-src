@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yokai\Batch\Tests\Bridge\Symfony\Serializer\Job\Item\Exception;
+namespace Yokai\Batch\Tests\Job\Item\Exception;
 
 use PHPUnit\Framework\TestCase;
 use Yokai\Batch\Job\Item\Exception\SkipItemWithWarning;
