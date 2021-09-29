@@ -150,6 +150,12 @@ final class FlatFileReader implements
         }
     }
 
+    /**
+     * @phpstan-param array<int, string> $headers
+     * @phpstan-param array<int, string> $row
+     *
+     * @phpstan-return array<string, string>|null
+     */
     private function combine(array $headers, array $row, int $rowIndex): ?array
     {
         try {
