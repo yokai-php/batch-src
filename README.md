@@ -29,6 +29,12 @@ And some special packages :
 - [`yokai/batch-symfony-pack`](https://github.com/yokai-php/batch-symfony-pack): Minimal pack for Symfony Framework
 
 
+## Documentation
+
+Every package has its own documentation,
+you should start with [core repository documentation](https://github.com/yokai-php/batch/blob/0.x/README.md).
+
+
 ## Contribution
 
 Please feel free to open an [issue](https://github.com/yokai-php/batch-src/issues)
