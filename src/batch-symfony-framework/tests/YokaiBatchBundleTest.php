@@ -6,14 +6,11 @@ namespace Yokai\Batch\Tests\Bridge\Symfony\Framework;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
 use Yokai\Batch\Bridge\Symfony\Framework\YokaiBatchBundle;
-use Yokai\Batch\Job\Item\ItemJob;
-use Yokai\Batch\Job\Item\Processor\NullProcessor;
-use Yokai\Batch\Job\Item\Reader\StaticIterableReader;
+use Yokai\Batch\Job\JobInterface;
 use Yokai\Batch\Registry\JobRegistry;
-use Yokai\Batch\Storage\NullJobExecutionStorage;
-use Yokai\Batch\Test\Job\Item\Writer\InMemoryWriter;
+use Yokai\Batch\Tests\Bridge\Symfony\Framework\Fixtures\DummyJob;
+use Yokai\Batch\Tests\Bridge\Symfony\Framework\Fixtures\DummyJobWithName;
 
 class YokaiBatchBundleTest extends TestCase
 {
@@ -23,27 +20,22 @@ class YokaiBatchBundleTest extends TestCase
         $container->register('yokai_batch.job_registry', JobRegistry::class)
             ->setPublic(true);
 
-        $this->job($container, 'job.named.with.service.id')
+        $container->register(DummyJobWithName::class, DummyJobWithName::class)
             ->addTag('yokai_batch.job');
-        $this->job($container, 'job.named.with.tag.attribute')
+        $container->register(DummyJob::class, DummyJob::class)
+            ->addTag('yokai_batch.job');
+        $container->register('job.named.with.service.id', DummyJob::class)
+            ->addTag('yokai_batch.job');
+        $container->register('job.named.with.tag.attribute', DummyJob::class)
             ->addTag('yokai_batch.job', ['job' => 'job.name.in.attribute']);
 
         (new YokaiBatchBundle())->build($container);
 
         $container->compile();
         $registry = $container->get('yokai_batch.job_registry');
-        self::assertInstanceOf(ItemJob::class, $registry->get('job.named.with.service.id'));
-        self::assertInstanceOf(ItemJob::class, $registry->get('job.name.in.attribute'));
-    }
-
-    private function job(ContainerBuilder $container, string $id): Definition
-    {
-        return $container->register($id, ItemJob::class)
-            ->setArgument('$batchSize', 100)
-            ->setArgument('$reader', (new Definition(StaticIterableReader::class))->setArgument('$items', []))
-            ->setArgument('$processor', new Definition(NullProcessor::class))
-            ->setArgument('$writer', new Definition(InMemoryWriter::class))
-            ->setArgument('$executionStorage', new Definition(NullJobExecutionStorage::class))
-        ;
+        self::assertInstanceOf(JobInterface::class, $registry->get('export_orders_job'));
+        self::assertInstanceOf(JobInterface::class, $registry->get(DummyJob::class));
+        self::assertInstanceOf(JobInterface::class, $registry->get('job.named.with.service.id'));
+        self::assertInstanceOf(JobInterface::class, $registry->get('job.name.in.attribute'));
     }
 }

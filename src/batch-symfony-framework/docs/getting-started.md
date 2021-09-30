@@ -124,3 +124,7 @@ Then the job will be triggered with its service id:
 /** @var \Yokai\Batch\Launcher\JobLauncherInterface $launcher */
 $launcher->launch(\App\Job\ImportUsersJob::class);
 ```
+
+> **note**: when registering jobs with dedicated class, you can use the
+> [JobWithStaticNameInterface](../src/JobWithStaticNameInterface.php) interface
+> to be able to specify the job name of your service.
