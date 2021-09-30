@@ -12,6 +12,11 @@ use Yokai\Batch\Job\JobExecutionAwareInterface;
 use Yokai\Batch\Job\JobExecutionAwareTrait;
 use Yokai\Batch\Warning;
 
+/**
+ * This {@see ItemWriterInterface} will insert/update items to one or multiple tables,
+ * via a Doctrine {@see Connection}.
+ * All items must instance of {@see DoctrineDBALUpsert}.
+ */
 final class DoctrineDBALUpsertWriter implements
     ItemWriterInterface,
     JobExecutionAwareInterface

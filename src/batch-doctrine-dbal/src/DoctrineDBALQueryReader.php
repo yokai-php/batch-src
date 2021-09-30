@@ -11,6 +11,10 @@ use Generator;
 use Yokai\Batch\Exception\InvalidArgumentException;
 use Yokai\Batch\Job\Item\ItemReaderInterface;
 
+/**
+ * This {@see ItemReaderInterface} executes an SQL query to a Doctrine connection,
+ * and iterate over each result as an item.
+ */
 final class DoctrineDBALQueryReader implements ItemReaderInterface
 {
     private Connection $connection;

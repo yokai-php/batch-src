@@ -8,6 +8,11 @@ use Doctrine\DBAL\Connection;
 use Doctrine\Persistence\ConnectionRegistry;
 use Yokai\Batch\Job\Item\ItemWriterInterface;
 
+/**
+ * This {@see ItemWriterInterface} will insert all items to a single table,
+ * via a Doctrine {@see Connection}.
+ * All items must be arrays.
+ */
 final class DoctrineDBALInsertWriter implements ItemWriterInterface
 {
     private Connection $connection;

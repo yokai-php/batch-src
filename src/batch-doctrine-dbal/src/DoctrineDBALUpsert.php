@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Bridge\Doctrine\DBAL;
 
+/**
+ * This model object is used by {@see DoctrineDBALUpsertWriter}.
+ * It holds table, data and identity to perform upsert operation.
+ */
 final class DoctrineDBALUpsert
 {
     private string $table;

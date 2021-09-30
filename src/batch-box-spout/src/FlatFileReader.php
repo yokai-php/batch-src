@@ -41,9 +41,6 @@ final class FlatFileReader implements
 
     private const TYPES = [Type::CSV, Type::XLSX, Type::ODS];
 
-    /**
-     * @var string
-     */
     private string $type;
 
     /**
@@ -51,9 +48,6 @@ final class FlatFileReader implements
      */
     private array $options;
 
-    /**
-     * @var string
-     */
     private string $headersMode;
 
     /**
@@ -61,9 +55,6 @@ final class FlatFileReader implements
      */
     private ?array $headers;
 
-    /**
-     * @var JobParameterAccessorInterface
-     */
     private JobParameterAccessorInterface $filePath;
 
     /**
