@@ -11,21 +11,13 @@ use Yokai\Batch\JobExecution;
 use Yokai\Batch\Launcher\JobLauncherInterface;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
 
+/**
+ * This {@see JobLauncherInterface} will execute job via a symfony message dispatch.
+ */
 final class DispatchMessageJobLauncher implements JobLauncherInterface
 {
-    /**
-     * @var JobExecutionFactory
-     */
     private JobExecutionFactory $jobExecutionFactory;
-
-    /**
-     * @var JobExecutionStorageInterface
-     */
     private JobExecutionStorageInterface $jobExecutionStorage;
-
-    /**
-     * @var MessageBusInterface
-     */
     private MessageBusInterface $messageBus;
 
     public function __construct(
@@ -38,6 +30,9 @@ final class DispatchMessageJobLauncher implements JobLauncherInterface
         $this->jobExecutionStorage = $jobExecutionStorage;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function launch(string $name, array $configuration = []): JobExecution
     {
         // create and store execution before dispatching message
@@ -50,10 +45,9 @@ final class DispatchMessageJobLauncher implements JobLauncherInterface
         // dispatch message
         $this->messageBus->dispatch(new LaunchJobMessage($name, $configuration));
 
-        // re-fetch job execution from storage
+        // re-fetch and return job execution from storage
         // if transport is synchronous, job execution may have been filled during execution
-        $jobExecution = $this->jobExecutionStorage->retrieve($jobExecution->getJobName(), $jobExecution->getId());
 
-        return $jobExecution;
+        return $this->jobExecutionStorage->retrieve($jobExecution->getJobName(), $jobExecution->getId());
     }
 }

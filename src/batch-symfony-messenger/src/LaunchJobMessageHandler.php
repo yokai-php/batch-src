@@ -7,11 +7,11 @@ namespace Yokai\Batch\Bridge\Symfony\Messenger;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Yokai\Batch\Launcher\JobLauncherInterface;
 
+/**
+ * Answer to {@see LaunchJobMessage} and launch requested job.
+ */
 final class LaunchJobMessageHandler implements MessageHandlerInterface
 {
-    /**
-     * @var JobLauncherInterface
-     */
     private JobLauncherInterface $jobLauncher;
 
     public function __construct(JobLauncherInterface $jobLauncher)

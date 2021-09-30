@@ -8,7 +8,9 @@ use Box\Spout\Common\Entity\Row;
 use Box\Spout\Common\Type;
 use Box\Spout\Reader\Common\Creator\ReaderFactory;
 use Box\Spout\Reader\CSV\Reader as CsvReader;
+use Box\Spout\Reader\ReaderInterface;
 use Box\Spout\Reader\SheetInterface;
+use Generator;
 use Yokai\Batch\Exception\InvalidArgumentException;
 use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\Job\Item\ItemReaderInterface;
@@ -17,6 +19,10 @@ use Yokai\Batch\Job\JobExecutionAwareTrait;
 use Yokai\Batch\Job\Parameters\JobParameterAccessorInterface;
 use Yokai\Batch\Warning;
 
+/**
+ * This {@see ItemReaderInterface} will read from CSV/ODS/XLSX file
+ * and return each line as an array.
+ */
 final class FlatFileReader implements
     ItemReaderInterface,
     JobExecutionAwareInterface
@@ -104,6 +110,34 @@ final class FlatFileReader implements
 
         $headers = $this->headers;
 
+        foreach ($this->rows($reader) as $rowIndex => $row) {
+            if ($rowIndex === 1) {
+                if ($this->headersMode === self::HEADERS_MODE_COMBINE) {
+                    $headers = $row;
+                }
+                if (in_array($this->headersMode, [self::HEADERS_MODE_COMBINE, self::HEADERS_MODE_SKIP])) {
+                    continue;
+                }
+            }
+
+            if (is_array($headers)) {
+                $row = $this->combine($headers, $row, $rowIndex);
+                if ($row === null) {
+                    continue;
+                }
+            }
+
+            yield $row;
+        }
+
+        $reader->close();
+    }
+
+    /**
+     * @phpstan-return Generator<int, array>
+     */
+    private function rows(ReaderInterface $reader): Generator
+    {
         /** @var SheetInterface $sheet */
         foreach ($reader->getSheetIterator() as $sheet) {
             foreach ($sheet->getRowIterator() as $rowIndex => $row) {
@@ -111,51 +145,48 @@ final class FlatFileReader implements
                     $row = $row->toArray();
                 }
 
-                if ($rowIndex === 1) {
-                    if ($this->headersMode === self::HEADERS_MODE_COMBINE) {
-                        $headers = $row;
-                    }
-                    if (in_array($this->headersMode, [self::HEADERS_MODE_COMBINE, self::HEADERS_MODE_SKIP])) {
-                        continue;
-                    }
-                }
-
-                if (is_array($headers)) {
-                    try {
-                        /** @var array<string, mixed>|false $combined */
-                        $combined = @array_combine($headers, $row);
-                        if ($combined === false) {
-                            // @codeCoverageIgnoreStart
-                            // Prior to PHP 8.0 array_combine only trigger a warning
-                            // Now it is throwing a ValueError
-                            throw new \ValueError(
-                                'array_combine(): Argument #1 ($keys) and argument #2 ($values) ' .
-                                'must have the same number of elements'
-                            );
-                            // @codeCoverageIgnoreEnd
-                        }
-                    } catch (\ValueError $exception) {
-                        $this->jobExecution->addWarning(
-                            new Warning(
-                                'Expecting row {row} to have exactly {expected} columns(s), but got {actual}.',
-                                [
-                                    '{row}' => (string)$rowIndex,
-                                    '{expected}' => (string)count($headers),
-                                    '{actual}' => (string)count($row),
-                                ],
-                                ['headers' => $headers, 'row' => $row]
-                            )
-                        );
-                        continue;
-                    }
-
-                    $row = $combined;
-                }
-
-                yield $row;
+                yield $rowIndex => $row;
             }
         }
+    }
 
-        $reader->close();
+    /**
+     * @phpstan-param array<int, string> $headers
+     * @phpstan-param array<int, string> $row
+     *
+     * @phpstan-return array<string, string>|null
+     */
+    private function combine(array $headers, array $row, int $rowIndex): ?array
+    {
+        try {
+            /** @var array<string, mixed>|false $combined */
+            $combined = @array_combine($headers, $row);
+            if ($combined === false) {
+                // @codeCoverageIgnoreStart
+                // Prior to PHP 8.0 array_combine only trigger a warning
+                // Now it is throwing a ValueError
+                throw new \ValueError(
+                    'array_combine(): Argument #1 ($keys) and argument #2 ($values) ' .
+                    'must have the same number of elements'
+                );
+                // @codeCoverageIgnoreEnd
+            }
+
+            return $combined;
+        } catch (\ValueError $exception) {
+            $this->jobExecution->addWarning(
+                new Warning(
+                    'Expecting row {row} to have exactly {expected} columns(s), but got {actual}.',
+                    [
+                        '{row}' => (string)$rowIndex,
+                        '{expected}' => (string)count($headers),
+                        '{actual}' => (string)count($row),
+                    ],
+                    ['headers' => $headers, 'row' => $row]
+                )
+            );
+        }
+
+        return null;
     }
 }

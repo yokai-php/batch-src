@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Bridge\Symfony\Messenger;
 
+/**
+ * A message, dispatched in symfony/messenger's bus, that is requiring to launch a job.
+ */
 final class LaunchJobMessage
 {
-    /**
-     * @var string
-     */
     private string $jobName;
 
     /**

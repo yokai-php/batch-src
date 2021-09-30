@@ -19,6 +19,10 @@ use Yokai\Batch\Job\JobExecutionAwareInterface;
 use Yokai\Batch\Job\JobExecutionAwareTrait;
 use Yokai\Batch\Job\Parameters\JobParameterAccessorInterface;
 
+/**
+ * This {@see ItemReaderInterface} will write to CSV/ODS/XLSX file
+ * and each item will written its own line.
+ */
 final class FlatFileWriter implements
     ItemWriterInterface,
     JobExecutionAwareInterface,
