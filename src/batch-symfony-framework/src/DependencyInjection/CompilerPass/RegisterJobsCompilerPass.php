@@ -40,7 +40,7 @@ final class RegisterJobsCompilerPass implements CompilerPassInterface
         }
 
         $serviceClass = $definition->getClass();
-        if (\is_a($serviceClass, JobWithStaticNameInterface::class, true)) {
+        if ($serviceClass !== null && \is_a($serviceClass, JobWithStaticNameInterface::class, true)) {
             return $serviceClass::getJobName();
         }
 
