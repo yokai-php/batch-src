@@ -87,8 +87,16 @@ final class FlatFileReader implements
     public function read(): iterable
     {
         $reader = ReaderFactory::createFromType($this->type);
-        if ($reader instanceof CsvReader && isset($this->options['delimiter'])) {
-            $reader->setFieldDelimiter($this->options['delimiter']);
+        if ($reader instanceof CsvReader) {
+            if (isset($this->options['delimiter'])) {
+                $reader->setFieldDelimiter($this->options['delimiter']);
+            }
+            if (isset($this->options['enclosure'])) {
+                $reader->setFieldEnclosure($this->options['enclosure']);
+            }
+            if (isset($this->options['encoding'])) {
+                $reader->setEncoding($this->options['encoding']);
+            }
         }
         $reader->open($this->getFilePath());
 
