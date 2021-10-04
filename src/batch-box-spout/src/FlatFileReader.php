@@ -96,6 +96,9 @@ final class FlatFileReader implements
         if ($reader instanceof CsvReader) {
             $reader->setFieldDelimiter($this->options['delimiter'] ?? ',');
             $reader->setFieldEnclosure($this->options['enclosure'] ?? '"');
+            if (isset($this->options['encoding'])) {
+                $reader->setEncoding($this->options['encoding']);
+            }
         }
         $reader->open((string)$this->filePath->get($this->jobExecution));
 
