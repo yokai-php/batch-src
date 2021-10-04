@@ -99,6 +99,25 @@ class FlatFileReaderTest extends TestCase
         );
     }
 
+    public function testReadCustomCSV()
+    {
+        $file = __DIR__ . '/fixtures/iso-8859-1.csv';
+        $reader = new FlatFileReader(
+            'csv',
+            ['delimiter' => ';', 'enclosure' => '|', 'encoding' => 'ISO-8859-1'],
+            FlatFileReader::HEADERS_MODE_NONE,
+            null,
+            $file
+        );
+        $reader->setJobExecution(JobExecution::createRoot('123456789', 'parent'));
+
+        self::assertSame([
+            ['Gérard', 'À peu près'],
+            ['Benoît', 'Bien-être'],
+            ['Gaëlle', 'Ça va'],
+        ], iterator_to_array($reader->read()));
+    }
+
     public function types()
     {
         foreach ([Type::CSV, Type::XLSX, Type::ODS] as $type) {
