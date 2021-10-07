@@ -13,11 +13,10 @@ if (false === $artifactDir) {
     throw new \LogicException('Missing "ARTIFACT_DIR" env var.');
 }
 
-if (is_dir($artifactDir)) {
-    (new Filesystem())->chmod($artifactDir, 0777, 0000, true);
-    (new Filesystem())->remove($artifactDir);
-}
-
-(new Filesystem())->mkdir($artifactDir);
+$filesystem = new Filesystem();
+$filesystem->remove(__DIR__ . '/symfony/var');
+$filesystem->chmod($artifactDir, 0777, 0000, true);
+$filesystem->remove($artifactDir);
+$filesystem->mkdir($artifactDir);
 
 define('ARTIFACT_DIR', $artifactDir);
