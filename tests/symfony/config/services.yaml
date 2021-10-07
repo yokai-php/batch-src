@@ -1,0 +1,10 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+  _instanceof:
+    Yokai\Batch\Job\JobInterface:
+      tags: [ 'yokai_batch.job' ]
+  Yokai\Batch\Sources\Tests\Symfony\App\:
+    resource: '../src/*'
+    exclude: '../src/{Entity,Kernel.php}'

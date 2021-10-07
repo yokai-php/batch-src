@@ -64,6 +64,8 @@
   "autoload-dev": {
     "psr-4": {
       "Yokai\\Batch\\Sources\\Tests\\Integration\\": "tests/integration/",
+      "Yokai\\Batch\\Sources\\Tests\\Symfony\\App\\": "tests/symfony/src/",
+      "Yokai\\Batch\\Sources\\Tests\\Symfony\\Tests\\": "tests/symfony/tests/",
       "Yokai\\Batch\\Tests\\": "src/batch/tests/",
       "Yokai\\Batch\\Tests\\Bridge\\Box\\Spout\\": "src/batch-box-spout/tests/",
       "Yokai\\Batch\\Tests\\Bridge\\Doctrine\\DBAL\\": "src/batch-doctrine-dbal/tests/",
