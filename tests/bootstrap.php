@@ -14,8 +14,10 @@ if (false === $artifactDir) {
 }
 
 $filesystem = new Filesystem();
+if (is_dir($artifactDir)) {
+    $filesystem->chmod($artifactDir, 0777, 0000, true);
+}
 $filesystem->remove(__DIR__ . '/symfony/var');
-$filesystem->chmod($artifactDir, 0777, 0000, true);
 $filesystem->remove($artifactDir);
 $filesystem->mkdir($artifactDir);
 
