@@ -34,7 +34,7 @@ final class ImportStarWarsCharacterJob extends AbstractImportStartWarsEntityJob
             function (array $item) use ($doctrine) {
                 $entity = new Character();
                 $entity->name = $item['name'];
-                $entity->birthYear = (int)$item['birth_year'];
+                $entity->birthYear = $item['birth_year'] ? (int)$item['birth_year'] : null;
                 $entity->gender = $item['gender'] ?? 'unknown';
                 $entity->homeWorld = $doctrine->getRepository(Planet::class)
                     ->findOneBy(['name' => $item['homeworld']]);

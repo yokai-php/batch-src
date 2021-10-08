@@ -25,10 +25,9 @@ final class ImportStarWarsJob extends JobWithChildJobs implements JobWithStaticN
     public function __construct(JobExecutionStorageInterface $executionStorage, JobRegistry $jobRegistry)
     {
         parent::__construct($executionStorage, $jobRegistry, [
+            // in that case, job order matters
             ImportStarWarsPlanetJob::getJobName(),
             ImportStarWarsSpecieJob::getJobName(),
-            // this job should always be last
-            // because it expects other entities to have been imported
             ImportStarWarsCharacterJob::getJobName(),
         ]);
     }

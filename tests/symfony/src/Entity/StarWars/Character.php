@@ -35,9 +35,7 @@ class Character
     public ?string $name;
 
     /**
-     * @ORM\Column(type="integer")
-     *
-     * @Assert\NotNull()
+     * @ORM\Column(type="integer", nullable=true)
      */
     public ?int $birthYear;
 

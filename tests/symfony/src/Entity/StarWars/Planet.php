@@ -33,4 +33,26 @@ class Planet
      * @Assert\NotNull()
      */
     public ?string $name;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    public ?int $rotationPeriod;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    public ?int $orbitalPeriod;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    public ?int $population;
+
+    /**
+     * @ORM\Column(type="json")
+     *
+     * @Assert\NotNull()
+     */
+    public array $terrain;
 }

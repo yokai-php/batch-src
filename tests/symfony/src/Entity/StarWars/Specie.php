@@ -33,4 +33,19 @@ class Specie
      * @Assert\NotNull()
      */
     public ?string $name;
+
+    /**
+     * @ORM\Column(nullable=true)
+     */
+    public ?string $classification;
+
+    /**
+     * @ORM\Column(nullable=true)
+     */
+    public ?string $language;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Planet::class)
+     */
+    public Planet $homeWorld;
 }
