@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yokai\Batch\Sources\Tests\Symfony\App\Job\Country;
 
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -61,7 +63,9 @@ final class CountryJob extends ItemJob implements
 
     public function __construct(JobExecutionStorageInterface $executionStorage, KernelInterface $kernel)
     {
-        $writePath = fn(string $format) => new StaticValueParameterAccessor(ARTIFACT_DIR . '/symfony/country/countries.' . $format);
+        $writePath = fn(string $format) => new StaticValueParameterAccessor(
+            ARTIFACT_DIR . '/symfony/country/countries.' . $format
+        );
         $reader = function (string $key) use ($kernel) {
             $path = new StaticValueParameterAccessor($kernel->getProjectDir() . '/data/country/' . $key . '.json');
 

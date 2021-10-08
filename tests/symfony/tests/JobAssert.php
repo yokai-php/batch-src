@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yokai\Batch\Sources\Tests\Symfony\Tests;
 
 use PHPUnit\Framework\Assert;

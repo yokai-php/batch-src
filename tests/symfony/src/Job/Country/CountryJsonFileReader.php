@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yokai\Batch\Sources\Tests\Symfony\App\Job\Country;
 
 use Yokai\Batch\Job\Item\ItemReaderInterface;
