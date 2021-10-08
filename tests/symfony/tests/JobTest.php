@@ -14,9 +14,15 @@ final class JobTest extends KernelTestCase
     /**
      * @dataProvider configs
      */
-    public function testUsingCli(string $job, callable $assert, array $config = []): void
+    public function testUsingCli(string $job, callable $assert, callable $setup = null, array $config = []): void
     {
         $kernel = self::createKernel();
+        $container = self::getContainer();
+
+        if ($setup !== null) {
+            $setup($container);
+        }
+
         $application = new Application($kernel);
 
         $config['_id'] = $id = \uniqid();
@@ -26,25 +32,32 @@ final class JobTest extends KernelTestCase
         $commandTester->execute(['job' => $job, 'configuration' => \json_encode($config)]);
 
         /** @var JobExecutionStorageInterface $storage */
-        $storage = self::getContainer()->get(JobExecutionStorageInterface::class);
-        $assert($storage->retrieve($job, $id));
+        $storage = $container->get(JobExecutionStorageInterface::class);
+        $assert($storage->retrieve($job, $id), $container);
     }
 
     /**
      * @dataProvider configs
      */
-    public function testUsingLauncher(string $job, callable $assert, array $config = []): void
+    public function testUsingLauncher(string $job, callable $assert, callable $setup = null, array $config = []): void
     {
+        $container = self::getContainer();
+
+        if ($setup !== null) {
+            $setup($container);
+        }
+
         /** @var JobLauncherInterface $launcher */
-        $launcher = self::getContainer()->get('yokai_batch.job_launcher.simple');
+        $launcher = $container->get('yokai_batch.job_launcher.simple');
 
         $execution = $launcher->launch($job, $config ?? []);
 
-        $assert($execution);
+        $assert($execution, $container);
     }
 
     public function configs(): Generator
     {
         yield from CountryJobSet::sets();
+        yield from StarWarsJobSet::sets();
     }
 }

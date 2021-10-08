@@ -28,6 +28,8 @@
     "symfony/validator": "^4.4|^5.0"
   },
   "require-dev": {
+    "doctrine/annotations": "^1.13",
+    "doctrine/doctrine-bundle": "^2.4",
     "phpspec/prophecy-phpunit": "^2.0",
     "phpstan/phpstan": "^0.12",
     "phpunit/phpunit": "^9.4",

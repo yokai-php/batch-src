@@ -12,10 +12,16 @@ final class JobAssert
         Assert::assertTrue($execution->getStatus()->isSuccessful());
     }
 
-    public static function assertItemJobStats(JobExecution $execution, int $read, int $processed, int $write): void
-    {
+    public static function assertItemJobStats(
+        JobExecution $execution,
+        int $read,
+        int $processed,
+        int $write,
+        int $skipped = null
+    ): void {
         Assert::assertSame($read, $execution->getSummary()->get('read'));
         Assert::assertSame($processed, $execution->getSummary()->get('processed'));
         Assert::assertSame($write, $execution->getSummary()->get('write'));
+        Assert::assertSame($skipped, $execution->getSummary()->get('skipped'));
     }
 }
