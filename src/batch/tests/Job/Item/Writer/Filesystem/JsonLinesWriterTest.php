@@ -14,13 +14,6 @@ class JsonLinesWriterTest extends TestCase
 {
     private const WRITE_DIR = ARTIFACT_DIR . '/json-lines-writer';
 
-    public static function setUpBeforeClass(): void
-    {
-        if (!\is_dir(self::WRITE_DIR)) {
-            \mkdir(self::WRITE_DIR, 0777, true);
-        }
-    }
-
     public function testWrite(): void
     {
         $filename = self::WRITE_DIR . '/lines.jsonl';
