@@ -17,6 +17,7 @@ use Symfony\Component\Routing\RouteCollectionBuilder;
 use Yokai\Batch\Bridge\Symfony\Framework\YokaiBatchBundle;
 use Yokai\Batch\Job\JobInterface;
 
+//phpcs:disable PSR1.Classes.ClassDeclaration.MultipleClasses
 if (\version_compare(InstalledVersions::getVersion('symfony/http-kernel'), '5.3.0', '>=')) {
     final class Kernel extends BaseKernel
     {
@@ -66,15 +67,12 @@ if (\version_compare(InstalledVersions::getVersion('symfony/http-kernel'), '5.3.
 
             $container->services()
                 ->defaults()
-                    ->autoconfigure(true)
-                    ->autowire(true)
-
+                ->autoconfigure(true)
+                ->autowire(true)
                 ->instanceof(JobInterface::class)
-                    ->tag('yokai_batch.job')
-
+                ->tag('yokai_batch.job')
                 ->load(__NAMESPACE__ . '\\', __DIR__)
-                    ->exclude(__DIR__ . '/{Entity,Kernel.php}')
-            ;
+                ->exclude(__DIR__ . '/{Entity,Kernel.php}');
         }
 
         protected function configureRoutes(RoutingConfigurator $routes): void
@@ -128,7 +126,7 @@ if (\version_compare(InstalledVersions::getVersion('symfony/http-kernel'), '5.3.
                 ],
             ]);
 
-            $loader->load(__DIR__.'/../config/services.php');
+            $loader->load(__DIR__ . '/../config/services.php');
         }
 
         protected function configureRoutes(RouteCollectionBuilder $routes): void
