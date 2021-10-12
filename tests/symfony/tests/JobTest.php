@@ -18,7 +18,7 @@ final class JobTest extends KernelTestCase
 
     protected static function getContainer(): ContainerInterface
     {
-        if (\method_exists(KernelTestCase::class, __METHOD__)) {
+        if (\method_exists(KernelTestCase::class, __FUNCTION__)) {
             return parent::getContainer();
         }
 
