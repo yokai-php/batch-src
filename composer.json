@@ -28,6 +28,8 @@
     "symfony/validator": "^4.4|^5.0"
   },
   "require-dev": {
+    "doctrine/annotations": "^1.13",
+    "doctrine/doctrine-bundle": "^2.4",
     "phpspec/prophecy-phpunit": "^2.0",
     "phpstan/phpstan": "^0.12",
     "phpunit/phpunit": "^9.4",
@@ -64,6 +66,8 @@
   "autoload-dev": {
     "psr-4": {
       "Yokai\\Batch\\Sources\\Tests\\Integration\\": "tests/integration/",
+      "Yokai\\Batch\\Sources\\Tests\\Symfony\\App\\": "tests/symfony/src/",
+      "Yokai\\Batch\\Sources\\Tests\\Symfony\\Tests\\": "tests/symfony/tests/",
       "Yokai\\Batch\\Tests\\": "src/batch/tests/",
       "Yokai\\Batch\\Tests\\Bridge\\Box\\Spout\\": "src/batch-box-spout/tests/",
       "Yokai\\Batch\\Tests\\Bridge\\Doctrine\\DBAL\\": "src/batch-doctrine-dbal/tests/",

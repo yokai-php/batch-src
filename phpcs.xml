@@ -11,7 +11,9 @@
     <rule ref="PSR12"/>
 
     <file>src/</file>
-    <file>tests/</file>
+    <file>tests/integration</file>
+    <file>tests/symfony/src</file>
+    <file>tests/symfony/tests</file>
 
     <rule ref="Generic.PHP.ForbiddenFunctions">
         <properties>
