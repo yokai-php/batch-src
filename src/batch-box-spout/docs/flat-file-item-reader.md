@@ -1,27 +1,42 @@
 # Item reader with CSV/ODS/XLSX files
 
-The [FlatFileReader](../src/FlatFileReader.php) is a reader 
+The [FlatFileReader](../src/Reader/FlatFileReader.php) is a reader 
 that will read from CSV/ODS/XLSX file and return each line as an array.
 
 ```php
 <?php
 
-use Box\Spout\Common\Type;
-use Yokai\Batch\Bridge\Box\Spout\FlatFileReader;
+use Yokai\Batch\Bridge\Box\Spout\Reader\FlatFileReader;
+use Yokai\Batch\Bridge\Box\Spout\Reader\HeaderStrategy;
+use Yokai\Batch\Bridge\Box\Spout\Reader\Options\CSVOptions;
+use Yokai\Batch\Bridge\Box\Spout\Reader\Options\ODSOptions;
+use Yokai\Batch\Bridge\Box\Spout\Reader\Options\SheetFilter;
+use Yokai\Batch\Bridge\Box\Spout\Reader\Options\XLSXOptions;
 use Yokai\Batch\Job\Parameters\StaticValueParameterAccessor;
 
 // Read .xlsx file
-// Each item will be an array_combine of first line as key and line as values
-new FlatFileReader(Type::XLSX, new StaticValueParameterAccessor('/path/to/file.xlsx'));
+// Every sheet will be read
+// First line of each sheet will be skipped
+// Other lines will be read as simple array
+new FlatFileReader(new StaticValueParameterAccessor('/path/to/file.xlsx'), new XLSXOptions());
 
 // Read .csv file
-// Each item will be an array_combine of first line as key and line as values
 // The CSV delimiter and enclosure has been changed from default (respectively ',' & '"')
-new FlatFileReader(Type::CSV, new StaticValueParameterAccessor('/path/to/file.csv'), ['delimiter' => ';', 'enclosure' => '|']);
+// Each lines will be read as simple array
+new FlatFileReader(
+    new StaticValueParameterAccessor('/path/to/file.csv'),
+    new CSVOptions(';', '|'),
+    HeaderStrategy::none()
+);
 
 // Read .ods file
-// Each item will be an array_combine of headers constructor arg as key and line as values
-new FlatFileReader(Type::ODS, new StaticValueParameterAccessor('/path/to/file.ods'), [], FlatFileReader::HEADERS_MODE_SKIP, ['static', 'header', 'keys']);
+// Only sheet named "Sheet name to read" will be read
+// Each item will be an array_combine of first line as key and line as values
+new FlatFileReader(
+    new StaticValueParameterAccessor('/path/to/file.ods'),
+    new ODSOptions(SheetFilter::nameIs('Sheet name to read')),
+    HeaderStrategy::combine()
+);
 ```
 
 ## On the same subject

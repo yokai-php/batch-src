@@ -7,7 +7,9 @@ namespace Yokai\Batch\Sources\Tests\Symfony\App\Job\StarWars;
 use Closure;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Yokai\Batch\Bridge\Box\Spout\FlatFileReader;
+use Yokai\Batch\Bridge\Box\Spout\Reader\FlatFileReader;
+use Yokai\Batch\Bridge\Box\Spout\Reader\HeaderStrategy;
+use Yokai\Batch\Bridge\Box\Spout\Reader\Options\CSVOptions;
 use Yokai\Batch\Bridge\Doctrine\Persistence\ObjectWriter;
 use Yokai\Batch\Bridge\Symfony\Framework\JobWithStaticNameInterface;
 use Yokai\Batch\Bridge\Symfony\Validator\SkipInvalidItemProcessor;
@@ -45,10 +47,9 @@ abstract class AbstractImportStartWarsEntityJob extends ItemJob implements JobWi
         parent::__construct(
             50, // could be much higher, but set this way for demo purpose
             new FlatFileReader(
-                'csv',
                 new StaticValueParameterAccessor($file),
-                [],
-                FlatFileReader::HEADERS_MODE_COMBINE
+                new CSVOptions(),
+                HeaderStrategy::combine()
             ),
             new ChainProcessor([
                 new ArrayMapProcessor(
