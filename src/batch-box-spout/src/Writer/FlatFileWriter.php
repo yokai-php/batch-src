@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Bridge\Box\Spout\Writer;
 
+use Box\Spout\Common\Entity\Row;
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 use Box\Spout\Writer\Common\Creator\WriterFactory;
 use Box\Spout\Writer\WriterInterface;
@@ -88,10 +89,14 @@ final class FlatFileWriter implements
         }
 
         foreach ($items as $row) {
-            if (!\is_array($row)) {
-                throw UnexpectedValueException::type('array', $row);
+            if (\is_array($row)) {
+                $row = WriterEntityFactory::createRowFromArray($row);
             }
-            $this->writer->addRow(WriterEntityFactory::createRowFromArray($row));
+            if (!$row instanceof Row) {
+                throw UnexpectedValueException::type('array|' . Row::class, $row);
+            }
+
+            $this->writer->addRow($row);
         }
     }
 

@@ -8,6 +8,7 @@ use Box\Spout\Common\Entity\Style\CellAlignment;
 use Box\Spout\Common\Entity\Style\Color;
 use Box\Spout\Reader\Wrapper\XMLReader;
 use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
+use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 use PHPUnit\Framework\TestCase;
 use Yokai\Batch\Bridge\Box\Spout\Writer\FlatFileWriter;
 use Yokai\Batch\Bridge\Box\Spout\Writer\Options\CSVOptions;
@@ -107,17 +108,49 @@ CSV;
             ->build();
 
         yield [
-            "style.xlsx",
+            "total-style.xlsx",
             fn() => new XLSXOptions('Sheet1 with styles', $style),
             null,
             $items,
             $contentWithoutHeader,
         ];
         yield [
-            "style.ods",
+            "total-style.ods",
             fn() => new ODSOptions('Sheet1 with styles', $style),
             null,
             $items,
+            $contentWithoutHeader,
+        ];
+
+        $blue = (new StyleBuilder())
+            ->setFontBold()
+            ->setFontColor(Color::BLUE)
+            ->build();
+        $red = (new StyleBuilder())
+            ->setFontBold()
+            ->setFontColor(Color::RED)
+            ->build();
+        $green = (new StyleBuilder())
+            ->setFontBold()
+            ->setFontColor(Color::GREEN)
+            ->build();
+        $styledItems = [
+            WriterEntityFactory::createRowFromArray(['John', 'Doe'], $blue),
+            WriterEntityFactory::createRowFromArray(['Jane', 'Doe'], $red),
+            WriterEntityFactory::createRowFromArray(['Jack', 'Doe'], $green),
+        ];
+        yield [
+            "partial-style.xlsx",
+            fn() => new XLSXOptions(),
+            null,
+            $styledItems,
+            $contentWithoutHeader,
+        ];
+        yield [
+            "partial-style.ods",
+            fn() => new ODSOptions(),
+            null,
+            $styledItems,
             $contentWithoutHeader,
         ];
     }
@@ -125,16 +158,16 @@ CSV;
     /**
      * @dataProvider types
      */
-    public function testWriteSomethingThatIsNotAnArray(string $type, callable $options): void
+    public function testWriteInvalidItem(string $type, callable $options): void
     {
         $this->expectException(UnexpectedValueException::class);
 
-        $file = self::WRITE_DIR . '/not-an-array.' . $type;
+        $file = self::WRITE_DIR . '/invalid-item.' . $type;
         $writer = new FlatFileWriter(new StaticValueParameterAccessor($file), $options());
         $writer->setJobExecution(JobExecution::createRoot('123456789', 'export'));
 
         $writer->initialize();
-        $writer->write([true]);
+        $writer->write([true]); // writer accept collection of array or \Box\Spout\Common\Entity\Row
     }
 
     /**
