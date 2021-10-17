@@ -1,27 +1,39 @@
 # Item writer with CSV/ODS/XLSX files
 
-The [FlatFileWriter](../src/FlatFileWriter.php) is a writer that will write to CSV/ODS/XLSX file and each item will
+The [FlatFileWriter](../src/Writer/FlatFileWriter.php) is a writer that will write to CSV/ODS/XLSX file and each item will
 written its own line.
 
 ```php
 <?php
 
-use Box\Spout\Common\Type;
-use Yokai\Batch\Bridge\Box\Spout\FlatFileWriter;
+use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
+use Yokai\Batch\Bridge\Box\Spout\Writer\FlatFileWriter;
+use Yokai\Batch\Bridge\Box\Spout\Writer\Options\CSVOptions;
+use Yokai\Batch\Bridge\Box\Spout\Writer\Options\ODSOptions;
+use Yokai\Batch\Bridge\Box\Spout\Writer\Options\XLSXOptions;
 use Yokai\Batch\Job\Parameters\StaticValueParameterAccessor;
 
 // Write items to .xlsx file
-// That File will not contain a header line
-new FlatFileWriter(Type::XLSX, new StaticValueParameterAccessor('/path/to/file.xlsx'));
+// That file will not contain a header line
+new FlatFileWriter(new StaticValueParameterAccessor('/path/to/file.xlsx'), new XLSXOptions());
 
 // Write items to .csv file
-// That File will not contain a header line
+// That file will not contain a header line
 // The CSV delimiter and enclosure has been changed from default (respectively ',' & '"')
-new FlatFileWriter(Type::CSV, new StaticValueParameterAccessor('/path/to/file.csv'), [], ['delimiter' => ';', 'enclosure' => '|']);
+new FlatFileWriter(
+    new StaticValueParameterAccessor('/path/to/file.csv'),
+    new CSVOptions(';', '|')
+);
 
 // Write items to .ods file
-// That File will contain a header line with : static | header | keys
-new FlatFileWriter(Type::ODS, new StaticValueParameterAccessor('/path/to/file.ods'), ['static', 'header', 'keys']);
+// That file will contain a header line with : static | header | keys
+// Change the sheet name data will be written
+// Change the default style of each cell
+new FlatFileWriter(
+    new StaticValueParameterAccessor('/path/to/file.ods'),
+    new ODSOptions('The sheet name', (new StyleBuilder())->setFontBold()->build()),
+    ['static', 'header', 'keys']
+);
 ```
 
 ## On the same subject

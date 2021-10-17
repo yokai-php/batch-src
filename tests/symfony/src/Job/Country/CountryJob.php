@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace Yokai\Batch\Sources\Tests\Symfony\App\Job\Country;
 
 use Symfony\Component\HttpKernel\KernelInterface;
-use Yokai\Batch\Bridge\Box\Spout\FlatFileWriter;
+use Yokai\Batch\Bridge\Box\Spout\Writer\FlatFileWriter;
+use Yokai\Batch\Bridge\Box\Spout\Writer\Options\CSVOptions;
 use Yokai\Batch\Bridge\Symfony\Framework\JobWithStaticNameInterface;
 use Yokai\Batch\Job\Item\ElementConfiguratorTrait;
 use Yokai\Batch\Job\Item\FlushableInterface;
@@ -77,7 +78,7 @@ final class CountryJob extends ItemJob implements
         $headers = \array_merge(['iso2'], $fragments);
         $this->writer = new ChainWriter([
             new SummaryWriter(new StaticValueParameterAccessor('countries')),
-            new FlatFileWriter('csv', $writePath('csv'), $headers),
+            new FlatFileWriter($writePath('csv'), new CSVOptions(), $headers),
             new JsonLinesWriter($writePath('jsonl')),
         ]);
 
