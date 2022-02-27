@@ -35,8 +35,8 @@ final class RegisterJobsCompilerPass implements CompilerPassInterface
      */
     private function getJobName(string $id, Definition $definition, array $attributes): string
     {
-        if (isset($attributes['job'])) {
-            return (string)$attributes['job'];
+        if (isset($attributes['job']) && \is_string($attributes['job'])) {
+            return $attributes['job'];
         }
 
         $serviceClass = $definition->getClass();
