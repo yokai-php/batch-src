@@ -12,47 +12,31 @@ use Yokai\Batch\Sources\Tests\Symfony\App\Job\StarWars\ImportStarWarsCharacterJo
 /**
  * A character from Star Wars universe.
  * Imported via {@see ImportStarWarsCharacterJob}.
- *
- * @ORM\Entity()
- * @ORM\Table(name="star_wars_character")
- *
- * @UniqueEntity("name")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'star_wars_character')]
+#[UniqueEntity('name')]
 class Character
 {
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id()
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Column(type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     public int $id;
 
-    /**
-     * @ORM\Column(unique=true)
-     *
-     * @Assert\NotNull()
-     */
+    #[ORM\Column(type: 'string', unique: true)]
+    #[Assert\NotNull]
     public ?string $name;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     public ?int $birthYear;
 
-    /**
-     * @ORM\Column()
-     *
-     * @Assert\NotNull()
-     */
+    #[ORM\Column(type: 'string')]
+    #[Assert\NotNull]
     public ?string $gender;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Planet::class)
-     */
+    #[ORM\ManyToOne(targetEntity: Planet::class)]
     public ?Planet $homeWorld;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Specie::class)
-     */
+    #[ORM\ManyToOne(targetEntity: Specie::class)]
     public ?Specie $specie;
 }

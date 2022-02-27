@@ -12,40 +12,27 @@ use Yokai\Batch\Sources\Tests\Symfony\App\Job\StarWars\ImportStarWarsSpecieJob;
 /**
  * A specie from Star Wars universe.
  * Imported via {@see ImportStarWarsSpecieJob}.
- *
- * @ORM\Entity()
- * @ORM\Table(name="star_wars_specie")
- *
- * @UniqueEntity("name")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'star_wars_specie')]
+#[UniqueEntity('name')]
 class Specie
 {
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id()
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Column(type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     public int $id;
 
-    /**
-     * @ORM\Column(unique=true)
-     *
-     * @Assert\NotNull()
-     */
+    #[ORM\Column(type: 'string', unique: true)]
+    #[Assert\NotNull]
     public ?string $name;
 
-    /**
-     * @ORM\Column(nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     public ?string $classification;
 
-    /**
-     * @ORM\Column(nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     public ?string $language;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Planet::class)
-     */
+    #[ORM\ManyToOne(targetEntity: Planet::class)]
     public Planet $homeWorld;
 }

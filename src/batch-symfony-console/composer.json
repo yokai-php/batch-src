@@ -11,9 +11,9 @@
         }
     ],
     "require": {
-        "php": "^7.4|^8.0",
+        "php": "^8.0",
         "ext-json": "*",
-        "symfony/console": "^4.4|^5.0",
+        "symfony/console": "^5.0|^6.0",
         "yokai/batch": "^0.4.0"
     },
     "autoload": {
@@ -34,6 +34,6 @@
         "symfony/process": "Used to determine PHP bin location when using command job launcher (^4.4)"
     },
     "conflict": {
-        "symfony/process": "<4.4"
+        "symfony/process": "<5.4"
     }
 }
