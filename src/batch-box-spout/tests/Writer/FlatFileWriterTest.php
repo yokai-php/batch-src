@@ -6,7 +6,6 @@ namespace Yokai\Batch\Tests\Bridge\Box\Spout\Writer;
 
 use Box\Spout\Common\Entity\Style\CellAlignment;
 use Box\Spout\Common\Entity\Style\Color;
-use Box\Spout\Reader\Wrapper\XMLReader;
 use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 use PHPUnit\Framework\TestCase;
@@ -14,6 +13,7 @@ use Yokai\Batch\Bridge\Box\Spout\Writer\FlatFileWriter;
 use Yokai\Batch\Bridge\Box\Spout\Writer\Options\CSVOptions;
 use Yokai\Batch\Bridge\Box\Spout\Writer\Options\ODSOptions;
 use Yokai\Batch\Bridge\Box\Spout\Writer\Options\XLSXOptions;
+use Yokai\Batch\Bridge\Box\Spout\Writer\WriteToSheetItem;
 use Yokai\Batch\Exception\BadMethodCallException;
 use Yokai\Batch\Exception\RuntimeException;
 use Yokai\Batch\Exception\UnexpectedValueException;
@@ -35,7 +35,6 @@ class FlatFileWriterTest extends TestCase
         string $expectedContent
     ): void {
         $file = self::WRITE_DIR . '/' . $filename;
-
         self::assertFileDoesNotExist($file);
 
         $writer = new FlatFileWriter(new StaticValueParameterAccessor($file), $options(), $headers);
@@ -219,6 +218,58 @@ CSV;
             yield [$type, $options];
         }
     }
+
+    /**
+     * @dataProvider multipleSheetsOptions
+     */
+    public function testWriteMultipleSheets(string $type, callable $options): void
+    {
+        $file = self::WRITE_DIR . '/multiple-sheets.' . $type;
+        self::assertFileDoesNotExist($file);
+
+        $writer = new FlatFileWriter(new StaticValueParameterAccessor($file), $options());
+        $writer->setJobExecution(JobExecution::createRoot('123456789', 'export'));
+
+        $writer->initialize();
+        $writer->write([
+            WriteToSheetItem::array('English', ['John', 'Doe']),
+            WriteToSheetItem::array('Français', ['Jean', 'Aimar']),
+            WriteToSheetItem::row('English', WriterEntityFactory::createRowFromArray(['Jack', 'Doe'])),
+            WriteToSheetItem::row('Français', WriterEntityFactory::createRowFromArray(['Jacques', 'Ouzi'])),
+        ]);
+        $writer->flush();
+
+        if ($type === 'csv') {
+            self::assertFileContents($file, <<<CSV
+            John,Doe
+            Jean,Aimar
+            Jack,Doe
+            Jacques,Ouzi
+            CSV);
+        } else {
+            self::assertSheetContents($file, 'English', <<<CSV
+            John,Doe
+            Jack,Doe
+            CSV);
+            self::assertSheetContents($file, 'Français', <<<CSV
+            Jean,Aimar
+            Jacques,Ouzi
+            CSV);
+        }
+    }
+
+    public function multipleSheetsOptions(): \Generator
+    {
+        $types = [
+            'csv' => fn() => new CSVOptions(),
+            'xlsx' => fn() => new XLSXOptions('English'),
+            'ods' => fn() => new ODSOptions('English'),
+        ];
+        foreach ($types as $type => $options) {
+            yield [$type, $options];
+        }
+    }
+
     /**
      * @dataProvider wrongOptions
      */
@@ -283,15 +334,55 @@ CSV;
                 $pathToSheetFile = $filePath . '#xl/worksheets/sheet1.xml';
                 $xmlContents = file_get_contents('zip://' . $pathToSheetFile);
                 foreach ($strings as $string) {
-                    self::assertStringContainsString($string, $xmlContents);
+                    self::assertStringContainsString("<t>$string</t>", $xmlContents);
                 }
                 break;
 
             case 'ods':
-                $xmlReader = new XMLReader();
-                $xmlReader->openFileInZip($filePath, 'content.xml');
-                $xmlReader->readUntilNodeFound('table:table');
-                $sheetXmlAsString = $xmlReader->readOuterXml();
+                $sheetContent = file_get_contents('zip://' . $filePath . '#content.xml');
+                if (!preg_match('#<table:table[^>]+>[\s\S]*?<\/table:table>#', $sheetContent, $matches)) {
+                    self::fail('No sheet found in file "' . $filePath . '".');
+                }
+                $sheetXmlAsString = $matches[0];
+                foreach ($strings as $string) {
+                    self::assertStringContainsString("<text:p>$string</text:p>", $sheetXmlAsString);
+                }
+                break;
+        }
+    }
+
+    private static function assertSheetContents(string $filePath, string $sheet, string $inlineData): void
+    {
+        $type = \strtolower(\pathinfo($filePath, PATHINFO_EXTENSION));
+        $strings = array_merge(...array_map('str_getcsv', explode(PHP_EOL, $inlineData)));
+
+        switch ($type) {
+            case 'csv':
+                $fileContents = file_get_contents($filePath);
+                foreach ($strings as $string) {
+                    self::assertStringContainsString($string, $fileContents);
+                }
+                break;
+
+            case 'xlsx':
+                $workbookContent = file_get_contents('zip://' . $filePath . '#xl/workbook.xml');
+                if (!preg_match('#<sheet name="' . $sheet . '" sheetId="([0-9]+)"#', $workbookContent, $matches)) {
+                    self::fail('Sheet ' . $sheet . ' was not found in file "' . $filePath . '".');
+                }
+                $sheetFilename = 'sheet' . $matches[1];
+                $sheetContent = file_get_contents('zip://' . $filePath . '#xl/worksheets/' . $sheetFilename . '.xml');
+                foreach ($strings as $string) {
+                    self::assertStringContainsString("<t>$string</t>", $sheetContent);
+                }
+                break;
+
+            case 'ods':
+                $sheetContent = file_get_contents('zip://' . $filePath . '#content.xml');
+                $regex = '#<table:table.+table:name="' . $sheet . '">[\s\S]*?<\/table:table>#';
+                if (!preg_match($regex, $sheetContent, $matches)) {
+                    self::fail('Sheet ' . $sheet . ' was not found in file "' . $filePath . '".');
+                }
+                $sheetXmlAsString = $matches[0];
                 foreach ($strings as $string) {
                     self::assertStringContainsString("<text:p>$string</text:p>", $sheetXmlAsString);
                 }

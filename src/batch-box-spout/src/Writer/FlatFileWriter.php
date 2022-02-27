@@ -8,6 +8,7 @@ use Box\Spout\Common\Entity\Row;
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 use Box\Spout\Writer\Common\Creator\WriterFactory;
 use Box\Spout\Writer\WriterInterface;
+use Box\Spout\Writer\WriterMultiSheetsAbstract;
 use Yokai\Batch\Bridge\Box\Spout\Writer\Options\OptionsInterface;
 use Yokai\Batch\Exception\BadMethodCallException;
 use Yokai\Batch\Exception\RuntimeException;
@@ -40,6 +41,7 @@ final class FlatFileWriter implements
     private ?array $headers;
     private ?WriterInterface $writer = null;
     private bool $headersAdded = false;
+    private ?string $defaultSheet = null;
 
     /**
      * @phpstan-param list<string>|null $headers
@@ -70,6 +72,10 @@ final class FlatFileWriter implements
         $this->writer = WriterFactory::createFromFile($path);
         $this->writer->openToFile($path);
         $this->options->configure($this->writer);
+
+        if ($this->writer instanceof WriterMultiSheetsAbstract) {
+            $this->defaultSheet = $this->writer->getCurrentSheet()->getName();
+        }
     }
 
     /**
@@ -89,6 +95,12 @@ final class FlatFileWriter implements
         }
 
         foreach ($items as $row) {
+            if ($row instanceof WriteToSheetItem) {
+                $this->changeSheet($row->getSheet());
+                $row = $row->getItem();
+            } elseif ($this->defaultSheet !== null) {
+                $this->changeSheet($this->defaultSheet);
+            }
             if (\is_array($row)) {
                 $row = WriterEntityFactory::createRowFromArray($row);
             }
@@ -112,5 +124,22 @@ final class FlatFileWriter implements
         $this->writer->close();
         $this->writer = null;
         $this->headersAdded = false;
+    }
+
+    private function changeSheet(string $name): void
+    {
+        if (!$this->writer instanceof WriterMultiSheetsAbstract) {
+            return;
+        }
+
+        foreach ($this->writer->getSheets() as $sheet) {
+            if ($sheet->getName() === $name) {
+                $this->writer->setCurrentSheet($sheet);
+                return;
+            }
+        }
+
+        $sheet = $this->writer->addNewSheetAndMakeItCurrent();
+        $sheet->setName($name);
     }
 }
