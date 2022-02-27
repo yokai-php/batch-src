@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Yokai\Batch\Tests\Bridge\Doctrine\DBAL;
 
 use Doctrine\DBAL\Types\Types;
+use Generator;
 use Yokai\Batch\Bridge\Doctrine\DBAL\DoctrineDBALInsertWriter;
+use Yokai\Batch\Exception\UnexpectedValueException;
 
 class DoctrineDBALInsertWriterTest extends DoctrineDBALTestCase
 {
@@ -35,5 +37,12 @@ class DoctrineDBALInsertWriterTest extends DoctrineDBALTestCase
             ['firstName' => 'Jane', 'lastName' => 'Doe'],
             ['firstName' => 'Jack', 'lastName' => 'Doe'],
         ], $this->findAll('persons'));
+    }
+
+    public function testItemNotAnArray(): void
+    {
+        $this->expectException(UnexpectedValueException::class);
+        $writer = new DoctrineDBALInsertWriter($this->doctrine, 'persons');
+        $writer->write(['string']);
     }
 }

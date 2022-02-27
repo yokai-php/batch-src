@@ -33,10 +33,6 @@ final class DoctrineDBALInsertWriter implements ItemWriterInterface
      */
     public function write(iterable $items): void
     {
-        if (!\is_iterable($items)) {
-            throw UnexpectedValueException::type('iterable', $items);
-        }
-
         foreach ($items as $item) {
             if (!\is_array($item)) {
                 throw UnexpectedValueException::type('array', $item);

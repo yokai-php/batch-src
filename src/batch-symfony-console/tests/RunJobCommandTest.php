@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Tests\Bridge\Symfony\Console;
 
+use JsonException;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
 use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Bridge\Symfony\Console\RunJobCommand;
+use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\Failure;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\Launcher\JobLauncherInterface;
@@ -50,10 +51,18 @@ class RunJobCommandTest extends TestCase
 
     public function testRunWithMalformedConfiguration(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(JsonException::class);
 
         $this->jobLauncher->launch(Argument::cetera())->shouldNotBeCalled();
         $this->execute('{]');
+    }
+
+    public function testRunWithInvalidConfiguration(): void
+    {
+        $this->expectException(UnexpectedValueException::class);
+
+        $this->jobLauncher->launch(Argument::cetera())->shouldNotBeCalled();
+        $this->execute('"string"');
     }
 
     /**
