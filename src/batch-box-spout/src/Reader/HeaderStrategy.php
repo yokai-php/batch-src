@@ -18,19 +18,16 @@ final class HeaderStrategy
     private const COMBINE = 'combine';
     private const NONE = 'none';
 
-    private string $mode;
-    /**
-     * @phpstan-var list<string>|null
-     */
-    private ?array $headers;
-
     /**
      * @phpstan-param list<string>|null $headers
      */
-    private function __construct(string $mode, ?array $headers)
-    {
-        $this->mode = $mode;
-        $this->headers = $headers;
+    private function __construct(
+        private string $mode,
+        /**
+         * @phpstan-var list<string>|null
+         */
+        private ?array $headers
+    ) {
     }
 
     /**

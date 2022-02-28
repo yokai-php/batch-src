@@ -9,20 +9,13 @@ namespace Yokai\Batch\Bridge\Symfony\Messenger;
  */
 final class LaunchJobMessage
 {
-    private string $jobName;
-
-    /**
-     * @phpstan-var array<string, mixed>
-     */
-    private array $configuration;
-
-    /**
-     * @phpstan-param array<string, mixed> $configuration
-     */
-    public function __construct(string $jobName, array $configuration = [])
-    {
-        $this->jobName = $jobName;
-        $this->configuration = $configuration;
+    public function __construct(
+        private string $jobName,
+        /**
+         * @phpstan-var array<string, mixed>
+         */
+        private array $configuration = [],
+    ) {
     }
 
     public function getJobName(): string

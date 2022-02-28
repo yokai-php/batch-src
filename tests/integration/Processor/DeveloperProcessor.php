@@ -19,7 +19,7 @@ final class DeveloperProcessor implements ItemProcessorInterface
         $this->manager = $manager;
     }
 
-    public function process($item)
+    public function process(mixed $item): Developer
     {
         $badges = $this->manager->getRepository(Badge::class)
             ->findBy(['label' => str_getcsv($item['badges'], '|')])

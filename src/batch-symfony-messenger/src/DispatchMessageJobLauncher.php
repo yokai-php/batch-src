@@ -16,18 +16,11 @@ use Yokai\Batch\Storage\JobExecutionStorageInterface;
  */
 final class DispatchMessageJobLauncher implements JobLauncherInterface
 {
-    private JobExecutionFactory $jobExecutionFactory;
-    private JobExecutionStorageInterface $jobExecutionStorage;
-    private MessageBusInterface $messageBus;
-
     public function __construct(
-        JobExecutionFactory $jobExecutionFactory,
-        JobExecutionStorageInterface $jobExecutionStorage,
-        MessageBusInterface $messageBus
+        private JobExecutionFactory $jobExecutionFactory,
+        private JobExecutionStorageInterface $jobExecutionStorage,
+        private MessageBusInterface $messageBus,
     ) {
-        $this->jobExecutionFactory = $jobExecutionFactory;
-        $this->messageBus = $messageBus;
-        $this->jobExecutionStorage = $jobExecutionStorage;
     }
 
     /**
@@ -38,7 +31,7 @@ final class DispatchMessageJobLauncher implements JobLauncherInterface
         // create and store execution before dispatching message
         // guarantee job execution exists if message bus transport is asynchronous
         $jobExecution = $this->jobExecutionFactory->create($name, $configuration);
-        $configuration['_id'] = $configuration['_id'] ?? $jobExecution->getId();
+        $configuration['_id'] ??= $jobExecution->getId();
         $jobExecution->setStatus(BatchStatus::PENDING);
         $this->jobExecutionStorage->store($jobExecution);
 

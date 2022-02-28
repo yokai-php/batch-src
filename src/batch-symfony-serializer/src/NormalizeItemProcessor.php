@@ -15,28 +15,20 @@ use Yokai\Batch\Job\Item\ItemProcessorInterface;
  */
 final class NormalizeItemProcessor implements ItemProcessorInterface
 {
-    private NormalizerInterface $normalizer;
-    private ?string $format;
-
-    /**
-     * @phpstan-var array<string, mixed>
-     */
-    private array $context;
-
-    /**
-     * @phpstan-param array<string, mixed> $context
-     */
-    public function __construct(NormalizerInterface $normalizer, string $format = null, array $context = [])
-    {
-        $this->normalizer = $normalizer;
-        $this->format = $format;
-        $this->context = $context;
+    public function __construct(
+        private NormalizerInterface $normalizer,
+        private ?string $format = null,
+        /**
+         * @phpstan-var array<string, mixed>
+         */
+        private array $context = [],
+    ) {
     }
 
     /**
      * @inheritDoc
      */
-    public function process($item)
+    public function process(mixed $item): mixed
     {
         try {
             if (!$this->normalizer->supportsNormalization($item, $this->format)) {

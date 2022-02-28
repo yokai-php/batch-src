@@ -15,19 +15,16 @@ use Yokai\Batch\JobExecution;
  */
 final class ContainerParameterAccessor implements JobParameterAccessorInterface
 {
-    private ContainerInterface $container;
-    private string $name;
-
-    public function __construct(ContainerInterface $container, string $name)
-    {
-        $this->container = $container;
-        $this->name = $name;
+    public function __construct(
+        private ContainerInterface $container,
+        private string $name,
+    ) {
     }
 
     /**
      * @inheritdoc
      */
-    public function get(JobExecution $execution)
+    public function get(JobExecution $execution): mixed
     {
         try {
             return $this->container->getParameter($this->name);

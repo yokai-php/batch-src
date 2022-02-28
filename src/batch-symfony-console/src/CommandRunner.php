@@ -10,13 +10,14 @@ use Symfony\Component\Process\PhpExecutableFinder;
 class CommandRunner
 {
     private string $consolePath;
-    private string $logDir;
     private ?PhpExecutableFinder $phpLocator;
 
-    public function __construct(string $binDir, string $logDir, PhpExecutableFinder $phpLocator = null)
-    {
+    public function __construct(
+        string $binDir,
+        private string $logDir,
+        PhpExecutableFinder $phpLocator = null,
+    ) {
         $this->consolePath = implode(DIRECTORY_SEPARATOR, [$binDir, 'console']);
-        $this->logDir = $logDir;
         if (class_exists(PhpExecutableFinder::class)) {
             $phpLocator ??= new PhpExecutableFinder();
         }

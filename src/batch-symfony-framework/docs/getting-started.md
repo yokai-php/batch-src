@@ -100,7 +100,7 @@ final class ImportUsersJob extends ItemJob
         JobExecutionStorageInterface $executionStorage,
         ManagerRegistry $doctrine,
         DenormalizerInterface $denormalizer,
-        KernelInterface $kernel
+        KernelInterface $kernel,
     ) {
         parent::__construct(
             500,

@@ -22,12 +22,10 @@ final class RunJobCommand extends Command
     public const EXIT_ERROR_CODE = 1;
     public const EXIT_WARNING_CODE = 2;
 
-    private JobLauncherInterface $jobLauncher;
-
-    public function __construct(JobLauncherInterface $jobLauncher)
-    {
+    public function __construct(
+        private JobLauncherInterface $jobLauncher,
+    ) {
         parent::__construct();
-        $this->jobLauncher = $jobLauncher;
     }
 
     /**
@@ -87,14 +85,10 @@ final class RunJobCommand extends Command
                     sprintf('<comment>%s has been executed with %d warnings.</comment>', $jobName, count($warnings))
                 );
             } else {
-                $output->writeln(
-                    sprintf('<info>%s has been successfully executed.</info>', $jobName)
-                );
+                $output->writeln(sprintf('<info>%s has been successfully executed.</info>', $jobName));
             }
         } else {
-            $output->writeln(
-                sprintf('<error>An error occurred during the %s execution.</error>', $jobName)
-            );
+            $output->writeln(sprintf('<error>An error occurred during the %s execution.</error>', $jobName));
             foreach ($jobExecution->getAllFailures() as $failure) {
                 $output->writeln(
                     sprintf(

@@ -16,33 +16,23 @@ use Yokai\Batch\Job\Item\ItemProcessorInterface;
  */
 final class SkipInvalidItemProcessor implements ItemProcessorInterface
 {
-    private ValidatorInterface $validator;
-
-    /**
-     * @var Constraint[]|null
-     */
-    private ?array $contraints;
-
-    /**
-     * @var string[]|null
-     */
-    private ?array $groups;
-
-    /**
-     * @param Constraint[]|null $contraints
-     * @param string[]|null     $groups
-     */
-    public function __construct(ValidatorInterface $validator, array $contraints = null, array $groups = null)
-    {
-        $this->validator = $validator;
-        $this->contraints = $contraints;
-        $this->groups = $groups;
+    public function __construct(
+        private ValidatorInterface $validator,
+        /**
+         * @var Constraint[]|null
+         */
+        private ?array $contraints = null,
+        /**
+         * @var string[]|null
+         */
+        private ?array $groups = null,
+    ) {
     }
 
     /**
      * @inheritDoc
      */
-    public function process($item)
+    public function process(mixed $item): mixed
     {
         $violations = $this->validator->validate($item, $this->contraints, $this->groups);
         if (\count($violations) === 0) {
@@ -63,7 +53,7 @@ final class SkipInvalidItemProcessor implements ItemProcessorInterface
     private function normalizeConstraints(?array $constraints): Iterator
     {
         foreach ($constraints ?? [] as $constraint) {
-            yield \get_class($constraint);
+            yield $constraint::class;
         }
     }
 }

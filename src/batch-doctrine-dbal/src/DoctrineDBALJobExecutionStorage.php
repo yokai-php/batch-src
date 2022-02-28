@@ -37,7 +37,7 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
     public function __construct(ConnectionRegistry $doctrine, array $options)
     {
         $options = array_filter($options) + self::DEFAULT_OPTIONS;
-        $options['connection'] = $options['connection'] ?? $doctrine->getDefaultConnectionName();
+        $options['connection'] ??= $doctrine->getDefaultConnectionName();
 
         $this->table = $options['table'];
 
@@ -122,11 +122,7 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
             ->from($this->table)
             ->where($qb->expr()->eq('job_name', ':jobName'));
 
-        yield from $this->queryList(
-            $qb->getSQL(),
-            ['jobName' => $jobName],
-            ['jobName' => Types::STRING]
-        );
+        yield from $this->queryList($qb->getSQL(), ['jobName' => $jobName], ['jobName' => Types::STRING]);
     }
 
     /**
@@ -266,9 +262,7 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
         $row = $statement->fetchAllAssociative()[0] ?? null;
 
         if ($row === null) {
-            throw new RuntimeException(
-                \sprintf('No row found for job %s#%s.', $jobName, $id)
-            );
+            throw new RuntimeException(\sprintf('No row found for job %s#%s.', $jobName, $id));
         }
 
         return $row;

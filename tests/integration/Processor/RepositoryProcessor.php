@@ -9,7 +9,7 @@ use Yokai\Batch\Sources\Tests\Integration\Entity\Repository;
 
 final class RepositoryProcessor implements ItemProcessorInterface
 {
-    public function process($item)
+    public function process(mixed $item): Repository
     {
         $repository = new Repository();
         $repository->label = $item['label'];

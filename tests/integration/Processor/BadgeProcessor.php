@@ -9,7 +9,7 @@ use Yokai\Batch\Sources\Tests\Integration\Entity\Badge;
 
 final class BadgeProcessor implements ItemProcessorInterface
 {
-    public function process($item)
+    public function process(mixed $item): Badge
     {
         $badge = new Badge();
         $badge->label = $item['label'];

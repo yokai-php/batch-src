@@ -14,13 +14,10 @@ use Yokai\Batch\Job\Item\ItemReaderInterface;
  */
 final class EntityReader implements ItemReaderInterface
 {
-    private ManagerRegistry $doctrine;
-    private string $class;
-
-    public function __construct(ManagerRegistry $doctrine, string $class)
-    {
-        $this->doctrine = $doctrine;
-        $this->class = $class;
+    public function __construct(
+        private ManagerRegistry $doctrine,
+        private string $class,
+    ) {
     }
 
     /**

@@ -23,7 +23,8 @@
     },
     "require-dev": {
         "phpspec/prophecy-phpunit": "^2.0",
-        "phpunit/phpunit": "^9.5"
+        "phpunit/phpunit": "^9.5",
+        "symfony/process": "^5.0|^6.0"
     },
     "autoload-dev": {
         "psr-4": {
