@@ -20,7 +20,7 @@ final class Configuration implements ConfigurationInterface
 
         $root
             ->children()
-            ->append($this->storage())
+                ->append($this->storage())
             ->end()
         ;
 
