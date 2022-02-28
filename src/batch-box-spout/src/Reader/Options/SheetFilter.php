@@ -10,22 +10,33 @@ use Closure;
 use Generator;
 
 /**
- *
+ * A sheet filter is used by {@see XLSXOptions} & {@see ODSOptions}
+ * so you can tell which sheet is to be read.
  */
 final class SheetFilter
 {
     private Closure $accept;
 
+    /**
+     * @param Closure $accept A closure with {@see SheetInterface} as single argument,
+     *                        and returning a boolean, telling if the sheet should be read.
+     */
     public function __construct(Closure $accept)
     {
         $this->accept = $accept;
     }
 
+    /**
+     * Will read every sheets in file.
+     */
     public static function all(): self
     {
         return new self(fn() => true);
     }
 
+    /**
+     * Will read sheets that are at specified indexes.
+     */
     public static function indexIs(int $index, int ...$indexes): self
     {
         $indexes[] = $index;
@@ -33,6 +44,9 @@ final class SheetFilter
         return new self(fn(SheetInterface $sheet) => \in_array($sheet->getIndex(), $indexes, true));
     }
 
+    /**
+     * Will read sheets that are named as specified.
+     */
     public static function nameIs(string $name, string ...$names): self
     {
         $names[] = $name;
