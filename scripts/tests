@@ -3,12 +3,10 @@
 led in -s php80 -- composer2 --no-interaction --quiet remove --dev --no-update symplify/monorepo-builder
 
 matrix=(
-  "php74/4.4.*"
-  "php80/4.4.*"
-  "php74/5.3.*"
-  "php80/5.3.*"
-  "php81/5.4.x-dev@dev"
-  "php81/6.0.x-dev@dev"
+  "php80/5.4.*"
+  "php81/5.4.*"
+  "php80/6.0.*"
+  "php81/6.0.*"
 )
 for entry in "${matrix[@]}"
 do
