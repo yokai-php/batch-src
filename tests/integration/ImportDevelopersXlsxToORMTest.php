@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Sources\Tests\Integration;
 
-use Box\Spout\Common\Type;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\Setup;
@@ -12,7 +11,9 @@ use Doctrine\Persistence\ManagerRegistry;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Yokai\Batch\Bridge\Box\Spout\FlatFileReader;
+use Yokai\Batch\Bridge\Box\Spout\Reader\FlatFileReader;
+use Yokai\Batch\Bridge\Box\Spout\Reader\HeaderStrategy;
+use Yokai\Batch\Bridge\Box\Spout\Reader\Options\CSVOptions;
 use Yokai\Batch\Bridge\Doctrine\Persistence\ObjectWriter;
 use Yokai\Batch\Job\Item\ItemJob;
 use Yokai\Batch\Job\JobInterface;
@@ -82,10 +83,9 @@ class ImportDevelopersXlsxToORMTest extends JobTestCase
 
         $csvReader = function (string $file): FlatFileReader {
             return new FlatFileReader(
-                Type::CSV,
                 new StaticValueParameterAccessor($file),
-                [],
-                FlatFileReader::HEADERS_MODE_COMBINE
+                new CSVOptions(),
+                HeaderStrategy::combine()
             );
         };
 

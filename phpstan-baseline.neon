@@ -1,31 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Cannot cast mixed to string\\.$#"
-			count: 1
-			path: src/batch-box-spout/src/FlatFileReader.php
-
-		-
-			message: "#^Method Yokai\\\\Batch\\\\Bridge\\\\Box\\\\Spout\\\\FlatFileReader\\:\\:combine\\(\\) should return array\\<string, string\\>\\|null but returns array\\<string, mixed\\>\\.$#"
-			count: 1
-			path: src/batch-box-spout/src/FlatFileReader.php
-
-		-
-			message: "#^Method Yokai\\\\Batch\\\\Bridge\\\\Box\\\\Spout\\\\FlatFileReader\\:\\:rows\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/batch-box-spout/src/FlatFileReader.php
-
-		-
-			message: "#^Offset 'encoding' on array\\{delimiter\\?\\: string, enclosure\\?\\: string\\} in isset\\(\\) does not exist\\.$#"
-			count: 1
-			path: src/batch-box-spout/src/FlatFileReader.php
-
-		-
-			message: "#^Cannot cast mixed to string\\.$#"
-			count: 1
-			path: src/batch-box-spout/src/FlatFileWriter.php
-
-		-
 			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
 			count: 2
 			path: src/batch-doctrine-dbal/src/JobExecutionRowNormalizer.php
