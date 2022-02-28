@@ -82,7 +82,7 @@ final class HeaderStrategy
      *
      * @phpstan-param array<int, string> $row
      *
-     * @phpstan-return array<int, string>|array<string, string>
+     * @phpstan-return array<int|string, string>
      * @internal
      */
     public function getItem(array $row): array
@@ -92,19 +92,9 @@ final class HeaderStrategy
         }
 
         try {
-            /** @var array<string, mixed>|false $combined */
+            /** @phpstan-var array<string, string> $combined */
             $combined = @array_combine($this->headers, $row);
-            if ($combined === false) {
-                // @codeCoverageIgnoreStart
-                // Prior to PHP 8.0 array_combine only trigger a warning
-                // Now it is throwing a ValueError
-                throw new \ValueError(
-                    'array_combine(): Argument #1 ($keys) and argument #2 ($values) ' .
-                    'must have the same number of elements'
-                );
-                // @codeCoverageIgnoreEnd
-            }
-        } catch (\ValueError $exception) {
+        } catch (\ValueError) {
             throw new InvalidRowSizeException($this->headers, $row);
         }
 

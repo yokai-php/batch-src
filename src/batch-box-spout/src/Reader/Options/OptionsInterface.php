@@ -28,7 +28,7 @@ interface OptionsInterface
      * Extract the list of readable sheets from box/spout reader.
      *
      * @return iterable&SheetInterface[]
-     * @phpstan-return list<SheetInterface>
+     * @phpstan-return iterable<SheetInterface>
      * @internal
      */
     public function getSheets(ReaderInterface $reader): iterable;

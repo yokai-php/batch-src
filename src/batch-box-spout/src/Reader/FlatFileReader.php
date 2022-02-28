@@ -45,7 +45,8 @@ final class FlatFileReader implements
      */
     public function read(): iterable
     {
-        $path = (string)$this->filePath->get($this->jobExecution);
+        /** @var string $path */
+        $path = $this->filePath->get($this->jobExecution);
 
         $reader = ReaderFactory::createFromFile($path);
         $this->options->configure($reader);
@@ -79,7 +80,7 @@ final class FlatFileReader implements
     }
 
     /**
-     * @phpstan-return Generator<int, array>
+     * @phpstan-return Generator<int, array<string>>
      */
     private function rows(ReaderInterface $reader): Generator
     {

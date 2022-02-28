@@ -61,7 +61,8 @@ final class FlatFileWriter implements
      */
     public function initialize(): void
     {
-        $path = (string)$this->filePath->get($this->jobExecution);
+        /** @var string $path */
+        $path = $this->filePath->get($this->jobExecution);
         $dir = \dirname($path);
         if (!@\is_dir($dir) && !@\mkdir($dir, 0777, true)) {
             throw new RuntimeException(
@@ -83,14 +84,15 @@ final class FlatFileWriter implements
      */
     public function write(iterable $items): void
     {
-        if ($this->writer === null) {
+        $writer = $this->writer;
+        if ($writer === null) {
             throw BadMethodCallException::itemComponentNotInitialized($this);
         }
 
         if (!$this->headersAdded) {
             $this->headersAdded = true;
             if ($this->headers !== null) {
-                $this->writer->addRow(WriterEntityFactory::createRowFromArray($this->headers));
+                $writer->addRow(WriterEntityFactory::createRowFromArray($this->headers));
             }
         }
 
@@ -108,7 +110,7 @@ final class FlatFileWriter implements
                 throw UnexpectedValueException::type('array|' . Row::class, $row);
             }
 
-            $this->writer->addRow($row);
+            $writer->addRow($row);
         }
     }
 
