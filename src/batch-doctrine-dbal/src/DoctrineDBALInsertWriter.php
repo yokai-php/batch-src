@@ -17,15 +17,16 @@ use Yokai\Batch\Job\Item\ItemWriterInterface;
 final class DoctrineDBALInsertWriter implements ItemWriterInterface
 {
     private Connection $connection;
-    private string $table;
 
-    public function __construct(ConnectionRegistry $doctrine, string $table, string $connection = null)
-    {
+    public function __construct(
+        ConnectionRegistry $doctrine,
+        private string $table,
+        string $connection = null,
+    ) {
         $connection ??= $doctrine->getDefaultConnectionName();
         /** @var Connection $connection */
         $connection = $doctrine->getConnection($connection);
         $this->connection = $connection;
-        $this->table = $table;
     }
 
     /**

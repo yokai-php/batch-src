@@ -13,24 +13,13 @@ use Yokai\Batch\Exception\UnexpectedValueException;
  */
 final class CSVOptions implements OptionsInterface
 {
-    private string $delimiter;
-    private string $enclosure;
-    private string $encoding;
-    private bool $formatDates;
-    private bool $preserveEmptyRows;
-
     public function __construct(
-        string $delimiter = ',',
-        string $enclosure = '"',
-        string $encoding = 'UTF-8',
-        bool $formatDates = false,
-        bool $preserveEmptyRows = false
+        private string $delimiter = ',',
+        private string $enclosure = '"',
+        private string $encoding = 'UTF-8',
+        private bool $formatDates = false,
+        private bool $preserveEmptyRows = false,
     ) {
-        $this->delimiter = $delimiter;
-        $this->enclosure = $enclosure;
-        $this->encoding = $encoding;
-        $this->formatDates = $formatDates;
-        $this->preserveEmptyRows = $preserveEmptyRows;
     }
 
     /**

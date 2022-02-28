@@ -91,7 +91,7 @@ final class CountryJob extends ItemJob implements
         );
     }
 
-    public function process($item)
+    public function process(mixed $item): array
     {
         return ['iso2' => $item['code'], $item['_key'] => $item['value']];
     }

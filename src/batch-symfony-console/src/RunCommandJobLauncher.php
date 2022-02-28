@@ -20,21 +20,12 @@ use Yokai\Batch\Storage\JobExecutionStorageInterface;
  */
 final class RunCommandJobLauncher implements JobLauncherInterface
 {
-    private JobExecutionFactory $jobExecutionFactory;
-    private CommandRunner $commandRunner;
-    private string $logFilename;
-    private JobExecutionStorageInterface $jobExecutionStorage;
-
     public function __construct(
-        JobExecutionFactory $jobExecutionFactory,
-        CommandRunner $commandRunner,
-        JobExecutionStorageInterface $jobExecutionStorage,
-        string $logFilename = 'batch_execute.log'
+        private JobExecutionFactory $jobExecutionFactory,
+        private CommandRunner $commandRunner,
+        private JobExecutionStorageInterface $jobExecutionStorage,
+        private string $logFilename = 'batch_execute.log',
     ) {
-        $this->jobExecutionFactory = $jobExecutionFactory;
-        $this->logFilename = $logFilename;
-        $this->commandRunner = $commandRunner;
-        $this->jobExecutionStorage = $jobExecutionStorage;
     }
 
     /**
@@ -43,7 +34,7 @@ final class RunCommandJobLauncher implements JobLauncherInterface
     public function launch(string $name, array $configuration = []): JobExecution
     {
         $jobExecution = $this->jobExecutionFactory->create($name, $configuration);
-        $configuration['_id'] = $configuration['_id'] ?? $jobExecution->getId();
+        $configuration['_id'] ??= $jobExecution->getId();
         $jobExecution->setStatus(BatchStatus::PENDING);
         $this->jobExecutionStorage->store($jobExecution);
 
@@ -52,7 +43,7 @@ final class RunCommandJobLauncher implements JobLauncherInterface
             $this->logFilename,
             [
                 'job' => $name,
-                'configuration' => json_encode($configuration),
+                'configuration' => json_encode($configuration, JSON_THROW_ON_ERROR),
             ]
         );
 

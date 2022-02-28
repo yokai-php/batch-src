@@ -10,27 +10,17 @@ namespace Yokai\Batch\Bridge\Doctrine\DBAL;
  */
 final class DoctrineDBALUpsert
 {
-    private string $table;
-
-    /**
-     * @phpstan-var array<string, mixed>
-     */
-    private array $data;
-
-    /**
-     * @phpstan-var array<string, mixed>
-     */
-    private array $identity;
-
-    /**
-     * @phpstan-param array<string, mixed> $data
-     * @phpstan-param array<string, mixed> $identity
-     */
-    public function __construct(string $table, array $data, array $identity = [])
-    {
-        $this->table = $table;
-        $this->data = $data;
-        $this->identity = $identity;
+    public function __construct(
+        private string $table,
+        /**
+         * @phpstan-var array<string, mixed>
+         */
+        private array $data,
+        /**
+         * @phpstan-var array<string, mixed>
+         */
+        private array $identity = [],
+    ) {
     }
 
     public function getTable(): string

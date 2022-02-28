@@ -26,17 +26,13 @@ final class FlatFileReader implements
 {
     use JobExecutionAwareTrait;
 
-    private JobParameterAccessorInterface $filePath;
-    private OptionsInterface $options;
     private HeaderStrategy $headerStrategy;
 
     public function __construct(
-        JobParameterAccessorInterface $filePath,
-        OptionsInterface $options,
-        HeaderStrategy $headerStrategy = null
+        private JobParameterAccessorInterface $filePath,
+        private OptionsInterface $options,
+        HeaderStrategy $headerStrategy = null,
     ) {
-        $this->filePath = $filePath;
-        $this->options = $options;
         $this->headerStrategy = $headerStrategy ?? HeaderStrategy::skip();
     }
 

@@ -32,28 +32,18 @@ final class FlatFileWriter implements
 {
     use JobExecutionAwareTrait;
 
-    private JobParameterAccessorInterface $filePath;
-    private OptionsInterface $options;
-
-    /**
-     * @phpstan-var list<string>|null
-     */
-    private ?array $headers;
     private ?WriterInterface $writer = null;
     private bool $headersAdded = false;
     private ?string $defaultSheet = null;
 
-    /**
-     * @phpstan-param list<string>|null $headers
-     */
     public function __construct(
-        JobParameterAccessorInterface $filePath,
-        OptionsInterface $options,
-        array $headers = null
+        private JobParameterAccessorInterface $filePath,
+        private OptionsInterface $options,
+        /**
+         * @phpstan-var list<string>|null
+         */
+        private ?array $headers = null,
     ) {
-        $this->filePath = $filePath;
-        $this->options = $options;
-        $this->headers = $headers;
     }
 
     /**
@@ -65,9 +55,7 @@ final class FlatFileWriter implements
         $path = $this->filePath->get($this->jobExecution);
         $dir = \dirname($path);
         if (!@\is_dir($dir) && !@\mkdir($dir, 0777, true)) {
-            throw new RuntimeException(
-                \sprintf('Cannot create dir "%s".', $dir)
-            );
+            throw new RuntimeException(\sprintf('Cannot create dir "%s".', $dir));
         }
 
         $this->writer = WriterFactory::createFromFile($path);

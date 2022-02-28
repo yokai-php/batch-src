@@ -14,13 +14,10 @@ use Yokai\Batch\Exception\UnexpectedValueException;
  */
 final class XLSXOptions implements OptionsInterface
 {
-    private ?string $sheet;
-    private ?Style $style;
-
-    public function __construct(string $sheet = null, Style $style = null)
-    {
-        $this->sheet = $sheet;
-        $this->style = $style;
+    public function __construct(
+        private ?string $sheet = null,
+        private ?Style $style = null,
+    ) {
     }
 
     /**

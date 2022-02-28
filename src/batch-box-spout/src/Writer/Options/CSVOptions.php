@@ -13,15 +13,11 @@ use Yokai\Batch\Exception\UnexpectedValueException;
  */
 final class CSVOptions implements OptionsInterface
 {
-    private string $delimiter;
-    private string $enclosure;
-    private bool $addBOM;
-
-    public function __construct(string $delimiter = ',', string $enclosure = '"', bool $addBOM = false)
-    {
-        $this->delimiter = $delimiter;
-        $this->enclosure = $enclosure;
-        $this->addBOM = $addBOM;
+    public function __construct(
+        private string $delimiter = ',',
+        private string $enclosure = '"',
+        private bool $addBOM = false,
+    ) {
     }
 
     /**

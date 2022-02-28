@@ -14,13 +14,10 @@ use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
  */
 final class WriteToSheetItem
 {
-    private string $sheet;
-    private Row $item;
-
-    private function __construct(string $sheet, Row $item)
-    {
-        $this->sheet = $sheet;
-        $this->item = $item;
+    private function __construct(
+        private string $sheet,
+        private Row $item
+    ) {
     }
 
     /**

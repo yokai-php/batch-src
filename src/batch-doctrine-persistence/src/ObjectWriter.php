@@ -15,8 +15,6 @@ use Yokai\Batch\Job\Item\ItemWriterInterface;
  */
 final class ObjectWriter implements ItemWriterInterface
 {
-    private ManagerRegistry $doctrine;
-
     /**
      * @var ObjectManager[]
      */
@@ -27,9 +25,9 @@ final class ObjectWriter implements ItemWriterInterface
      */
     private array $managerForClass = [];
 
-    public function __construct(ManagerRegistry $doctrine)
-    {
-        $this->doctrine = $doctrine;
+    public function __construct(
+        private ManagerRegistry $doctrine,
+    ) {
     }
 
     /**
@@ -55,7 +53,7 @@ final class ObjectWriter implements ItemWriterInterface
 
     private function getManagerForClass(object $item): ObjectManager
     {
-        $class = get_class($item);
+        $class = $item::class;
 
         $manager = $this->managerForClass[$class] ?? null;
         if ($manager === null) {
@@ -72,18 +70,10 @@ final class ObjectWriter implements ItemWriterInterface
         return $manager;
     }
 
-    /**
-     * @param mixed $item
-     *
-     * @return InvalidArgumentException
-     */
-    private function createInvalidItemException($item): InvalidArgumentException
+    private function createInvalidItemException(mixed $item): InvalidArgumentException
     {
         return new InvalidArgumentException(
-            sprintf(
-                'Items to write must be object managed by Doctrine. Got "%s".',
-                is_object($item) ? get_class($item) : gettype($item)
-            )
+            sprintf('Items to write must be object managed by Doctrine. Got "%s".', get_debug_type($item))
         );
     }
 }

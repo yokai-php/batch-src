@@ -102,12 +102,7 @@ final class YokaiBatchExtension extends Extension
         } else {
             $container
                 ->register('yokai_batch.storage.filesystem', FilesystemJobExecutionStorage::class)
-                ->setArguments(
-                    [
-                        new Reference($config['filesystem']['serializer']),
-                        $config['filesystem']['dir'],
-                    ]
-                )
+                ->setArguments([new Reference($config['filesystem']['serializer']), $config['filesystem']['dir']])
             ;
 
             $defaultStorage = 'yokai_batch.storage.filesystem';

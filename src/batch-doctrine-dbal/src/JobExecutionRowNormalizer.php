@@ -21,11 +21,9 @@ use Yokai\Batch\Warning;
  */
 final class JobExecutionRowNormalizer
 {
-    private AbstractPlatform $platform;
-
-    public function __construct(AbstractPlatform $platform)
-    {
-        $this->platform = $platform;
+    public function __construct(
+        private AbstractPlatform $platform,
+    ) {
     }
 
     /**
@@ -115,17 +113,14 @@ final class JobExecutionRowNormalizer
     }
 
     /**
-     * @param array|string $value
-     *
-     * @return array
-     *
      * @phpstan-param array<int|string, mixed>|string $value
+     *
      * @phpstan-return array<int|string, mixed>
      */
-    private function jsonFromString($value): array
+    private function jsonFromString(array|string $value): array
     {
         if (is_string($value)) {
-            $value = json_decode($value, true);
+            $value = json_decode($value, true, 512, JSON_THROW_ON_ERROR);
         }
 
         if (!is_array($value)) {

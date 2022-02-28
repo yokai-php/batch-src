@@ -16,23 +16,18 @@ use Yokai\Batch\Warning;
  */
 final class SkipItemOnViolations implements SkipItemCauseInterface
 {
-    /**
-     * @phpstan-var ConstraintViolationListInterface<ConstraintViolationInterface>
-     */
-    private ConstraintViolationListInterface $violations;
-
-    /**
-     * @phpstan-param ConstraintViolationListInterface<ConstraintViolationInterface> $violations
-     */
-    public function __construct(ConstraintViolationListInterface $violations)
-    {
-        $this->violations = $violations;
+    public function __construct(
+        /**
+         * @phpstan-var ConstraintViolationListInterface<ConstraintViolationInterface>
+         */
+        private ConstraintViolationListInterface $violations
+    ) {
     }
 
     /**
      * @inheritdoc
      */
-    public function report(JobExecution $execution, $index, $item): void
+    public function report(JobExecution $execution, int|string $index, mixed $item): void
     {
         $execution->getSummary()->increment('invalid');
         $violations = [];
@@ -63,10 +58,7 @@ final class SkipItemOnViolations implements SkipItemCauseInterface
         return $this->violations;
     }
 
-    /**
-     * @param mixed $invalidValue
-     */
-    private function normalizeInvalidValue($invalidValue): string
+    private function normalizeInvalidValue(mixed $invalidValue): string
     {
         if ($invalidValue === '') {
             return '""';
@@ -96,7 +88,7 @@ final class SkipItemOnViolations implements SkipItemCauseInterface
                 return (string)$invalidValue;
             }
 
-            return \get_class($invalidValue);
+            return $invalidValue::class;
         }
 
         return \gettype($invalidValue);

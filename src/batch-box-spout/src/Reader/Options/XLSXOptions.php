@@ -14,17 +14,13 @@ use Yokai\Batch\Exception\UnexpectedValueException;
 final class XLSXOptions implements OptionsInterface
 {
     private SheetFilter $sheetFilter;
-    private bool $formatDates;
-    private bool $preserveEmptyRows;
 
     public function __construct(
         SheetFilter $sheetFilter = null,
-        bool $formatDates = false,
-        bool $preserveEmptyRows = false
+        private bool $formatDates = false,
+        private bool $preserveEmptyRows = false,
     ) {
         $this->sheetFilter = $sheetFilter ?? SheetFilter::all();
-        $this->formatDates = $formatDates;
-        $this->preserveEmptyRows = $preserveEmptyRows;
     }
 
     /**

@@ -12,11 +12,9 @@ use Yokai\Batch\Launcher\JobLauncherInterface;
  */
 final class LaunchJobMessageHandler implements MessageHandlerInterface
 {
-    private JobLauncherInterface $jobLauncher;
-
-    public function __construct(JobLauncherInterface $jobLauncher)
-    {
-        $this->jobLauncher = $jobLauncher;
+    public function __construct(
+        private JobLauncherInterface $jobLauncher,
+    ) {
     }
 
     public function __invoke(LaunchJobMessage $message): void

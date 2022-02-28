@@ -82,7 +82,7 @@ abstract class JobTestCase extends TestCase
             {
                 return $this->jobs[$id];
             }
-            public function has($id)
+            public function has($id): bool
             {
                 return $this->jobs[$id] instanceof JobInterface;
             }
