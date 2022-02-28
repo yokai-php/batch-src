@@ -6,6 +6,7 @@ namespace Yokai\Batch\Bridge\Doctrine\DBAL;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\Persistence\ConnectionRegistry;
+use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\Job\Item\ItemWriterInterface;
 
 /**
@@ -33,6 +34,10 @@ final class DoctrineDBALInsertWriter implements ItemWriterInterface
     public function write(iterable $items): void
     {
         foreach ($items as $item) {
+            if (!\is_array($item)) {
+                throw UnexpectedValueException::type('array', $item);
+            }
+
             $this->connection->insert($this->table, $item);
         }
     }

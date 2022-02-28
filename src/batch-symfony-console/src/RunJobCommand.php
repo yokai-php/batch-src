@@ -10,6 +10,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Yokai\Batch\BatchStatus;
+use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\Launcher\JobLauncherInterface;
 
@@ -111,21 +112,17 @@ final class RunJobCommand extends Command
     }
 
     /**
-     * @param string $data
-     *
      * @throws InvalidArgumentException
-     * @return array
      *
      * @phpstan-return array<string, mixed>
      */
     private function decodeConfiguration(string $data): array
     {
-        $config = json_decode($data, true);
-
-        if (json_last_error() === JSON_ERROR_NONE) {
+        $config = json_decode($data, true, 512, \JSON_THROW_ON_ERROR);
+        if (\is_array($config)) {
             return $config;
         }
 
-        throw new InvalidArgumentException('Cannot decode JSON : ' . \json_last_error_msg());
+        throw UnexpectedValueException::type('array', $config);
     }
 }

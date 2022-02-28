@@ -261,6 +261,8 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
             ['jobName' => $jobName, 'id' => $id],
             ['jobName' => Types::STRING, 'id' => Types::STRING]
         );
+
+        /** @var array<string, string>|null $row */
         $row = $statement->fetchAllAssociative()[0] ?? null;
 
         if ($row === null) {

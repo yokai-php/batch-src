@@ -28,12 +28,11 @@
     "symfony/validator": "^5.0|^6.0"
   },
   "require-dev": {
-    "doctrine/annotations": "^1.13",
-    "doctrine/doctrine-bundle": "^2.4",
+    "doctrine/doctrine-bundle": "^2.5",
     "phpspec/prophecy-phpunit": "^2.0",
-    "phpstan/phpstan": "^0.12",
-    "phpunit/phpunit": "^9.4",
-    "squizlabs/php_codesniffer": "^3.5",
+    "phpstan/phpstan": "^1.4",
+    "phpunit/phpunit": "^9.5",
+    "squizlabs/php_codesniffer": "^3.6",
     "symfony/filesystem": "^5.0|^6.0",
     "symplify/monorepo-builder": "^8.2"
   },
