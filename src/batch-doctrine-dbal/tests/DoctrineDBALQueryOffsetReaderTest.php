@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Yokai\Batch\Tests\Bridge\Doctrine\DBAL;
 
 use Doctrine\DBAL\Types\Types;
-use Yokai\Batch\Bridge\Doctrine\DBAL\DoctrineDBALQueryReader;
+use Yokai\Batch\Bridge\Doctrine\DBAL\DoctrineDBALQueryOffsetReader;
 use Yokai\Batch\Exception\InvalidArgumentException;
 
-class DoctrineDBALQueryReaderTest extends DoctrineDBALTestCase
+class DoctrineDBALQueryOffsetReaderTest extends DoctrineDBALTestCase
 {
     public function test(): void
     {
@@ -27,7 +27,7 @@ class DoctrineDBALQueryReaderTest extends DoctrineDBALTestCase
         $this->connection->insert('numbers', ['as_int' => 8, 'as_string' => 'Height']);
         $this->connection->insert('numbers', ['as_int' => 9, 'as_string' => 'Nine']);
 
-        $reader = new DoctrineDBALQueryReader(
+        $reader = new DoctrineDBALQueryOffsetReader(
             $this->doctrine,
             'SELECT * FROM numbers LIMIT {limit} OFFSET {offset};',
             null,
@@ -56,19 +56,19 @@ class DoctrineDBALQueryReaderTest extends DoctrineDBALTestCase
     public function testQueryMustContainsLimitPlaceholder(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        new DoctrineDBALQueryReader($this->doctrine, 'SELECT * FROM some table LIMIT 1 OFFSET {offset};');
+        new DoctrineDBALQueryOffsetReader($this->doctrine, 'SELECT * FROM some table LIMIT 1 OFFSET {offset};');
     }
 
     public function testQueryMustContainsOffsetPlaceholder(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        new DoctrineDBALQueryReader($this->doctrine, 'SELECT * FROM some table LIMIT {limit} OFFSET 0;');
+        new DoctrineDBALQueryOffsetReader($this->doctrine, 'SELECT * FROM some table LIMIT {limit} OFFSET 0;');
     }
 
     public function testBatchMustBePositiveInteger(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        new DoctrineDBALQueryReader(
+        new DoctrineDBALQueryOffsetReader(
             $this->doctrine,
             'SELECT * FROM some table LIMIT {limit} OFFSET {offset};',
             null,
