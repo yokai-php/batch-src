@@ -42,7 +42,6 @@ jobs:
           composer require --quiet --no-update "symfony/process:${{ matrix.symfony-version }}"
           composer require --quiet --no-update "symfony/serializer:${{ matrix.symfony-version }}"
           composer require --quiet --no-update "symfony/validator:${{ matrix.symfony-version }}"
-          composer remove  --quiet --no-update "symplify/monorepo-builder" --dev
           composer update --no-interaction --no-progress --no-suggest
 
       - name: "Run tests with phpunit/phpunit"
@@ -77,7 +76,6 @@ jobs:
           composer require --quiet --no-update "symfony/process:${{ matrix.symfony-version }}"
           composer require --quiet --no-update "symfony/serializer:${{ matrix.symfony-version }}"
           composer require --quiet --no-update "symfony/validator:${{ matrix.symfony-version }}"
-          composer remove  --quiet --no-update "symplify/monorepo-builder" --dev
           composer update --no-interaction --no-progress --no-suggest
 
       - name: "Run static analyzis with phpstan/phpstan"
@@ -112,7 +110,6 @@ jobs:
           composer require --quiet --no-update "symfony/process:${{ matrix.symfony-version }}"
           composer require --quiet --no-update "symfony/serializer:${{ matrix.symfony-version }}"
           composer require --quiet --no-update "symfony/validator:${{ matrix.symfony-version }}"
-          composer remove  --quiet --no-update "symplify/monorepo-builder" --dev
           composer update --no-interaction --no-progress --no-suggest
 
       - name: "Run checkstyle with squizlabs/php_codesniffer"
@@ -147,7 +144,6 @@ jobs:
           composer require --quiet --no-update "symfony/process:${{ matrix.symfony-version }}"
           composer require --quiet --no-update "symfony/serializer:${{ matrix.symfony-version }}"
           composer require --quiet --no-update "symfony/validator:${{ matrix.symfony-version }}"
-          composer remove  --quiet --no-update "symplify/monorepo-builder" --dev
           composer update --no-interaction --no-progress --no-suggest
 
       - name: "Run tests with phpunit/phpunit"

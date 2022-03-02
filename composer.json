@@ -34,8 +34,7 @@
     "phpunit/phpunit": "^9.5",
     "squizlabs/php_codesniffer": "^3.6",
     "symfony/filesystem": "^5.0|^6.0",
-    "symfony/process": "^5.0|^6.0",
-    "symplify/monorepo-builder": "^8.2"
+    "symfony/process": "^5.0|^6.0"
   },
   "replace": {
     "yokai/batch": "self.version",

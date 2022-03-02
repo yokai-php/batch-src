@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+set -e
+set -x
+
+# Make sure the tag is provided.
+if (( "$#" != 1 ))
+then
+    echo "Tag has to be provided."
+
+    exit 1
+fi
+
+TAG=$1
+
+function split()
+{
+    SHA1=`./scripts/splitsh-lite --prefix=$1`
+    git push $2 "$SHA1:refs/tags/$TAG" -f
+}
+
+function remote()
+{
+    git remote add $1 $2 || true
+}
+
+remote batch                      git@github.com:yokai-php/batch.git
+remote batch-box-spout            git@github.com:yokai-php/batch-box-spout.git
+remote batch-doctrine-dbal        git@github.com:yokai-php/batch-doctrine-dbal.git
+remote batch-doctrine-orm         git@github.com:yokai-php/batch-doctrine-orm.git
+remote batch-doctrine-persistence git@github.com:yokai-php/batch-doctrine-persistence.git
+remote batch-symfony-console      git@github.com:yokai-php/batch-symfony-console.git
+remote batch-symfony-framework    git@github.com:yokai-php/batch-symfony-framework.git
+remote batch-symfony-messenger    git@github.com:yokai-php/batch-symfony-messenger.git
+remote batch-symfony-pack         git@github.com:yokai-php/batch-symfony-pack.git
+remote batch-symfony-serializer   git@github.com:yokai-php/batch-symfony-serializer.git
+remote batch-symfony-validator    git@github.com:yokai-php/batch-symfony-validator.git
+
+split 'src/batch'                      batch
+split 'src/batch-box-spout'            batch-box-spout
+split 'src/batch-doctrine-dbal'        batch-doctrine-dbal
+split 'src/batch-doctrine-orm'         batch-doctrine-orm
+split 'src/batch-doctrine-persistence' batch-doctrine-persistence
+split 'src/batch-symfony-console'      batch-symfony-console
+split 'src/batch-symfony-framework'    batch-symfony-framework
+split 'src/batch-symfony-messenger'    batch-symfony-messenger
+split 'src/batch-symfony-pack'         batch-symfony-pack
+split 'src/batch-symfony-serializer'   batch-symfony-serializer
+split 'src/batch-symfony-validator'    batch-symfony-validator

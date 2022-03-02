@@ -1,7 +1,5 @@
 #!/bin/bash
 
-led in -s php80 -- composer2 --no-interaction --quiet remove --dev --no-update symplify/monorepo-builder
-
 matrix=(
   "php80/5.4.*"
   "php81/5.4.*"
