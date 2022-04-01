@@ -47,7 +47,7 @@ final class Failure implements \Stringable
             $exception->getMessage(),
             $exception->getCode(),
             $parameters,
-            $exception->getTraceAsString()
+            'in ' . $exception->getFile() . ':' . $exception->getLine() . PHP_EOL . $exception->getTraceAsString()
         );
     }
 
