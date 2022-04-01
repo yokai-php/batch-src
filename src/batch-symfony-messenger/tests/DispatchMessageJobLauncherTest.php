@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Exception\TransportException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Bridge\Symfony\Messenger\DispatchMessageJobLauncher;
@@ -80,5 +81,31 @@ final class DispatchMessageJobLauncherTest extends TestCase
         self::assertSame('testing', $jobExecutionFromStorage->getJobName());
         self::assertSame('123456789', $jobExecutionFromStorage->getId());
         self::assertSame(BatchStatus::PENDING, $jobExecutionFromStorage->getStatus()->getValue());
+    }
+
+    public function testLaunchAndMessengerFail(): void
+    {
+        $messageBus = $this->prophesize(MessageBusInterface::class);
+        $messageBus->dispatch(Argument::any())
+            ->shouldBeCalled()
+            ->willThrow(new TransportException('This is a test'));
+
+        $jobLauncher = new DispatchMessageJobLauncher(
+            new JobExecutionFactory(new UniqidJobExecutionIdGenerator()),
+            $storage = new InMemoryJobExecutionStorage(),
+            $messageBus->reveal()
+        );
+
+        $jobExecutionFromLauncher = $jobLauncher->launch('testing');
+
+        [$jobExecutionFromStorage] = $storage->getExecutions();
+        self::assertSame($jobExecutionFromLauncher, $jobExecutionFromStorage);
+
+        self::assertSame('testing', $jobExecutionFromStorage->getJobName());
+        self::assertSame(BatchStatus::FAILED, $jobExecutionFromStorage->getStatus()->getValue());
+        self::assertCount(1, $jobExecutionFromStorage->getFailures());
+        $failure = $jobExecutionFromStorage->getFailures()[0];
+        self::assertSame(TransportException::class, $failure->getClass());
+        self::assertSame('This is a test', $failure->getMessage());
     }
 }
