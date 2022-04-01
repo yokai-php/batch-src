@@ -1,5 +1,16 @@
 #!/bin/bash
 
+led in -s php81 -- composer2 --no-interaction --quiet require --no-update symfony/console:6.0.*
+led in -s php81 -- composer2 --no-interaction --quiet require --no-update symfony/filesystem:6.0.* --dev
+led in -s php81 -- composer2 --no-interaction --quiet require --no-update symfony/framework-bundle:6.0.*
+led in -s php81 -- composer2 --no-interaction --quiet require --no-update symfony/messenger:6.0.*
+led in -s php81 -- composer2 --no-interaction --quiet require --no-update symfony/process:6.0.*
+led in -s php81 -- composer2 --no-interaction --quiet require --no-update symfony/serializer:6.0.*
+led in -s php81 -- composer2 --no-interaction --quiet require --no-update symfony/validator:6.0.*
+led in -s php81 -- composer2 --no-interaction update --no-progress --with-all-dependencies
+led in -s php81 -- vendor/bin/phpcs
+led in -s php81 -- vendor/bin/phpstan analyze
+
 matrix=(
   "php80/5.4.*"
   "php81/5.4.*"
