@@ -61,6 +61,7 @@ final class SheetFilter
      */
     public function getSheets(ReaderInterface $reader): Generator
     {
+        /** @var SheetInterface $sheet */
         foreach ($reader->getSheetIterator() as $sheet) {
             if (($this->accept)($sheet)) {
                 yield $sheet;

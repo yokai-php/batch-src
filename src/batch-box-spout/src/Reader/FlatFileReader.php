@@ -81,8 +81,11 @@ final class FlatFileReader implements
     private function rows(ReaderInterface $reader): Generator
     {
         foreach ($this->options->getSheets($reader) as $sheet) {
+            /** @var int $rowIndex */
+            /** @var Row|array<string> $row */
             foreach ($sheet->getRowIterator() as $rowIndex => $row) {
                 if ($row instanceof Row) {
+                    /** @var array<string> $row */
                     $row = $row->toArray();
                 }
 
