@@ -79,7 +79,7 @@ final class JobExecutor
 
         $summary = $jobExecution->getSummary()->all();
         if (\count($summary) > 0) {
-            $logger->debug('Job produced summary', ['job' => $name, ...$summary]);
+            $logger->debug('Job produced summary', \array_merge(['job' => $name]), $summary);
         }
 
         $this->jobExecutionStorage->store($rootExecution);
