@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yokai\Batch\Sources\Tests\Integration;
 
 use PHPUnit\Framework\TestCase;
-use Psr\Container\ContainerInterface;
 use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Factory\JobExecutionFactory;
 use Yokai\Batch\Factory\UniqidJobExecutionIdGenerator;
@@ -58,11 +57,7 @@ abstract class JobTestCase extends TestCase
                 new JobExecutionFactory(new UniqidJobExecutionIdGenerator()),
                 $jobExecutionStorage
             ),
-            new JobExecutor(
-                self::createJobRegistry([$jobName => $job]),
-                $jobExecutionStorage,
-                null
-            )
+            self::createJobExecutor($jobExecutionStorage, [$jobName => $job])
         );
 
         $jobExecution = $launcher->launch($jobName);
@@ -77,9 +72,9 @@ abstract class JobTestCase extends TestCase
         }
     }
 
-    protected static function createJobRegistry(array $jobs): JobRegistry
+    protected static function createJobExecutor(JobExecutionStorageInterface $storage, array $jobs): JobExecutor
     {
-        return JobRegistry::fromJobArray($jobs);
+        return new JobExecutor(JobRegistry::fromJobArray($jobs), $storage, null);
     }
 
     abstract protected function createJob(JobExecutionStorageInterface $executionStorage): JobInterface;

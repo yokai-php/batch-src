@@ -9,7 +9,6 @@ use Yokai\Batch\Job\Item\ItemJob;
 use Yokai\Batch\Job\Item\ItemWriterInterface;
 use Yokai\Batch\Job\Item\Processor\NullProcessor;
 use Yokai\Batch\Job\Item\Reader\StaticIterableReader;
-use Yokai\Batch\Job\JobExecutor;
 use Yokai\Batch\Job\JobInterface;
 use Yokai\Batch\Job\JobWithChildJobs;
 use Yokai\Batch\JobExecution;
@@ -44,35 +43,29 @@ class JobWithDummyItemChildrenTest extends JobTestCase
 
         return new JobWithChildJobs(
             $executionStorage,
-            new JobExecutor(
-                self::createJobRegistry(
-                    [
-                        'one-two-three' => new ItemJob(
-                            1,
-                            new StaticIterableReader([1, 2, 3]),
-                            new NullProcessor(),
-                            $fileLineWriter,
-                            $executionStorage
-                        ),
-                        'four-five-six' => new ItemJob(
-                            2,
-                            new StaticIterableReader([4, 5, 6]),
-                            new NullProcessor(),
-                            $fileLineWriter,
-                            $executionStorage
-                        ),
-                        'seven-height-nine' => new ItemJob(
-                            3,
-                            new StaticIterableReader([7, 8, 9]),
-                            new NullProcessor(),
-                            $fileLineWriter,
-                            $executionStorage
-                        ),
-                    ]
+            self::createJobExecutor($executionStorage, [
+                'one-two-three' => new ItemJob(
+                    1,
+                    new StaticIterableReader([1, 2, 3]),
+                    new NullProcessor(),
+                    $fileLineWriter,
+                    $executionStorage
                 ),
-                $executionStorage,
-                null
-            ),
+                'four-five-six' => new ItemJob(
+                    2,
+                    new StaticIterableReader([4, 5, 6]),
+                    new NullProcessor(),
+                    $fileLineWriter,
+                    $executionStorage
+                ),
+                'seven-height-nine' => new ItemJob(
+                    3,
+                    new StaticIterableReader([7, 8, 9]),
+                    new NullProcessor(),
+                    $fileLineWriter,
+                    $executionStorage
+                ),
+            ]),
             ['one-two-three', 'four-five-six', 'seven-height-nine']
         );
     }
