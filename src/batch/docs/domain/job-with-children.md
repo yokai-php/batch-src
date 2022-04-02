@@ -7,15 +7,13 @@ todo
 
 declare(strict_types=1);
 
-use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
+use Yokai\Batch\Job\JobExecutor;
 use Yokai\Batch\Job\JobInterface;
 use Yokai\Batch\Job\JobWithChildJobs;
 use Yokai\Batch\JobExecution;
-use Yokai\Batch\Registry\JobRegistry;
 use Yokai\Batch\Registry\JobContainer;
-use Yokai\Batch\Serializer\JsonJobExecutionSerializer;
-use Yokai\Batch\Storage\FilesystemJobExecutionStorage;
+use Yokai\Batch\Registry\JobRegistry;
+use Yokai\Batch\Storage\NullJobExecutionStorage;
 
 // you can instead use any psr/container implementation
 // @see https://packagist.org/providers/psr/container-implementation
@@ -39,8 +37,8 @@ $container = new JobContainer([
 ]);
 
 $job = new JobWithChildJobs(
-    new FilesystemJobExecutionStorage(new JsonJobExecutionSerializer(), '/dir/where/jobs/are/stored'),
-    new JobRegistry($container),
+    $jobExecutionStorage = new NullJobExecutionStorage(),
+    new JobExecutor(new JobRegistry($container), $jobExecutionStorage, null),
     ['export', 'upload']
 );
 ```

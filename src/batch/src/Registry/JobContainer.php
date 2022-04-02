@@ -12,6 +12,9 @@ use Yokai\Batch\Job\JobInterface;
 /**
  * This {@see ContainerInterface} implementation
  * suits for providing a static implementation to {@see JobRegistry}.
+ *
+ * You can instead use any psr/container implementation
+ * {@see https://packagist.org/providers/psr/container-implementation}
  */
 final class JobContainer implements ContainerInterface
 {

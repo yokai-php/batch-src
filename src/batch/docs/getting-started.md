@@ -20,8 +20,6 @@ before starting to work with this library.
 
 declare(strict_types=1);
 
-use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Yokai\Batch\Factory\JobExecutionFactory;
 use Yokai\Batch\Factory\UniqidJobExecutionIdGenerator;
 use Yokai\Batch\Job\JobExecutionAccessor;
@@ -29,6 +27,7 @@ use Yokai\Batch\Job\JobExecutor;
 use Yokai\Batch\Job\JobInterface;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\Launcher\SimpleJobLauncher;
+use Yokai\Batch\Registry\JobContainer;
 use Yokai\Batch\Registry\JobRegistry;
 use Yokai\Batch\Serializer\JsonJobExecutionSerializer;
 use Yokai\Batch\Storage\FilesystemJobExecutionStorage;
