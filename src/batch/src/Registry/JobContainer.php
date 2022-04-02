@@ -9,6 +9,10 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Yokai\Batch\Job\JobInterface;
 
+/**
+ * This {@see ContainerInterface} implementation
+ * suits for providing a static implementation to {@see JobRegistry}.
+ */
 final class JobContainer implements ContainerInterface
 {
     /**
