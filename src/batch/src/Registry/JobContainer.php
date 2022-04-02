@@ -15,17 +15,12 @@ use Yokai\Batch\Job\JobInterface;
  */
 final class JobContainer implements ContainerInterface
 {
-    /**
-     * @var array<string, JobInterface>
-     */
-    private array $jobs;
-
-    /**
-     * @param array<string, JobInterface> $jobs
-     */
-    public function __construct(array $jobs)
-    {
-        $this->jobs = $jobs;
+    public function __construct(
+        /**
+         * @var array<string, JobInterface>
+         */
+        private array $jobs,
+    ) {
     }
 
     public function get(string $id): JobInterface
