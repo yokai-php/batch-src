@@ -99,7 +99,10 @@ class RunJobCommandTest extends TestCase
             self::assertStringContainsString('An error occurred during the testing execution.', $display);
             self::assertStringContainsString('Error #100 of class RuntimeException: 1st exception', $display);
             self::assertStringContainsString('Error #200 of class LogicException: 2nd exception', $display);
-            self::assertStringContainsString('Error #300 of class Exception: The exception that failed the job', $display);
+            self::assertStringContainsString(
+                'Error #300 of class Exception: The exception that failed the job',
+                $display
+            );
         }
     }
 

@@ -55,7 +55,8 @@ abstract class JobTestCase extends TestCase
 
         $launcher = new SimpleJobLauncher(
             new JobExecutionAccessor(
-                new JobExecutionFactory(new UniqidJobExecutionIdGenerator()), $jobExecutionStorage
+                new JobExecutionFactory(new UniqidJobExecutionIdGenerator()),
+                $jobExecutionStorage
             ),
             new JobExecutor(
                 self::createJobRegistry([$jobName => $job]),
