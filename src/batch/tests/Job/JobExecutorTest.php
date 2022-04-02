@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Tests\Job;
 
+use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -106,6 +107,36 @@ class JobExecutorTest extends TestCase
         $logs = (string)$execution->getLogs();
         self::assertStringContainsString('DEBUG: Starting job', $logs);
         self::assertStringContainsString('ERROR: Job did not executed successfully', $logs);
+    }
+
+    public function testLaunchErrorWithStatusListener(): void
+    {
+        $execution = JobExecution::createRoot('123', self::JOB_NAME);
+        $this->job->execute($execution)
+            ->willThrow($exception = new \RuntimeException());
+
+        $this->dispatcher->dispatch(Argument::type(ExceptionEvent::class))
+            ->shouldBeCalledTimes(1)
+            ->will(function (array $args) use ($exception) {
+                /** @var ExceptionEvent $event */
+                $event = $args[0];
+                Assert::assertSame($exception, $event->getException());
+                $event->setStatus(BatchStatus::COMPLETED);
+            });
+
+        $this->executor->execute($execution);
+
+        $this->dispatcher->dispatch(Argument::type(PreExecuteEvent::class))
+            ->shouldHaveBeenCalledTimes(1);
+        $this->dispatcher->dispatch(Argument::type(PostExecuteEvent::class))
+            ->shouldHaveBeenCalledTimes(1);
+
+        self::assertNotNull($execution->getStartTime());
+        self::assertNotNull($execution->getEndTime());
+        self::assertSame(BatchStatus::COMPLETED, $execution->getStatus()->getValue());
+        $logs = (string)$execution->getLogs();
+        self::assertStringContainsString('DEBUG: Starting job', $logs);
+        self::assertStringContainsString('INFO: Job executed successfully', $logs);
     }
 
     public function testLaunchJobNotExecutable(): void
