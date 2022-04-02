@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yokai\Batch\Sources\Tests\Integration;
 
 use Yokai\Batch\BatchStatus;
-use Yokai\Batch\Job\AbstractJob;
+use Yokai\Batch\Job\JobExecutor;
 use Yokai\Batch\Job\JobInterface;
 use Yokai\Batch\Job\JobWithChildJobs;
 use Yokai\Batch\JobExecution;
@@ -17,24 +17,28 @@ class JobWithFailingDummyChidlrenTest extends JobTestCase
     {
         return new JobWithChildJobs(
             $executionStorage,
-            self::createJobRegistry(
-                [
-                    'prepare' => new class extends AbstractJob
-                    {
-                        protected function doExecute(JobExecution $jobExecution): void
+            new JobExecutor(
+                self::createJobRegistry(
+                    [
+                        'prepare' => new class implements JobInterface
                         {
-                            throw new \Exception('Critical dummy exception');
-                        }
-                    },
-                    'do' => new class extends AbstractJob
-                    {
-                        protected function doExecute(JobExecution $jobExecution): void
+                            public function execute(JobExecution $jobExecution): void
+                            {
+                                throw new \Exception('Critical dummy exception');
+                            }
+                        },
+                        'do' => new class implements JobInterface
                         {
-                            // this job should not be executed
-                            $jobExecution->getSummary()->set('done', true);
-                        }
-                    },
-                ]
+                            public function execute(JobExecution $jobExecution): void
+                            {
+                                // this job should not be executed
+                                $jobExecution->getSummary()->set('done', true);
+                            }
+                        },
+                    ]
+                ),
+                $executionStorage,
+                null
             ),
             ['prepare', 'do']
         );

@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace Yokai\Batch\Bridge\Symfony\Messenger;
 
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use Yokai\Batch\Launcher\JobLauncherInterface;
+use Yokai\Batch\Job\JobExecutionAccessor;
+use Yokai\Batch\Job\JobExecutor;
 
 /**
  * Answer to {@see LaunchJobMessage} and launch requested job.
@@ -13,12 +14,14 @@ use Yokai\Batch\Launcher\JobLauncherInterface;
 final class LaunchJobMessageHandler implements MessageHandlerInterface
 {
     public function __construct(
-        private JobLauncherInterface $jobLauncher,
+        private JobExecutionAccessor $jobExecutionAccessor,
+        private JobExecutor $jobExecutor,
     ) {
     }
 
     public function __invoke(LaunchJobMessage $message): void
     {
-        $this->jobLauncher->launch($message->getJobName(), $message->getConfiguration());
+        $execution = $this->jobExecutionAccessor->get($message->getJobName(), $message->getConfiguration());
+        $this->jobExecutor->execute($execution);
     }
 }

@@ -8,15 +8,19 @@ use JsonException;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
-use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Bridge\Symfony\Console\RunJobCommand;
 use Yokai\Batch\Exception\UnexpectedValueException;
-use Yokai\Batch\Failure;
+use Yokai\Batch\Factory\JobExecutionFactory;
+use Yokai\Batch\Factory\UniqidJobExecutionIdGenerator;
+use Yokai\Batch\Job\JobExecutionAccessor;
+use Yokai\Batch\Job\JobExecutor;
+use Yokai\Batch\Job\JobInterface;
 use Yokai\Batch\JobExecution;
-use Yokai\Batch\Launcher\JobLauncherInterface;
+use Yokai\Batch\Registry\JobRegistry;
+use Yokai\Batch\Test\Storage\InMemoryJobExecutionStorage;
 use Yokai\Batch\Warning;
 
 class RunJobCommandTest extends TestCase
@@ -25,14 +29,20 @@ class RunJobCommandTest extends TestCase
 
     private const JOBNAME = 'testing';
 
-    /**
-     * @var JobLauncherInterface|ObjectProphecy
-     */
-    private ObjectProphecy $jobLauncher;
-
     protected function setUp(): void
     {
-        $this->jobLauncher = $this->prophesize(JobLauncherInterface::class);
+        $this->job = $this->prophesize(JobInterface::class);
+        $this->dispatcher = $this->prophesize(EventDispatcherInterface::class);
+
+        $this->accessor = new JobExecutionAccessor(
+            new JobExecutionFactory(new UniqidJobExecutionIdGenerator()),
+            new InMemoryJobExecutionStorage(),
+        );
+        $this->executor = new JobExecutor(
+            JobRegistry::fromJobArray([self::JOBNAME => $this->job->reveal()]),
+            new InMemoryJobExecutionStorage(),
+            $this->dispatcher->reveal()
+        );
     }
 
     private function execute(string $configuration = null, int $verbosity = OutputInterface::VERBOSITY_NORMAL): array
@@ -43,7 +53,7 @@ class RunJobCommandTest extends TestCase
             $input['configuration'] = $configuration;
         }
 
-        $tester = new CommandTester(new RunJobCommand($this->jobLauncher->reveal()));
+        $tester = new CommandTester(new RunJobCommand($this->accessor, $this->executor));
         $tester->execute($input, $options);
 
         return [$tester->getStatusCode(), $tester->getDisplay()];
@@ -53,7 +63,7 @@ class RunJobCommandTest extends TestCase
     {
         $this->expectException(JsonException::class);
 
-        $this->jobLauncher->launch(Argument::cetera())->shouldNotBeCalled();
+        $this->job->execute(Argument::any())->shouldNotBeCalled();
         $this->execute('{]');
     }
 
@@ -61,7 +71,7 @@ class RunJobCommandTest extends TestCase
     {
         $this->expectException(UnexpectedValueException::class);
 
-        $this->jobLauncher->launch(Argument::cetera())->shouldNotBeCalled();
+        $this->job->execute(Argument::any())->shouldNotBeCalled();
         $this->execute('"string"');
     }
 
@@ -70,12 +80,14 @@ class RunJobCommandTest extends TestCase
      */
     public function testRunWithErrors(int $verbosity): void
     {
-        $jobExecution = JobExecution::createRoot('123456789', self::JOBNAME, new BatchStatus(BatchStatus::FAILED));
-        $jobExecution->addFailure(Failure::fromException($runtime = new \RuntimeException('1st exception')));
-        $jobExecution->addFailure(Failure::fromException($logic = new \LogicException('2nd exception')));
-        $this->jobLauncher->launch(self::JOBNAME, [])
-            ->shouldBeCalledTimes(1)
-            ->willReturn($jobExecution);
+        $this->job->execute(Argument::any())
+            ->will(function (array $args) {
+                /** @var JobExecution $jobExecution */
+                $jobExecution = $args[0];
+                $jobExecution->addFailureException(new \RuntimeException('1st exception', 100));
+                $jobExecution->addFailureException(new \LogicException('2nd exception', 200));
+                throw new \Exception('The exception that failed the job', 300);
+            });
 
         [$code, $display] = $this->execute(null, $verbosity);
 
@@ -85,15 +97,9 @@ class RunJobCommandTest extends TestCase
             self::assertSame('', $display);
         } else {
             self::assertStringContainsString('An error occurred during the testing execution.', $display);
-            self::assertStringContainsString('Error #0 of class RuntimeException: 1st exception', $display);
-            self::assertStringContainsString('Error #0 of class LogicException: 2nd exception', $display);
-            if ($verbosity > OutputInterface::VERBOSITY_NORMAL) {
-                self::assertStringContainsString($runtime->getTraceAsString(), $display);
-                self::assertStringContainsString($logic->getTraceAsString(), $display);
-            } else {
-                self::assertStringNotContainsString($runtime->getTraceAsString(), $display);
-                self::assertStringNotContainsString($logic->getTraceAsString(), $display);
-            }
+            self::assertStringContainsString('Error #100 of class RuntimeException: 1st exception', $display);
+            self::assertStringContainsString('Error #200 of class LogicException: 2nd exception', $display);
+            self::assertStringContainsString('Error #300 of class Exception: The exception that failed the job', $display);
         }
     }
 
@@ -102,12 +108,13 @@ class RunJobCommandTest extends TestCase
      */
     public function testRunWithWarnings(int $verbosity): void
     {
-        $jobExecution = JobExecution::createRoot('123456789', self::JOBNAME, new BatchStatus(BatchStatus::COMPLETED));
-        $jobExecution->addWarning(new Warning('1st warning'));
-        $jobExecution->addWarning(new Warning('2nd warning'));
-        $this->jobLauncher->launch(self::JOBNAME, [])
-            ->shouldBeCalledTimes(1)
-            ->willReturn($jobExecution);
+        $this->job->execute(Argument::any())
+            ->will(function (array $args) {
+                /** @var JobExecution $jobExecution */
+                $jobExecution = $args[0];
+                $jobExecution->addWarning(new Warning('1st warning'));
+                $jobExecution->addWarning(new Warning('2nd warning'));
+            });
 
         [$code, $display] = $this->execute(null, $verbosity);
 
@@ -132,22 +139,26 @@ class RunJobCommandTest extends TestCase
      */
     public function testRunSuccessful(int $verbosity): void
     {
-        $jobExecution = JobExecution::createRoot('123456789', self::JOBNAME, new BatchStatus(BatchStatus::COMPLETED));
-        $this->jobLauncher->launch(self::JOBNAME, [])
-            ->shouldBeCalledTimes(1)
-            ->willReturn($jobExecution);
+        $this->job->execute(Argument::any())
+            ->will(function (array $args) {
+            });
 
         [$code, $display] = $this->execute(null, $verbosity);
 
         self::assertSame(RunJobCommand::EXIT_SUCCESS_CODE, $code);
+        if ($verbosity === OutputInterface::VERBOSITY_QUIET) {
+            self::assertSame('', $display);
+        } else {
+            self::assertStringContainsString('testing has been successfully executed.', $display);
+        }
     }
 
     public function verbosity(): \Generator
     {
-        yield [OutputInterface::VERBOSITY_QUIET];
-        yield [OutputInterface::VERBOSITY_NORMAL];
-        yield [OutputInterface::VERBOSITY_VERBOSE];
-        yield [OutputInterface::VERBOSITY_VERY_VERBOSE];
-        yield [OutputInterface::VERBOSITY_DEBUG];
+        yield 'quiet' => [OutputInterface::VERBOSITY_QUIET];
+        yield 'normal' => [OutputInterface::VERBOSITY_NORMAL];
+        yield 'verbose' => [OutputInterface::VERBOSITY_VERBOSE];
+        yield 'very verbose' => [OutputInterface::VERBOSITY_VERY_VERBOSE];
+        yield 'debug' => [OutputInterface::VERBOSITY_DEBUG];
     }
 }

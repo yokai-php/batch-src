@@ -13,6 +13,12 @@
         <service id="Yokai\Batch\Registry\JobRegistry"
                  alias="yokai_batch.job_registry"/>
 
+        <service id="Yokai\Batch\Job\JobExecutionAccessor"
+                 alias="yokai_batch.job_execution_accessor"/>
+
+        <service id="Yokai\Batch\Job\JobExecutor"
+                 alias="yokai_batch.job_executor"/>
+
         <service id="Yokai\Batch\Factory\JobExecutionIdGeneratorInterface"
                  alias="yokai_batch.job_execution_id_generator.uniqid"/>
     </services>

@@ -10,6 +10,8 @@ use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Factory\JobExecutionFactory;
 use Yokai\Batch\Factory\UniqidJobExecutionIdGenerator;
 use Yokai\Batch\Failure;
+use Yokai\Batch\Job\JobExecutionAccessor;
+use Yokai\Batch\Job\JobExecutor;
 use Yokai\Batch\Job\JobInterface;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\Launcher\SimpleJobLauncher;
@@ -46,16 +48,20 @@ abstract class JobTestCase extends TestCase
     /**
      * @dataProvider variant
      */
-    public function testLaunchJob(JobExecutionStorageInterface $jobExecutionStorage): void
+    public function testExecuteJob(JobExecutionStorageInterface $jobExecutionStorage): void
     {
         $job = $this->createJob($jobExecutionStorage);
         $jobName = $this->getJobName();
 
         $launcher = new SimpleJobLauncher(
-            self::createJobRegistry([$jobName => $job]),
-            new JobExecutionFactory(new UniqidJobExecutionIdGenerator()),
-            $jobExecutionStorage,
-            null
+            new JobExecutionAccessor(
+                new JobExecutionFactory(new UniqidJobExecutionIdGenerator()), $jobExecutionStorage
+            ),
+            new JobExecutor(
+                self::createJobRegistry([$jobName => $job]),
+                $jobExecutionStorage,
+                null
+            )
         );
 
         $jobExecution = $launcher->launch($jobName);
@@ -72,23 +78,7 @@ abstract class JobTestCase extends TestCase
 
     protected static function createJobRegistry(array $jobs): JobRegistry
     {
-        $container = new class ($jobs) implements ContainerInterface {
-            private $jobs;
-            public function __construct(array $jobs)
-            {
-                $this->jobs = $jobs;
-            }
-            public function get($id)
-            {
-                return $this->jobs[$id];
-            }
-            public function has($id): bool
-            {
-                return $this->jobs[$id] instanceof JobInterface;
-            }
-        };
-
-        return new JobRegistry($container);
+        return JobRegistry::fromJobArray($jobs);
     }
 
     abstract protected function createJob(JobExecutionStorageInterface $executionStorage): JobInterface;

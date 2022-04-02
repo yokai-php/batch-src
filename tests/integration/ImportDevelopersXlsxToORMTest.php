@@ -16,6 +16,7 @@ use Yokai\Batch\Bridge\Box\Spout\Reader\HeaderStrategy;
 use Yokai\Batch\Bridge\Box\Spout\Reader\Options\CSVOptions;
 use Yokai\Batch\Bridge\Doctrine\Persistence\ObjectWriter;
 use Yokai\Batch\Job\Item\ItemJob;
+use Yokai\Batch\Job\JobExecutor;
 use Yokai\Batch\Job\JobInterface;
 use Yokai\Batch\Job\JobWithChildJobs;
 use Yokai\Batch\Job\Parameters\StaticValueParameterAccessor;
@@ -91,41 +92,49 @@ class ImportDevelopersXlsxToORMTest extends JobTestCase
 
         return new JobWithChildJobs(
             $executionStorage,
-            self::createJobRegistry([
-                'split' => new SplitDeveloperXlsxJob(
-                    $inputFile,
-                    $outputBadgeFile,
-                    $outputRepositoryFile,
-                    $outputDeveloperFile
-                ),
-                'import' => new JobWithChildJobs(
-                    $executionStorage,
-                    self::createJobRegistry([
-                        'import-badge' => new ItemJob(
-                            PHP_INT_MAX,
-                            $csvReader(self::OUTPUT_BADGE_FILE),
-                            new BadgeProcessor(),
-                            $objectWriter,
-                            $executionStorage
+            new JobExecutor(
+                self::createJobRegistry([
+                    'split' => new SplitDeveloperXlsxJob(
+                        $inputFile,
+                        $outputBadgeFile,
+                        $outputRepositoryFile,
+                        $outputDeveloperFile
+                    ),
+                    'import' => new JobWithChildJobs(
+                        $executionStorage,
+                        new JobExecutor(
+                            self::createJobRegistry([
+                                'import-badge' => new ItemJob(
+                                    PHP_INT_MAX,
+                                    $csvReader(self::OUTPUT_BADGE_FILE),
+                                    new BadgeProcessor(),
+                                    $objectWriter,
+                                    $executionStorage
+                                ),
+                                'import-repository' => new ItemJob(
+                                    PHP_INT_MAX,
+                                    $csvReader(self::OUTPUT_REPOSITORY_FILE),
+                                    new RepositoryProcessor(),
+                                    $objectWriter,
+                                    $executionStorage
+                                ),
+                                'import-developer' => new ItemJob(
+                                    5,
+                                    $csvReader(self::OUTPUT_DEVELOPER_FILE),
+                                    new DeveloperProcessor($entityManager),
+                                    $objectWriter,
+                                    $executionStorage
+                                ),
+                            ]),
+                            $executionStorage,
+                            null
                         ),
-                        'import-repository' => new ItemJob(
-                            PHP_INT_MAX,
-                            $csvReader(self::OUTPUT_REPOSITORY_FILE),
-                            new RepositoryProcessor(),
-                            $objectWriter,
-                            $executionStorage
-                        ),
-                        'import-developer' => new ItemJob(
-                            5,
-                            $csvReader(self::OUTPUT_DEVELOPER_FILE),
-                            new DeveloperProcessor($entityManager),
-                            $objectWriter,
-                            $executionStorage
-                        ),
-                    ]),
-                    ['import-badge', 'import-repository', 'import-developer']
-                ),
-            ]),
+                        ['import-badge', 'import-repository', 'import-developer']
+                    ),
+                ]),
+                $executionStorage,
+                null
+            ),
             ['split', 'import']
         );
     }

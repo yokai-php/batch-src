@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yokai\Batch\Sources\Tests\Integration;
 
 use Yokai\Batch\BatchStatus;
-use Yokai\Batch\Job\AbstractJob;
+use Yokai\Batch\Job\JobExecutor;
 use Yokai\Batch\Job\JobInterface;
 use Yokai\Batch\Job\JobWithChildJobs;
 use Yokai\Batch\JobExecution;
@@ -17,23 +17,27 @@ class JobWithDummyChildrenTest extends JobTestCase
     {
         return new JobWithChildJobs(
             $executionStorage,
-            self::createJobRegistry(
-                [
-                    'prepare' => new class extends AbstractJob
-                    {
-                        protected function doExecute(JobExecution $jobExecution): void
+            new JobExecutor(
+                self::createJobRegistry(
+                    [
+                        'prepare' => new class implements JobInterface
                         {
-                            $jobExecution->getSummary()->set('done', true);
-                        }
-                    },
-                    'do' => new class extends AbstractJob
-                    {
-                        protected function doExecute(JobExecution $jobExecution): void
+                            public function execute(JobExecution $jobExecution): void
+                            {
+                                $jobExecution->getSummary()->set('done', true);
+                            }
+                        },
+                        'do' => new class implements JobInterface
                         {
-                            $jobExecution->getSummary()->set('done', true);
-                        }
-                    },
-                ]
+                            public function execute(JobExecution $jobExecution): void
+                            {
+                                $jobExecution->getSummary()->set('done', true);
+                            }
+                        },
+                    ]
+                ),
+                $executionStorage,
+                null
             ),
             ['prepare', 'do']
         );

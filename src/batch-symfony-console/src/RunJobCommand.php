@@ -11,8 +11,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Exception\UnexpectedValueException;
+use Yokai\Batch\Job\JobExecutionAccessor;
+use Yokai\Batch\Job\JobExecutor;
 use Yokai\Batch\JobExecution;
-use Yokai\Batch\Launcher\JobLauncherInterface;
 
 final class RunJobCommand extends Command
 {
@@ -23,7 +24,8 @@ final class RunJobCommand extends Command
     public const EXIT_WARNING_CODE = 2;
 
     public function __construct(
-        private JobLauncherInterface $jobLauncher,
+        private JobExecutionAccessor $jobExecutionAccessor,
+        private JobExecutor $jobExecutor,
     ) {
         parent::__construct();
     }
@@ -52,7 +54,8 @@ final class RunJobCommand extends Command
 
         $configuration = $this->decodeConfiguration($configurationJson);
 
-        $execution = $this->jobLauncher->launch($jobName, $configuration);
+        $execution = $this->jobExecutionAccessor->get($jobName, $configuration);
+        $this->jobExecutor->execute($execution);
 
         $this->outputExecution($execution, $output);
 
