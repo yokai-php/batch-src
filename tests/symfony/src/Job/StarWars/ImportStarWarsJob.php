@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Yokai\Batch\Sources\Tests\Symfony\App\Job\StarWars;
 
 use Yokai\Batch\Bridge\Symfony\Framework\JobWithStaticNameInterface;
+use Yokai\Batch\Job\JobExecutor;
 use Yokai\Batch\Job\JobWithChildJobs;
-use Yokai\Batch\Registry\JobRegistry;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
 
 /**
@@ -22,9 +22,9 @@ final class ImportStarWarsJob extends JobWithChildJobs implements JobWithStaticN
         return 'star-wars.import';
     }
 
-    public function __construct(JobExecutionStorageInterface $executionStorage, JobRegistry $jobRegistry)
+    public function __construct(JobExecutionStorageInterface $executionStorage, JobExecutor $jobExecutor)
     {
-        parent::__construct($executionStorage, $jobRegistry, [
+        parent::__construct($executionStorage, $jobExecutor, [
             // in that case, job order matters
             ImportStarWarsPlanetJob::getJobName(),
             ImportStarWarsSpecieJob::getJobName(),

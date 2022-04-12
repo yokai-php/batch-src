@@ -91,7 +91,7 @@ class ImportDevelopersXlsxToORMTest extends JobTestCase
 
         return new JobWithChildJobs(
             $executionStorage,
-            self::createJobRegistry([
+            self::createJobExecutor($executionStorage, [
                 'split' => new SplitDeveloperXlsxJob(
                     $inputFile,
                     $outputBadgeFile,
@@ -100,7 +100,7 @@ class ImportDevelopersXlsxToORMTest extends JobTestCase
                 ),
                 'import' => new JobWithChildJobs(
                     $executionStorage,
-                    self::createJobRegistry([
+                    self::createJobExecutor($executionStorage, [
                         'import-badge' => new ItemJob(
                             PHP_INT_MAX,
                             $csvReader(self::OUTPUT_BADGE_FILE),

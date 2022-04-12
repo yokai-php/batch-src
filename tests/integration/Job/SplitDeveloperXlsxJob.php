@@ -10,33 +10,21 @@ use Box\Spout\Reader\Common\Creator\ReaderFactory;
 use Box\Spout\Reader\SheetInterface;
 use Yokai\Batch\Bridge\Box\Spout\Writer\FlatFileWriter;
 use Yokai\Batch\Bridge\Box\Spout\Writer\Options\CSVOptions;
-use Yokai\Batch\Job\AbstractJob;
+use Yokai\Batch\Job\JobInterface;
 use Yokai\Batch\Job\Parameters\StaticValueParameterAccessor;
 use Yokai\Batch\JobExecution;
 
-final class SplitDeveloperXlsxJob extends AbstractJob
+final class SplitDeveloperXlsxJob implements JobInterface
 {
-    private $inputFile;
-
-    private $outputBadgeFile;
-
-    private $outputRepositoryFile;
-
-    private $outputDeveloperFile;
-
     public function __construct(
-        string $inputFile,
-        string $outputBadgeFile,
-        string $outputRepositoryFile,
-        string $outputDeveloperFile
+        private string $inputFile,
+        private string $outputBadgeFile,
+        private string $outputRepositoryFile,
+        private string $outputDeveloperFile
     ) {
-        $this->inputFile = $inputFile;
-        $this->outputBadgeFile = $outputBadgeFile;
-        $this->outputRepositoryFile = $outputRepositoryFile;
-        $this->outputDeveloperFile = $outputDeveloperFile;
     }
 
-    protected function doExecute(JobExecution $jobExecution): void
+    public function execute(JobExecution $jobExecution): void
     {
         $badges = [];
         $repositories = [];

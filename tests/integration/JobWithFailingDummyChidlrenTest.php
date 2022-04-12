@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yokai\Batch\Sources\Tests\Integration;
 
 use Yokai\Batch\BatchStatus;
-use Yokai\Batch\Job\AbstractJob;
 use Yokai\Batch\Job\JobInterface;
 use Yokai\Batch\Job\JobWithChildJobs;
 use Yokai\Batch\JobExecution;
@@ -17,25 +16,23 @@ class JobWithFailingDummyChidlrenTest extends JobTestCase
     {
         return new JobWithChildJobs(
             $executionStorage,
-            self::createJobRegistry(
-                [
-                    'prepare' => new class extends AbstractJob
+            self::createJobExecutor($executionStorage, [
+                'prepare' => new class implements JobInterface
+                {
+                    public function execute(JobExecution $jobExecution): void
                     {
-                        protected function doExecute(JobExecution $jobExecution): void
-                        {
-                            throw new \Exception('Critical dummy exception');
-                        }
-                    },
-                    'do' => new class extends AbstractJob
+                        throw new \Exception('Critical dummy exception');
+                    }
+                },
+                'do' => new class implements JobInterface
+                {
+                    public function execute(JobExecution $jobExecution): void
                     {
-                        protected function doExecute(JobExecution $jobExecution): void
-                        {
-                            // this job should not be executed
-                            $jobExecution->getSummary()->set('done', true);
-                        }
-                    },
-                ]
-            ),
+                        // this job should not be executed
+                        $jobExecution->getSummary()->set('done', true);
+                    }
+                },
+            ]),
             ['prepare', 'do']
         );
     }
