@@ -18,7 +18,7 @@ use Yokai\Batch\JobExecution;
 /**
  * This job allows you to copy files from one filesystem ot another.
  */
-final class CopyFilesJob implements JobInterface
+class CopyFilesJob implements JobInterface
 {
     public function __construct(
         private JobParameterAccessorInterface $location,
@@ -28,7 +28,7 @@ final class CopyFilesJob implements JobInterface
     ) {
     }
 
-    public function execute(JobExecution $jobExecution): void
+    final public function execute(JobExecution $jobExecution): void
     {
         $config = $this->location->get($jobExecution);
         if (\is_string($config)) {

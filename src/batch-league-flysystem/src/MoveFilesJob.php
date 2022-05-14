@@ -19,7 +19,7 @@ use Yokai\Batch\JobExecution;
 /**
  * This job allows you to move files from one filesystem ot another.
  */
-final class MoveFilesJob implements JobInterface
+class MoveFilesJob implements JobInterface
 {
     public function __construct(
         private JobParameterAccessorInterface $location,
@@ -29,7 +29,7 @@ final class MoveFilesJob implements JobInterface
     ) {
     }
 
-    public function execute(JobExecution $jobExecution): void
+    final public function execute(JobExecution $jobExecution): void
     {
         $config = $this->location->get($jobExecution);
         if (\is_string($config)) {
