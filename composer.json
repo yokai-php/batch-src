@@ -18,6 +18,7 @@
     "doctrine/dbal": "^2.11",
     "doctrine/orm": "^2.8",
     "doctrine/persistence": "^2.0",
+    "league/flysystem": "^3.0",
     "psr/container": "^1.0",
     "psr/event-dispatcher": "^1.0",
     "psr/log": "^1.0|^2.0|^3.0",
@@ -34,7 +35,8 @@
     "phpunit/phpunit": "^9.5",
     "squizlabs/php_codesniffer": "^3.6",
     "symfony/filesystem": "^5.0|^6.0",
-    "symfony/process": "^5.0|^6.0"
+    "symfony/process": "^5.0|^6.0",
+    "league/flysystem-memory": "^3.0"
   },
   "replace": {
     "yokai/batch": "self.version",
@@ -55,6 +57,7 @@
       "Yokai\\Batch\\Bridge\\Doctrine\\DBAL\\": "src/batch-doctrine-dbal/src/",
       "Yokai\\Batch\\Bridge\\Doctrine\\ORM\\": "src/batch-doctrine-orm/src/",
       "Yokai\\Batch\\Bridge\\Doctrine\\Persistence\\": "src/batch-doctrine-persistence/src/",
+      "Yokai\\Batch\\Bridge\\League\\Flysystem\\": "src/batch-league-flysystem/src/",
       "Yokai\\Batch\\Bridge\\Symfony\\Console\\": "src/batch-symfony-console/src/",
       "Yokai\\Batch\\Bridge\\Symfony\\Framework\\": "src/batch-symfony-framework/src/",
       "Yokai\\Batch\\Bridge\\Symfony\\Messenger\\": "src/batch-symfony-messenger/src/",
@@ -72,6 +75,7 @@
       "Yokai\\Batch\\Tests\\Bridge\\Doctrine\\DBAL\\": "src/batch-doctrine-dbal/tests/",
       "Yokai\\Batch\\Tests\\Bridge\\Doctrine\\ORM\\": "src/batch-doctrine-orm/tests/",
       "Yokai\\Batch\\Tests\\Bridge\\Doctrine\\Persistence\\": "src/batch-doctrine-persistence/tests/",
+      "Yokai\\Batch\\Tests\\Bridge\\League\\Flysystem\\": "src/batch-league-flysystem/tests/",
       "Yokai\\Batch\\Tests\\Bridge\\Symfony\\Console\\": "src/batch-symfony-console/tests/",
       "Yokai\\Batch\\Tests\\Bridge\\Symfony\\Framework\\": "src/batch-symfony-framework/tests/",
       "Yokai\\Batch\\Tests\\Bridge\\Symfony\\Messenger\\": "src/batch-symfony-messenger/tests/",

@@ -29,6 +29,7 @@ remote batch-box-spout            git@github.com:yokai-php/batch-box-spout.git
 remote batch-doctrine-dbal        git@github.com:yokai-php/batch-doctrine-dbal.git
 remote batch-doctrine-orm         git@github.com:yokai-php/batch-doctrine-orm.git
 remote batch-doctrine-persistence git@github.com:yokai-php/batch-doctrine-persistence.git
+remote batch-league-flysystem     git@github.com:yokai-php/batch-league-flysystem.git
 remote batch-symfony-console      git@github.com:yokai-php/batch-symfony-console.git
 remote batch-symfony-framework    git@github.com:yokai-php/batch-symfony-framework.git
 remote batch-symfony-messenger    git@github.com:yokai-php/batch-symfony-messenger.git
@@ -41,6 +42,7 @@ split 'src/batch-box-spout'            batch-box-spout
 split 'src/batch-doctrine-dbal'        batch-doctrine-dbal
 split 'src/batch-doctrine-orm'         batch-doctrine-orm
 split 'src/batch-doctrine-persistence' batch-doctrine-persistence
+split 'src/batch-league-flysystem'     batch-league-flysystem
 split 'src/batch-symfony-console'      batch-symfony-console
 split 'src/batch-symfony-framework'    batch-symfony-framework
 split 'src/batch-symfony-messenger'    batch-symfony-messenger
