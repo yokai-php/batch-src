@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yokai\Batch\Tests\Bridge\League\Flysystem;
+namespace Yokai\Batch\Tests\Bridge\League\Flysystem\Job;
 
 use League\Flysystem\CorruptedPathDetected;
 use League\Flysystem\Filesystem;
@@ -10,7 +10,7 @@ use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use League\Flysystem\UnableToReadFile;
 use League\Flysystem\UnableToWriteFile;
 use PHPUnit\Framework\TestCase;
-use Yokai\Batch\Bridge\League\Flysystem\CopyFilesJob;
+use Yokai\Batch\Bridge\League\Flysystem\Job\CopyFilesJob;
 use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\Job\Parameters\StaticValueParameterAccessor;
 use Yokai\Batch\JobExecution;

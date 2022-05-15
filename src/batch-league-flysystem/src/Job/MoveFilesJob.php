@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Yokai\Batch\Bridge\League\Flysystem;
+namespace Yokai\Batch\Bridge\League\Flysystem\Job;
 
 use Closure;
 use League\Flysystem\FilesystemException;
-use League\Flysystem\FilesystemReader;
+use League\Flysystem\FilesystemOperator;
 use League\Flysystem\FilesystemWriter;
+use League\Flysystem\UnableToDeleteFile;
 use League\Flysystem\UnableToReadFile;
 use League\Flysystem\UnableToWriteFile;
 use Yokai\Batch\Exception\UnexpectedValueException;
@@ -16,13 +17,13 @@ use Yokai\Batch\Job\Parameters\JobParameterAccessorInterface;
 use Yokai\Batch\JobExecution;
 
 /**
- * This job allows you to copy files from one filesystem ot another.
+ * This job allows you to move files from one filesystem ot another.
  */
-class CopyFilesJob implements JobInterface
+class MoveFilesJob implements JobInterface
 {
     public function __construct(
         private JobParameterAccessorInterface $location,
-        private FilesystemReader $source,
+        private FilesystemOperator $source,
         private FilesystemWriter $destination,
         private ?Closure $transformLocation = null,
     ) {
@@ -51,6 +52,7 @@ class CopyFilesJob implements JobInterface
                     $destinationLocation,
                     $this->source->readStream($sourceLocation)
                 );
+                $this->source->delete($sourceLocation);
             } catch (UnableToReadFile $exception) {
                 $jobExecution->addFailureException($exception, [], false);
                 $jobExecution->getLogger()->error(
@@ -65,17 +67,24 @@ class CopyFilesJob implements JobInterface
                     ['file' => $destinationLocation]
                 );
                 continue;
+            } catch (UnableToDeleteFile $exception) {
+                $jobExecution->addFailureException($exception, [], false);
+                $jobExecution->getLogger()->error(
+                    'Unable to delete file from filesystem.',
+                    ['file' => $sourceLocation]
+                );
+                continue;
             } catch (FilesystemException $exception) {
                 $jobExecution->addFailureException($exception, [], false);
                 $jobExecution->getLogger()->error(
-                    'Unable to copy file.',
+                    'Unable to move file.',
                     ['source' => $sourceLocation, 'destination' => $destinationLocation]
                 );
                 continue;
             }
 
             $jobExecution->getLogger()->notice(
-                'Copied file from filesystem to another.',
+                'Moved file from filesystem to another.',
                 ['source' => $sourceLocation, 'destination' => $destinationLocation]
             );
         }
