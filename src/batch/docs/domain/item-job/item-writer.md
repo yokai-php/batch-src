@@ -17,6 +17,8 @@ It can be any class implementing [ItemWriterInterface](../../../src/Job/Item/Ite
   route writing to different writer based on your logic.
 - [SummaryWriter](../../../src/Job/Item/Writer/SummaryWriter.php):
   write items to a job summary value.
+- [TransformingWriter](../../../src/Job/Item/Writer/TransformingWriter.php):
+  perform items transformation before delegating to another writer.
 
 **Item writers from bridges:**
 - [DoctrineDBALInsertWriter (`doctrine/dbal`)](https://github.com/yokai-php/batch-doctrine-dbal/blob/0.x/src/DoctrineDBALInsertWriter.php):
