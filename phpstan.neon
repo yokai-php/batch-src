@@ -9,6 +9,7 @@ parameters:
     - src/batch-doctrine-dbal/src/
     - src/batch-doctrine-orm/src/
     - src/batch-doctrine-persistence/src/
+    - src/batch-league-flysystem/src/
     - src/batch-symfony-console/src/
     - src/batch-symfony-framework/src/
     - src/batch-symfony-messenger/src/
