@@ -25,6 +25,7 @@ composer require yokai/batch-symfony-messenger
 This package provides:
 
 - a [job launcher](docs/job-launcher.md) that uses messages to launch jobs
+- a [writer](docs/dispatch-each-item-writer.md) that will write each item as a message
 
 
 ## Contribution
