@@ -39,4 +39,3 @@ final class LaunchJobForItemsBatchWriter implements ItemWriterInterface, JobExec
         );
     }
 }
-
