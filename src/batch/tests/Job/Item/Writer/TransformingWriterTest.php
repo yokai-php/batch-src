@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Yokai\Batch\Tests\Job\Item\Writer;
 
 use PHPUnit\Framework\TestCase;
+use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\Job\Item\Exception\SkipItemException;
 use Yokai\Batch\Job\Item\Processor\CallbackProcessor;
+use Yokai\Batch\Job\Item\Processor\NullProcessor;
 use Yokai\Batch\Job\Item\Writer\TransformingWriter;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\Test\Job\Item\Processor\TestDebugProcessor;
@@ -65,5 +67,18 @@ class TransformingWriterTest extends TestCase
         self::assertStringContainsString('Skipping item in writer transformation 0.', (string)$execution->getLogs());
         self::assertStringContainsString('Skipping item in writer transformation 1.', (string)$execution->getLogs());
         self::assertStringContainsString('Skipping item in writer transformation 2.', (string)$execution->getLogs());
+    }
+
+    public function testInvalidIndexType(): void
+    {
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage('Expecting argument to be string|int, but got null.');
+
+        $writer = new TransformingWriter(new NullProcessor(), new InMemoryWriter());
+        $generator = function () {
+            yield null => null;
+        };
+
+        $writer->write($generator());
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Job\Item\Writer;
 
+use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\Job\Item\ElementConfiguratorTrait;
 use Yokai\Batch\Job\Item\Exception\SkipItemException;
 use Yokai\Batch\Job\Item\FlushableInterface;
@@ -38,6 +39,10 @@ final class TransformingWriter implements
         $transformedItems = [];
 
         foreach ($items as $index => $item) {
+            if (!\is_string($index) && !\is_int($index)) {
+                throw UnexpectedValueException::type('string|int', $index);
+            }
+
             try {
                 $transformedItems[] = $this->processor->process($item);
             } catch (SkipItemException $exception) {
