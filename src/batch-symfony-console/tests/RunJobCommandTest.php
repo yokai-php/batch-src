@@ -8,6 +8,7 @@ use JsonException;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -29,10 +30,13 @@ class RunJobCommandTest extends TestCase
 
     private const JOBNAME = 'testing';
 
+    private JobInterface|ObjectProphecy $job;
+    private JobExecutionAccessor $accessor;
+    private JobExecutor $executor;
+
     protected function setUp(): void
     {
         $this->job = $this->prophesize(JobInterface::class);
-        $this->dispatcher = $this->prophesize(EventDispatcherInterface::class);
 
         $this->accessor = new JobExecutionAccessor(
             new JobExecutionFactory(new UniqidJobExecutionIdGenerator()),
@@ -41,22 +45,8 @@ class RunJobCommandTest extends TestCase
         $this->executor = new JobExecutor(
             JobRegistry::fromJobArray([self::JOBNAME => $this->job->reveal()]),
             new InMemoryJobExecutionStorage(),
-            $this->dispatcher->reveal()
+            null
         );
-    }
-
-    private function execute(string $configuration = null, int $verbosity = OutputInterface::VERBOSITY_NORMAL): array
-    {
-        $options = ['verbosity' => $verbosity];
-        $input = ['job' => self::JOBNAME];
-        if ($configuration !== null) {
-            $input['configuration'] = $configuration;
-        }
-
-        $tester = new CommandTester(new RunJobCommand($this->accessor, $this->executor));
-        $tester->execute($input, $options);
-
-        return [$tester->getStatusCode(), $tester->getDisplay()];
     }
 
     public function testRunWithMalformedConfiguration(): void
@@ -163,5 +153,19 @@ class RunJobCommandTest extends TestCase
         yield 'verbose' => [OutputInterface::VERBOSITY_VERBOSE];
         yield 'very verbose' => [OutputInterface::VERBOSITY_VERY_VERBOSE];
         yield 'debug' => [OutputInterface::VERBOSITY_DEBUG];
+    }
+
+    private function execute(string $configuration = null, int $verbosity = OutputInterface::VERBOSITY_NORMAL): array
+    {
+        $options = ['verbosity' => $verbosity];
+        $input = ['job' => self::JOBNAME];
+        if ($configuration !== null) {
+            $input['configuration'] = $configuration;
+        }
+
+        $tester = new CommandTester(new RunJobCommand($this->accessor, $this->executor));
+        $tester->execute($input, $options);
+
+        return [$tester->getStatusCode(), $tester->getDisplay()];
     }
 }
