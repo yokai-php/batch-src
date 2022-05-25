@@ -34,12 +34,10 @@ final class EntityReader implements ItemReaderInterface
             );
         }
 
-        $query = $manager->createQueryBuilder()
+        yield from $manager->createQueryBuilder()
             ->select('e')
-            ->from($this->class, 'e');
-
-        foreach ($query->getQuery()->toIterable() as [$entity]) {
-            yield $entity;
-        }
+            ->from($this->class, 'e')
+            ->getQuery()
+            ->toIterable();
     }
 }

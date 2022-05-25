@@ -10,6 +10,7 @@ use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\Persistence\ConnectionRegistry;
 use PHPUnit\Framework\TestCase;
+use Yokai\Batch\Tests\Bridge\Doctrine\DBAL\Dummy\SingleConnectionRegistry;
 
 abstract class DoctrineDBALTestCase extends TestCase
 {
@@ -19,12 +20,7 @@ abstract class DoctrineDBALTestCase extends TestCase
     protected function setUp(): void
     {
         $this->connection = DriverManager::getConnection(['url' => \getenv('DATABASE_URL')]);
-        $this->doctrine = $this->createMock(ConnectionRegistry::class);
-        $this->doctrine->method('getDefaultConnectionName')
-            ->willReturn('default');
-        $this->doctrine->method('getConnection')
-            ->with('default')
-            ->willReturn($this->connection);
+        $this->doctrine = new SingleConnectionRegistry($this->connection);
     }
 
     protected function createTable(string $table, array $columns): void
