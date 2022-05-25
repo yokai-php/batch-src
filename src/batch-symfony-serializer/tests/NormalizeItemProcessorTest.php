@@ -8,42 +8,22 @@ use DateTime;
 use DateTimeImmutable;
 use Generator;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Serializer\Exception\BadMethodCallException;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Yokai\Batch\Bridge\Symfony\Serializer\NormalizeItemProcessor;
 use Yokai\Batch\Job\Item\Exception\SkipItemException;
 use Yokai\Batch\Job\Item\Exception\SkipItemOnError;
+use Yokai\Batch\Tests\Bridge\Symfony\Serializer\Dummy\DummyNormalizer;
+use Yokai\Batch\Tests\Bridge\Symfony\Serializer\Dummy\FailingNormalizer;
 
 final class NormalizeItemProcessorTest extends TestCase
 {
-    use ProphecyTrait;
-
-    /**
-     * @var ObjectProphecy|NormalizerInterface
-     */
-    private $normalizer;
-
-    protected function setUp(): void
-    {
-        $this->normalizer = $this->prophesize(NormalizerInterface::class);
-    }
-
     /**
      * @dataProvider sets
      */
     public function testProcess(?string $format, array $context, $item, $expected): void
     {
-        $this->normalizer->supportsNormalization($item, $format)
-            ->shouldBeCalled()
-            ->willReturn(true);
-        $this->normalizer->normalize($item, $format, $context)
-            ->shouldBeCalled()
-            ->willReturn($expected);
-
-        $processor = new NormalizeItemProcessor($this->normalizer->reveal(), $format, $context);
+        $normalizer = new DummyNormalizer(true, $expected);
+        $processor = new NormalizeItemProcessor($normalizer, $format, $context);
 
         self::assertSame($expected, $processor->process($item));
     }
@@ -53,13 +33,8 @@ final class NormalizeItemProcessorTest extends TestCase
      */
     public function testUnsupported(?string $format, array $context, $item): void
     {
-        $this->normalizer->supportsNormalization($item, $format)
-            ->shouldBeCalled()
-            ->willReturn(false);
-        $this->normalizer->normalize(Argument::cetera())
-            ->shouldNotBeCalled();
-
-        $processor = new NormalizeItemProcessor($this->normalizer->reveal(), $format, $context);
+        $normalizer = new DummyNormalizer(false, null);
+        $processor = new NormalizeItemProcessor($normalizer, $format, $context);
 
         $exception = null;
         try {
@@ -80,14 +55,8 @@ final class NormalizeItemProcessorTest extends TestCase
      */
     public function testException(?string $format, array $context, $item): void
     {
-        $this->normalizer->supportsNormalization($item, $format)
-            ->shouldBeCalled()
-            ->willReturn(true);
-        $this->normalizer->normalize($item, $format, $context)
-            ->shouldBeCalled()
-            ->willThrow($exceptionThrown = new BadMethodCallException());
-
-        $processor = new NormalizeItemProcessor($this->normalizer->reveal(), $format, $context);
+        $normalizer = new FailingNormalizer($exceptionThrown = new BadMethodCallException());
+        $processor = new NormalizeItemProcessor($normalizer, $format, $context);
 
         $exception = null;
         try {
