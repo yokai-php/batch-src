@@ -13,17 +13,18 @@ The core repository [`yokai/batch`](https://github.com/yokai-php/batch) : contai
 
 Some bridges to popular packages :
 
-| Bridge with                                                                           |                                                                   |
-| ------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| [`box/spout`](https://github.com/yokai-php/batch-box-spout)                           | Read/Write from/to CSV/ODS/XLSX                                   |
-| [`doctrine/dbal`](https://github.com/yokai-php/batch-doctrine-dbal)                   | Read/Write from/to SQL databases                                  |
-| [`doctrine/orm`](https://github.com/yokai-php/batch-doctrine-orm)                     | Read from Doctrine ORM entities                                   |
-| [`doctrine/persistence`](https://github.com/yokai-php/batch-doctrine-persistence)     | Write to Doctrine ORM/ODM objects                                 |
-| [`symfony/console`](https://github.com/yokai-php/batch-symfony-console)               | Add command to trigger jobs and async job launcher via command    |
-| [`symfony/framework-bundle`](https://github.com/yokai-php/batch-symfony-framework)    | Bundle to integrate with Symfony framework                        |
-| [`symfony/messenger`](https://github.com/yokai-php/batch-symfony-serializer)          | Trigger jobs using message dispatch                               |
-| [`symfony/serializer`](https://github.com/yokai-php/batch-symfony-serializer)         | Process items using (de)normalization                             |
-| [`symfony/validator`](https://github.com/yokai-php/batch-symfony-validator)           | Skip invalid items during process                                 |
+| Bridge with                                                                        |                                                                |
+|------------------------------------------------------------------------------------|----------------------------------------------------------------|
+| [`box/spout`](https://github.com/yokai-php/batch-box-spout)                        | Read/Write from/to CSV/ODS/XLSX                                |
+| [`doctrine/dbal`](https://github.com/yokai-php/batch-doctrine-dbal)                | Read/Write from/to SQL databases                               |
+| [`doctrine/orm`](https://github.com/yokai-php/batch-doctrine-orm)                  | Read from Doctrine ORM entities                                |
+| [`doctrine/persistence`](https://github.com/yokai-php/batch-doctrine-persistence)  | Write to Doctrine ORM/ODM objects                              |
+| [`league/flysystem`](https://github.com/yokai-php/batch-league-flysystem)          | Copy/Move files in a job / Trigger job when file found         |
+| [`symfony/console`](https://github.com/yokai-php/batch-symfony-console)            | Add command to trigger jobs and async job launcher via command |
+| [`symfony/framework-bundle`](https://github.com/yokai-php/batch-symfony-framework) | Bundle to integrate with Symfony framework                     |
+| [`symfony/messenger`](https://github.com/yokai-php/batch-symfony-serializer)       | Trigger jobs using message dispatch                            |
+| [`symfony/serializer`](https://github.com/yokai-php/batch-symfony-serializer)      | Process items using (de)normalization                          |
+| [`symfony/validator`](https://github.com/yokai-php/batch-symfony-validator)        | Skip invalid items during process                              |
 
 And some special packages :
 - [`yokai/batch-symfony-pack`](https://github.com/yokai-php/batch-symfony-pack): Minimal pack for Symfony Framework
