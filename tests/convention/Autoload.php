@@ -69,5 +69,4 @@ final class Autoload
     {
         return \basename($filename, '.php');
     }
-
 }
