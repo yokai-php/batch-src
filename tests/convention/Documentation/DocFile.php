@@ -15,9 +15,9 @@ final class DocFile
         public string $package,
         public SplFileInfo $file,
         /**
-         * @var iterable<DocLink>
+         * @var array<DocLink>
          */
-        public iterable $links,
+        public array $links,
     ) {
     }
 }

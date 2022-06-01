@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Sources\Tests\Convention\Documentation;
 
+use Generator;
 use SplFileInfo;
 use Symfony\Component\Finder\Finder;
 
@@ -44,14 +45,15 @@ final class Markdown
     private static function createDocFile(SplFileInfo $file): DocFile
     {
         $package = self::getPackageFromFile($file);
+        $links = \iterator_to_array(self::listLinksInFile($file->getRealPath(), $package));
 
-        return new DocFile($package, $file, self::listLinksInFile($file->getRealPath(), $package));
+        return new DocFile($package, $file, $links);
     }
 
     /**
-     * @return iterable<DocLink>
+     * @return Generator<DocLink>
      */
-    private static function listLinksInFile(string $path, string $filePackage): iterable
+    private static function listLinksInFile(string $path, string $filePackage): Generator
     {
         \preg_match_all(self::MARKDOWN_LINKS_REGEX, \file_get_contents($path), $fileLinks);
         foreach (\array_keys($fileLinks[0]) as $idx) {
