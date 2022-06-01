@@ -7,6 +7,10 @@
          colors="true"
          bootstrap="vendor/autoload.php"
 >
+    <php>
+        <env name="DATABASE_URL" value="sqlite:///:memory:"/>
+    </php>
+
     <testsuites>
         <testsuite name="Tests">
             <directory>./tests</directory>

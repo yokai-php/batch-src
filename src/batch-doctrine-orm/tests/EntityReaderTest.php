@@ -4,77 +4,55 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Tests\Bridge\Doctrine\ORM;
 
-use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\ORMSetup;
+use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\Persistence\ManagerRegistry;
+use Generator;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Yokai\Batch\Bridge\Doctrine\ORM\EntityReader;
 use Yokai\Batch\Exception\UnexpectedValueException;
+use Yokai\Batch\Tests\Bridge\Doctrine\ORM\Dummy\SingleManagerRegistry;
+use Yokai\Batch\Tests\Bridge\Doctrine\ORM\Entity\Unknown;
+use Yokai\Batch\Tests\Bridge\Doctrine\ORM\Entity\User;
 
 class EntityReaderTest extends TestCase
 {
-    use ProphecyTrait;
+    private EntityManager $manager;
+    private ManagerRegistry $doctrine;
 
-    private const ENTITY = 'App\Entity\User';
-
-    public function testRead()
+    protected function setUp(): void
     {
-        /** @var ObjectProphecy|AbstractQuery $query */
-        $query = $this->prophesize(AbstractQuery::class);
-        $query->toIterable()
-            ->shouldBeCalledTimes(1)
-            ->willReturn(
-                new \ArrayIterator([[$user1 = new User('1')], [$user2 = new User('2')], [$user3 = new User('3')]])
-            );
+        $config = ORMSetup::createAttributeMetadataConfiguration([__DIR__ . '/Entity'], true);
+        $this->manager = EntityManager::create(['url' => \getenv('DATABASE_URL')], $config);
+        $this->doctrine = new SingleManagerRegistry($this->manager);
 
-        $queryBuilder = $this->getMockBuilder(QueryBuilder::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $queryBuilder->expects($this->once())
-            ->method('select')
-            ->with('e')
-            ->will($this->returnSelf());
-        $queryBuilder->expects($this->once())
-            ->method('from')
-            ->with(self::ENTITY)
-            ->will($this->returnSelf());
-        $queryBuilder->expects($this->once())
-            ->method('getQuery')
-            ->will($this->returnValue($query->reveal()));
-
-        /** @var ObjectProphecy|EntityManager $manager */
-        $manager = $this->prophesize(EntityManager::class);
-        $manager->createQueryBuilder()
-            ->shouldBeCalledTimes(1)
-            ->willReturn($queryBuilder);
-
-        /** @var ObjectProphecy|ManagerRegistry $doctrine */
-        $doctrine = $this->prophesize(ManagerRegistry::class);
-        $doctrine->getManagerForClass(self::ENTITY)
-            ->shouldBeCalledTimes(1)
-            ->willReturn($manager->reveal());
-
-        $reader = new EntityReader($doctrine->reveal(), self::ENTITY);
-        $entities = $reader->read();
-
-        self::assertInstanceOf(\Generator::class, $entities);
-        self::assertSame([$user1, $user2, $user3], iterator_to_array($entities));
+        (new SchemaTool($this->manager))
+            ->createSchema($this->manager->getMetadataFactory()->getAllMetadata());
     }
 
-    public function testReadExceptionWithUnknownEntityClass()
+    public function testRead(): void
+    {
+        $this->manager->persist($forest = new User('Forest'));
+        $this->manager->persist($jenny = new User('Jenny'));
+        $this->manager->persist($bubba = new User('Bubba'));
+        $this->manager->flush();
+
+        $reader = new EntityReader($this->doctrine, User::class);
+        $entities = $reader->read();
+
+        self::assertInstanceOf(Generator::class, $entities);
+        self::assertSame([$forest, $jenny, $bubba], \iterator_to_array($entities));
+    }
+
+    public function testReadExceptionWithUnknownEntityClass(): void
     {
         $this->expectException(UnexpectedValueException::class);
 
-        /** @var ObjectProphecy|ManagerRegistry $doctrine */
-        $doctrine = $this->prophesize(ManagerRegistry::class);
-        $doctrine->getManagerForClass(self::ENTITY)
-            ->shouldBeCalledTimes(1)
-            ->willReturn(null);
+        $reader = new EntityReader($this->doctrine, Unknown::class);
+        $entities = $reader->read();
 
-        $reader = new EntityReader($doctrine->reveal(), self::ENTITY);
-        iterator_to_array($reader->read()); // the method is using a yield expression
+        self::assertInstanceOf(Generator::class, $entities);
+        \iterator_to_array($entities);
     }
 }

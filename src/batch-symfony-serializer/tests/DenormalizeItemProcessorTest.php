@@ -8,41 +8,22 @@ use DateTime;
 use DateTimeImmutable;
 use Generator;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
-use Symfony\Component\Serializer\Exception\ExceptionInterface;
-use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Exception\UnsupportedException;
 use Yokai\Batch\Bridge\Symfony\Serializer\DenormalizeItemProcessor;
 use Yokai\Batch\Job\Item\Exception\SkipItemException;
+use Yokai\Batch\Job\Item\Exception\SkipItemOnError;
+use Yokai\Batch\Tests\Bridge\Symfony\Serializer\Dummy\DummyNormalizer;
+use Yokai\Batch\Tests\Bridge\Symfony\Serializer\Dummy\FailingNormalizer;
 
 final class DenormalizeItemProcessorTest extends TestCase
 {
-    use ProphecyTrait;
-
-    /**
-     * @var ObjectProphecy|DenormalizerInterface
-     */
-    private $denormalizer;
-
-    protected function setUp(): void
-    {
-        $this->denormalizer = $this->prophesize(DenormalizerInterface::class);
-    }
-
     /**
      * @dataProvider sets
      */
     public function testProcess(string $type, ?string $format, array $context, $item, $expected): void
     {
-        $this->denormalizer->supportsDenormalization($item, $type, $format)
-            ->shouldBeCalled()
-            ->willReturn(true);
-        $this->denormalizer->denormalize($item, $type, $format, $context)
-            ->shouldBeCalled()
-            ->willReturn($expected);
-
-        $processor = new DenormalizeItemProcessor($this->denormalizer->reveal(), $type, $format, $context);
+        $denormalizer = new DummyNormalizer(true, $expected);
+        $processor = new DenormalizeItemProcessor($denormalizer, $type, $format, $context);
 
         self::assertSame($expected, $processor->process($item));
     }
@@ -52,17 +33,21 @@ final class DenormalizeItemProcessorTest extends TestCase
      */
     public function testUnsupported(string $type, ?string $format, array $context, $item): void
     {
-        $this->expectException(SkipItemException::class);
+        $denormalizer = new DummyNormalizer(false, null);
+        $processor = new DenormalizeItemProcessor($denormalizer, $type, $format, $context);
 
-        $this->denormalizer->supportsDenormalization($item, $type, $format)
-            ->shouldBeCalled()
-            ->willReturn(false);
-        $this->denormalizer->denormalize(Argument::cetera())
-            ->shouldNotBeCalled();
+        $exception = null;
+        try {
+            $processor->process($item);
+        } catch (SkipItemException $exception) {
+            // just capture the exception
+        }
 
-        $processor = new DenormalizeItemProcessor($this->denormalizer->reveal(), $type, $format, $context);
-
-        $processor->process($item);
+        self::assertNotNull($exception, 'Processor has thrown an exception');
+        $cause = $exception->getCause();
+        self::assertInstanceOf(SkipItemOnError::class, $cause);
+        /** @var SkipItemOnError $cause */
+        self::assertSame('Unable to denormalize item. Not supported.', $cause->getError()->getMessage());
     }
 
     /**
@@ -70,21 +55,21 @@ final class DenormalizeItemProcessorTest extends TestCase
      */
     public function testException(string $type, ?string $format, array $context, $item): void
     {
-        $this->expectException(SkipItemException::class);
+        $denormalizer = new FailingNormalizer($exceptionThrown = new UnsupportedException());
+        $processor = new DenormalizeItemProcessor($denormalizer, $type, $format, $context);
 
-        $this->denormalizer->supportsDenormalization($item, $type, $format)
-            ->shouldBeCalled()
-            ->willReturn(true);
-        $this->denormalizer->denormalize($item, $type, $format, $context)
-            ->shouldBeCalled()
-            ->willThrow(
-                new class extends \Exception implements ExceptionInterface {
-                }
-            );
+        $exception = null;
+        try {
+            $processor->process($item);
+        } catch (SkipItemException $exception) {
+            // just capture the exception
+        }
 
-        $processor = new DenormalizeItemProcessor($this->denormalizer->reveal(), $type, $format, $context);
-
-        $processor->process($item);
+        self::assertNotNull($exception, 'Processor has thrown an exception');
+        $cause = $exception->getCause();
+        self::assertInstanceOf(SkipItemOnError::class, $cause);
+        /** @var SkipItemOnError $cause */
+        self::assertSame($exceptionThrown, $cause->getError());
     }
 
     public function sets(): Generator
