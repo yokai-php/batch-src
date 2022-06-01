@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Yokai\Batch\Sources\Tests\Integration;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\Tools\SchemaTool;
-use Doctrine\ORM\Tools\Setup;
 use Doctrine\Persistence\ManagerRegistry;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -55,7 +55,7 @@ class ImportDevelopersXlsxToORMTest extends JobTestCase
     {
         $this->persisted = [];
 
-        $config = Setup::createAnnotationMetadataConfiguration([__DIR__ . '/Entity'], true, null, null, false);
+        $config = ORMSetup::createAnnotationMetadataConfiguration([__DIR__ . '/Entity'], true);
         $this->entityManager = EntityManager::create(['url' => getenv('DATABASE_URL')], $config);
 
         (new SchemaTool($this->entityManager))
