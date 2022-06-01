@@ -7,6 +7,11 @@ namespace Yokai\Batch\Sources\Tests\Convention\Documentation;
 use SplFileInfo;
 use Symfony\Component\Finder\Finder;
 
+/**
+ * This util class is a wrapper around Symfony's finder.
+ * It will search for markdown files considered as documentation.
+ * Every fetched files will be converted to a {@see DocFile}.
+ */
 final class Markdown
 {
     private const MARKDOWN_LINKS_REGEX = '/\[([^]]+)\]\(([^)]+)\)/';
@@ -15,6 +20,8 @@ final class Markdown
     private const ROOT_DIR = __DIR__ . '/../../..';
 
     /**
+     * List every known markdown documentation files in yokai batch packages.
+     *
      * @return iterable<DocFile>
      */
     public static function listFiles(): iterable
@@ -22,20 +29,31 @@ final class Markdown
         $files = Finder::create()->files()->in(self::ROOT_DIR . '/src/*/')->name('*.md');
 
         foreach ($files as $file) {
-            yield new DocFile(self::getPackageFromFile($file), $file);
+            yield self::createDocFile($file);
         }
     }
 
+    /**
+     * Convert a markdown documentation file to a {@see DocFile}.
+     */
     public static function getFile(string $path): DocFile
     {
-        $file = new SplFileInfo(self::ROOT_DIR . '/src/' . \ltrim($path, '/'));
-
-        return new DocFile(self::getPackageFromFile($file), $file);
+        return self::createDocFile(new SplFileInfo(self::ROOT_DIR . '/src/' . \ltrim($path, '/')));
     }
 
-    public static function listLinksInFile(DocFile $file): iterable
+    private static function createDocFile(SplFileInfo $file): DocFile
     {
-        \preg_match_all(self::MARKDOWN_LINKS_REGEX, \file_get_contents($file->file->getRealPath()), $fileLinks);
+        $package = self::getPackageFromFile($file);
+
+        return new DocFile($package, $file, self::listLinksInFile($file->getRealPath(), $package));
+    }
+
+    /**
+     * @return iterable<DocLink>
+     */
+    private static function listLinksInFile(string $path, string $filePackage): iterable
+    {
+        \preg_match_all(self::MARKDOWN_LINKS_REGEX, \file_get_contents($path), $fileLinks);
         foreach (\array_keys($fileLinks[0]) as $idx) {
             $label = $fileLinks[1][$idx];
             $uri = $fileLinks[2][$idx];
@@ -50,25 +68,25 @@ final class Markdown
                 }
                 [, $package, $branch, $linkPath] = $internalLink;
             } else {
-                $package = $file->package;
+                $package = $filePackage;
                 $branch = self::DEFAULT_BRANCH;
                 $linkPath = $uri;
             }
 
             $linkFile = self::getFileFromMembers($package, $linkPath);
 
-            yield new DocLink($file, $label, $package, $uri, $linkFile, $branch, $absolute);
+            yield new DocLink($label, $package, $uri, $linkFile, $branch, $absolute);
         }
     }
 
-    public static function getPackageFromFile(SplFileInfo $file): string
+    private static function getPackageFromFile(SplFileInfo $file): string
     {
         $relativePath = \str_replace(\realpath(self::ROOT_DIR) . '/src/', '', $file->getRealPath());
 
         return \dirname($relativePath);
     }
 
-    public static function getFileFromMembers(string $package, string $file): SplFileInfo
+    private static function getFileFromMembers(string $package, string $file): SplFileInfo
     {
         return new SplFileInfo(self::ROOT_DIR . '/src/' . $package . '/' . \ltrim($file, '/'));
     }

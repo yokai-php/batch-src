@@ -28,7 +28,8 @@ final class MarkdownLinksTest extends TestCase
     {
         /** @var DocFile $file */
         foreach (Markdown::listFiles() as $file) {
-            foreach (Markdown::listLinksInFile($file) as $link) {
+            /** @var DocLink $link */
+            foreach ($file->links as $link) {
                 if ($link->package !== $file->package) {
                     self::assertTrue($link->absolute, 'When pointing to another package, links must be absolute.');
                 }
@@ -76,7 +77,8 @@ final class MarkdownLinksTest extends TestCase
         // Find all links in these files that points to file that implement these interfaces
         foreach ($rules as $filepath => $interface) {
             $file = Markdown::getFile($filepath);
-            foreach (Markdown::listLinksInFile($file) as $link) {
+            /** @var DocLink $link */
+            foreach ($file->links as $link) {
                 if (!\str_ends_with($link->uri, '.php')) {
                     continue; // it's not a php file the link is pointing to
                 }
