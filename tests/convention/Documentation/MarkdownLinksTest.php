@@ -12,6 +12,8 @@ use Yokai\Batch\Job\JobInterface;
 use Yokai\Batch\Job\Parameters\JobParameterAccessorInterface;
 use Yokai\Batch\Launcher\JobLauncherInterface;
 use Yokai\Batch\Sources\Tests\Convention\Autoload;
+use Yokai\Batch\Sources\Tests\Convention\Package;
+use Yokai\Batch\Sources\Tests\Convention\Packages;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
 
 /**
@@ -66,8 +68,9 @@ final class MarkdownLinksTest extends TestCase
         $actualClasses = [];
 
         // Find all classes in libraries that implement this interface
-        foreach (Autoload::listPackageDirs() as $dir) {
-            foreach (Autoload::listAllFQCN($dir) as $class) {
+        /** @var Package $package */
+        foreach (Packages::listYokaiPackages() as $package) {
+            foreach (Autoload::listAllFQCN($package->sources()) as $class) {
                 if ($class !== $interface && \is_a($class, $interface, true)) {
                     $expectedClasses[] = $class;
                 }
