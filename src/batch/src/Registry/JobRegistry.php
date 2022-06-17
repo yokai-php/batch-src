@@ -4,10 +4,17 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Registry;
 
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Yokai\Batch\Exception\UndefinedJobException;
 use Yokai\Batch\Job\JobInterface;
 
+/**
+ * This class is a wrapper around a {@see ContainerInterface},
+ * responsible for accessing jobs in a typed maner.
+ * It can be registered as a global registry,
+ * but it can be also created with a subset of jobs if required.
+ */
 final class JobRegistry
 {
     public function __construct(
@@ -28,12 +35,12 @@ final class JobRegistry
      */
     public function get(string $name): JobInterface
     {
-        if (!$this->jobs->has($name)) {
-            throw new UndefinedJobException($name);
+        try {
+            /** @var JobInterface $job */
+            $job = $this->jobs->get($name);
+        } catch (ContainerExceptionInterface $exception) {
+            throw new UndefinedJobException($name, $exception);
         }
-
-        /** @var JobInterface $job */
-        $job = $this->jobs->get($name);
 
         return $job;
     }

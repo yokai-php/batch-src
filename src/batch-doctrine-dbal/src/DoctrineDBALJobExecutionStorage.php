@@ -17,9 +17,14 @@ use Yokai\Batch\Exception\CannotStoreJobExecutionException;
 use Yokai\Batch\Exception\JobExecutionNotFoundException;
 use Yokai\Batch\Exception\RuntimeException;
 use Yokai\Batch\JobExecution;
+use Yokai\Batch\Storage\JobExecutionStorageInterface;
 use Yokai\Batch\Storage\Query;
 use Yokai\Batch\Storage\QueryableJobExecutionStorageInterface;
 
+/**
+ * This {@see JobExecutionStorageInterface} will store
+ * {@see JobExecution} in an SQL database using doctrine/dbal.
+ */
 final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStorageInterface
 {
     private const DEFAULT_OPTIONS = [

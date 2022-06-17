@@ -15,6 +15,10 @@ use Yokai\Batch\JobExecution;
 use Yokai\Batch\JobParameters;
 use Yokai\Batch\Summary;
 
+/**
+ * This base contains all "runtime" interfaces handled by the lib.
+ * It provides convenient assertion methods to ensure your component was used correctly.
+ */
 abstract class TestDebugComponent implements
     InitializableInterface,
     FlushableInterface,

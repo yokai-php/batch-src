@@ -8,6 +8,9 @@ use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
+/**
+ * Configuration for yokai/batch Symfony Bundle.
+ */
 final class Configuration implements ConfigurationInterface
 {
     /**

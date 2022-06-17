@@ -7,6 +7,9 @@ namespace Yokai\Batch\Bridge\Symfony\Console;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Process\PhpExecutableFinder;
 
+/**
+ * Utility class that knows how to run command asynchronously.
+ */
 class CommandRunner
 {
     private string $consolePath;

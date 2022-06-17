@@ -20,6 +20,9 @@ use Yokai\Batch\Storage\JobExecutionStorageInterface;
 use Yokai\Batch\Storage\ListableJobExecutionStorageInterface;
 use Yokai\Batch\Storage\QueryableJobExecutionStorageInterface;
 
+/**
+ * Dependency injection extension for yokai/batch Symfony Bundle.
+ */
 final class YokaiBatchExtension extends Extension
 {
     /**

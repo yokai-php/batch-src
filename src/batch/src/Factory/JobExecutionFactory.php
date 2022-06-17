@@ -7,6 +7,9 @@ namespace Yokai\Batch\Factory;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\JobParameters;
 
+/**
+ * Create a {@see JobExecution} from scalar members.
+ */
 final class JobExecutionFactory
 {
     public function __construct(
