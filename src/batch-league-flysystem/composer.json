@@ -1,5 +1,5 @@
 {
-    "name": "yokai/batch-flysystem",
+    "name": "yokai/batch-league-flysystem",
     "description": "league/flysystem bridge for yokai/batch",
     "keywords": ["batch", "job", "filesystem", "flysystem"],
     "type": "library",
