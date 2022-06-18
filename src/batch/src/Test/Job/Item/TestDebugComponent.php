@@ -40,6 +40,10 @@ abstract class TestDebugComponent implements
     ) {
     }
 
+    /**
+     * @internal
+     * Utility method to simulate configuration from a {@see JobExecution}.
+     */
     public function configure(JobExecution $jobExecution): void
     {
         $this->setJobExecution($jobExecution);
@@ -63,6 +67,12 @@ abstract class TestDebugComponent implements
         $this->summaryProvided = true;
     }
 
+    /**
+     * Assert that component was provided with *Aware interfaces:
+     * - {@see JobExecutionAwareInterface}
+     * - {@see JobParametersAwareInterface}
+     * - {@see SummaryAwareInterface}
+     */
     public function assertWasConfigured(): void
     {
         Assert::assertTrue($this->jobExecutionProvided, 'Job execution was configured');
@@ -70,6 +80,12 @@ abstract class TestDebugComponent implements
         Assert::assertTrue($this->summaryProvided, 'Summary was configured');
     }
 
+    /**
+     * Assert that component was not provided with *Aware interfaces:
+     * - {@see JobExecutionAwareInterface}
+     * - {@see JobParametersAwareInterface}
+     * - {@see SummaryAwareInterface}
+     */
     public function assertWasNotConfigured(): void
     {
         Assert::assertFalse($this->jobExecutionProvided, 'Job execution was not configured');
@@ -90,6 +106,10 @@ abstract class TestDebugComponent implements
         $this->flushElement($this->decorated);
     }
 
+    /**
+     * Assert that component was used (depends on extending class).
+     * Also ensure that component was initialized & flushed.
+     */
     public function assertWasUsed(): void
     {
         Assert::assertTrue($this->initialized, 'Element was initialized');
@@ -97,6 +117,10 @@ abstract class TestDebugComponent implements
         Assert::assertTrue($this->flushed, 'Element was flushed');
     }
 
+    /**
+     * Assert that component was not used (depends on extending class).
+     * Also ensure that component was (or was not) initialized & flushed.
+     */
     public function assertWasNotUsed(bool $initialized = false, bool $flushed = false): void
     {
         Assert::assertSame(

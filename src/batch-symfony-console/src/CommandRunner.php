@@ -28,6 +28,8 @@ class CommandRunner
     }
 
     /**
+     * Run a command asynchronously.
+     *
      * @phpstan-param array<string, mixed> $arguments
      */
     public function runAsync(string $commandName, string $logFilename, array $arguments = []): void

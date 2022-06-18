@@ -23,6 +23,8 @@ final class JobRegistry
     }
 
     /**
+     * Static constructor with indexed array of jobs.
+     *
      * @param array<string, JobInterface> $jobs
      */
     public static function fromJobArray(array $jobs): JobRegistry
@@ -31,7 +33,9 @@ final class JobRegistry
     }
 
     /**
-     * @throws UndefinedJobException
+     * Get a job from its name.
+     *
+     * @throws UndefinedJobException if the job is not defined
      */
     public function get(string $name): JobInterface
     {

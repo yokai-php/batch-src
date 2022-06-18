@@ -27,6 +27,8 @@ final class JobExecutionRowNormalizer
     }
 
     /**
+     * Convert a {@see JobExecution} object to a row data array.
+     *
      * @phpstan-return array<string, mixed>
      */
     public function toRow(JobExecution $jobExecution): array
@@ -47,6 +49,8 @@ final class JobExecutionRowNormalizer
     }
 
     /**
+     * Convert a row data array to a {@see JobExecution} object.
+     *
      * @phpstan-param array<string, mixed> $data
      */
     public function fromRow(array $data, JobExecution $parent = null): JobExecution
@@ -97,7 +101,7 @@ final class JobExecutionRowNormalizer
     /**
      * @phpstan-return array<string, mixed>
      */
-    public function toChildRow(JobExecution $jobExecution): array
+    private function toChildRow(JobExecution $jobExecution): array
     {
         return [
             'job_name' => $jobExecution->getJobName(),

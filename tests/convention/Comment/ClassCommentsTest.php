@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Sources\Tests\Convention\Comment;
 
-use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use Yokai\Batch\Sources\Tests\Convention\Autoload;
 use Yokai\Batch\Sources\Tests\Convention\Package;
 use Yokai\Batch\Sources\Tests\Convention\Packages;
 
-final class ClassCommentsTest extends TestCase
+final class ClassCommentsTest extends CommentsTestCase
 {
     /**
      * @dataProvider classes
@@ -28,13 +27,7 @@ final class ClassCommentsTest extends TestCase
      */
     public function testAllSeeDocAreSurroundedWithBrackets(ReflectionClass $class): void
     {
-        if (!\preg_match('/.@see [^ }]+./', (string)$class->getDocComment(), $matches)) {
-            self::assertTrue(true);
-            return;
-        }
-
-        self::assertStringStartsWith('{', $matches[0]);
-        self::assertStringEndsWith('}', $matches[0]);
+        self::assertAllSeeDocAreSurroundedWithBrackets((string)$class->getDocComment());
     }
 
     public function classes(): iterable

@@ -51,6 +51,9 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
         $this->connection = $connection;
     }
 
+    /**
+     * Create required table for this storage.
+     */
     public function createSchema(): void
     {
         $assetFilter = $this->connection->getConfiguration()->getSchemaAssetsFilter();

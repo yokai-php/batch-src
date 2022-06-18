@@ -21,6 +21,8 @@ final class WriteToSheetItem
     }
 
     /**
+     * Static constructor from array data.
+     *
      * @param array<int|string, mixed> $item
      */
     public static function array(string $sheet, array $item, Style $style = null): self
@@ -28,6 +30,9 @@ final class WriteToSheetItem
         return new self($sheet, WriterEntityFactory::createRowFromArray($item, $style));
     }
 
+    /**
+     * Static constructor from {@see Row} object.
+     */
     public static function row(string $sheet, Row $item): self
     {
         return new self($sheet, $item);
