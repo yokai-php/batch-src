@@ -13,6 +13,7 @@
     "require": {
         "php": "^8.0",
         "doctrine/orm": "^2.8",
+        "doctrine/persistence": "^2.0",
         "yokai/batch": "^0.4.0"
     },
     "autoload": {

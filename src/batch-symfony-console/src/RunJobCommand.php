@@ -13,8 +13,12 @@ use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\Job\JobExecutionAccessor;
 use Yokai\Batch\Job\JobExecutor;
+use Yokai\Batch\Job\JobInterface;
 use Yokai\Batch\JobExecution;
 
+/**
+ * Execute any {@see JobInterface} within your CLI.
+ */
 final class RunJobCommand extends Command
 {
     protected static $defaultName = 'yokai:batch:run';

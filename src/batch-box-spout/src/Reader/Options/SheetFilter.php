@@ -55,6 +55,8 @@ final class SheetFilter
     }
 
     /**
+     * Iterate over valid sheets for the provided filter.
+     *
      * @return Generator&SheetInterface[]
      * @phpstan-return Generator<SheetInterface>
      * @internal

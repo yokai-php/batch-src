@@ -75,6 +75,8 @@ final class HeaderStrategy
     }
 
     /**
+     * Build the associative item, a combination of headers and values.
+     *
      * @throws InvalidRowSizeException
      *
      * @phpstan-param array<int, string> $row

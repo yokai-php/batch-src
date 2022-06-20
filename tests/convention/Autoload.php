@@ -36,20 +36,9 @@ final class Autoload
     }
 
     /**
-     * List all dirs where yokai batch packages are living.
-     *
      * @return iterable<string>
      */
-    public static function listPackageDirs(): iterable
-    {
-        $composer = \json_decode(\file_get_contents(__DIR__ . '/../../composer.json'), true);
-
-        foreach ($composer['autoload']['psr-4'] as $dir) {
-            yield __DIR__ . '/../../' . $dir;
-        }
-    }
-
-    private static function listFiles(string $path): iterable
+    public static function listFiles(string $path): iterable
     {
         $files = Finder::create()->files()->in($path)->name('*.php');
         /** @var SplFileInfo $file */
@@ -62,7 +51,7 @@ final class Autoload
     {
         \preg_match('/namespace (.*);/', \file_get_contents($filename), $namespace);
 
-        return $namespace[1] ?? throw new \Exception('No namespace');
+        return $namespace[1] ?? throw new \Exception('No namespace in ' . $filename);
     }
 
     private static function getClassname(string $filename): string

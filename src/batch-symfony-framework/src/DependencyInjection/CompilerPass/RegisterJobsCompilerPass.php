@@ -10,7 +10,12 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Yokai\Batch\Bridge\Symfony\Framework\JobWithStaticNameInterface;
+use Yokai\Batch\Job\JobInterface;
+use Yokai\Batch\Registry\JobRegistry;
 
+/**
+ * Find tagged {@see JobInterface} and register these in {@see JobRegistry}.
+ */
 final class RegisterJobsCompilerPass implements CompilerPassInterface
 {
     /**

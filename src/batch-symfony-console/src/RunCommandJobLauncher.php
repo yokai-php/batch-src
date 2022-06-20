@@ -13,7 +13,7 @@ use Yokai\Batch\Storage\JobExecutionStorageInterface;
 /**
  * This {@see JobLauncherInterface} will execute job via an asynchronous symfony command.
  *
- * Example, if you call {@see RunCommandJobLauncher::launch('import', ['foo'=>'bar'])},
+ * Example, if you call RunCommandJobLauncher::launch('import', ['foo'=>'bar']),
  * this command will run (with absolute pathes) :
  *
  *      php bin/console yokai:batch:run import '{"foo":"bar"}' >> var/log/batch_execute.log 2>&1 &

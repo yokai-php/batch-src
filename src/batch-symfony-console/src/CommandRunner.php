@@ -7,6 +7,9 @@ namespace Yokai\Batch\Bridge\Symfony\Console;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Process\PhpExecutableFinder;
 
+/**
+ * Utility class that knows how to run command asynchronously.
+ */
 class CommandRunner
 {
     private string $consolePath;
@@ -25,6 +28,8 @@ class CommandRunner
     }
 
     /**
+     * Run a command asynchronously.
+     *
      * @phpstan-param array<string, mixed> $arguments
      */
     public function runAsync(string $commandName, string $logFilename, array $arguments = []): void
