@@ -4,44 +4,15 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Tests\Bridge\Doctrine\Persistence;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\ORMSetup;
-use Doctrine\ORM\Tools\SchemaTool;
-use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\Persistence\ObjectManager;
-use PHPUnit\Framework\TestCase;
 use Yokai\Batch\Bridge\Doctrine\Persistence\ObjectWriter;
 use Yokai\Batch\Exception\InvalidArgumentException;
-use Yokai\Batch\Tests\Bridge\Doctrine\Persistence\Dummy\SimpleManagerRegistry;
 use Yokai\Batch\Tests\Bridge\Doctrine\Persistence\Entity\Auth\Group;
 use Yokai\Batch\Tests\Bridge\Doctrine\Persistence\Entity\Auth\User;
 use Yokai\Batch\Tests\Bridge\Doctrine\Persistence\Entity\Shop\Product;
 use Yokai\Batch\Tests\Bridge\Doctrine\Persistence\Entity\Unknown;
 
-class ObjectWriterTest extends TestCase
+class ObjectWriterTest extends DoctrinePersistenceTestCase
 {
-    private ObjectManager $authManager;
-    private ObjectManager $shopManager;
-    private ManagerRegistry $doctrine;
-
-    protected function setUp(): void
-    {
-        // It is important to have both attribute & annotation configurations because
-        // otherwise Doctrine do not seem to be able to find which manager is responsible
-        // to manager an entity or an other.
-        $authConfig = ORMSetup::createAttributeMetadataConfiguration([__DIR__ . '/Entity/Auth'], true);
-        $this->authManager = EntityManager::create(['url' => \getenv('DATABASE_URL')], $authConfig);
-        $shopConfig = ORMSetup::createAnnotationMetadataConfiguration([__DIR__ . '/Entity/Shop'], true);
-        $this->shopManager = EntityManager::create(['url' => \getenv('DATABASE_URL')], $shopConfig);
-        $this->doctrine = new SimpleManagerRegistry(['auth' => $this->authManager, 'shop' => $this->shopManager]);
-
-        /** @var EntityManager $manager */
-        foreach ($this->doctrine->getManagers() as $manager) {
-            (new SchemaTool($manager))
-                ->createSchema($manager->getMetadataFactory()->getAllMetadata());
-        }
-    }
-
     public function testWriteSingleManager(): void
     {
         $userCreated = new User('initialized');
