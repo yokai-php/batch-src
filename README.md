@@ -22,7 +22,7 @@ Some bridges to popular packages :
 | [`league/flysystem`](https://github.com/yokai-php/batch-league-flysystem)          | Copy/Move files in a job / Trigger job when file found         |
 | [`symfony/console`](https://github.com/yokai-php/batch-symfony-console)            | Add command to trigger jobs and async job launcher via command |
 | [`symfony/framework-bundle`](https://github.com/yokai-php/batch-symfony-framework) | Bundle to integrate with Symfony framework                     |
-| [`symfony/messenger`](https://github.com/yokai-php/batch-symfony-serializer)       | Trigger jobs using message dispatch                            |
+| [`symfony/messenger`](https://github.com/yokai-php/batch-symfony-messenger)        | Trigger jobs using message dispatch                            |
 | [`symfony/serializer`](https://github.com/yokai-php/batch-symfony-serializer)      | Process items using (de)normalization                          |
 | [`symfony/validator`](https://github.com/yokai-php/batch-symfony-validator)        | Skip invalid items during process                              |
 
