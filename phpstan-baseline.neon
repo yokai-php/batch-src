@@ -1,11 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
-			count: 2
-			path: src/batch-doctrine-dbal/src/JobExecutionRowNormalizer.php
-
-		-
 			message: "#^Parameter \\#1 \\$array of method Yokai\\\\Batch\\\\Bridge\\\\Doctrine\\\\DBAL\\\\JobExecutionRowNormalizer\\:\\:failureFromArray\\(\\) expects array\\<string, mixed\\>, mixed given\\.$#"
 			count: 1
 			path: src/batch-doctrine-dbal/src/JobExecutionRowNormalizer.php
@@ -46,7 +41,12 @@ parameters:
 			path: src/batch-doctrine-dbal/src/JobExecutionRowNormalizer.php
 
 		-
-			message: "#^Parameter \\#1 \\$parameters of class Yokai\\\\Batch\\\\JobParameters constructor expects array\\<string, mixed\\>, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$parameters of class Yokai\\\\Batch\\\\JobParameters constructor expects array\\<string, mixed\\>, array\\<int\\|string, mixed\\> given\\.$#"
+			count: 1
+			path: src/batch-doctrine-dbal/src/JobExecutionRowNormalizer.php
+
+		-
+			message: "#^Parameter \\#1 \\$value of function intval expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
 			count: 1
 			path: src/batch-doctrine-dbal/src/JobExecutionRowNormalizer.php
 
@@ -56,7 +56,7 @@ parameters:
 			path: src/batch-doctrine-dbal/src/JobExecutionRowNormalizer.php
 
 		-
-			message: "#^Parameter \\#1 \\$values of class Yokai\\\\Batch\\\\Summary constructor expects array\\<string, mixed\\>, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$values of class Yokai\\\\Batch\\\\Summary constructor expects array\\<string, mixed\\>, array\\<int\\|string, mixed\\> given\\.$#"
 			count: 1
 			path: src/batch-doctrine-dbal/src/JobExecutionRowNormalizer.php
 
