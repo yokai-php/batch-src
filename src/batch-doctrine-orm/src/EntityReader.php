@@ -16,6 +16,9 @@ final class EntityReader implements ItemReaderInterface
 {
     public function __construct(
         private ManagerRegistry $doctrine,
+        /**
+         * @var class-string
+         */
         private string $class,
     ) {
     }
