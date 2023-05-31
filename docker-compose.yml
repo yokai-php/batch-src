@@ -6,7 +6,7 @@ services:
     extends:
       file: ~/.led/docker-base.yaml
       service: localuser
-    hostname: php81
+    hostname: php82
     image: ledup/php:8.2
     volumes:
       - .:/src
