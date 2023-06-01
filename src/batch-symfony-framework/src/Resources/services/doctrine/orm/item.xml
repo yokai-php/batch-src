@@ -8,7 +8,7 @@
         <defaults public="false"/>
 
         <service id="yokai_batch.item_writer.doctrine_orm_object_writer"
-                 class="Yokai\Batch\Bridge\Doctrine\Common\ObjectWriter">
+                 class="Yokai\Batch\Bridge\Doctrine\Persistence\ObjectWriter">
             <argument type="service" id="doctrine"/>
         </service>
     </services>

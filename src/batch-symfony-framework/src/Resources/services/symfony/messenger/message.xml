@@ -9,7 +9,8 @@
 
         <service id="yokai_batch.messenger.launch_job_message_handler"
                  class="Yokai\Batch\Bridge\Symfony\Messenger\LaunchJobMessageHandler">
-            <argument type="service" id="yokai_batch.job_launcher.simple"/>
+            <argument type="service" id="yokai_batch.job_execution_accessor"/>
+            <argument type="service" id="yokai_batch.job_executor"/>
             <tag name="messenger.message_handler"/>
         </service>
     </services>

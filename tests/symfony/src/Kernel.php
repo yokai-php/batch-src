@@ -7,13 +7,15 @@ namespace Yokai\Batch\Sources\Tests\Symfony\App;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Yokai\Batch\Bridge\Symfony\Framework\YokaiBatchBundle;
 use Yokai\Batch\Job\JobInterface;
 
-final class Kernel extends BaseKernel
+final class Kernel extends BaseKernel implements CompilerPassInterface
 {
     use MicroKernelTrait;
 
@@ -71,5 +73,10 @@ final class Kernel extends BaseKernel
 
     protected function configureRoutes(RoutingConfigurator $routes): void
     {
+    }
+
+    public function process(ContainerBuilder $container) : void
+    {
+        $container->getDefinition('yokai_batch.job_launcher.simple')->setPublic(true);
     }
 }
