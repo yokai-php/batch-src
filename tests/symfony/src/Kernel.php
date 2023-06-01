@@ -75,7 +75,7 @@ final class Kernel extends BaseKernel implements CompilerPassInterface
     {
     }
 
-    public function process(ContainerBuilder $container) : void
+    public function process(ContainerBuilder $container): void
     {
         $container->getDefinition('yokai_batch.job_launcher.simple')->setPublic(true);
     }
