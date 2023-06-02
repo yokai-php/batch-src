@@ -1,0 +1,27 @@
+# https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes#configuring-automatically-generated-release-notes
+changelog:
+  categories:
+    - title: 'Changes made to the core: `yokai/batch`'
+      labels: ['yokai/batch']
+    - title: 'Changes made to the `box/spout` bridge: `yokai/batch-box-spout`'
+      labels: ['yokai/batch-box-spout']
+    - title: 'Changes made to the `doctrine/dbal` bridge: `yokai/batch-doctrine-dbal`'
+      labels: ['yokai/batch-doctrine-dbal']
+    - title: 'Changes made to the `doctrine/orm` bridge: `yokai/batch-doctrine-orm`'
+      labels: ['yokai/batch-doctrine-orm']
+    - title: 'Changes made to the `doctrine/persistence` bridge: `yokai/batch-doctrine-persistence`'
+      labels: ['yokai/batch-doctrine-persistence']
+    - title: 'Changes made to the `league/flysystem` bridge: `yokai/batch-league-flysystem`'
+      labels: ['yokai/batch-league-flysystem']
+    - title: 'Changes made to the `symfony/console` bridge: `yokai/batch-symfony-console`'
+      labels: ['yokai/batch-symfony-console']
+    - title: 'Changes made to the `symfony/framework-bundle` bridge: `yokai/batch-symfony-framework`'
+      labels: ['yokai/batch-symfony-framework']
+    - title: 'Changes made to the `symfony/messenger` bridge: `yokai/batch-symfony-messenger`'
+      labels: ['yokai/batch-symfony-messenger']
+    - title: 'Changes made to the Symfony install pack: `yokai/batch-symfony-pack`'
+      labels: ['yokai/batch-symfony-pack']
+    - title: 'Changes made to the `symfony/serializer` bridge: `yokai/batch-symfony-serializer`'
+      labels: ['yokai/batch-symfony-serializer']
+    - title: 'Changes made to the `symfony/validator` bridge: `yokai/batch-symfony-validator`'
+      labels: ['yokai/batch-symfony-validator']
