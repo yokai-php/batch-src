@@ -1,0 +1,25 @@
+# https://github.com/actions/labeler
+'yokai/batch':
+  - 'src/batch/**'
+'yokai/batch-box-spout':
+  - 'src/batch-box-spout/**'
+'yokai/batch-doctrine-dbal':
+  - 'src/batch-doctrine-dbal/**'
+'yokai/batch-doctrine-orm':
+  - 'src/batch-doctrine-orm/**'
+'yokai/batch-doctrine-persistence':
+  - 'src/batch-doctrine-persistence/**'
+'yokai/batch-league-flysystem':
+  - 'src/batch-league-flysystem/**'
+'yokai/batch-symfony-console':
+  - 'src/batch-symfony-console/**'
+'yokai/batch-symfony-framework':
+  - 'src/batch-symfony-framework/**'
+'yokai/batch-symfony-messenger':
+  - 'src/batch-symfony-messenger/**'
+'yokai/batch-symfony-pack':
+  - 'src/batch-symfony-pack/**'
+'yokai/batch-symfony-serializer':
+  - 'src/batch-symfony-serializer/**'
+'yokai/batch-symfony-validator':
+  - 'src/batch-symfony-validator/**'
