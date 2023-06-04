@@ -25,7 +25,7 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v2
       - name: "Setup env & install dependencies"
-        uses: ./.github/actions/install
+        uses: ./.github/actions/install.yml
         with:
           php-version: ${{ matrix.php-version }}
           symfony-version: ${{ matrix.symfony-version }}
@@ -39,7 +39,7 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v2
       - name: "Setup env & install dependencies"
-        uses: ./.github/actions/install
+        uses: ./.github/actions/install.yml
         with:
           php-version: '8.2'
           symfony-version: '6.2.*'
@@ -53,7 +53,7 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v2
       - name: "Setup env & install dependencies"
-        uses: ./.github/actions/install
+        uses: ./.github/actions/install.yml
         with:
           php-version: '8.2'
           symfony-version: '6.2.*'
@@ -67,7 +67,7 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v2
       - name: "Setup env & install dependencies"
-        uses: ./.github/actions/install
+        uses: ./.github/actions/install.yml
         with:
           php-version: '8.2'
           symfony-version: '6.2.*'
