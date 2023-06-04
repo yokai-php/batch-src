@@ -42,7 +42,8 @@ final class SourcesTest extends TestCase
         $prodDeps = $rootComposer->packages();
         $prodDeps[] = 'yokai/batch';
         \sort($prodDeps);
-        self::assertEmpty(
+        self::assertSame(
+            [],
             \array_diff($expectedProdDeps, $prodDeps),
             'Dependencies of all packages are required in root composer.json'
         );
@@ -51,7 +52,8 @@ final class SourcesTest extends TestCase
         \sort($expectedDevDeps);
         $devDeps = $rootComposer->packagesDev();
         \sort($devDeps);
-        self::assertEmpty(
+        self::assertSame(
+            [],
             \array_diff($expectedDevDeps, $devDeps),
             'Dev dependencies of all packages are required in root composer.json'
         );
@@ -68,7 +70,8 @@ final class SourcesTest extends TestCase
         $prodAutoload = $rootComposer->autoload();
         \ksort($prodAutoload);
         \ksort($expectedProdAutoload);
-        self::assertEmpty(
+        self::assertSame(
+            [],
             \array_diff($expectedProdAutoload, $prodAutoload),
             'All packages autoload rules are duplicated in root composer.json'
         );
@@ -76,7 +79,8 @@ final class SourcesTest extends TestCase
         $devAutoload = $rootComposer->autoloadDev();
         \ksort($devAutoload);
         \ksort($expectedDevAutoload);
-        self::assertEmpty(
+        self::assertSame(
+            [],
             \array_diff($expectedDevAutoload, $devAutoload),
             'All packages dev autoload rules are duplicated in root composer.json'
         );
