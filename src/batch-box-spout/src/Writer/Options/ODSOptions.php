@@ -20,9 +20,7 @@ final class ODSOptions implements OptionsInterface
     ) {
     }
 
-    /**
-     * @inheritDoc
-     */
+    
     public function configure(WriterInterface $writer): void
     {
         if (!$writer instanceof ODSWriter) {

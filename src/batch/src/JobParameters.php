@@ -61,16 +61,13 @@ final class JobParameters implements
         return $this->parameters[$name];
     }
 
-    /**
-     * @inheritDoc
-     */
+    
     public function count(): int
     {
         return count($this->parameters);
     }
 
     /**
-     * @inheritDoc
      * @phpstan-return ArrayIterator<string, mixed>
      */
     public function getIterator(): ArrayIterator

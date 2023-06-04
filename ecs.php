@@ -17,6 +17,7 @@ return function (ECSConfig $ecsConfig): void {
     ]);
 
     $ecsConfig->sets([
+        SetList::DOCBLOCK,
         SetList::NAMESPACES,
         SetList::COMMENTS,
         SetList::STRICT,

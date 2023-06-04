@@ -22,9 +22,7 @@ class ReplaceWithVariablesParameterAccessor implements JobParameterAccessorInter
     ) {
     }
 
-    /**
-     * @inheritdoc
-     */
+    
     public function get(JobExecution $execution): mixed
     {
         $parameter = $this->accessor->get($execution);

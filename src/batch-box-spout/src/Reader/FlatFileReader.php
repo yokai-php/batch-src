@@ -36,9 +36,7 @@ final class FlatFileReader implements
         $this->headerStrategy = $headerStrategy ?? HeaderStrategy::skip();
     }
 
-    /**
-     * @inheritDoc
-     */
+    
     public function read(): iterable
     {
         /** @var string $path */

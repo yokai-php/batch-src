@@ -23,9 +23,7 @@ final class SummaryWriter implements ItemWriterInterface, JobExecutionAwareInter
     ) {
     }
 
-    /**
-     * @inheritdoc
-     */
+    
     public function write(iterable $items): void
     {
         /** @var string $key */

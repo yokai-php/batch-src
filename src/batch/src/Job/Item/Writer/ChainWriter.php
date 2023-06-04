@@ -20,9 +20,7 @@ final class ChainWriter extends AbstractElementDecorator implements ItemWriterIn
     ) {
     }
 
-    /**
-     * @inheritDoc
-     */
+    
     public function write(iterable $items): void
     {
         /** @var ItemWriterInterface $writer */
@@ -31,9 +29,7 @@ final class ChainWriter extends AbstractElementDecorator implements ItemWriterIn
         }
     }
 
-    /**
-     * @inheritdoc
-     */
+    
     protected function getDecoratedElements(): iterable
     {
         return $this->writers;

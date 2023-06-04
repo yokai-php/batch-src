@@ -18,9 +18,7 @@ final class ClosestJobExecutionAccessor implements JobParameterAccessorInterface
     ) {
     }
 
-    /**
-     * @inheritdoc
-     */
+    
     public function get(JobExecution $execution): mixed
     {
         $candidateExecution = $execution;

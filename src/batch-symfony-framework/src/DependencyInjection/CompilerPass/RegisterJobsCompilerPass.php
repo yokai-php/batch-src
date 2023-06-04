@@ -18,9 +18,6 @@ use Yokai\Batch\Registry\JobRegistry;
  */
 final class RegisterJobsCompilerPass implements CompilerPassInterface
 {
-    /**
-     * @inheritdoc
-     */
     public function process(ContainerBuilder $container): void
     {
         $jobs = [];

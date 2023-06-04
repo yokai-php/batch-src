@@ -30,9 +30,7 @@ final class ObjectWriter implements ItemWriterInterface
     ) {
     }
 
-    /**
-     * @inheritDoc
-     */
+    
     public function write(iterable $items): void
     {
         foreach ($items as $item) {

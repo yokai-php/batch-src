@@ -12,23 +12,16 @@ use Yokai\Batch\JobExecution;
  */
 final class NullJobExecutionStorage implements JobExecutionStorageInterface
 {
-    /**
-     * @inheritDoc
-     */
     public function store(JobExecution $execution): void
     {
     }
 
-    /**
-     * @inheritDoc
-     */
+    
     public function remove(JobExecution $execution): void
     {
     }
 
-    /**
-     * @inheritDoc
-     */
+    
     public function retrieve(string $jobName, string $executionId): JobExecution
     {
         try {

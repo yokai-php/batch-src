@@ -35,9 +35,7 @@ final class FilesystemJobExecutionStorage implements QueryableJobExecutionStorag
     ) {
     }
 
-    /**
-     * @inheritDoc
-     */
+    
     public function store(JobExecution $execution): void
     {
         try {
@@ -47,9 +45,7 @@ final class FilesystemJobExecutionStorage implements QueryableJobExecutionStorag
         }
     }
 
-    /**
-     * @inheritDoc
-     */
+    
     public function remove(JobExecution $execution): void
     {
         try {
@@ -65,9 +61,7 @@ final class FilesystemJobExecutionStorage implements QueryableJobExecutionStorag
         }
     }
 
-    /**
-     * @inheritDoc
-     */
+    
     public function retrieve(string $jobName, string $executionId): JobExecution
     {
         try {
@@ -79,9 +73,7 @@ final class FilesystemJobExecutionStorage implements QueryableJobExecutionStorag
         }
     }
 
-    /**
-     * @inheritDoc
-     */
+    
     public function list(string $jobName): iterable
     {
         $glob = new \GlobIterator($this->buildFilePath($jobName, '*'));
@@ -95,9 +87,7 @@ final class FilesystemJobExecutionStorage implements QueryableJobExecutionStorag
         }
     }
 
-    /**
-     * @inheritDoc
-     */
+    
     public function query(Query $query): iterable
     {
         $candidates = [];

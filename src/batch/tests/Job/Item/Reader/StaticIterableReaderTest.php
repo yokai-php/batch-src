@@ -29,9 +29,6 @@ class StaticIterableReaderTest extends TestCase
         $items = [1, 2, 3];
 
         $aggregate = new class($items) implements \IteratorAggregate {
-            /**
-             * @var array
-             */
             private array $items;
 
             public function __construct(array $items)

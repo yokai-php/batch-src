@@ -21,9 +21,7 @@ final class ContainerParameterAccessor implements JobParameterAccessorInterface
     ) {
     }
 
-    /**
-     * @inheritdoc
-     */
+    
     public function get(JobExecution $execution): mixed
     {
         try {
