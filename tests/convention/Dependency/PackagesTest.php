@@ -6,8 +6,8 @@ namespace Yokai\Batch\Sources\Tests\Convention\Dependency;
 
 use PHPUnit\Framework\TestCase;
 use Yokai\Batch\Sources\Tests\Convention\Autoload;
-use Yokai\Batch\Sources\Tests\Convention\Packages;
 use Yokai\Batch\Sources\Tests\Convention\Package;
+use Yokai\Batch\Sources\Tests\Convention\Packages;
 
 final class PackagesTest extends TestCase
 {

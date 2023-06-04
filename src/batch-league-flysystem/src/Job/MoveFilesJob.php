@@ -40,7 +40,7 @@ class MoveFilesJob implements JobInterface
             throw UnexpectedValueException::type('string|string[]', $config);
         }
 
-        $transformLocation = $this->transformLocation ?? fn ($sourceLocation) => $sourceLocation;
+        $transformLocation = $this->transformLocation ?? fn($sourceLocation) => $sourceLocation;
         foreach ($locations as $sourceLocation) {
             $destinationLocation = $transformLocation($sourceLocation);
             if (!\is_string($destinationLocation)) {

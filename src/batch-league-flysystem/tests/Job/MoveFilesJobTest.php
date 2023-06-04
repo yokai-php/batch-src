@@ -66,7 +66,7 @@ class MoveFilesJobTest extends TestCase
         $source->write('source-file.txt', 'SOURCE TO BE MOVED');
         $destination = new Filesystem(new InMemoryFilesystemAdapter());
         $location = new StaticValueParameterAccessor('source-file.txt');
-        $transformDestination = fn () => 'destination-file.txt';
+        $transformDestination = fn() => 'destination-file.txt';
 
         self::assertFalse(
             $destination->has('source-file.txt'),
@@ -218,7 +218,7 @@ class MoveFilesJobTest extends TestCase
         $source->write('file.txt', 'FILE');
         $destination = new Filesystem(new InMemoryFilesystemAdapter());
         $location = new StaticValueParameterAccessor('source');
-        $transformation = fn () => null;
+        $transformation = fn() => null;
 
         $job = new MoveFilesJob($location, $source, $destination, $transformation);
         $job->execute(JobExecution::createRoot('123456', 'phpunit-move-file'));

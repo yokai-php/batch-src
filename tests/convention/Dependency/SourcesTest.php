@@ -6,8 +6,8 @@ namespace Yokai\Batch\Sources\Tests\Convention\Dependency;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Path;
-use Yokai\Batch\Sources\Tests\Convention\Packages;
 use Yokai\Batch\Sources\Tests\Convention\Package;
+use Yokai\Batch\Sources\Tests\Convention\Packages;
 
 /**
  * Perform some tests over root repository dependencies.
@@ -19,7 +19,7 @@ final class SourcesTest extends TestCase
      */
     public function test(): void
     {
-        $relative = fn (string $path) => Path::makeRelative($path, __DIR__ . '/../../..') . '/';
+        $relative = fn(string $path) => Path::makeRelative($path, __DIR__ . '/../../..') . '/';
 
         $expectedReplace = [];
         $expectedProdDeps = [];
