@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Storage;
 
-use Yokai\Batch\Exception\CannotRemoveJobExecutionException;
 use Yokai\Batch\Exception\JobExecutionNotFoundException;
 use Yokai\Batch\JobExecution;
 

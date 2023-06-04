@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yokai\Batch\Tests\Bridge\Doctrine\DBAL;
 
 use DateTimeImmutable;
-use Exception;
 use Generator;
 use RuntimeException;
 use Throwable;
