@@ -17,15 +17,11 @@ runs:
   using: "composite"
   runs-on: ubuntu-latest
   steps:
-    - name: "Checkout"
-      uses: actions/checkout@v2
-
     - name: "Setup PHP"
       uses: shivammathur/setup-php@v2
       with:
         coverage: none
         php-version: ${{ inputs.php-version }}
-
     - name: "Install dependencies with composer"
       run: |
         composer require --quiet --no-update "symfony/console:${{ inputs.symfony-version }}"
