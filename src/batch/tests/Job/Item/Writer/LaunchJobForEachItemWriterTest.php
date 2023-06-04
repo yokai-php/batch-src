@@ -6,7 +6,6 @@ namespace Yokai\Batch\Tests\Job\Item\Writer;
 
 use PHPUnit\Framework\TestCase;
 use Yokai\Batch\Job\Item\Writer\LaunchJobForEachItemWriter;
-use Yokai\Batch\Job\Item\Writer\LaunchJobForItemsBatchWriter;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\Test\Factory\SequenceJobExecutionIdGenerator;
 use Yokai\Batch\Test\Launcher\BufferingJobLauncher;

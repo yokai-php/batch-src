@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Sources\Tests\Convention\Comment;
 
-use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionMethod;
 use Yokai\Batch\Sources\Tests\Convention\Autoload;
