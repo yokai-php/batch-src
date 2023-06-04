@@ -48,7 +48,7 @@
     "yokai/batch-doctrine-dbal": "self.version",
     "yokai/batch-doctrine-orm": "self.version",
     "yokai/batch-doctrine-persistence": "self.version",
-    "yokai/batch-flysystem": "self.version",
+    "yokai/batch-league-flysystem": "self.version",
     "yokai/batch-symfony-console": "self.version",
     "yokai/batch-symfony-framework": "self.version",
     "yokai/batch-symfony-messenger": "self.version",
