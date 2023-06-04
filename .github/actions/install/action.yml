@@ -19,7 +19,6 @@ on:
 
 runs:
   using: "composite"
-  runs-on: ubuntu-latest
   steps:
     - name: "Setup PHP"
       uses: shivammathur/setup-php@v2
@@ -27,6 +26,7 @@ runs:
         coverage: ${{ inputs.coverage-mode }}
         php-version: ${{ inputs.php-version }}
     - name: "Install dependencies with composer"
+      shell: bash
       run: |
         composer require --quiet --no-update "symfony/console:${{ inputs.symfony-version }}"
         composer require --quiet --no-update "symfony/filesystem:${{ inputs.symfony-version }}"
