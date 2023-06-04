@@ -50,7 +50,7 @@ class FailureTest extends TestCase
                 'LogicException: I will fail because of {var}',
             ],
             ['{var}' => 'test var'],
-            'I will fail because of test var'
+            'I will fail because of test var',
         ];
         yield [
             fn() => Failure::fromException(
@@ -64,7 +64,7 @@ class FailureTest extends TestCase
                 'Caused by: LogicException: Previous exception',
             ],
             [],
-            'This is a test'
+            'This is a test',
         ];
     }
 }

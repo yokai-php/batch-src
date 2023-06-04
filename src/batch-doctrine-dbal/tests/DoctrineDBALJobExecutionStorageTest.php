@@ -226,23 +226,23 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
     {
         yield '"parameters" column value is expected to be array' => [
             ['parameters' => '"string"'],
-            UnexpectedValueException::type('array', 'string')
+            UnexpectedValueException::type('array', 'string'),
         ];
         yield '"summary" column value is expected to be array' => [
             ['summary' => '"string"'],
-            UnexpectedValueException::type('array', 'string')
+            UnexpectedValueException::type('array', 'string'),
         ];
         yield '"failures" column value is expected to be array' => [
             ['failures' => '"string"'],
-            UnexpectedValueException::type('array', 'string')
+            UnexpectedValueException::type('array', 'string'),
         ];
         yield '"warnings" column value is expected to be array' => [
             ['warnings' => '"string"'],
-            UnexpectedValueException::type('array', 'string')
+            UnexpectedValueException::type('array', 'string'),
         ];
         yield '"child_executions" column value is expected to be array' => [
             ['child_executions' => '"string"'],
-            UnexpectedValueException::type('array', 'string')
+            UnexpectedValueException::type('array', 'string'),
         ];
     }
 
