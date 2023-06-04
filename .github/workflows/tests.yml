@@ -30,7 +30,7 @@ jobs:
           php-version: ${{ matrix.php-version }}
           symfony-version: ${{ matrix.symfony-version }}
       - name: "Run tests with phpunit/phpunit"
-        run: vendor/bin/phpunit
+        run: vendor/bin/phpunit --testsuite=Code
 
   phpstan:
     name: "PhpStan"
@@ -60,6 +60,20 @@ jobs:
       - name: "Run checkstyle with squizlabs/php_codesniffer"
         run: vendor/bin/phpcs
 
+  conventions:
+    name: "Conventions"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+      - name: "Setup env & install dependencies"
+        uses: ./.github/actions/install
+        with:
+          php-version: '8.2'
+          symfony-version: '6.2.*'
+      - name: "Run tests with phpunit/phpunit"
+        run: vendor/bin/phpunit --testsuite=Convention
+
   codecov:
     name: "Code coverage"
     runs-on: ubuntu-latest
@@ -76,6 +90,6 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         run: |
-          vendor/bin/phpunit --coverage-clover coverage.xml
+          vendor/bin/phpunit --testsuite=Code --coverage-clover coverage.xml
       - name: "Upload coverage to Codecov"
         uses: codecov/codecov-action@v1

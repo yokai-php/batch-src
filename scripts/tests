@@ -16,6 +16,7 @@ install () {
 install "php82" "6.2.*"
 led in -s php82 -- vendor/bin/phpcs
 led in -s php82 -- vendor/bin/phpstan analyze
+led in -s php82 -- vendor/bin/phpunit --testsuite=Convention
 
 matrix=(
   "php80/5.4.*"
@@ -30,7 +31,7 @@ do
   symfony=${config[1]}
   echo "${entry}"
   install "${container}" "${symfony}"
-  led in -s ${container} -- vendor/bin/phpunit
+  led in -s ${container} -- vendor/bin/phpunit --testsuite=Code
 done
 
 echo "Revert changes made to composer.json"

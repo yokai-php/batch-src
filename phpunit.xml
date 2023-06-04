@@ -23,6 +23,15 @@
         <testsuite name="Symfony">
             <directory>./tests/symfony/tests</directory>
         </testsuite>
+
+        <testsuite name="Code">
+            <directory>./src/*/tests</directory>
+            <directory>./tests/integration</directory>
+            <directory>./tests/symfony/tests</directory>
+        </testsuite>
+        <testsuite name="Convention">
+            <directory>./tests/convention</directory>
+        </testsuite>
     </testsuites>
 
     <coverage>
