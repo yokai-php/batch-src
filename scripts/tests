@@ -4,18 +4,21 @@ install () {
   container="$1"
   symfony="$2"
   led in -s ${container} -- composer2 --no-interaction --quiet require --no-update symfony/console:${symfony}
-  led in -s ${container} -- composer2 --no-interaction --quiet require --no-update symfony/filesystem:${symfony} --dev
   led in -s ${container} -- composer2 --no-interaction --quiet require --no-update symfony/framework-bundle:${symfony}
   led in -s ${container} -- composer2 --no-interaction --quiet require --no-update symfony/messenger:${symfony}
   led in -s ${container} -- composer2 --no-interaction --quiet require --no-update symfony/process:${symfony}
   led in -s ${container} -- composer2 --no-interaction --quiet require --no-update symfony/serializer:${symfony}
   led in -s ${container} -- composer2 --no-interaction --quiet require --no-update symfony/validator:${symfony}
+  led in -s ${container} -- composer2 --no-interaction --quiet require --no-update symfony/filesystem:${symfony} --dev
+  led in -s ${container} -- composer2 --no-interaction --quiet require --no-update symfony/finder:${symfony} --dev
+  led in -s ${container} -- composer2 --no-interaction --quiet require --no-update symfony/process:${symfony} --dev
   led in -s ${container} -- composer2 --no-interaction update --no-progress --with-all-dependencies
 }
 
 install "php82" "6.2.*"
 led in -s php82 -- vendor/bin/phpcs
 led in -s php82 -- vendor/bin/phpstan analyze
+led in -s php82 -- vendor/bin/phpunit --testsuite=Convention
 
 matrix=(
   "php80/5.4.*"
@@ -30,7 +33,7 @@ do
   symfony=${config[1]}
   echo "${entry}"
   install "${container}" "${symfony}"
-  led in -s ${container} -- vendor/bin/phpunit
+  led in -s ${container} -- vendor/bin/phpunit --testsuite=Code
 done
 
 echo "Revert changes made to composer.json"
