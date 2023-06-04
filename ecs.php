@@ -17,6 +17,7 @@ return function (ECSConfig $ecsConfig): void {
     ]);
 
     $ecsConfig->sets([
+        SetList::COMMENTS,
         SetList::STRICT,
         SetList::PSR_12,
     ]);
