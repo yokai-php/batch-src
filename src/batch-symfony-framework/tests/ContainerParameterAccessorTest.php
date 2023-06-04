@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Tests\Bridge\Symfony\Framework;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Yokai\Batch\Bridge\Symfony\Framework\ContainerParameterAccessor;
-use PHPUnit\Framework\TestCase;
 use Yokai\Batch\Exception\CannotAccessParameterException;
 use Yokai\Batch\JobExecution;
 

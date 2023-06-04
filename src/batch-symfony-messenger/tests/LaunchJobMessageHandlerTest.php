@@ -23,7 +23,7 @@ final class LaunchJobMessageHandlerTest extends TestCase
 
     public function testInvoke(): void
     {
-        $job = new class implements JobInterface {
+        $job = new class() implements JobInterface {
             public JobExecution $execution;
             public function execute(JobExecution $jobExecution): void
             {

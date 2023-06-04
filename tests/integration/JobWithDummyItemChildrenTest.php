@@ -22,7 +22,7 @@ class JobWithDummyItemChildrenTest extends JobTestCase
     {
         $output = self::OUTPUT_FILE;
 
-        $fileLineWriter = new class ($output) implements ItemWriterInterface {
+        $fileLineWriter = new class($output) implements ItemWriterInterface {
             /**
              * @var string
              */

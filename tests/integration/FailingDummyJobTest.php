@@ -14,7 +14,7 @@ class FailingDummyJobTest extends JobTestCase
 {
     protected function createJob(JobExecutionStorageInterface $executionStorage): JobInterface
     {
-        return new class implements JobInterface {
+        return new class() implements JobInterface {
             public function execute(JobExecution $jobExecution): void
             {
                 $jobExecution->addWarning(new Warning('WARNING! I am a dummy.'));

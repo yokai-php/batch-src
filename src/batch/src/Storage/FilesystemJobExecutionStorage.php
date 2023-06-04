@@ -114,12 +114,12 @@ final class FilesystemJobExecutionStorage implements QueryableJobExecutionStorag
             }
 
             $names = $query->jobs();
-            if (count($names) > 0 && !in_array($execution->getJobName(), $names)) {
+            if (count($names) > 0 && !in_array($execution->getJobName(), $names, true)) {
                 continue;
             }
 
             $ids = $query->ids();
-            if (count($ids) > 0 && !in_array($execution->getId(), $ids)) {
+            if (count($ids) > 0 && !in_array($execution->getId(), $ids, true)) {
                 continue;
             }
 
