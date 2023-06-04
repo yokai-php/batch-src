@@ -22,9 +22,7 @@ final class DummyFinder implements FinderInterface
     ) {
     }
 
-    /**
-     * @inheritdoc
-     */
+    
     public function find(mixed $subject): object
     {
         return $this->object;

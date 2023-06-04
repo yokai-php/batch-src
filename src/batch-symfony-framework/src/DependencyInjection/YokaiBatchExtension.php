@@ -26,7 +26,6 @@ use Yokai\Batch\Storage\QueryableJobExecutionStorageInterface;
 final class YokaiBatchExtension extends Extension
 {
     /**
-     * @inheritDoc
      * @phpstan-param list<array<string, mixed>> $configs
      */
     public function load(array $configs, ContainerBuilder $container): void

@@ -28,9 +28,7 @@ final class RunCommandJobLauncher implements JobLauncherInterface
     ) {
     }
 
-    /**
-     * @inheritdoc
-     */
+    
     public function launch(string $name, array $configuration = []): JobExecution
     {
         $jobExecution = $this->jobExecutionFactory->create($name, $configuration);

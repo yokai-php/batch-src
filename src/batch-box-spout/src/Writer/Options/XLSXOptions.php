@@ -20,9 +20,7 @@ final class XLSXOptions implements OptionsInterface
     ) {
     }
 
-    /**
-     * @inheritDoc
-     */
+    
     public function configure(WriterInterface $writer): void
     {
         if (!$writer instanceof XLSXWriter) {

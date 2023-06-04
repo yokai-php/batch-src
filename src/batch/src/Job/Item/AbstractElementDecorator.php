@@ -30,9 +30,7 @@ abstract class AbstractElementDecorator implements
     use ElementConfiguratorTrait;
     use JobExecutionAwareTrait;
 
-    /**
-     * @inheritdoc
-     */
+    
     public function initialize(): void
     {
         foreach ($this->getDecoratedElements() as $element) {
@@ -41,9 +39,7 @@ abstract class AbstractElementDecorator implements
         }
     }
 
-    /**
-     * @inheritdoc
-     */
+    
     public function flush(): void
     {
         foreach ($this->getDecoratedElements() as $element) {

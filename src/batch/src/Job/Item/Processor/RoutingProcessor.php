@@ -39,9 +39,7 @@ final class RoutingProcessor implements
     ) {
     }
 
-    /**
-     * @inheritdoc
-     */
+    
     public function process(mixed $item): mixed
     {
         $processor = $this->finder->find($item);
@@ -60,17 +58,13 @@ final class RoutingProcessor implements
         return $processor->process($item);
     }
 
-    /**
-     * @inheritdoc
-     */
+    
     public function initialize(): void
     {
         $this->processors = [];
     }
 
-    /**
-     * @inheritdoc
-     */
+    
     public function flush(): void
     {
         $processors = $this->processors;

@@ -13,9 +13,7 @@ trait SummaryAwareTrait
 {
     private Summary $summary;
 
-    /**
-     * @inheritdoc
-     */
+    
     public function setSummary(Summary $summary): void
     {
         $this->summary = $summary;

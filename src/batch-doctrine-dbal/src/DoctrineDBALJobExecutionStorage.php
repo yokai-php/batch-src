@@ -69,9 +69,7 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
         $this->connection->getConfiguration()->setSchemaAssetsFilter($assetFilter);
     }
 
-    /**
-     * @inheritDoc
-     */
+    
     public function store(JobExecution $execution): void
     {
         try {
@@ -94,9 +92,7 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
         }
     }
 
-    /**
-     * @inheritDoc
-     */
+    
     public function remove(JobExecution $execution): void
     {
         try {
@@ -106,9 +102,7 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
         }
     }
 
-    /**
-     * @inheritDoc
-     */
+    
     public function retrieve(string $jobName, string $executionId): JobExecution
     {
         try {
@@ -120,9 +114,7 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
         return $this->fromRow($row);
     }
 
-    /**
-     * @inheritDoc
-     */
+    
     public function list(string $jobName): iterable
     {
         $qb = $this->connection->createQueryBuilder();
@@ -133,9 +125,7 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
         yield from $this->queryList($qb->getSQL(), ['jobName' => $jobName], ['jobName' => Types::STRING]);
     }
 
-    /**
-     * @inheritDoc
-     */
+    
     public function query(Query $query): iterable
     {
         $queryParameters = [];

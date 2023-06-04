@@ -56,9 +56,7 @@ final class IndexWithReader extends AbstractElementDecorator implements ItemRead
         return new self($reader, fn(object $item) => $item->$getter());
     }
 
-    /**
-     * @inheritdoc
-     */
+    
     public function read(): iterable
     {
         foreach ($this->reader->read() as $item) {
@@ -66,9 +64,7 @@ final class IndexWithReader extends AbstractElementDecorator implements ItemRead
         }
     }
 
-    /**
-     * @inheritdoc
-     */
+    
     protected function getDecoratedElements(): iterable
     {
         yield $this->reader;

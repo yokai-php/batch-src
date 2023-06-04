@@ -28,9 +28,7 @@ abstract class JobTestCase extends TestCase
 
     private static $run = false;
 
-    /**
-     * @inheritDoc
-     */
+    
     public static function setUpBeforeClass(): void
     {
         if (!self::$run) {

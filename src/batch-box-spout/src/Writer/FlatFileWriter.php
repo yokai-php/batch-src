@@ -46,9 +46,7 @@ final class FlatFileWriter implements
     ) {
     }
 
-    /**
-     * @inheritDoc
-     */
+    
     public function initialize(): void
     {
         /** @var string $path */
@@ -67,9 +65,7 @@ final class FlatFileWriter implements
         }
     }
 
-    /**
-     * @inheritDoc
-     */
+    
     public function write(iterable $items): void
     {
         $writer = $this->writer;
@@ -102,9 +98,7 @@ final class FlatFileWriter implements
         }
     }
 
-    /**
-     * @inheritDoc
-     */
+    
     public function flush(): void
     {
         if ($this->writer === null) {
