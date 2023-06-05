@@ -22,7 +22,6 @@ final class CSVOptions implements OptionsInterface
     ) {
     }
 
-    
     public function configure(ReaderInterface $reader): void
     {
         if (!$reader instanceof CSVReader) {
@@ -36,7 +35,6 @@ final class CSVOptions implements OptionsInterface
         $reader->setShouldPreserveEmptyRows($this->preserveEmptyRows);
     }
 
-    
     public function getSheets(ReaderInterface $reader): iterable
     {
         return $reader->getSheetIterator();

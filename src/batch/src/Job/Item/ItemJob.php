@@ -37,7 +37,6 @@ class ItemJob implements JobInterface
         $this->elements = [$reader, $processor, $writer];
     }
 
-    
     final public function execute(JobExecution $jobExecution): void
     {
         $rootExecution = $jobExecution->getRootExecution();

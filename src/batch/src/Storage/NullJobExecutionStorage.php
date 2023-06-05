@@ -16,12 +16,10 @@ final class NullJobExecutionStorage implements JobExecutionStorageInterface
     {
     }
 
-    
     public function remove(JobExecution $execution): void
     {
     }
 
-    
     public function retrieve(string $jobName, string $executionId): JobExecution
     {
         try {

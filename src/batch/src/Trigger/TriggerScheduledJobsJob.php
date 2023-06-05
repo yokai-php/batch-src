@@ -29,7 +29,6 @@ final class TriggerScheduledJobsJob implements JobInterface
     ) {
     }
 
-    
     public function execute(JobExecution $jobExecution): void
     {
         $jobs = [];

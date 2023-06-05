@@ -46,7 +46,6 @@ final class FlatFileWriter implements
     ) {
     }
 
-    
     public function initialize(): void
     {
         /** @var string $path */
@@ -65,7 +64,6 @@ final class FlatFileWriter implements
         }
     }
 
-    
     public function write(iterable $items): void
     {
         $writer = $this->writer;
@@ -98,7 +96,6 @@ final class FlatFileWriter implements
         }
     }
 
-    
     public function flush(): void
     {
         if ($this->writer === null) {

@@ -19,7 +19,6 @@ final class StaticIterableReader implements ItemReaderInterface
     ) {
     }
 
-    
     public function read(): iterable
     {
         return $this->items;

@@ -28,7 +28,6 @@ abstract class JobTestCase extends TestCase
 
     private static $run = false;
 
-    
     public static function setUpBeforeClass(): void
     {
         if (!self::$run) {

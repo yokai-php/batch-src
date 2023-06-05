@@ -39,7 +39,6 @@ final class AddMetadataReader extends AbstractElementDecorator implements ItemRe
         }
     }
 
-    
     protected function getDecoratedElements(): iterable
     {
         yield $this->reader;

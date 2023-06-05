@@ -18,7 +18,6 @@ final class JobExecutionSummaryAccessor implements JobParameterAccessorInterface
     ) {
     }
 
-    
     public function get(JobExecution $execution): mixed
     {
         if (!$execution->getSummary()->has($this->name)) {

@@ -23,7 +23,6 @@ final class EntityReader implements ItemReaderInterface
     ) {
     }
 
-    
     public function read(): iterable
     {
         $manager = $this->doctrine->getManagerForClass($this->class);

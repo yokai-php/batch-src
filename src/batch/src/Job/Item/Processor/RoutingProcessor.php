@@ -39,7 +39,6 @@ final class RoutingProcessor implements
     ) {
     }
 
-    
     public function process(mixed $item): mixed
     {
         $processor = $this->finder->find($item);
@@ -58,13 +57,11 @@ final class RoutingProcessor implements
         return $processor->process($item);
     }
 
-    
     public function initialize(): void
     {
         $this->processors = [];
     }
 
-    
     public function flush(): void
     {
         $processors = $this->processors;

@@ -34,7 +34,6 @@ final class JsonLinesWriter implements
     ) {
     }
 
-    
     public function initialize(): void
     {
         /** @var string $path */
@@ -52,7 +51,6 @@ final class JsonLinesWriter implements
         $this->file = $file;
     }
 
-    
     public function write(iterable $items): void
     {
         foreach ($items as $json) {
@@ -63,7 +61,6 @@ final class JsonLinesWriter implements
         }
     }
 
-    
     public function flush(): void
     {
         \fclose($this->file);

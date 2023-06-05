@@ -39,7 +39,6 @@ final class JsonJobExecutionSerializer implements JobExecutionSerializerInterfac
         return $json;
     }
 
-    
     public function unserialize(string $serializedJobExecution): JobExecution
     {
         try {
@@ -57,7 +56,6 @@ final class JsonJobExecutionSerializer implements JobExecutionSerializerInterfac
         }
     }
 
-    
     public function extension(): string
     {
         return 'json';

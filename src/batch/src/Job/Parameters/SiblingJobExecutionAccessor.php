@@ -19,7 +19,6 @@ final class SiblingJobExecutionAccessor implements JobParameterAccessorInterface
     ) {
     }
 
-    
     public function get(JobExecution $execution): mixed
     {
         $parent = $execution->getParentExecution();

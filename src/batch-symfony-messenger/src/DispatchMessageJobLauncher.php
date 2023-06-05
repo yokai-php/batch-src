@@ -24,7 +24,6 @@ final class DispatchMessageJobLauncher implements JobLauncherInterface
     ) {
     }
 
-    
     public function launch(string $name, array $configuration = []): JobExecution
     {
         // create and store execution before dispatching message

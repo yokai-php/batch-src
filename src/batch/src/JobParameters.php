@@ -61,7 +61,6 @@ final class JobParameters implements
         return $this->parameters[$name];
     }
 
-    
     public function count(): int
     {
         return count($this->parameters);

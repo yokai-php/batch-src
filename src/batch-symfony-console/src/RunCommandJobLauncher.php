@@ -28,7 +28,6 @@ final class RunCommandJobLauncher implements JobLauncherInterface
     ) {
     }
 
-    
     public function launch(string $name, array $configuration = []): JobExecution
     {
         $jobExecution = $this->jobExecutionFactory->create($name, $configuration);
