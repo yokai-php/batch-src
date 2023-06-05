@@ -39,7 +39,6 @@ final class RoutingWriter implements
     ) {
     }
 
-    
     public function write(iterable $items): void
     {
         $writerAndItems = [];
@@ -66,13 +65,11 @@ final class RoutingWriter implements
         }
     }
 
-    
     public function initialize(): void
     {
         $this->writers = [];
     }
 
-    
     public function flush(): void
     {
         $writers = $this->writers;

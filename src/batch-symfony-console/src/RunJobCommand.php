@@ -34,7 +34,6 @@ final class RunJobCommand extends Command
         parent::__construct();
     }
 
-    
     protected function configure(): void
     {
         $this->setDescription('Execute any job.');
@@ -44,7 +43,6 @@ final class RunJobCommand extends Command
         $this->addUsage('export \'{"toFile":"/path/to/file.xml"}\'');
     }
 
-    
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         /** @var string $jobName */

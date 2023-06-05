@@ -23,7 +23,6 @@ final class XLSXOptions implements OptionsInterface
         $this->sheetFilter = $sheetFilter ?? SheetFilter::all();
     }
 
-    
     public function configure(ReaderInterface $reader): void
     {
         if (!$reader instanceof XLSXReader) {
@@ -34,7 +33,6 @@ final class XLSXOptions implements OptionsInterface
         $reader->setShouldPreserveEmptyRows($this->preserveEmptyRows);
     }
 
-    
     public function getSheets(ReaderInterface $reader): iterable
     {
         yield from $this->sheetFilter->getSheets($reader);

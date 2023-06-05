@@ -21,7 +21,6 @@ final class ParameterAccessorReader implements ItemReaderInterface, JobExecution
     ) {
     }
 
-    
     public function read(): iterable
     {
         $data = $this->data->get($this->jobExecution);

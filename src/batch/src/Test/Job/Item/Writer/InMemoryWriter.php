@@ -25,13 +25,11 @@ final class InMemoryWriter implements ItemWriterInterface, InitializableInterfac
      */
     private array $batchItems = [];
 
-    
     public function initialize(): void
     {
         $this->items = [];
     }
 
-    
     public function write(iterable $items): void
     {
         $batch = [];

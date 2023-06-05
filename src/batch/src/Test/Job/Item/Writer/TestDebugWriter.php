@@ -23,14 +23,12 @@ final class TestDebugWriter extends TestDebugComponent implements ItemWriterInte
         $this->decorated = $decorated;
     }
 
-    
     public function initialize(): void
     {
         $this->written = false;
         parent::initialize();
     }
 
-    
     public function write(iterable $items): void
     {
         $this->written = true;

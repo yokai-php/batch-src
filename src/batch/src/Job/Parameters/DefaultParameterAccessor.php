@@ -19,7 +19,6 @@ final class DefaultParameterAccessor implements JobParameterAccessorInterface
     ) {
     }
 
-    
     public function get(JobExecution $execution): mixed
     {
         try {

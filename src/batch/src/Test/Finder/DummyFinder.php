@@ -22,7 +22,6 @@ final class DummyFinder implements FinderInterface
     ) {
     }
 
-    
     public function find(mixed $subject): object
     {
         return $this->object;

@@ -13,7 +13,6 @@ trait JobParametersAwareTrait
 {
     private JobParameters $jobParameters;
 
-    
     public function setJobParameters(JobParameters $jobParameters): void
     {
         $this->jobParameters = $jobParameters;

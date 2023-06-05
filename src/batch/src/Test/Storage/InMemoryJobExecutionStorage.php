@@ -28,13 +28,11 @@ final class InMemoryJobExecutionStorage implements JobExecutionStorageInterface
         }
     }
 
-    
     public function store(JobExecution $execution): void
     {
         $this->executions[self::buildKeyFrom($execution)] = $execution;
     }
 
-    
     public function remove(JobExecution $execution): void
     {
         $key = self::buildKeyFrom($execution);
@@ -45,7 +43,6 @@ final class InMemoryJobExecutionStorage implements JobExecutionStorageInterface
         unset($this->executions[$key]);
     }
 
-    
     public function retrieve(string $jobName, string $executionId): JobExecution
     {
         $key = self::buildKey($jobName, $executionId);

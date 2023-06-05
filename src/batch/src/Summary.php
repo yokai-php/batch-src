@@ -102,7 +102,6 @@ final class Summary implements
         return new ArrayIterator($this->values);
     }
 
-    
     public function count(): int
     {
         return count($this->values);

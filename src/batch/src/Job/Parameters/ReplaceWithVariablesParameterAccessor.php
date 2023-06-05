@@ -22,7 +22,6 @@ class ReplaceWithVariablesParameterAccessor implements JobParameterAccessorInter
     ) {
     }
 
-    
     public function get(JobExecution $execution): mixed
     {
         $parameter = $this->accessor->get($execution);

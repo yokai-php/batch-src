@@ -20,7 +20,6 @@ final class CountryJsonFileReader implements ItemReaderInterface, JobExecutionAw
         $this->filePath = $filePath;
     }
 
-    
     public function read(): iterable
     {
         $data = (array)\json_decode(

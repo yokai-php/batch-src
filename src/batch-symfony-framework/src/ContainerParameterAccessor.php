@@ -21,7 +21,6 @@ final class ContainerParameterAccessor implements JobParameterAccessorInterface
     ) {
     }
 
-    
     public function get(JobExecution $execution): mixed
     {
         try {

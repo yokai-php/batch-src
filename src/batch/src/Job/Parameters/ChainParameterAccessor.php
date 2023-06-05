@@ -21,7 +21,6 @@ final class ChainParameterAccessor implements JobParameterAccessorInterface
     ) {
     }
 
-    
     public function get(JobExecution $execution): mixed
     {
         $tries = [];

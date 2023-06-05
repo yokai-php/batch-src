@@ -16,7 +16,6 @@ final class StaticValueParameterAccessor implements JobParameterAccessorInterfac
     ) {
     }
 
-    
     public function get(JobExecution $execution): mixed
     {
         return $this->value;

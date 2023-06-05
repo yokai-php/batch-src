@@ -13,7 +13,6 @@ trait SummaryAwareTrait
 {
     private Summary $summary;
 
-    
     public function setSummary(Summary $summary): void
     {
         $this->summary = $summary;

@@ -30,7 +30,6 @@ final class ObjectWriter implements ItemWriterInterface
     ) {
     }
 
-    
     public function write(iterable $items): void
     {
         foreach ($items as $item) {

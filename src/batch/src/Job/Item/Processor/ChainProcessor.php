@@ -22,7 +22,6 @@ final class ChainProcessor extends AbstractElementDecorator implements ItemProce
     ) {
     }
 
-    
     public function process(mixed $item): mixed
     {
         /** @var ItemProcessorInterface $processor */
@@ -33,7 +32,6 @@ final class ChainProcessor extends AbstractElementDecorator implements ItemProce
         return $item;
     }
 
-    
     protected function getDecoratedElements(): iterable
     {
         return $this->processors;

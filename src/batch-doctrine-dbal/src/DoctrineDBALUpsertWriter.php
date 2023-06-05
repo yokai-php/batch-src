@@ -33,7 +33,6 @@ final class DoctrineDBALUpsertWriter implements
         $this->connection = $connection;
     }
 
-    
     public function write(iterable $items): void
     {
         foreach ($items as $item) {

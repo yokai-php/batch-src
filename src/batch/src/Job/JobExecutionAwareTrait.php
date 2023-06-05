@@ -13,7 +13,6 @@ trait JobExecutionAwareTrait
 {
     private JobExecution $jobExecution;
 
-    
     public function setJobExecution(JobExecution $jobExecution): void
     {
         $this->jobExecution = $jobExecution;
