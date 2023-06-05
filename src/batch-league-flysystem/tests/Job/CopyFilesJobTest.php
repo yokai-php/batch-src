@@ -64,7 +64,7 @@ class CopyFilesJobTest extends TestCase
         $source->write('source-file.txt', 'SOURCE TO BE COPIED');
         $destination = new Filesystem(new InMemoryFilesystemAdapter());
         $location = new StaticValueParameterAccessor('source-file.txt');
-        $transformDestination = fn () => 'destination-file.txt';
+        $transformDestination = fn() => 'destination-file.txt';
 
         self::assertFalse(
             $destination->has('source-file.txt'),
@@ -179,7 +179,7 @@ class CopyFilesJobTest extends TestCase
         $source->write('file.txt', 'FILE');
         $destination = new Filesystem(new InMemoryFilesystemAdapter());
         $location = new StaticValueParameterAccessor('source');
-        $transformation = fn () => null;
+        $transformation = fn() => null;
 
         $job = new CopyFilesJob($location, $source, $destination, $transformation);
         $job->execute(JobExecution::createRoot('123456', 'phpunit-copy-file'));

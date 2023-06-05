@@ -29,9 +29,6 @@ final class DoctrineDBALInsertWriter implements ItemWriterInterface
         $this->connection = $connection;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function write(iterable $items): void
     {
         foreach ($items as $item) {

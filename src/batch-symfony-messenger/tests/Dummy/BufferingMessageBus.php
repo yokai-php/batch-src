@@ -26,7 +26,7 @@ final class BufferingMessageBus implements MessageBusInterface
      */
     public function getMessages(): array
     {
-        return \array_map(fn (Envelope $envelope) => $envelope->getMessage(), $this->envelopes);
+        return \array_map(fn(Envelope $envelope) => $envelope->getMessage(), $this->envelopes);
     }
 
     /**

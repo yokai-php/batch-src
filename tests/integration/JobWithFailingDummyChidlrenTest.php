@@ -17,15 +17,13 @@ class JobWithFailingDummyChidlrenTest extends JobTestCase
         return new JobWithChildJobs(
             $executionStorage,
             self::createJobExecutor($executionStorage, [
-                'prepare' => new class implements JobInterface
-                {
+                'prepare' => new class() implements JobInterface {
                     public function execute(JobExecution $jobExecution): void
                     {
                         throw new \Exception('Critical dummy exception');
                     }
                 },
-                'do' => new class implements JobInterface
-                {
+                'do' => new class() implements JobInterface {
                     public function execute(JobExecution $jobExecution): void
                     {
                         // this job should not be executed

@@ -29,9 +29,6 @@ final class SkipInvalidItemProcessor implements ItemProcessorInterface
     ) {
     }
 
-    /**
-     * @inheritDoc
-     */
     public function process(mixed $item): mixed
     {
         $violations = $this->validator->validate($item, $this->contraints, $this->groups);

@@ -20,9 +20,6 @@ final class CSVOptions implements OptionsInterface
     ) {
     }
 
-    /**
-     * @inheritdoc
-     */
     public function configure(WriterInterface $writer): void
     {
         if (!$writer instanceof CSVWriter) {

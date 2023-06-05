@@ -37,10 +37,10 @@
     "phpspec/prophecy-phpunit": "^2.0",
     "phpstan/phpstan": "^1.4",
     "phpunit/phpunit": "^9.5",
-    "squizlabs/php_codesniffer": "^3.6",
     "symfony/filesystem": "^5.0|^6.0",
     "symfony/finder": "^5.0|^6.0",
-    "symfony/process": "^5.0|^6.0"
+    "symfony/process": "^5.0|^6.0",
+    "symplify/easy-coding-standard": "^11.3"
   },
   "replace": {
     "yokai/batch": "self.version",

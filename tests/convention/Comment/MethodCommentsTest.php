@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Sources\Tests\Convention\Comment;
 
-use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionMethod;
 use Yokai\Batch\Sources\Tests\Convention\Autoload;
@@ -20,8 +19,8 @@ final class MethodCommentsTest extends CommentsTestCase
     {
         // Only true comments are relevant, phpdoc is not.
         $lines = \explode(\PHP_EOL, $method->getDocComment() ?: '');
-        $lines = \array_map(fn ($line) => \trim($line, '/* '), $lines);
-        $lines = \array_filter($lines, fn ($line) => !\str_starts_with($line, '@'));
+        $lines = \array_map(fn($line) => \trim($line, '/* '), $lines);
+        $lines = \array_filter($lines, fn($line) => !\str_starts_with($line, '@'));
         $lines = \array_filter($lines);
         $comment = \implode(\PHP_EOL, $lines);
 

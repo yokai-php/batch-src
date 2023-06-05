@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yokai\Batch\Tests\Bridge\Doctrine\DBAL;
 
 use Doctrine\DBAL\Types\Types;
-use Generator;
 use Yokai\Batch\Bridge\Doctrine\DBAL\DoctrineDBALInsertWriter;
 use Yokai\Batch\Exception\UnexpectedValueException;
 

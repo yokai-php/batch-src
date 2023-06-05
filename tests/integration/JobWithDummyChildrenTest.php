@@ -17,15 +17,13 @@ class JobWithDummyChildrenTest extends JobTestCase
         return new JobWithChildJobs(
             $executionStorage,
             self::createJobExecutor($executionStorage, [
-                'prepare' => new class implements JobInterface
-                {
+                'prepare' => new class() implements JobInterface {
                     public function execute(JobExecution $jobExecution): void
                     {
                         $jobExecution->getSummary()->set('done', true);
                     }
                 },
-                'do' => new class implements JobInterface
-                {
+                'do' => new class() implements JobInterface {
                     public function execute(JobExecution $jobExecution): void
                     {
                         $jobExecution->getSummary()->set('done', true);

@@ -24,9 +24,6 @@ final class SkipItemOnViolations implements SkipItemCauseInterface
     ) {
     }
 
-    /**
-     * @inheritdoc
-     */
     public function report(JobExecution $execution, int|string $index, mixed $item): void
     {
         $execution->getSummary()->increment('invalid');

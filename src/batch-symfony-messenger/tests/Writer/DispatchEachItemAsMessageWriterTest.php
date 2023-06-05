@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Tests\Bridge\Symfony\Messenger\Writer;
 
-use Yokai\Batch\Bridge\Symfony\Messenger\Writer\DispatchEachItemAsMessageWriter;
 use PHPUnit\Framework\TestCase;
+use Yokai\Batch\Bridge\Symfony\Messenger\Writer\DispatchEachItemAsMessageWriter;
 use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\Tests\Bridge\Symfony\Messenger\Dummy\BufferingMessageBus;
 use Yokai\Batch\Tests\Bridge\Symfony\Messenger\Dummy\DummyMessage;

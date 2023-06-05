@@ -1,5 +1,4 @@
 /.idea/
-/.phpcs-cache
 /.phpunit.result.cache
 /tests/.artifacts/
 /tests/symfony/var/

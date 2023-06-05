@@ -25,9 +25,6 @@ final class NormalizeItemProcessor implements ItemProcessorInterface
     ) {
     }
 
-    /**
-     * @inheritDoc
-     */
     public function process(mixed $item): mixed
     {
         try {
