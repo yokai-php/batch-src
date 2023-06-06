@@ -15,7 +15,7 @@
     "ext-json": "*",
     "composer-runtime-api": "^2.0",
     "box/spout": "^3.0",
-    "doctrine/dbal": "^2.11",
+    "doctrine/dbal": "^2.11|^3.0",
     "doctrine/orm": "^2.8",
     "doctrine/persistence": "^2.0|^3.0",
     "league/flysystem": "^3.0",
