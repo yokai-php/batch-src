@@ -8,6 +8,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Yokai\Batch\Bridge\Box\Spout\Writer\FlatFileWriter;
 use Yokai\Batch\Bridge\Box\Spout\Writer\Options\CSVOptions;
 use Yokai\Batch\Bridge\Symfony\Framework\JobWithStaticNameInterface;
+use Yokai\Batch\Job\AbstractDecoratedJob;
 use Yokai\Batch\Job\Item\ElementConfiguratorTrait;
 use Yokai\Batch\Job\Item\FlushableInterface;
 use Yokai\Batch\Job\Item\ItemJob;
@@ -43,7 +44,7 @@ use Yokai\Batch\Storage\JobExecutionStorageInterface;
  * - a JSONL file, like :
  *   {"iso2":"FR","iso3":"FRA","name":"France","continent":"EU","currency":"EUR","phone":"33"}
  */
-final class CountryJob extends ItemJob implements
+final class CountryJob extends AbstractDecoratedJob implements
     JobWithStaticNameInterface,
     JobExecutionAwareInterface,
     ItemProcessorInterface,
@@ -83,11 +84,13 @@ final class CountryJob extends ItemJob implements
         ]);
 
         parent::__construct(
-            \PHP_INT_MAX,
-            new SequenceReader(\array_map($reader, $fragments)),
-            $this,
-            $this,
-            $executionStorage
+            new ItemJob(
+                \PHP_INT_MAX,
+                new SequenceReader(\array_map($reader, $fragments)),
+                $this,
+                $this,
+                $executionStorage
+            ),
         );
     }
 
