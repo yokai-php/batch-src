@@ -88,13 +88,14 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Yokai\Batch\Bridge\Doctrine\Persistence\ObjectWriter;
 use Yokai\Batch\Bridge\Symfony\Serializer\DenormalizeItemProcessor;
+use Yokai\Batch\Job\AbstractDecoratedJob;
 use Yokai\Batch\Job\Item\ItemJob;
 use Yokai\Batch\Job\Item\Reader\Filesystem\JsonLinesReader;
 use Yokai\Batch\Job\Parameters\DefaultParameterAccessor;
 use Yokai\Batch\Job\Parameters\JobExecutionParameterAccessor;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
 
-final class ImportUsersJob extends ItemJob
+final class ImportUsersJob extends AbstractDecoratedJob
 {
     public function __construct(
         JobExecutionStorageInterface $executionStorage,
@@ -103,16 +104,18 @@ final class ImportUsersJob extends ItemJob
         KernelInterface $kernel,
     ) {
         parent::__construct(
-            500,
-            new JsonLinesReader(
-                new DefaultParameterAccessor(
-                    new JobExecutionParameterAccessor('importFile'),
-                    $kernel->getProjectDir() . '/var/import/users.jsonl'
-                )
-            ),
-            new DenormalizeItemProcessor($denormalizer, User::class),
-            new ObjectWriter($doctrine),
-            $executionStorage
+            new ItemJob(
+                500,
+                new JsonLinesReader(
+                    new DefaultParameterAccessor(
+                        new JobExecutionParameterAccessor('importFile'),
+                        $kernel->getProjectDir() . '/var/import/users.jsonl'
+                    )
+                ),
+                new DenormalizeItemProcessor($denormalizer, User::class),
+                new ObjectWriter($doctrine),
+                $executionStorage
+            )
         );
     }
 }

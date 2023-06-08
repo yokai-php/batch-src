@@ -13,6 +13,7 @@ use Yokai\Batch\Bridge\Box\Spout\Reader\Options\CSVOptions;
 use Yokai\Batch\Bridge\Doctrine\Persistence\ObjectWriter;
 use Yokai\Batch\Bridge\Symfony\Framework\JobWithStaticNameInterface;
 use Yokai\Batch\Bridge\Symfony\Validator\SkipInvalidItemProcessor;
+use Yokai\Batch\Job\AbstractDecoratedJob;
 use Yokai\Batch\Job\Item\ItemJob;
 use Yokai\Batch\Job\Item\Processor\ArrayMapProcessor;
 use Yokai\Batch\Job\Item\Processor\CallbackProcessor;
@@ -35,7 +36,7 @@ use Yokai\Batch\Storage\JobExecutionStorageInterface;
  * Writer :
  * - Write processed entities to the database.
  */
-abstract class AbstractImportStartWarsEntityJob extends ItemJob implements JobWithStaticNameInterface
+abstract class AbstractImportStartWarsEntityJob extends AbstractDecoratedJob implements JobWithStaticNameInterface
 {
     public function __construct(
         string $file,
@@ -45,21 +46,23 @@ abstract class AbstractImportStartWarsEntityJob extends ItemJob implements JobWi
         JobExecutionStorageInterface $executionStorage
     ) {
         parent::__construct(
-            50, // could be much higher, but set this way for demo purpose
-            new FlatFileReader(
-                new StaticValueParameterAccessor($file),
-                new CSVOptions(),
-                HeaderStrategy::combine()
-            ),
-            new ChainProcessor([
-                new ArrayMapProcessor(
-                    fn(string $value) => $value === 'NA' ? null : $value
+            new ItemJob(
+                50, // could be much higher, but set this way for demo purpose
+                new FlatFileReader(
+                    new StaticValueParameterAccessor($file),
+                    new CSVOptions(),
+                    HeaderStrategy::combine()
                 ),
-                new CallbackProcessor($process),
-                new SkipInvalidItemProcessor($validator),
-            ]),
-            new ObjectWriter($doctrine),
-            $executionStorage
+                new ChainProcessor([
+                    new ArrayMapProcessor(
+                        fn(string $value) => $value === 'NA' ? null : $value
+                    ),
+                    new CallbackProcessor($process),
+                    new SkipInvalidItemProcessor($validator),
+                ]),
+                new ObjectWriter($doctrine),
+                $executionStorage
+            )
         );
     }
 }
