@@ -1,6 +1,6 @@
 # Yokai Batch Development Monorepo
 
-[![Tests](https://img.shields.io/github/workflow/status/yokai-php/batch-src/Tests?style=flat-square&label=tests)](https://github.com/yokai-php/batch-src/actions)
+[![Tests](https://img.shields.io/github/actions/workflow/status/yokai-php/batch-src/tests.yml?branch=0.x&style=flat-square&label=tests)](https://github.com/yokai-php/batch-src/actions)
 [![Coverage](https://img.shields.io/codecov/c/github/yokai-php/batch-src?style=flat-square)](https://codecov.io/gh/yokai-php/batch-src)
 [![Contributors](https://img.shields.io/github/contributors/yokai-php/batch-src?style=flat-square)](https://github.com/yokai-php/batch-src/graphs/contributors)
 
