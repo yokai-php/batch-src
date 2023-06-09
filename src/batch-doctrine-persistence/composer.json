@@ -21,6 +21,7 @@
         }
     },
     "require-dev": {
+        "doctrine/annotations": "^1.14",
         "phpunit/phpunit": "^9.5"
     },
     "autoload-dev": {

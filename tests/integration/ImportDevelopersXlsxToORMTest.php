@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Sources\Tests\Integration;
 
+use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -55,8 +56,9 @@ class ImportDevelopersXlsxToORMTest extends JobTestCase
     {
         $this->persisted = [];
 
+        $connection = DriverManager::getConnection(['url' => \getenv('DATABASE_URL')]);
         $config = ORMSetup::createAnnotationMetadataConfiguration([__DIR__ . '/Entity'], true);
-        $this->entityManager = EntityManager::create(['url' => getenv('DATABASE_URL')], $config);
+        $this->entityManager = new EntityManager($connection, $config);
 
         (new SchemaTool($this->entityManager))
             ->createSchema($this->entityManager->getMetadataFactory()->getAllMetadata());

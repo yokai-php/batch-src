@@ -59,11 +59,30 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
         $assetFilter = $this->connection->getConfiguration()->getSchemaAssetsFilter();
         $this->connection->getConfiguration()->setSchemaAssetsFilter(null);
 
-        $comparator = new Comparator();
-        $schemaDiff = $comparator->compare($this->connection->getSchemaManager()->createSchema(), $this->getSchema());
+        $schemaManager = method_exists($this->connection, 'createSchemaManager')
+            ? $this->connection->createSchemaManager()
+            : $this->connection->getSchemaManager();
+        $comparator = method_exists($schemaManager, 'createComparator')
+            ? $schemaManager->createComparator()
+            : new Comparator();
+        $fromSchema = method_exists($schemaManager, 'introspectSchema')
+            ? $schemaManager->introspectSchema()
+            : $schemaManager->createSchema();
+        $toSchema = $this->getSchema();
+        $schemaDiff = method_exists($comparator, 'compareSchemas')
+            ? $comparator->compareSchemas($fromSchema, $toSchema)
+            : $comparator->compare($fromSchema, $toSchema);
+        $platform = $this->connection->getDatabasePlatform();
+        $schemaDiffQueries = method_exists($platform, 'getAlterSchemaSQL')
+            ? $platform->getAlterSchemaSQL($schemaDiff)
+            : $schemaDiff->toSaveSql($platform);
 
-        foreach ($schemaDiff->toSaveSql($this->connection->getDatabasePlatform()) as $sql) {
-            $this->connection->executeStatement($sql);
+        foreach ($schemaDiffQueries as $sql) {
+            if (method_exists($this->connection, 'executeStatement')) {
+                $this->connection->executeStatement($sql);
+            } else {
+                $this->connection->exec($sql);
+            }
         }
 
         $this->connection->getConfiguration()->setSchemaAssetsFilter($assetFilter);
