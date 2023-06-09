@@ -11,7 +11,10 @@ final class JobAssert
 {
     public static function assertIsSuccessful(JobExecution $execution): void
     {
-        Assert::assertTrue($execution->getStatus()->isSuccessful());
+        Assert::assertTrue(
+            $execution->getStatus()->isSuccessful(),
+            'Failed asserting the job succeed. Failure:' . PHP_EOL . ($execution->getAllFailures()[0] ?? null),
+        );
     }
 
     public static function assertItemJobStats(
