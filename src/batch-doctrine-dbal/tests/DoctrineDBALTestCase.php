@@ -29,7 +29,7 @@ abstract class DoctrineDBALTestCase extends TestCase
         foreach ($columns as $name => $type) {
             $table->addColumn($name, $type);
         }
-        $this->connection->getSchemaManager()->createTable($table);
+        $this->connection->createSchemaManager()->createTable($table);
     }
 
     protected function findAll(string $table): array
