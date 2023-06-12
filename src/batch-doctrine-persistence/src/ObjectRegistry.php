@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Yokai\Batch\Bridge\Doctrine\Persistence;
 
 use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\Persistence\ObjectRepository;
 use Doctrine\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectRepository;
 use Yokai\Batch\Exception\InvalidArgumentException;
 
 /**
