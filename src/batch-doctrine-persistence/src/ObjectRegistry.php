@@ -9,6 +9,10 @@ use Doctrine\Persistence\ObjectRepository;
 use Doctrine\Persistence\ObjectManager;
 use Yokai\Batch\Exception\InvalidArgumentException;
 
+/**
+ * This class will remember objects identifies when found.
+ * Using it as a proxy to your queries will simplify queries afterward.
+ */
 final class ObjectRegistry
 {
     /**
@@ -22,6 +26,8 @@ final class ObjectRegistry
     }
 
     /**
+     * Finds a single object by a set of criteria.
+     *
      * @template T of object
      *
      * @param class-string<T>      $class
@@ -39,6 +45,8 @@ final class ObjectRegistry
     }
 
     /**
+     * Finds a single object by using a callback to find it.
+     *
      * @template T of object
      *
      * @param class-string<T>                                        $class
@@ -72,6 +80,9 @@ final class ObjectRegistry
         return $object;
     }
 
+    /**
+     * Removes all remembered identities of all classes.
+     */
     public function reset(): void
     {
         $this->identities = [];
