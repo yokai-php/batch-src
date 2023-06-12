@@ -7,11 +7,12 @@ namespace Yokai\Batch\Bridge\Doctrine\Persistence;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectRepository;
 use Doctrine\Persistence\ObjectManager;
+use Yokai\Batch\Exception\InvalidArgumentException;
 
 final class ObjectRegistry
 {
     /**
-     * @var array<class-string, array<string, mixed[]>>
+     * @var array<class-string, array<string, array<string, mixed>>>
      */
     private array $identities = [];
 
@@ -21,7 +22,7 @@ final class ObjectRegistry
     }
 
     /**
-     * @template T
+     * @template T of object
      *
      * @param class-string<T>      $class
      * @param array<string, mixed> $criteria
@@ -38,17 +39,20 @@ final class ObjectRegistry
     }
 
     /**
-     * @template T
+     * @template T of object
      *
-     * @param class-string<T>                                 $class
-     * @param \Closure(ObjectRepository=, ObjectManager=): ?T $closure
-     * @param string|null                                     $key
+     * @param class-string<T>                                        $class
+     * @param \Closure(ObjectRepository<T>, ObjectManager): (T|null) $closure
+     * @param string|null                                            $key
      *
      * @return T|null
      */
     public function findOneUsing(string $class, \Closure $closure, string $key = null): ?object
     {
         $manager = $this->doctrine->getManagerForClass($class);
+        if ($manager === null) {
+            throw new InvalidArgumentException(sprintf('Class "%s" is not a managed Doctrine entity.', $class));
+        }
 
         $key ??= spl_object_hash($closure);
         $key = md5($key);
@@ -60,7 +64,7 @@ final class ObjectRegistry
 
         $object = $closure($manager->getRepository($class), $manager);
 
-        if (is_object($object)) {
+        if ($object instanceof $class) {
             $this->identities[$class] ??= [];
             $this->identities[$class][$key] = $manager->getClassMetadata($class)->getIdentifierValues($object);
         }
