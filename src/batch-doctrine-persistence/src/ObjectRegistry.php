@@ -55,7 +55,6 @@ final class ObjectRegistry
      *
      * @param class-string<T>                                        $class
      * @param \Closure(ObjectRepository<T>, ObjectManager): (T|null) $closure
-     * @param string|null                                            $key
      *
      * @return T|null
      */
