@@ -37,7 +37,7 @@ class FindOneByCalledOnlyOnceWhenFoundRepositoryDecorator implements ObjectRepos
             return null;
         }
 
-        $this->ensureNotCalledAlready(__METHOD__, func_get_args());
+        $this->ensureNotCalledAlready(__FUNCTION__, func_get_args());
 
         return $result;
     }
@@ -55,5 +55,7 @@ class FindOneByCalledOnlyOnceWhenFoundRepositoryDecorator implements ObjectRepos
                 'Method ' . $method . ' with args ' . $serializedArgs . ' has already been called'
             );
         }
+
+        $this->calls[$key] = true;
     }
 }

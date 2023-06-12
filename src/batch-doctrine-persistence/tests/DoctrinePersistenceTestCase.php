@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Tests\Bridge\Doctrine\Persistence;
 
+use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,8 +30,9 @@ abstract class DoctrinePersistenceTestCase extends TestCase
 
         $this->setUpConfigs($authConfig, $shopConfig);
 
-        $this->authManager = EntityManager::create(['url' => \getenv('DATABASE_URL')], $authConfig);
-        $this->shopManager = EntityManager::create(['url' => \getenv('DATABASE_URL')], $shopConfig);
+        $connection = DriverManager::getConnection(['url' => \getenv('DATABASE_URL')]);
+        $this->authManager = new EntityManager($connection, $authConfig);
+        $this->shopManager = new EntityManager($connection, $shopConfig);
 
         $this->doctrine = new SimpleManagerRegistry(['auth' => $this->authManager, 'shop' => $this->shopManager]);
 

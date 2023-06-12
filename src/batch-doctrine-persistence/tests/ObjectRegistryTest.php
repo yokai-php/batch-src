@@ -22,6 +22,14 @@ class ObjectRegistryTest extends DoctrinePersistenceTestCase
 
     protected function setUpConfigs(Configuration $authConfig, Configuration $shopConfig): void
     {
+        // Because the purpose of ObjectRegistry is to avoid calling the repositories too often
+        // we will decorate repository with an implementation that do not allow calling findOneBy more than once
+        $authConfig->setRepositoryFactory(
+            new DecoratedRepositoryFactory(
+                FindOneByCalledOnlyOnceWhenFoundRepositoryDecorator::class,
+                $authConfig->getRepositoryFactory()
+            )
+        );
         $shopConfig->setRepositoryFactory(
             new DecoratedRepositoryFactory(
                 FindOneByCalledOnlyOnceWhenFoundRepositoryDecorator::class,
@@ -74,8 +82,8 @@ class ObjectRegistryTest extends DoctrinePersistenceTestCase
         };
 
         $emmetClosure = $closureFactory($this->authManager, User::class, ['name' => 'Emmet']);
-        $lucyClosure = $closureFactory($this->shopManager, User::class, ['name' => 'Lucy']);
-        $johnClosure = $closureFactory($this->shopManager, User::class, ['name' => 'John']);
+        $lucyClosure = $closureFactory($this->authManager, User::class, ['name' => 'Lucy']);
+        $johnClosure = $closureFactory($this->authManager, User::class, ['name' => 'John']);
         $galaxyExplorerClosure = $closureFactory($this->shopManager, Product::class, ['name' => 'Galaxy Explorer']);
         $boutiqueHotelClosure = $closureFactory($this->shopManager, Product::class, ['name' => 'Boutique Hotel']);
         $hauntedHouseClosure = $closureFactory($this->shopManager, Product::class, ['name' => 'Haunted House']);
@@ -89,5 +97,20 @@ class ObjectRegistryTest extends DoctrinePersistenceTestCase
             self::assertSame($this->boutiqueHotel, $registry->findOneUsing(Product::class, $boutiqueHotelClosure));
             self::assertNull($registry->findOneUsing(Product::class, $hauntedHouseClosure));
         }
+    }
+
+    public function testReset(): void
+    {
+        // Not the behaviour of production code
+        // But here in the test, it is not possible to call the repository more than once
+        // Hence, if we call reset after using the registry at least once, the repository will fail
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Method findOneBy with args a:1:{i:0;a:1:{s:4:"name";s:5:"Emmet";}} has already been called');
+
+        $registry = new ObjectRegistry($this->doctrine);
+
+        self::assertSame($this->emmet, $registry->findOneBy(User::class, ['name' => 'Emmet']));
+        $registry->reset();
+        self::assertSame($this->emmet, $registry->findOneBy(User::class, ['name' => 'Emmet']));
     }
 }

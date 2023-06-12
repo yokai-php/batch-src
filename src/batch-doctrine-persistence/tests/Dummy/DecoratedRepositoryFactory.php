@@ -10,6 +10,11 @@ use Doctrine\Persistence\ObjectRepository;
 
 class DecoratedRepositoryFactory implements RepositoryFactory
 {
+    /**
+     * @var array<string, ObjectRepository>
+     */
+    private array $repositories = [];
+
     public function __construct(
         /**
          * @var class-string<ObjectRepository>
@@ -21,6 +26,6 @@ class DecoratedRepositoryFactory implements RepositoryFactory
 
     public function getRepository(EntityManagerInterface $entityManager, $entityName): ObjectRepository
     {
-        return new $this->class($this->decorated->getRepository($entityManager, $entityName));
+        return $this->repositories[$entityName] ??= new $this->class($this->decorated->getRepository($entityManager, $entityName));
     }
 }
