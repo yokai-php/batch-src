@@ -8,6 +8,7 @@ use Doctrine\ORM\Configuration;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
 use Yokai\Batch\Bridge\Doctrine\Persistence\ObjectRegistry;
+use Yokai\Batch\Exception\InvalidArgumentException;
 use Yokai\Batch\Tests\Bridge\Doctrine\Persistence\Dummy\DecoratedRepositoryFactory;
 use Yokai\Batch\Tests\Bridge\Doctrine\Persistence\Dummy\FindOneByCalledOnlyOnceWhenFoundRepositoryDecorator;
 use Yokai\Batch\Tests\Bridge\Doctrine\Persistence\Entity\Auth\User;
@@ -97,6 +98,15 @@ class ObjectRegistryTest extends DoctrinePersistenceTestCase
             self::assertSame($this->boutiqueHotel, $registry->findOneUsing(Product::class, $boutiqueHotelClosure));
             self::assertNull($registry->findOneUsing(Product::class, $hauntedHouseClosure));
         }
+    }
+
+    public function testNoManagerForClass(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Class "' . self::class . '" is not a managed Doctrine entity.');
+
+        $registry = new ObjectRegistry($this->doctrine);
+        $registry->findOneBy(self::class, ['name' => 'Emmet']);
     }
 
     public function testReset(): void
