@@ -39,7 +39,11 @@ final class ObjectRegistry
     {
         return $this->findOneUsing(
             $class,
-            fn(ObjectRepository $repository) => $repository->findOneBy($criteria),
+            function ($repository) use ($criteria) {
+                /** @var ObjectRepository<T> $repository */
+
+                return $repository->findOneBy($criteria);
+            },
             serialize($criteria)
         );
     }
