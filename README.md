@@ -15,11 +15,12 @@ Some bridges to popular packages :
 
 | Bridge with                                                                        |                                                                |
 |------------------------------------------------------------------------------------|----------------------------------------------------------------|
-| [`box/spout`](https://github.com/yokai-php/batch-box-spout)                        | Read/Write from/to CSV/ODS/XLSX                                |
+| `DEPRECATED` [`box/spout`](https://github.com/yokai-php/batch-box-spout)           | Read/Write from/to CSV/ODS/XLSX                                |
 | [`doctrine/dbal`](https://github.com/yokai-php/batch-doctrine-dbal)                | Read/Write from/to SQL databases                               |
 | [`doctrine/orm`](https://github.com/yokai-php/batch-doctrine-orm)                  | Read from Doctrine ORM entities                                |
 | [`doctrine/persistence`](https://github.com/yokai-php/batch-doctrine-persistence)  | Write to Doctrine ORM/ODM objects                              |
 | [`league/flysystem`](https://github.com/yokai-php/batch-league-flysystem)          | Copy/Move files in a job / Trigger job when file found         |
+| [`openspout/openspout`](https://github.com/yokai-php/batch-openspout)              | Read/Write from/to CSV/ODS/XLSX                                |
 | [`symfony/console`](https://github.com/yokai-php/batch-symfony-console)            | Add command to trigger jobs and async job launcher via command |
 | [`symfony/framework-bundle`](https://github.com/yokai-php/batch-symfony-framework) | Bundle to integrate with Symfony framework                     |
 | [`symfony/messenger`](https://github.com/yokai-php/batch-symfony-messenger)        | Trigger jobs using message dispatch                            |

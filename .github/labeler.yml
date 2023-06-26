@@ -11,6 +11,8 @@
   - 'src/batch-doctrine-persistence/**'
 'yokai/batch-league-flysystem':
   - 'src/batch-league-flysystem/**'
+'yokai/batch-openspout':
+  - 'src/batch-openspout/**'
 'yokai/batch-symfony-console':
   - 'src/batch-symfony-console/**'
 'yokai/batch-symfony-framework':
