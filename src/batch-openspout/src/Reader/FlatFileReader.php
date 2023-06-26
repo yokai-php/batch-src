@@ -53,7 +53,7 @@ final class FlatFileReader implements
             'csv' => new CSVReader($this->options),
             'xlsx' => new XLSXReader($this->options),
             'ods' => new ODSReader($this->options),
-            default => throw new UnsupportedTypeException('No readers supporting the given type: '.$extension),
+            default => throw new UnsupportedTypeException('No readers supporting the given type: ' . $extension),
         };
 
         $reader->open($path);

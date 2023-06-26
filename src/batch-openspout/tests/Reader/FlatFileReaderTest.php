@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Yokai\Batch\Tests\Bridge\OpenSpout\Reader;
 
 use Generator;
-use PHPUnit\Framework\TestCase;
-use Yokai\Batch\Bridge\OpenSpout\Reader\FlatFileReader;
-use Yokai\Batch\Bridge\OpenSpout\Reader\HeaderStrategy;
 use OpenSpout\Reader\CSV\Options as CSVOptions;
 use OpenSpout\Reader\ODS\Options as ODSOptions;
 use OpenSpout\Reader\XLSX\Options as XLSXOptions;
+use PHPUnit\Framework\TestCase;
+use Yokai\Batch\Bridge\OpenSpout\Reader\FlatFileReader;
+use Yokai\Batch\Bridge\OpenSpout\Reader\HeaderStrategy;
 use Yokai\Batch\Bridge\OpenSpout\Reader\SheetFilter;
 use Yokai\Batch\Job\Parameters\StaticValueParameterAccessor;
 use Yokai\Batch\JobExecution;
