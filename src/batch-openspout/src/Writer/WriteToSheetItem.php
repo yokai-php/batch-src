@@ -22,7 +22,7 @@ final class WriteToSheetItem
     /**
      * Static constructor from array data.
      *
-     * @param array<int|string, mixed> $item
+     * @param array<int, bool|\DateInterval|\DateTimeInterface|float|int|string> $item
      */
     public static function array(string $sheet, array $item, Style $style = null): self
     {

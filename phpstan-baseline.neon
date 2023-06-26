@@ -101,6 +101,66 @@ parameters:
 			path: src/batch-doctrine-dbal/src/JobExecutionRowNormalizer.php
 
 		-
+			message: "#^Method Yokai\\\\Batch\\\\Bridge\\\\OpenSpout\\\\Reader\\\\FlatFileReader\\:\\:rows\\(\\) has parameter \\$reader with generic interface OpenSpout\\\\Reader\\\\ReaderInterface but does not specify its types\\: T$#"
+			count: 1
+			path: src/batch-openspout/src/Reader/FlatFileReader.php
+
+		-
+			message: "#^Parameter \\#1 \\$headers of method Yokai\\\\Batch\\\\Bridge\\\\OpenSpout\\\\Reader\\\\HeaderStrategy\\:\\:setHeaders\\(\\) expects array\\<int, string\\>, array\\<bool\\|DateInterval\\|DateTimeInterface\\|float\\|int\\|string\\|null\\> given\\.$#"
+			count: 1
+			path: src/batch-openspout/src/Reader/FlatFileReader.php
+
+		-
+			message: "#^Parameter \\#1 \\$options of class OpenSpout\\\\Reader\\\\CSV\\\\Reader constructor expects OpenSpout\\\\Reader\\\\CSV\\\\Options\\|null, OpenSpout\\\\Reader\\\\CSV\\\\Options\\|OpenSpout\\\\Reader\\\\ODS\\\\Options\\|OpenSpout\\\\Reader\\\\XLSX\\\\Options\\|null given\\.$#"
+			count: 1
+			path: src/batch-openspout/src/Reader/FlatFileReader.php
+
+		-
+			message: "#^Parameter \\#1 \\$options of class OpenSpout\\\\Reader\\\\ODS\\\\Reader constructor expects OpenSpout\\\\Reader\\\\ODS\\\\Options\\|null, OpenSpout\\\\Reader\\\\CSV\\\\Options\\|OpenSpout\\\\Reader\\\\ODS\\\\Options\\|OpenSpout\\\\Reader\\\\XLSX\\\\Options\\|null given\\.$#"
+			count: 1
+			path: src/batch-openspout/src/Reader/FlatFileReader.php
+
+		-
+			message: "#^Parameter \\#1 \\$options of class OpenSpout\\\\Reader\\\\XLSX\\\\Reader constructor expects OpenSpout\\\\Reader\\\\XLSX\\\\Options\\|null, OpenSpout\\\\Reader\\\\CSV\\\\Options\\|OpenSpout\\\\Reader\\\\ODS\\\\Options\\|OpenSpout\\\\Reader\\\\XLSX\\\\Options\\|null given\\.$#"
+			count: 1
+			path: src/batch-openspout/src/Reader/FlatFileReader.php
+
+		-
+			message: "#^Parameter \\#1 \\$row of method Yokai\\\\Batch\\\\Bridge\\\\OpenSpout\\\\Reader\\\\HeaderStrategy\\:\\:getItem\\(\\) expects array\\<int, string\\>, array\\<bool\\|DateInterval\\|DateTimeInterface\\|float\\|int\\|string\\|null\\> given\\.$#"
+			count: 1
+			path: src/batch-openspout/src/Reader/FlatFileReader.php
+
+		-
+			message: "#^Method Yokai\\\\Batch\\\\Bridge\\\\OpenSpout\\\\Reader\\\\SheetFilter\\:\\:list\\(\\) has parameter \\$reader with generic interface OpenSpout\\\\Reader\\\\ReaderInterface but does not specify its types\\: T$#"
+			count: 1
+			path: src/batch-openspout/src/Reader/SheetFilter.php
+
+		-
+			message: "#^Method Yokai\\\\Batch\\\\Bridge\\\\OpenSpout\\\\Reader\\\\SheetFilter\\:\\:list\\(\\) return type with generic interface OpenSpout\\\\Reader\\\\SheetInterface does not specify its types\\: T$#"
+			count: 1
+			path: src/batch-openspout/src/Reader/SheetFilter.php
+
+		-
+			message: "#^PHPDoc tag @var for variable \\$sheet contains generic interface OpenSpout\\\\Reader\\\\SheetInterface but does not specify its types\\: T$#"
+			count: 1
+			path: src/batch-openspout/src/Reader/SheetFilter.php
+
+		-
+			message: "#^Parameter \\#1 \\$options of class OpenSpout\\\\Writer\\\\CSV\\\\Writer constructor expects OpenSpout\\\\Writer\\\\CSV\\\\Options\\|null, OpenSpout\\\\Writer\\\\CSV\\\\Options\\|OpenSpout\\\\Writer\\\\ODS\\\\Options\\|OpenSpout\\\\Writer\\\\XLSX\\\\Options\\|null given\\.$#"
+			count: 1
+			path: src/batch-openspout/src/Writer/FlatFileWriter.php
+
+		-
+			message: "#^Parameter \\#1 \\$options of class OpenSpout\\\\Writer\\\\ODS\\\\Writer constructor expects OpenSpout\\\\Writer\\\\ODS\\\\Options\\|null, OpenSpout\\\\Writer\\\\CSV\\\\Options\\|OpenSpout\\\\Writer\\\\ODS\\\\Options\\|OpenSpout\\\\Writer\\\\XLSX\\\\Options\\|null given\\.$#"
+			count: 1
+			path: src/batch-openspout/src/Writer/FlatFileWriter.php
+
+		-
+			message: "#^Parameter \\#1 \\$options of class OpenSpout\\\\Writer\\\\XLSX\\\\Writer constructor expects OpenSpout\\\\Writer\\\\XLSX\\\\Options\\|null, OpenSpout\\\\Writer\\\\CSV\\\\Options\\|OpenSpout\\\\Writer\\\\ODS\\\\Options\\|OpenSpout\\\\Writer\\\\XLSX\\\\Options\\|null given\\.$#"
+			count: 1
+			path: src/batch-openspout/src/Writer/FlatFileWriter.php
+
+		-
 			message: "#^Cannot access offset 'connection' on mixed\\.$#"
 			count: 1
 			path: src/batch-symfony-framework/src/DependencyInjection/YokaiBatchExtension.php
