@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Sources\Tests\Integration\Job;
 
-use Box\Spout\Common\Entity\Row;
-use Box\Spout\Common\Type;
-use Box\Spout\Reader\Common\Creator\ReaderFactory;
-use Box\Spout\Reader\SheetInterface;
-use Yokai\Batch\Bridge\Box\Spout\Writer\FlatFileWriter;
-use Yokai\Batch\Bridge\Box\Spout\Writer\Options\CSVOptions;
+use OpenSpout\Common\Entity\Row;
+use OpenSpout\Reader\SheetInterface;
+use OpenSpout\Reader\XLSX\Reader;
+use Yokai\Batch\Bridge\OpenSpout\Writer\FlatFileWriter;
 use Yokai\Batch\Job\JobInterface;
 use Yokai\Batch\Job\Parameters\StaticValueParameterAccessor;
 use Yokai\Batch\JobExecution;
@@ -30,7 +28,7 @@ final class SplitDeveloperXlsxJob implements JobInterface
         $repositories = [];
         $developers = [];
 
-        $reader = ReaderFactory::createFromType(Type::XLSX);
+        $reader = new Reader();
         $reader->open($this->inputFile);
         $sheets = iterator_to_array($reader->getSheetIterator(), false);
         [$badgeSheet, $repositorySheet] = $sheets;
@@ -81,7 +79,7 @@ final class SplitDeveloperXlsxJob implements JobInterface
 
     private function writeToCsv(string $filename, array $data, array $headers): void
     {
-        $writer = new FlatFileWriter(new StaticValueParameterAccessor($filename), new CSVOptions(), $headers);
+        $writer = new FlatFileWriter(new StaticValueParameterAccessor($filename), null, null, $headers);
         $writer->setJobExecution(JobExecution::createRoot('fake', 'fake'));
         $writer->initialize();
         $writer->write($data);

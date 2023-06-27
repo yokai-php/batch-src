@@ -36,6 +36,7 @@ see https://github.com/yokai-php/batch-src/releases/tag/{created tag}
   - https://github.com/yokai-php/batch-doctrine-orm/releases/new
   - https://github.com/yokai-php/batch-doctrine-persistence/releases/new
   - https://github.com/yokai-php/batch-league-flysystem/releases/new
+  - https://github.com/yokai-php/batch-openspout/releases/new
   - https://github.com/yokai-php/batch-symfony-console/releases/new
   - https://github.com/yokai-php/batch-symfony-framework/releases/new
   - https://github.com/yokai-php/batch-symfony-messenger/releases/new

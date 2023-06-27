@@ -1,16 +1,9 @@
 # box/spout bridge for Batch processing library
 
-[![Latest Stable Version](https://img.shields.io/packagist/v/yokai/batch-box-spout?style=flat-square)](https://packagist.org/packages/yokai/batch-box-spout)
-[![Downloads Monthly](https://img.shields.io/packagist/dm/yokai/batch-box-spout?style=flat-square)](https://packagist.org/packages/yokai/batch-box-spout)
+[![Latest Stable Version](https://img.shields.io/packagist/v/yokai/batch-openspout?style=flat-square)](https://packagist.org/packages/yokai/batch-openspout)
+[![Downloads Monthly](https://img.shields.io/packagist/dm/yokai/batch-openspout?style=flat-square)](https://packagist.org/packages/yokai/batch-openspout)
 
-[`box/spout`](https://github.com/box/spout) bridge for [Batch](https://github.com/yokai-php/batch) processing library.
-
-
-## :warning: DEPRECATED
-
-This library is deprecated because the package it relies on was also deprecated.
-The library has been replaced with [`openspout/openspout`](https://github.com/openspout/openspout).
-And this bridge was replaced with [`yokai/batch-openspout`](https://github.com/yokai-php/batch-openspout).
+[`openspout/openspout`](https://github.com/openspout/openspout) bridge for [Batch](https://github.com/yokai-php/batch) processing library.
 
 
 ## :warning: BETA
@@ -23,7 +16,7 @@ This is why you should stick to a `v0.[minor].*` requirement !
 # Installation
 
 ```
-composer require yokai/batch-box-spout
+composer require yokai/batch-openspout
 ```
 
 

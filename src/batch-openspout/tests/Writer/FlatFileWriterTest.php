@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Yokai\Batch\Tests\Bridge\Box\Spout\Writer;
+namespace Yokai\Batch\Tests\Bridge\OpenSpout\Writer;
 
-use Box\Spout\Common\Entity\Style\CellAlignment;
-use Box\Spout\Common\Entity\Style\Color;
-use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
-use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
+use OpenSpout\Common\Entity\Row;
+use OpenSpout\Common\Entity\Style\CellAlignment;
+use OpenSpout\Common\Entity\Style\Color;
+use OpenSpout\Common\Entity\Style\Style;
+use OpenSpout\Writer\CSV\Options as CSVOptions;
+use OpenSpout\Writer\ODS\Options as ODSOptions;
+use OpenSpout\Writer\XLSX\Options as XLSXOptions;
 use PHPUnit\Framework\TestCase;
-use Yokai\Batch\Bridge\Box\Spout\Writer\FlatFileWriter;
-use Yokai\Batch\Bridge\Box\Spout\Writer\Options\CSVOptions;
-use Yokai\Batch\Bridge\Box\Spout\Writer\Options\ODSOptions;
-use Yokai\Batch\Bridge\Box\Spout\Writer\Options\XLSXOptions;
-use Yokai\Batch\Bridge\Box\Spout\Writer\WriteToSheetItem;
+use Yokai\Batch\Bridge\OpenSpout\Writer\FlatFileWriter;
+use Yokai\Batch\Bridge\OpenSpout\Writer\WriteToSheetItem;
 use Yokai\Batch\Exception\BadMethodCallException;
 use Yokai\Batch\Exception\RuntimeException;
 use Yokai\Batch\Exception\UnexpectedValueException;
@@ -22,14 +22,15 @@ use Yokai\Batch\JobExecution;
 
 class FlatFileWriterTest extends TestCase
 {
-    private const WRITE_DIR = ARTIFACT_DIR . '/box-spout-flat-file-writer';
+    private const WRITE_DIR = ARTIFACT_DIR . '/openspout-flat-file-writer';
 
     /**
      * @dataProvider sets
      */
     public function testWrite(
         string $filename,
-        callable $options,
+        ?object $options,
+        ?string $defaultSheet,
         ?array $headers,
         iterable $itemsToWrite,
         string $expectedContent
@@ -37,7 +38,7 @@ class FlatFileWriterTest extends TestCase
         $file = self::WRITE_DIR . '/' . $filename;
         self::assertFileDoesNotExist($file);
 
-        $writer = new FlatFileWriter(new StaticValueParameterAccessor($file), $options(), $headers);
+        $writer = new FlatFileWriter(new StaticValueParameterAccessor($file), $options, $defaultSheet, $headers);
         $writer->setJobExecution(JobExecution::createRoot('123456789', 'export'));
 
         $writer->initialize();
@@ -67,23 +68,28 @@ Jane,Doe
 Jack,Doe
 CSV;
 
-        foreach ($this->types() as [$type, $options]) {
+        foreach ($this->types() as [$type]) {
             yield [
                 "no-header.$type",
-                $options,
+                null,
+                null,
                 null,
                 $items,
                 $contentWithoutHeader,
             ];
             yield [
                 "with-header.$type",
-                $options,
+                null,
+                null,
                 $headers,
                 $items,
                 $contentWithHeader,
             ];
         }
 
+        $options = new CSVOptions();
+        $options->FIELD_DELIMITER = ';';
+        $options->FIELD_ENCLOSURE = '|';
         $content = <<<CSV
 John;Doe
 Jane;Doe
@@ -91,63 +97,68 @@ Jack;Doe
 CSV;
         yield [
             "custom.csv",
-            fn() => new CSVOptions(';', '|'),
+            $options,
+            null,
             null,
             $items,
             $content,
         ];
 
-        $style = (new StyleBuilder())
+        $style = (new Style())
             ->setFontBold()
             ->setFontSize(15)
             ->setFontColor(Color::BLUE)
             ->setShouldWrapText()
             ->setCellAlignment(CellAlignment::RIGHT)
-            ->setBackgroundColor(Color::YELLOW)
-            ->build();
+            ->setBackgroundColor(Color::YELLOW);
 
+        $options = new XLSXOptions();
+        $options->DEFAULT_ROW_STYLE = $style;
         yield [
             "total-style.xlsx",
-            fn() => new XLSXOptions('Sheet1 with styles', $style),
+            $options,
+            'Sheet1 with styles',
             null,
             $items,
             $contentWithoutHeader,
         ];
+        $options = new ODSOptions();
+        $options->DEFAULT_ROW_STYLE = $style;
         yield [
             "total-style.ods",
-            fn() => new ODSOptions('Sheet1 with styles', $style),
+            $options,
+            'Sheet1 with styles',
             null,
             $items,
             $contentWithoutHeader,
         ];
 
-        $blue = (new StyleBuilder())
+        $blue = (new Style())
             ->setFontBold()
-            ->setFontColor(Color::BLUE)
-            ->build();
-        $red = (new StyleBuilder())
+            ->setFontColor(Color::BLUE);
+        $red = (new Style())
             ->setFontBold()
-            ->setFontColor(Color::RED)
-            ->build();
-        $green = (new StyleBuilder())
+            ->setFontColor(Color::RED);
+        $green = (new Style())
             ->setFontBold()
-            ->setFontColor(Color::GREEN)
-            ->build();
+            ->setFontColor(Color::GREEN);
         $styledItems = [
-            WriterEntityFactory::createRowFromArray(['John', 'Doe'], $blue),
-            WriterEntityFactory::createRowFromArray(['Jane', 'Doe'], $red),
-            WriterEntityFactory::createRowFromArray(['Jack', 'Doe'], $green),
+            Row::fromValues(['John', 'Doe'], $blue),
+            Row::fromValues(['Jane', 'Doe'], $red),
+            Row::fromValues(['Jack', 'Doe'], $green),
         ];
         yield [
             "partial-style.xlsx",
-            fn() => new XLSXOptions(),
+            null,
+            null,
             null,
             $styledItems,
             $contentWithoutHeader,
         ];
         yield [
             "partial-style.ods",
-            fn() => new ODSOptions(),
+            null,
+            null,
             null,
             $styledItems,
             $contentWithoutHeader,
@@ -157,27 +168,27 @@ CSV;
     /**
      * @dataProvider types
      */
-    public function testWriteInvalidItem(string $type, callable $options): void
+    public function testWriteInvalidItem(string $type): void
     {
         $this->expectException(UnexpectedValueException::class);
 
         $file = self::WRITE_DIR . '/invalid-item.' . $type;
-        $writer = new FlatFileWriter(new StaticValueParameterAccessor($file), $options());
+        $writer = new FlatFileWriter(new StaticValueParameterAccessor($file));
         $writer->setJobExecution(JobExecution::createRoot('123456789', 'export'));
 
         $writer->initialize();
-        $writer->write([true]); // writer accept collection of array or \Box\Spout\Common\Entity\Row
+        $writer->write([true]); // writer accept collection of array or \OpenSpout\Common\Entity\Row
     }
 
     /**
      * @dataProvider types
      */
-    public function testCannotCreateFile(string $type, callable $options): void
+    public function testCannotCreateFile(string $type): void
     {
         $this->expectException(RuntimeException::class);
 
         $file = '/path/to/a/dir/that/do/not/exists/and/not/creatable/file.' . $type;
-        $writer = new FlatFileWriter(new StaticValueParameterAccessor($file), $options());
+        $writer = new FlatFileWriter(new StaticValueParameterAccessor($file));
         $writer->setJobExecution(JobExecution::createRoot('123456789', 'export'));
 
         $writer->initialize();
@@ -186,56 +197,51 @@ CSV;
     /**
      * @dataProvider types
      */
-    public function testShouldInitializeBeforeWrite(string $type, callable $options): void
+    public function testShouldInitializeBeforeWrite(string $type): void
     {
         $this->expectException(BadMethodCallException::class);
 
         $file = self::WRITE_DIR . '/should-initialize-before-write.' . $type;
-        $writer = new FlatFileWriter(new StaticValueParameterAccessor($file), $options());
+        $writer = new FlatFileWriter(new StaticValueParameterAccessor($file));
         $writer->write([true]);
     }
 
     /**
      * @dataProvider types
      */
-    public function testShouldInitializeBeforeFlush(string $type, callable $options): void
+    public function testShouldInitializeBeforeFlush(string $type): void
     {
         $this->expectException(BadMethodCallException::class);
 
         $file = self::WRITE_DIR . '/should-initialize-before-flush.' . $type;
-        $writer = new FlatFileWriter(new StaticValueParameterAccessor($file), $options());
+        $writer = new FlatFileWriter(new StaticValueParameterAccessor($file));
         $writer->flush();
     }
 
     public function types(): \Generator
     {
-        $types = [
-            'csv' => fn() => new CSVOptions(),
-            'xlsx' => fn() => new XLSXOptions(),
-            'ods' => fn() => new ODSOptions(),
-        ];
-        foreach ($types as $type => $options) {
-            yield [$type, $options];
-        }
+        yield ['csv'];
+        yield ['ods'];
+        yield ['xlsx'];
     }
 
     /**
-     * @dataProvider multipleSheetsOptions
+     * @dataProvider multipleSheets
      */
-    public function testWriteMultipleSheets(string $type, callable $options): void
+    public function testWriteMultipleSheets(string $type, ?string $defaultSheet): void
     {
         $file = self::WRITE_DIR . '/multiple-sheets.' . $type;
         self::assertFileDoesNotExist($file);
 
-        $writer = new FlatFileWriter(new StaticValueParameterAccessor($file), $options());
+        $writer = new FlatFileWriter(new StaticValueParameterAccessor($file), null, $defaultSheet);
         $writer->setJobExecution(JobExecution::createRoot('123456789', 'export'));
 
         $writer->initialize();
         $writer->write([
             WriteToSheetItem::array('English', ['John', 'Doe']),
             WriteToSheetItem::array('Français', ['Jean', 'Aimar']),
-            WriteToSheetItem::row('English', WriterEntityFactory::createRowFromArray(['Jack', 'Doe'])),
-            WriteToSheetItem::row('Français', WriterEntityFactory::createRowFromArray(['Jacques', 'Ouzi'])),
+            WriteToSheetItem::row('English', Row::fromValues(['Jack', 'Doe'])),
+            WriteToSheetItem::row('Français', Row::fromValues(['Jacques', 'Ouzi'])),
         ]);
         $writer->flush();
 
@@ -258,28 +264,23 @@ CSV;
         }
     }
 
-    public function multipleSheetsOptions(): \Generator
+    public function multipleSheets(): \Generator
     {
-        $types = [
-            'csv' => fn() => new CSVOptions(),
-            'xlsx' => fn() => new XLSXOptions('English'),
-            'ods' => fn() => new ODSOptions('English'),
-        ];
-        foreach ($types as $type => $options) {
-            yield [$type, $options];
-        }
+        yield ['csv', null];
+        yield ['xlsx', 'English'];
+        yield ['ods', 'English'];
     }
 
     /**
      * @dataProvider wrongOptions
      */
-    public function testWrongOptions(string $type, callable $options): void
+    public function testWrongOptions(string $type, object $options): void
     {
-        $this->expectException(UnexpectedValueException::class);
+        $this->expectException(\TypeError::class);
 
         $file = self::WRITE_DIR . '/should-initialize-before-flush.' . $type;
         $jobExecution = JobExecution::createRoot('123456789', 'parent');
-        $reader = new FlatFileWriter(new StaticValueParameterAccessor($file), $options());
+        $reader = new FlatFileWriter(new StaticValueParameterAccessor($file), $options);
         $reader->setJobExecution($jobExecution);
         $reader->initialize();
     }
@@ -287,34 +288,16 @@ CSV;
     public function wrongOptions(): \Generator
     {
         // with CSV file, CSVOptions is expected
-        yield [
-            'csv',
-            fn() => new XLSXOptions(),
-        ];
-        yield [
-            'csv',
-            fn() => new ODSOptions(),
-        ];
+        yield ['csv', new XLSXOptions()];
+        yield ['csv', new ODSOptions()];
 
         // with ODS file, ODSOptions is expected
-        yield [
-            'ods',
-            fn() => new CSVOptions(),
-        ];
-        yield [
-            'ods',
-            fn() => new XLSXOptions(),
-        ];
+        yield ['ods', new CSVOptions()];
+        yield ['ods', new XLSXOptions()];
 
         // with XLSX file, XLSXOptions is expected
-        yield [
-            'xlsx',
-            fn() => new CSVOptions(),
-        ];
-        yield [
-            'xlsx',
-            fn() => new ODSOptions(),
-        ];
+        yield ['xlsx', new CSVOptions()];
+        yield ['xlsx', new ODSOptions()];
     }
 
     private static function assertFileContents(string $filePath, string $inlineData): void

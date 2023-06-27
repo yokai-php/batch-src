@@ -12,10 +12,9 @@ use Doctrine\Persistence\ManagerRegistry;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Yokai\Batch\Bridge\Box\Spout\Reader\FlatFileReader;
-use Yokai\Batch\Bridge\Box\Spout\Reader\HeaderStrategy;
-use Yokai\Batch\Bridge\Box\Spout\Reader\Options\CSVOptions;
 use Yokai\Batch\Bridge\Doctrine\Persistence\ObjectWriter;
+use Yokai\Batch\Bridge\OpenSpout\Reader\FlatFileReader;
+use Yokai\Batch\Bridge\OpenSpout\Reader\HeaderStrategy;
 use Yokai\Batch\Job\Item\ItemJob;
 use Yokai\Batch\Job\JobInterface;
 use Yokai\Batch\Job\JobWithChildJobs;
@@ -85,9 +84,8 @@ class ImportDevelopersXlsxToORMTest extends JobTestCase
 
         $csvReader = function (string $file): FlatFileReader {
             return new FlatFileReader(
-                new StaticValueParameterAccessor($file),
-                new CSVOptions(),
-                HeaderStrategy::combine()
+                filePath: new StaticValueParameterAccessor($file),
+                headerStrategy: HeaderStrategy::combine(),
             );
         };
 
