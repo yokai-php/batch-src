@@ -79,7 +79,7 @@ final class SplitDeveloperXlsxJob implements JobInterface
 
     private function writeToCsv(string $filename, array $data, array $headers): void
     {
-        $writer = new FlatFileWriter(new StaticValueParameterAccessor($filename), null, $headers);
+        $writer = new FlatFileWriter(new StaticValueParameterAccessor($filename), null, null, $headers);
         $writer->setJobExecution(JobExecution::createRoot('fake', 'fake'));
         $writer->initialize();
         $writer->write($data);

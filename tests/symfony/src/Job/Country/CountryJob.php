@@ -78,7 +78,7 @@ final class CountryJob extends AbstractDecoratedJob implements
         $headers = \array_merge(['iso2'], $fragments);
         $this->writer = new ChainWriter([
             new SummaryWriter(new StaticValueParameterAccessor('countries')),
-            new FlatFileWriter($writePath('csv'), null, $headers),
+            new FlatFileWriter($writePath('csv'), null, null, $headers),
             new JsonLinesWriter($writePath('jsonl')),
         ]);
 
