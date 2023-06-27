@@ -6,7 +6,10 @@ written its own line.
 ```php
 <?php
 
-use OpenSpout\Writer\Common\Creator\Style\StyleBuilder;
+use OpenSpout\Common\Entity\Style\Style;
+use OpenSpout\Writer\CSV\Options as CSVOptions;
+use OpenSpout\Writer\ODS\Options as ODSOptions;
+use OpenSpout\Writer\XLSX\Options as XLSXOptions;
 use Yokai\Batch\Bridge\OpenSpout\Writer\FlatFileWriter;
 use Yokai\Batch\Bridge\OpenSpout\Writer\Options\CSVOptions;
 use Yokai\Batch\Bridge\OpenSpout\Writer\Options\ODSOptions;
@@ -15,24 +18,30 @@ use Yokai\Batch\Job\Parameters\StaticValueParameterAccessor;
 
 // Write items to .xlsx file
 // That file will not contain a header line
-new FlatFileWriter(new StaticValueParameterAccessor('/path/to/file.xlsx'), new XLSXOptions());
+new FlatFileWriter(new StaticValueParameterAccessor('/path/to/file.xlsx'));
 
 // Write items to .csv file
 // That file will not contain a header line
 // The CSV delimiter and enclosure has been changed from default (respectively ',' & '"')
+$options = new CSVOptions();
+$options->FIELD_DELIMITER = ';';
+$options->FIELD_ENCLOSURE = '|';
 new FlatFileWriter(
     new StaticValueParameterAccessor('/path/to/file.csv'),
-    new CSVOptions(';', '|')
+    $options,
 );
 
 // Write items to .ods file
 // That file will contain a header line with : static | header | keys
 // Change the sheet name data will be written
 // Change the default style of each cell
+$options = new ODSOptions();
+$options->DEFAULT_ROW_STYLE = (new Style())->setFontBold();
 new FlatFileWriter(
     new StaticValueParameterAccessor('/path/to/file.ods'),
-    new ODSOptions('The sheet name', (new StyleBuilder())->setFontBold()->build()),
-    ['static', 'header', 'keys']
+    $options,
+    'The sheet name',
+    ['static', 'header', 'keys'],
 );
 ```
 
