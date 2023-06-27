@@ -38,11 +38,11 @@ final class FlatFileWriter implements
 
     private ?WriterInterface $writer = null;
     private bool $headersAdded = false;
-    private ?string $defaultSheet = null;
 
     public function __construct(
         private JobParameterAccessorInterface $filePath,
         private CSVOptions|ODSOptions|XLSXOptions|null $options = null,
+        private string|null $defaultSheet = null,
         /**
          * @var list<string>|null
          */
@@ -69,7 +69,11 @@ final class FlatFileWriter implements
         $this->writer->openToFile($path);
 
         if ($this->writer instanceof AbstractWriterMultiSheets) {
-            $this->defaultSheet = $this->writer->getCurrentSheet()->getName();
+            if ($this->defaultSheet !== null) {
+                $this->writer->getCurrentSheet()->setName($this->defaultSheet);
+            } else {
+                $this->defaultSheet = $this->writer->getCurrentSheet()->getName();
+            }
         }
     }
 

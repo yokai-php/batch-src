@@ -29,7 +29,8 @@ class FlatFileWriterTest extends TestCase
      */
     public function testWrite(
         string $filename,
-        ?callable $options,
+        ?object $options,
+        ?string $defaultSheet,
         ?array $headers,
         iterable $itemsToWrite,
         string $expectedContent
@@ -37,7 +38,7 @@ class FlatFileWriterTest extends TestCase
         $file = self::WRITE_DIR . '/' . $filename;
         self::assertFileDoesNotExist($file);
 
-        $writer = new FlatFileWriter(new StaticValueParameterAccessor($file), $options ? $options() : null, $headers);
+        $writer = new FlatFileWriter(new StaticValueParameterAccessor($file), $options, $defaultSheet, $headers);
         $writer->setJobExecution(JobExecution::createRoot('123456789', 'export'));
 
         $writer->initialize();
@@ -72,11 +73,13 @@ CSV;
                 "no-header.$type",
                 null,
                 null,
+                null,
                 $items,
                 $contentWithoutHeader,
             ];
             yield [
                 "with-header.$type",
+                null,
                 null,
                 $headers,
                 $items,
@@ -94,7 +97,8 @@ Jack;Doe
 CSV;
         yield [
             "custom.csv",
-            fn() => $options,
+            $options,
+            null,
             null,
             $items,
             $content,
@@ -112,7 +116,8 @@ CSV;
         $options->DEFAULT_ROW_STYLE = $style;
         yield [
             "total-style.xlsx",
-            fn() => $options,
+            $options,
+            'Sheet1 with styles',
             null,
             $items,
             $contentWithoutHeader,
@@ -121,7 +126,8 @@ CSV;
         $options->DEFAULT_ROW_STYLE = $style;
         yield [
             "total-style.ods",
-            fn() => $options,
+            $options,
+            'Sheet1 with styles',
             null,
             $items,
             $contentWithoutHeader,
@@ -145,11 +151,13 @@ CSV;
             "partial-style.xlsx",
             null,
             null,
+            null,
             $styledItems,
             $contentWithoutHeader,
         ];
         yield [
             "partial-style.ods",
+            null,
             null,
             null,
             $styledItems,
@@ -218,14 +226,14 @@ CSV;
     }
 
     /**
-     * @dataProvider multipleSheetsOptions
+     * @dataProvider multipleSheets
      */
-    public function testWriteMultipleSheets(string $type, callable $options): void
+    public function testWriteMultipleSheets(string $type, ?string $defaultSheet): void
     {
         $file = self::WRITE_DIR . '/multiple-sheets.' . $type;
         self::assertFileDoesNotExist($file);
 
-        $writer = new FlatFileWriter(new StaticValueParameterAccessor($file), $options());
+        $writer = new FlatFileWriter(new StaticValueParameterAccessor($file), null, $defaultSheet);
         $writer->setJobExecution(JobExecution::createRoot('123456789', 'export'));
 
         $writer->initialize();
@@ -256,28 +264,23 @@ CSV;
         }
     }
 
-    public function multipleSheetsOptions(): \Generator
+    public function multipleSheets(): \Generator
     {
-        $types = [
-            'csv' => fn() => new CSVOptions(),
-            'xlsx' => fn() => new XLSXOptions('English'),
-            'ods' => fn() => new ODSOptions('English'),
-        ];
-        foreach ($types as $type => $options) {
-            yield [$type, $options];
-        }
+        yield ['csv', null];
+        yield ['xlsx', 'English'];
+        yield ['ods', 'English'];
     }
 
     /**
      * @dataProvider wrongOptions
      */
-    public function testWrongOptions(string $type, callable $options): void
+    public function testWrongOptions(string $type, object $options): void
     {
         $this->expectException(\TypeError::class);
 
         $file = self::WRITE_DIR . '/should-initialize-before-flush.' . $type;
         $jobExecution = JobExecution::createRoot('123456789', 'parent');
-        $reader = new FlatFileWriter(new StaticValueParameterAccessor($file), $options());
+        $reader = new FlatFileWriter(new StaticValueParameterAccessor($file), $options);
         $reader->setJobExecution($jobExecution);
         $reader->initialize();
     }
@@ -285,34 +288,16 @@ CSV;
     public function wrongOptions(): \Generator
     {
         // with CSV file, CSVOptions is expected
-        yield [
-            'csv',
-            fn() => new XLSXOptions(),
-        ];
-        yield [
-            'csv',
-            fn() => new ODSOptions(),
-        ];
+        yield ['csv', new XLSXOptions()];
+        yield ['csv', new ODSOptions()];
 
         // with ODS file, ODSOptions is expected
-        yield [
-            'ods',
-            fn() => new CSVOptions(),
-        ];
-        yield [
-            'ods',
-            fn() => new XLSXOptions(),
-        ];
+        yield ['ods', new CSVOptions()];
+        yield ['ods', new XLSXOptions()];
 
         // with XLSX file, XLSXOptions is expected
-        yield [
-            'xlsx',
-            fn() => new CSVOptions(),
-        ];
-        yield [
-            'xlsx',
-            fn() => new ODSOptions(),
-        ];
+        yield ['xlsx', new CSVOptions()];
+        yield ['xlsx', new ODSOptions()];
     }
 
     private static function assertFileContents(string $filePath, string $inlineData): void

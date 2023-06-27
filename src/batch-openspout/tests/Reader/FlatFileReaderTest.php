@@ -22,7 +22,7 @@ class FlatFileReaderTest extends TestCase
      */
     public function testRead(
         string $file,
-        ?callable $options,
+        ?object $options,
         ?callable $sheetFilter,
         ?callable $headers,
         array $expected,
@@ -30,7 +30,7 @@ class FlatFileReaderTest extends TestCase
         $jobExecution = JobExecution::createRoot('123456789', 'parent');
         $reader = new FlatFileReader(
             new StaticValueParameterAccessor($file),
-            $options ? $options() : null,
+            $options,
             $sheetFilter ? $sheetFilter() : null,
             $headers ? $headers() : null
         );
@@ -120,7 +120,7 @@ class FlatFileReaderTest extends TestCase
         $options->ENCODING = 'ISO-8859-1';
         yield [
             __DIR__ . '/fixtures/iso-8859-1.csv',
-            fn() => $options,
+            $options,
             null,
             null,
             [
@@ -222,12 +222,12 @@ class FlatFileReaderTest extends TestCase
     /**
      * @dataProvider wrongOptions
      */
-    public function testWrongOptions(string $file, callable $options): void
+    public function testWrongOptions(string $file, object $options): void
     {
         $this->expectException(\TypeError::class);
 
         $jobExecution = JobExecution::createRoot('123456789', 'parent');
-        $reader = new FlatFileReader(new StaticValueParameterAccessor($file), $options());
+        $reader = new FlatFileReader(new StaticValueParameterAccessor($file), $options);
         $reader->setJobExecution($jobExecution);
 
         iterator_to_array($reader->read());
@@ -236,33 +236,15 @@ class FlatFileReaderTest extends TestCase
     public function wrongOptions(): \Generator
     {
         // with CSV file, CSVOptions is expected
-        yield [
-            __DIR__ . '/fixtures/sample.csv',
-            fn() => new XLSXOptions(),
-        ];
-        yield [
-            __DIR__ . '/fixtures/sample.csv',
-            fn() => new ODSOptions(),
-        ];
+        yield [__DIR__ . '/fixtures/sample.csv', new XLSXOptions()];
+        yield [__DIR__ . '/fixtures/sample.csv', new ODSOptions()];
 
         // with ODS file, ODSOptions is expected
-        yield [
-            __DIR__ . '/fixtures/sample.ods',
-            fn() => new CSVOptions(),
-        ];
-        yield [
-            __DIR__ . '/fixtures/sample.ods',
-            fn() => new XLSXOptions(),
-        ];
+        yield [__DIR__ . '/fixtures/sample.ods', new CSVOptions()];
+        yield [__DIR__ . '/fixtures/sample.ods', new XLSXOptions()];
 
         // with XLSX file, XLSXOptions is expected
-        yield [
-            __DIR__ . '/fixtures/sample.xlsx',
-            fn() => new CSVOptions(),
-        ];
-        yield [
-            __DIR__ . '/fixtures/sample.xlsx',
-            fn() => new ODSOptions(),
-        ];
+        yield [__DIR__ . '/fixtures/sample.xlsx', new CSVOptions()];
+        yield [__DIR__ . '/fixtures/sample.xlsx', new ODSOptions()];
     }
 }
