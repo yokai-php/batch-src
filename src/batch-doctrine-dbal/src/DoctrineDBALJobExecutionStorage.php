@@ -170,6 +170,9 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
             $queryTypes['statuses'] = Connection::PARAM_INT_ARRAY;
         }
 
+        if ($query->startTime()) {
+            $qb->andWhere($qb->expr()->isNotNull('start_time'));
+        }
         $startDateFrom = $query->startTime()?->getFrom();
         if ($startDateFrom) {
             $qb->andWhere($qb->expr()->gte('start_time', ':startDateFrom'));
@@ -183,6 +186,9 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
             $queryTypes['startDateTo'] = Types::DATETIME_IMMUTABLE;
         }
 
+        if ($query->endTime()) {
+            $qb->andWhere($qb->expr()->isNotNull('start_time'));
+        }
         $endDateFrom = $query->endTime()?->getFrom();
         if ($endDateFrom) {
             $qb->andWhere($qb->expr()->gte('end_time', ':endDateFrom'));
