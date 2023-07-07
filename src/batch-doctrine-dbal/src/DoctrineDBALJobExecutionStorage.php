@@ -170,6 +170,28 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
             $queryTypes['statuses'] = Connection::PARAM_INT_ARRAY;
         }
 
+        $startDateFrom = $query->startTime()?->getFrom();
+        if ($startDateFrom) {
+            $qb->andWhere($qb->expr()->gte('start_time', ':startDateFrom'));
+            $queryParameters['startDateFrom'] = $startDateFrom;
+        }
+        $startDateTo = $query->startTime()?->getTo();
+        if ($startDateTo) {
+            $qb->andWhere($qb->expr()->lte('start_time', ':startDateTo'));
+            $queryParameters['startDateTo'] = $startDateTo;
+        }
+
+        $endDateFrom = $query->endTime()?->getFrom();
+        if ($endDateFrom) {
+            $qb->andWhere($qb->expr()->gte('end_time', ':endDateFrom'));
+            $queryParameters['endDateFrom'] = $endDateFrom;
+        }
+        $endDateTo = $query->endTime()?->getTo();
+        if ($endDateTo) {
+            $qb->andWhere($qb->expr()->lte('end_time', ':endDateTo'));
+            $queryParameters['endDateTo'] = $endDateTo;
+        }
+
         switch ($query->sort()) {
             case Query::SORT_BY_START_ASC:
                 $qb->orderBy('start_time', 'asc');
