@@ -76,6 +76,7 @@ jobs:
 
   codecov:
     name: "Code coverage"
+    needs: [phpunit, phpstan, checkstyke, conventions]
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout"
