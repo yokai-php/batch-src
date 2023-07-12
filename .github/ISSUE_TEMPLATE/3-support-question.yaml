@@ -1,0 +1,18 @@
+name: 🤨 Support Question
+description: Ask for help if you are stuck with something
+labels: [ question ]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear and concise description of problem you are facing
+    validations:
+      required: true
+  - type: textarea
+    id: code
+    attributes:
+      label: Code
+      description: |
+        If your problem is related to some code, please provide it.
+        Include the Job code, config, some external resources if possible, and the JobExecution if you have it.
