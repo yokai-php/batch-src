@@ -29,6 +29,9 @@ class JobWithChildJobs implements JobInterface
     }
 
     /**
+     * When creating {@see JobWithChildJobs}, you might prefer that child jobs are not available from the outside.
+     * You can do it by yourself, but this method will do it for you in one line.
+     *
      * @param array<string, JobInterface> $children
      */
     public static function withAnonymousChildren(
