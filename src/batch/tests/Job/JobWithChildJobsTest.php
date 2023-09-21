@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Tests\Job;
 
+use PHPUnit\Framework\TestCase;
 use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Job\JobExecutor;
 use Yokai\Batch\Job\JobInterface;
 use Yokai\Batch\Job\JobWithChildJobs;
-use PHPUnit\Framework\TestCase;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\Registry\JobRegistry;
 use Yokai\Batch\Test\Storage\InMemoryJobExecutionStorage;
@@ -25,13 +25,13 @@ class JobWithChildJobsTest extends TestCase
     public function test(): void
     {
         $execution = $this->execute([
-            'import' => new class implements JobInterface {
+            'import' => new class() implements JobInterface {
                 public function execute(JobExecution $jobExecution): void
                 {
                     $jobExecution->getSummary()->set('executed', true);
                 }
             },
-            'report' => new class implements JobInterface {
+            'report' => new class() implements JobInterface {
                 public function execute(JobExecution $jobExecution): void
                 {
                     $jobExecution->getSummary()->set('executed', true);
@@ -67,13 +67,13 @@ class JobWithChildJobsTest extends TestCase
     public function testFirstChildFailing(): void
     {
         $execution = $this->execute([
-            'import' => new class implements JobInterface {
+            'import' => new class() implements JobInterface {
                 public function execute(JobExecution $jobExecution): void
                 {
                     throw new \RuntimeException('Expected failure');
                 }
             },
-            'report' => new class implements JobInterface {
+            'report' => new class() implements JobInterface {
                 public function execute(JobExecution $jobExecution): void
                 {
                     throw new \LogicException('Should never be executed');
