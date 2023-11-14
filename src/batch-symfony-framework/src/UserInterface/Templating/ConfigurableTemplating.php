@@ -11,6 +11,9 @@ use Twig\Environment;
  */
 final class ConfigurableTemplating implements TemplatingInterface
 {
+    /**
+     * @param array<string, mixed> $context
+     */
     public function __construct(
         private string $prefix,
         private array $context,
