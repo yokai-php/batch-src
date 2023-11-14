@@ -1,0 +1,27 @@
+{% trans_default_domain 'YokaiBatchBundle' %}
+
+{# @var execution \Yokai\Batch\JobExecution #}
+<div class="row">
+    <div class="col-md-6">
+        <div class="job-show-information">
+            {% include [
+                '@YokaiBatch/sonata/show/'~jobName~'/_information.html.twig',
+                '@YokaiBatch/sonata/show/_information.html.twig'
+            ] %}
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="job-show-parameters">
+            {% include [
+                '@YokaiBatch/sonata/show/'~jobName~'/_parameters.html.twig',
+                '@YokaiBatch/sonata/show/_parameters.html.twig'
+            ] %}
+        </div>
+        <div class="job-show-summary">
+            {% include [
+                '@YokaiBatch/sonata/show/'~jobName~'/_summary.html.twig',
+                '@YokaiBatch/sonata/show/_summary.html.twig'
+            ] %}
+        </div>
+    </div>
+</div>

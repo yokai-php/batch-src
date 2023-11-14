@@ -73,7 +73,7 @@ final class JobTest extends KernelTestCase
         $assert($execution, $container);
     }
 
-    public function configs(): Generator
+    public static function configs(): Generator
     {
         yield from CountryJobSet::sets();
         yield from StarWarsJobSet::sets();

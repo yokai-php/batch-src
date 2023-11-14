@@ -12,6 +12,17 @@ use Yokai\Batch\Sources\Tests\Convention\Packages;
 final class PackagesTest extends TestCase
 {
     /**
+     * Some package are wrapper around others
+     * This map helps to remove false negative
+     */
+    private const ALIASES = [
+        'symfony/twig-bundle' => ['twig/twig'],
+        'symfony/security-bundle' => ['symfony/security-core'],
+        'symfony/form' => ['symfony/options-resolver'],
+        'symfony/http-kernel' => ['symfony/http-foundation'],
+    ];
+
+    /**
      * Every individual package must declare explicit dependencies, based on use statements.
      *
      * @dataProvider packages
@@ -28,9 +39,16 @@ final class PackagesTest extends TestCase
             if (!\str_contains($require, '/')) {
                 continue; // php & extensions
             }
-            $requirePackage = Packages::getPackage($require);
-            foreach (\array_keys($requirePackage->composer->autoload()) as $prefix) {
-                $requirePrefixes[] = $prefix;
+
+            $add = \array_merge(
+                [$require],
+                self::ALIASES[$require] ?? [],
+            );
+            foreach ($add as $name) {
+                $requirePackage = Packages::getPackage($name);
+                foreach (\array_keys($requirePackage->composer->autoload()) as $prefix) {
+                    $requirePrefixes[] = $prefix;
+                }
             }
         }
 

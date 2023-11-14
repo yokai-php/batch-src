@@ -1,0 +1,29 @@
+{% trans_default_domain 'YokaiBatchBundle' %}
+
+{# @var execution \Yokai\Batch\JobExecution #}
+{# @var failure \Yokai\Batch\Failure #}
+{% set canSeeTraces = yokai_batch_grant_traces(execution) %}
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>{{ 'job.field.failure.message'|trans }}</th>
+        <th>{{ 'job.field.failure.class'|trans }}</th>
+        {% if canSeeTraces %}
+            <th>{{ 'job.field.failure.trace'|trans }}</th>
+        {% endif %}
+    </tr>
+    <tbody>
+    {% for failure in failures %}
+        <tr>
+            <td>{{ failure }}</td>
+            <td>{{ failure.class }}</td>
+            {% if canSeeTraces %}
+                <td>
+                    {% if failure.trace %}
+                        {% include '@YokaiBatch/sonata/_traces.html.twig' with {value: failure.trace} only %}
+                    {% endif %}
+                </td>
+            {% endif %}
+        </tr>
+    {% endfor %}
+</table>

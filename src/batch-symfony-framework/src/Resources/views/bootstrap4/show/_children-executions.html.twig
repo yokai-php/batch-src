@@ -1,0 +1,62 @@
+{% trans_default_domain 'YokaiBatchBundle' %}
+
+{# @var execution \Yokai\Batch\JobExecution #}
+{# @var childExecution \Yokai\Batch\JobExecution #}
+{% set hasChildFailures = failures|length > execution.failures|length %}
+{% set hasChildWarnings = warnings|length > execution.warnings|length %}
+<table class="table">
+    <thead>
+    <tr>
+        <th>{{ 'job.field.job_name'|trans }}</th>
+        <th>{{ 'job.field.status'|trans }}</th>
+        <th>{{ 'job.field.summary'|trans }}</th>
+        {% if hasChildFailures %}
+            <th>{{ 'job.field.failures'|trans }}</th>
+        {% endif %}
+        {% if hasChildWarnings %}
+            <th>{{ 'job.field.warnings'|trans }}</th>
+        {% endif %}
+        <th>{{ 'job.field.start_time'|trans }}</th>
+        <th>{{ 'job.field.end_time'|trans }}</th>
+    </tr>
+    <tbody>
+    {% for childExecution in execution.childExecutions %}
+        <tr>
+            <td>
+                {% include '@YokaiBatch/bootstrap4/_job-name.html.twig' with {execution: childExecution} only %}
+            </td>
+            <td>
+                {% include '@YokaiBatch/bootstrap4/_status.html.twig' with {execution: childExecution} only %}
+            </td>
+            <td>
+                {% if childExecution.summary|length > 0 %}
+                    {% include '@YokaiBatch/bootstrap4/_json.html.twig' with {value: childExecution.summary.iterator} only %}
+                {% endif %}
+            </td>
+            {% if hasChildFailures %}
+                <td>
+                    {% if childExecution.failures|length > 0 %}
+                        <div class="alert alert-danger">
+                            {{ childExecution.failures|join('<br>')|raw }}
+                        </div>
+                    {% endif %}
+                </td>
+            {% endif %}
+            {% if hasChildWarnings %}
+                <td>
+                    {% if childExecution.warnings|length > 0 %}
+                        <div class="alert alert-warning">
+                            {{ childExecution.warnings|join('<br>')|raw }}
+                        </div>
+                    {% endif %}
+                </td>
+            {% endif %}
+            <td>
+                {% include '@YokaiBatch/bootstrap4/_datetime.html.twig' with {value: childExecution.startTime} only %}
+            </td>
+            <td>
+                {% include '@YokaiBatch/bootstrap4/_datetime.html.twig' with {value: childExecution.endTime} only %}
+            </td>
+        </tr>
+    {% endfor %}
+</table>

@@ -1,0 +1,223 @@
+{% extends base_template %}
+
+{% trans_default_domain 'YokaiBatchBundle' %}
+
+{# @var execution \Yokai\Batch\JobExecution #}
+
+{% set parameters = app.request.query.all('filter') %}
+
+{% block title %}
+    - {{ 'job.name'|trans }}
+{% endblock %}
+
+{% block navbar_title %}
+{% endblock %}
+
+{%- block actions -%}
+{%- endblock -%}
+
+{%- block tab_menu -%}
+{%- endblock -%}
+
+{% block breadcrumb %}
+    <ol class="nav navbar-top-links breadcrumb">
+        <li>
+            <a href="{{ path('sonata_admin_dashboard') }}">
+                <i class="fa fa-home"></i>
+            </a>
+        </li>
+        <li>
+            <span>
+                {{ 'job.name'|trans }}
+            </span>
+        </li>
+    </ol>
+{% endblock %}
+
+{% block list_table %}
+    <div class="col-xs-12 col-md-12">
+        <div class="box box-primary"{% if pagination.is.last %} style="margin-bottom: 100px;"{% endif %}>
+            <div class="box-body{% if executions|length > 0 %} table-responsive no-padding{% endif %}">
+                <table class="table table-bordered table-striped table-hover sonata-ba-list">
+                    <thead>
+                    <tr class="sonata-ba-list-filter-header">
+                        <th class="sonata-ba-list-filter-header-text">
+                            {{ 'job.field.execution_id'|trans }}
+                        </th>
+                        <th class="sonata-ba-list-filter-header-text">
+                            {{ 'job.field.job_name'|trans }}
+                        </th>
+                        <th class="sonata-ba-list-filter-header-text">
+                            {{ 'job.field.status'|trans }}
+                        </th>
+                        <th class="sonata-ba-list-filter-header-datetime {% if sort.start.sorted %}sonata-ba-list-field-order-active sonata-ba-list-field-header-order-{{ sort.desc ? 'desc' : 'asc' }}{% endif %}">
+                            <a href="{{ path('yokai_batch.job_list', { filter: parameters, (sort.parameter): sort.start.switch }) }}">
+                                {{ 'job.field.start_time'|trans }}
+                            </a>
+                        </th>
+                        <th class="sonata-ba-list-filter-header-datetime {% if sort.end.sorted %}sonata-ba-list-field-order-active sonata-ba-list-field-header-order-{{ sort.desc ? 'desc' : 'asc' }}{% endif %}">
+                            <a href="{{ path('yokai_batch.job_list', { filter: parameters, (sort.parameter): sort.end.switch }) }}">
+                                {{ 'job.field.end_time'|trans }}
+                            </a>
+                        </th>
+                        <th class="sonata-ba-list-filter-header-actions"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for execution in executions %}
+                        <tr>
+                            <td class="sonata-ba-list-field sonata-ba-list-field-text">
+                                {% if yokai_batch_grant_view(execution) %}
+                                    <a class="sonata-link-identifier" href="{{ path('yokai_batch.job_view', { job: execution.jobName, id: execution.id }) }}">
+                                        {{ execution.id }}
+                                    </a>
+                                {% else %}
+                                    {{ execution.id }}
+                                {% endif %}
+                            </td>
+                            <td class="sonata-ba-list-field sonata-ba-list-field-text">
+                                {% include '@YokaiBatch/sonata/_job-name.html.twig' with { execution: execution } only %}
+                            </td>
+                            <td class="sonata-ba-list-field sonata-ba-list-field-text">
+                                {% include '@YokaiBatch/sonata/_status.html.twig' with { execution: execution } only %}
+                            </td>
+                            <td class="sonata-ba-list-field sonata-ba-list-field-datetime">
+                                {%- include '@SonataAdmin/CRUD/display_datetime.html.twig' with { value: execution.startTime } only -%}
+                            </td>
+                            <td class="sonata-ba-list-field sonata-ba-list-field-datetime">
+                                {%- include '@SonataAdmin/CRUD/display_datetime.html.twig' with { value: execution.endTime } only -%}
+                            </td>
+                            <td class="sonata-ba-list-field sonata-ba-list-field-actions">
+                                <div class="btn-group">
+                                    {% if yokai_batch_grant_view(execution) %}
+                                        <a
+                                            href="{{ path('yokai_batch.job_view', { job: execution.jobName, id: execution.id }) }}"
+                                            class="btn btn-sm btn-default view_link"
+                                            title="{{ 'action_show'|trans({}, 'SonataAdminBundle') }}"
+                                        >
+                                            <i class="fa fa-eye" aria-hidden="true"></i>
+                                            {{ 'action_show'|trans({}, 'SonataAdminBundle') }}
+                                        </a>
+                                    {% endif %}
+                                    {% if yokai_batch_grant_logs(execution) %}
+                                        <a
+                                            href="{{ path('yokai_batch.job_logs', { job: execution.jobName, id: execution.id }) }}"
+                                            class="btn btn-sm btn-default"
+                                            title="{{ 'job.action.download_logs'|trans }}"
+                                        >
+                                            <i class="fa fa-download" aria-hidden="true"></i> {{ 'job.action.download_logs'|trans }}
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% if executions|length > 0 and (pagination.prev.enabled or pagination.next.enabled) %}
+            <div class="box-footer">
+                <div class="text-center">
+                    <ul class="pagination">
+                        {% if pagination.current > 2 %}
+                            <li>
+                                <a href="{{ path('yokai_batch.job_list', { filter: parameters, (pagination.parameter): 1 }) }}"
+                                   title="{{ 'link_first_pager'|trans({}, 'SonataAdminBundle') }}">&laquo;</a>
+                            </li>
+                        {% endif %}
+
+                        {% if pagination.prev.enabled %}
+                            <li>
+                                <a href="{{ path('yokai_batch.job_list', { filter: parameters, (pagination.parameter): pagination.prev.value }) }}"
+                                   title="{{ 'link_previous_pager'|trans({}, 'SonataAdminBundle') }}">&lsaquo;</a>
+                            </li>
+                        {% endif %}
+
+                        {% if pagination.next.enabled %}
+                            <li>
+                                <a href="{{ path('yokai_batch.job_list', { filter: parameters, (pagination.parameter): pagination.next.value }) }}"
+                                   title="{{ 'link_next_pager'|trans({}, 'SonataAdminBundle') }}">&rsaquo;</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block list_filters_actions %}
+    <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown sonata-actions">
+            <a href="#" class="dropdown-toggle sonata-ba-action" data-toggle="dropdown">
+                <i class="fa fa-filter" aria-hidden="true"></i>
+                {{ 'link_filters'|trans({}, 'SonataAdminBundle') }}
+                <span class="badge sonata-filter-count"></span>
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+                {% for filter in form %}
+                    <li>
+                        <a href="#" class="sonata-toggle-filter sonata-ba-action"
+                           filter-target="filter-job-{{ filter.vars.name }}"
+                           filter-container="filter-container-job">
+                            <i class="fa {{ (filter.vars.name in filters) ? 'fa-check-square-o' : 'fa-square-o' }}"></i>
+                            {{ (filter.vars.label)|trans({}, filter.vars.translation_domain) }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </li>
+    </ul>
+{% endblock %}
+
+{% block list_filters %}
+    {% form_theme form filter_template %}
+    <div class="col-xs-12 col-md-12 sonata-filters-box" style="display: {{ (filters|length > 0) ? 'block' : 'none' }}" id="filter-container-job">
+        <div class="box box-primary" >
+            <div class="box-body">
+                <form class="sonata-filter-form form-horizontal" action="{{ path('yokai_batch.job_list') }}" method="GET" role="form">
+                    {{ form_errors(form) }}
+                    <div class="row">
+                        <div class="col-sm-9">
+                            {% for filter in form %}
+                                {% set filterVisible = true %}
+                                {% set filterActive = filter.vars.name in filters %}
+                                <div class="form-group" id="filter-job-{{ filter.vars.name }}" sonata-filter="{{ filterVisible ? 'true' : 'false' }}" style="display: {% if filterActive %}block{% else %}none{% endif %}">
+                                    <label for="{{ filter.vars.id }}" class="col-sm-3 control-label">{{ filter.vars.label|trans({}, filter.vars.translation_domain) }}</label>
+                                    <div class="col-sm-4 advanced-filter">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        {{ form_widget(filter) }}
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <label class="control-label">
+                                            <a href="#" class="sonata-toggle-filter sonata-ba-action" filter-target="filter-job-{{ filter.vars.name }}" filter-container="filter-container-job">
+                                                <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                                            </a>
+                                        </label>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-sm-3 text-center">
+                            {{ form_rest(form) }}
+
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-filter" aria-hidden="true"></i>
+                                    {{ 'btn_filter'|trans({}, 'SonataAdminBundle') }}
+                                </button>
+
+                                <a class="btn btn-default" href="{{ path('yokai_batch.job_list') }}">
+                                    {{ 'link_reset_filter'|trans({}, 'SonataAdminBundle') }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

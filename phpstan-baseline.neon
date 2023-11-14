@@ -161,44 +161,9 @@ parameters:
 			path: src/batch-openspout/src/Writer/FlatFileWriter.php
 
 		-
-			message: "#^Cannot access offset 'connection' on mixed\\.$#"
+			message: "#^Call to an undefined method Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\NodeDefinition\\:\\:children\\(\\)\\.$#"
 			count: 1
-			path: src/batch-symfony-framework/src/DependencyInjection/YokaiBatchExtension.php
-
-		-
-			message: "#^Cannot access offset 'dir' on mixed\\.$#"
-			count: 1
-			path: src/batch-symfony-framework/src/DependencyInjection/YokaiBatchExtension.php
-
-		-
-			message: "#^Cannot access offset 'serializer' on mixed\\.$#"
-			count: 1
-			path: src/batch-symfony-framework/src/DependencyInjection/YokaiBatchExtension.php
-
-		-
-			message: "#^Cannot access offset 'table' on mixed\\.$#"
-			count: 1
-			path: src/batch-symfony-framework/src/DependencyInjection/YokaiBatchExtension.php
-
-		-
-			message: "#^Parameter \\#1 \\$id of class Symfony\\\\Component\\\\DependencyInjection\\\\Reference constructor expects string, mixed given\\.$#"
-			count: 1
-			path: src/batch-symfony-framework/src/DependencyInjection/YokaiBatchExtension.php
-
-		-
-			message: "#^Parameter \\#1 \\$id of method Symfony\\\\Component\\\\DependencyInjection\\\\ContainerBuilder\\:\\:getDefinition\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/batch-symfony-framework/src/DependencyInjection/YokaiBatchExtension.php
-
-		-
-			message: "#^Parameter \\#2 \\$id of method Symfony\\\\Component\\\\DependencyInjection\\\\ContainerBuilder\\:\\:setAlias\\(\\) expects string\\|Symfony\\\\Component\\\\DependencyInjection\\\\Alias, mixed given\\.$#"
-			count: 1
-			path: src/batch-symfony-framework/src/DependencyInjection/YokaiBatchExtension.php
-
-		-
-			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
-			count: 3
-			path: src/batch-symfony-framework/src/DependencyInjection/YokaiBatchExtension.php
+			path: src/batch-symfony-framework/src/DependencyInjection/Configuration.php
 
 		-
 			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"

@@ -1,0 +1,10 @@
+{% extends "@YokaiBatch/bootstrap4/show/_summary.html.twig" %}
+
+{# @var execution \Yokai\Batch\JobExecution #}
+
+{% block body %}
+    <p>Count: {{ execution.summary.get('countries')|length }}</p>
+    {% for country in execution.summary.get('countries') %}
+        <img class="d-inline-flex" src="https://flagcdn.com/48x36/{{ country.iso2|lower }}.png" alt="{{ country.name }}"/>
+    {% endfor %}
+{% endblock %}

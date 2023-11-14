@@ -1,0 +1,27 @@
+{% trans_default_domain 'YokaiBatchBundle' %}
+
+{# @var execution \Yokai\Batch\JobExecution #}
+<div class="row">
+    <div class="col-md-6">
+        <div class="job-show-information">
+            {% include [
+                '@YokaiBatch/bootstrap4/show/'~jobName~'/_information.html.twig',
+                '@YokaiBatch/bootstrap4/show/_information.html.twig'
+            ] %}
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="job-show-parameters">
+            {% include [
+                '@YokaiBatch/bootstrap4/show/'~jobName~'/_parameters.html.twig',
+                '@YokaiBatch/bootstrap4/show/_parameters.html.twig'
+            ] %}
+        </div>
+        <div class="job-show-summary">
+            {% include [
+                '@YokaiBatch/bootstrap4/show/'~jobName~'/_summary.html.twig',
+                '@YokaiBatch/bootstrap4/show/_summary.html.twig'
+            ] %}
+        </div>
+    </div>
+</div>

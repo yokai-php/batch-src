@@ -25,7 +25,20 @@
         }
     },
     "require-dev": {
+        "sonata-project/admin-bundle": "^4.0",
+        "symfony/filesystem": "^5.0|^6.0",
+        "symfony/form": "^5.0|^6.0",
+        "symfony/security-bundle": "^5.0|^6.0",
+        "symfony/translation": "^5.0|^6.0",
+        "symfony/twig-bundle": "^5.0|^6.0",
         "phpunit/phpunit": "^9.5"
+    },
+    "suggest": {
+        "sonata-project/admin-bundle": "If you want a SonataAdmin like rendering in the user interface",
+        "symfony/form": "If you want the JobExecution form filter in the user interface",
+        "symfony/security-bundle": "If you want to secure the access to JobExecution in the user interface",
+        "symfony/translation": "Required if you want to enable the user interface",
+        "symfony/twig-bundle": "Required if you want to enable the user interface"
     },
     "autoload-dev": {
         "psr-4": {

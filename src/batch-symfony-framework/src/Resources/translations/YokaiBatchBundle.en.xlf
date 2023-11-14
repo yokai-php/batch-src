@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="job.name">
+                <source>job.name</source>
+                <target>Jobs</target>
+            </trans-unit>
+            <trans-unit id="job.title.list">
+                <source>job.title.list</source>
+                <target>Jobs list</target>
+            </trans-unit>
+            <trans-unit id="job.title.view">
+                <source>job.title.view</source>
+                <target>Job detail</target>
+            </trans-unit>
+            <trans-unit id="job.tab.general">
+                <source>job.tab.general</source>
+                <target>General</target>
+            </trans-unit>
+            <trans-unit id="job.tab.failures">
+                <source>job.tab.failures</source>
+                <target>Errors</target>
+            </trans-unit>
+            <trans-unit id="job.tab.warnings">
+                <source>job.tab.warnings</source>
+                <target>Warnings</target>
+            </trans-unit>
+            <trans-unit id="job.tab.children">
+                <source>job.tab.children</source>
+                <target>Children</target>
+            </trans-unit>
+            <trans-unit id="job.fieldset.information">
+                <source>job.fieldset.information</source>
+                <target>Information</target>
+            </trans-unit>
+            <trans-unit id="job.fieldset.parameters">
+                <source>job.fieldset.parameters</source>
+                <target>Parameters</target>
+            </trans-unit>
+            <trans-unit id="job.fieldset.summary">
+                <source>job.fieldset.summary</source>
+                <target>Summary</target>
+            </trans-unit>
+            <trans-unit id="job.field.execution_id">
+                <source>job.field.execution_id</source>
+                <target>Execution ID</target>
+            </trans-unit>
+            <trans-unit id="job.field.job_name">
+                <source>job.field.job_name</source>
+                <target>Job name</target>
+            </trans-unit>
+            <trans-unit id="job.field.status">
+                <source>job.field.status</source>
+                <target>Status</target>
+            </trans-unit>
+            <trans-unit id="job.field.start_time">
+                <source>job.field.start_time</source>
+                <target>Start time</target>
+            </trans-unit>
+            <trans-unit id="job.field.end_time">
+                <source>job.field.end_time</source>
+                <target>End time</target>
+            </trans-unit>
+            <trans-unit id="job.field.summary">
+                <source>job.field.summary</source>
+                <target>Information</target>
+            </trans-unit>
+            <trans-unit id="job.field.failures">
+                <source>job.field.failures</source>
+                <target>Errors</target>
+            </trans-unit>
+            <trans-unit id="job.field.warnings">
+                <source>job.field.warnings</source>
+                <target>Warnings</target>
+            </trans-unit>
+            <trans-unit id="job.field.failure.message">
+                <source>job.field.failure.message</source>
+                <target>Message</target>
+            </trans-unit>
+            <trans-unit id="job.field.failure.class">
+                <source>job.field.failure.class</source>
+                <target>Type</target>
+            </trans-unit>
+            <trans-unit id="job.field.failure.trace">
+                <source>job.field.failure.trace</source>
+                <target>Trace</target>
+            </trans-unit>
+            <trans-unit id="job.field.warning.message">
+                <source>job.field.warning.message</source>
+                <target>Message</target>
+            </trans-unit>
+            <trans-unit id="job.field.warning.context">
+                <source>job.field.warning.context</source>
+                <target>Context</target>
+            </trans-unit>
+            <trans-unit id="job.status.pending">
+                <source>job.status.pending</source>
+                <target>Pending</target>
+            </trans-unit>
+            <trans-unit id="job.status.running">
+                <source>job.status.running</source>
+                <target>Running</target>
+            </trans-unit>
+            <trans-unit id="job.status.stopped">
+                <source>job.status.stopped</source>
+                <target>Stopped</target>
+            </trans-unit>
+            <trans-unit id="job.status.completed">
+                <source>job.status.completed</source>
+                <target>Completed</target>
+            </trans-unit>
+            <trans-unit id="job.status.abandoned">
+                <source>job.status.abandoned</source>
+                <target>Abandoned</target>
+            </trans-unit>
+            <trans-unit id="job.status.failed">
+                <source>job.status.failed</source>
+                <target>Failed</target>
+            </trans-unit>
+            <trans-unit id="job.action.list">
+                <source>job.action.list</source>
+                <target>List</target>
+            </trans-unit>
+            <trans-unit id="job.action.filter">
+                <source>job.action.filter</source>
+                <target>Filter</target>
+            </trans-unit>
+            <trans-unit id="job.action.view">
+                <source>job.action.view</source>
+                <target>View</target>
+            </trans-unit>
+            <trans-unit id="job.action.download_logs">
+                <source>job.action.download_logs</source>
+                <target>Download logs</target>
+            </trans-unit>
+            <trans-unit id="job.action.pagination_first">
+                <source>job.action.pagination_first</source>
+                <target>First</target>
+            </trans-unit>
+            <trans-unit id="job.action.pagination_prev">
+                <source>job.action.pagination_prev</source>
+                <target>Previous</target>
+            </trans-unit>
+            <trans-unit id="job.action.pagination_next">
+                <source>job.action.pagination_next</source>
+                <target>Next</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
