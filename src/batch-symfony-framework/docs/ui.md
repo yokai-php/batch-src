@@ -2,6 +2,10 @@
 
 The package is shipped with few routes that will allow you and your users, to watch for `JobExecution`.
 
+![Bootstrap 4 - List action](images/bootstrap4-list.png)
+![Bootstrap 4 - Detail : Information](images/bootstrap4-details.png)
+![Bootstrap 4 - Detail : Children](images/bootstrap4-children.png)
+
 
 ## Installation
 
@@ -165,6 +169,10 @@ yokai_batch:
     templating: sonata
 ```
 > With this configuration, we will look for templates like `@JokaiBatch/sonata/*.html.twig`.
+
+![Sonata - List](images/sonata-list.png)
+![Sonata - Detail : Information](images/sonata-details.png)
+![Sonata - Detail : Children](images/sonata-children.png)
 
 
 ## Customizing templates
