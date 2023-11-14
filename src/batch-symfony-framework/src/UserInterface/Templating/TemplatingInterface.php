@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating;
 
-use Twig\Environment;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Controller\JobController;
 
 /**

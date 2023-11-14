@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating;
 
-use Twig\Environment;
-
 /**
  * Apply a prefix to every template names.
  */
