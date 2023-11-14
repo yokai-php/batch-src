@@ -4,7 +4,7 @@
 {# @var childExecution \Yokai\Batch\JobExecution #}
 {% set hasChildFailures = failures|length > execution.failures|length %}
 {% set hasChildWarnings = warnings|length > execution.warnings|length %}
-<table class="table">
+<table class="table table-striped">
     <thead>
     <tr>
         <th>{{ 'job.field.job_name'|trans }}</th>

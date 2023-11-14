@@ -3,7 +3,7 @@
 {# @var execution \Yokai\Batch\JobExecution #}
 {# @var failure \Yokai\Batch\Failure #}
 {% set canSeeTraces = yokai_batch_grant_traces(execution) %}
-<table class="table">
+<table class="table table-striped">
     <thead>
     <tr>
         <th>{{ 'job.field.failure.message'|trans }}</th>
