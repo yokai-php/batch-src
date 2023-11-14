@@ -97,7 +97,9 @@ class UserInterfaceTest extends WebTestCase
                 self::assertSelectorTextContains('.job-show', 'Job name Country import');
                 self::assertSelectorTextContains('.job-show', 'Status Completed');
                 self::assertSelectorTextContains('.job-show', 'Count: 250');
-                self::assertSelectorCount(250, '.job-show img');
+                if (\method_exists(self::class, 'assertSelectorCount')) {
+                    self::assertSelectorCount(250, '.job-show img');
+                }
                 self::assertSelectorExists('.job-show img[src="https://flagcdn.com/48x36/fr.png"]');
             },
         ];
