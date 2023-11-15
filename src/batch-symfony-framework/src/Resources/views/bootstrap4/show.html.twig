@@ -3,6 +3,7 @@
 {% trans_default_domain 'YokaiBatchBundle' %}
 
 {# @var execution \Yokai\Batch\JobExecution #}
+{# @var executionInPath \Yokai\Batch\JobExecution #}
 
 {% block title %}
     {{ 'job.title.view'|trans }}
@@ -25,17 +26,17 @@
             {% for parentPath, executionInPath in executionsPath %}
                 {% if loop.last %}
                     <li class="breadcrumb-item active" aria-current="page">
-                        {% include '@YokaiBatch/bootstrap4/_job-name.html.twig' with {execution: execution} only %} (#{{ execution.id }})
+                        {%- include '@YokaiBatch/bootstrap4/show/_job-name-and-id.html.twig' with {execution: executionInPath} only -%}
                     </li>
                 {% else %}
                     <li class="breadcrumb-item">
-                        {% if loop.first %}
-                            <a href="{{ path('yokai_batch.job_view', { job: executionInPath.jobName, id: executionInPath.id }) }}">
-                                {% include '@YokaiBatch/bootstrap4/_job-name.html.twig' with {execution: execution} only %} (#{{ execution.id }})
+                        {% if executionInPath.parentExecution is null %}
+                            <a href="{{ path('yokai_batch.job_view', { job: rootExecution.jobName, id: rootExecution.id }) }}">
+                                {%- include '@YokaiBatch/bootstrap4/show/_job-name-and-id.html.twig' with {execution: executionInPath} only -%}
                             </a>
                         {% else %}
                             <a href="{{ path('yokai_batch.job_view_child', { job: rootExecution.jobName, id: rootExecution.id, path: parentPath }) }}">
-                                {% include '@YokaiBatch/bootstrap4/_job-name.html.twig' with {execution: execution} only %}
+                                {%- include '@YokaiBatch/bootstrap4/show/_job-name-and-id.html.twig' with {execution: executionInPath} only -%}
                             </a>
                         {% endif %}
                     </li>

@@ -1,0 +1,5 @@
+{% trans_default_domain 'YokaiBatchBundle' %}
+
+{# @var execution \Yokai\Batch\JobExecution #}
+{% include '@YokaiBatch/bootstrap4/_job-name.html.twig' with {execution: execution} only %}
+{% if execution.parentExecution is null %}(#{{ execution.id }}){% endif %}

@@ -3,6 +3,7 @@
 {% trans_default_domain 'YokaiBatchBundle' %}
 
 {# @var execution \Yokai\Batch\JobExecution #}
+{# @var executionInPath \Yokai\Batch\JobExecution #}
 
 {% set executionName %}
     {% include '@YokaiBatch/sonata/_job-name.html.twig' with {execution: execution} only %}
@@ -61,14 +62,16 @@
         {% for parentPath, executionInPath in executionsPath %}
             <li>
                 {% if loop.last %}
-                    {% include '@YokaiBatch/sonata/_job-name.html.twig' with {execution: executionInPath} only %}
-                {% elseif loop.first %}
+                    <span>
+                        {%- include '@YokaiBatch/sonata/show/_job-name-and-id.html.twig' with {execution: executionInPath} only -%}
+                    </span>
+                {% elseif executionInPath.parentExecution is null %}
                     <a href="{{ path('yokai_batch.job_view', { job: executionInPath.jobName, id: executionInPath.id }) }}">
-                        {% include '@YokaiBatch/sonata/_job-name.html.twig' with {execution: executionInPath} only %} (#{{ executionInPath.id }})
+                        {%- include '@YokaiBatch/sonata/show/_job-name-and-id.html.twig' with {execution: executionInPath} only -%}
                     </a>
                 {% else %}
                     <a href="{{ path('yokai_batch.job_view_child', { job: rootExecution.jobName, id: rootExecution.id, path: parentPath }) }}">
-                        {% include '@YokaiBatch/sonata/_job-name.html.twig' with {execution: executionInPath} only %}
+                        {%- include '@YokaiBatch/sonata/show/_job-name-and-id.html.twig' with {execution: executionInPath} only -%}
                     </a>
                 {% endif %}
             </li>
