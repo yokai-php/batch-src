@@ -156,6 +156,9 @@ final class JobVoter extends Voter
 
 If you are on a [SonataAdmin](https://symfony.com/bundles/SonataAdminBundle/current/index.html) project.
 The bundle got you covered with a dedicated templating services and templates.
+
+<img src="images/sonata-list.png" alt="Sonata - List action" width="23%"> <img src="images/sonata-details.png" alt="Sonata - Detail : Information" width="23%"> <img src="images/sonata-children.png" alt="Sonata - Detail : Children" width="23%"> <img src="images/sonata-warnings.png" alt="Sonata - Detail : Warnings" width="23%">
+
 ```shell
 composer require sonata-project/admin-bundle
 ```
@@ -167,8 +170,6 @@ yokai_batch:
     templating: sonata
 ```
 > With this configuration, we will look for templates like `@JokaiBatch/sonata/*.html.twig`.
-
-<img src="images/sonata-list.png" alt="Sonata - List action" width="23%"> <img src="images/sonata-details.png" alt="Sonata - Detail : Information" width="23%"> <img src="images/sonata-children.png" alt="Sonata - Detail : Children" width="23%"> <img src="images/sonata-warnings.png" alt="Sonata - Detail : Warnings" width="23%">
 
 
 ## Customizing templates
