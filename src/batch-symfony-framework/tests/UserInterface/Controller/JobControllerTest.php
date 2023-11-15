@@ -255,7 +255,7 @@ final class JobControllerTest extends TestCase
                     $exportExecution->addChildExecution(
                         JobExecution::createChild(
                             $exportExecution,
-                            'transform',
+                            'upload',
                             new BatchStatus(BatchStatus::PENDING),
                         ),
                     );
@@ -301,6 +301,7 @@ final class JobControllerTest extends TestCase
                     fn() => null,
                     'job.unknown',
                     'unknown_id',
+                    null,
                     $security,
                     $templating,
                     Response::HTTP_NOT_FOUND,
