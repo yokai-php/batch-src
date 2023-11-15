@@ -5,6 +5,7 @@ The package is shipped with few routes that will allow you and your users, to wa
 ![Bootstrap 4 - List action](images/bootstrap4-list.png)
 ![Bootstrap 4 - Detail : Information](images/bootstrap4-details.png)
 ![Bootstrap 4 - Detail : Children](images/bootstrap4-children.png)
+![Bootstrap 4 - Detail : Warnings](images/bootstrap4-warnings.png)
 
 
 ## Installation
@@ -173,6 +174,7 @@ yokai_batch:
 ![Sonata - List](images/sonata-list.png)
 ![Sonata - Detail : Information](images/sonata-details.png)
 ![Sonata - Detail : Children](images/sonata-children.png)
+![Sonata 4 - Detail : Warnings](images/sonata-warnings.png)
 
 
 ## Customizing templates
