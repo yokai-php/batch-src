@@ -169,7 +169,7 @@ yokai_batch:
   ui:
     templating: sonata
 ```
-> With this configuration, we will look for templates like `@JokaiBatch/sonata/*.html.twig`.
+> With this configuration, we will look for templates like `@YokaiBatch/sonata/*.html.twig`.
 
 
 ## Customizing templates
