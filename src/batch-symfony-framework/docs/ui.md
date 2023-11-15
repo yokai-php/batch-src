@@ -2,10 +2,7 @@
 
 The package is shipped with few routes that will allow you and your users, to watch for `JobExecution`.
 
-<img src="images/bootstrap4-list.png" alt="Bootstrap 4 - List action" width="23%"> 
-<img src="images/bootstrap4-details.png" alt="Bootstrap 4 - Detail : Information" width="23%"> 
-<img src="images/bootstrap4-children.png" alt="Bootstrap 4 - Detail : Children" width="23%"> 
-<img src="images/bootstrap4-warnings.png" alt="Bootstrap 4 - Detail : Warnings" width="23%">
+<img src="images/bootstrap4-list.png" alt="Bootstrap 4 - List action" width="23%"> <img src="images/bootstrap4-details.png" alt="Bootstrap 4 - Detail : Information" width="23%"> <img src="images/bootstrap4-children.png" alt="Bootstrap 4 - Detail : Children" width="23%"> <img src="images/bootstrap4-warnings.png" alt="Bootstrap 4 - Detail : Warnings" width="23%">
 
 
 ## Installation
@@ -171,10 +168,7 @@ yokai_batch:
 ```
 > With this configuration, we will look for templates like `@JokaiBatch/sonata/*.html.twig`.
 
-<img src="images/sonata-list.png" alt="Sonata - List action" width="23%">
-<img src="images/sonata-details.png" alt="Sonata - Detail : Information" width="23%">
-<img src="images/sonata-children.png" alt="Sonata - Detail : Children" width="23%">
-<img src="images/sonata-warnings.png" alt="Sonata - Detail : Warnings" width="23%">
+<img src="images/sonata-list.png" alt="Sonata - List action" width="23%"> <img src="images/sonata-details.png" alt="Sonata - Detail : Information" width="23%"> <img src="images/sonata-children.png" alt="Sonata - Detail : Children" width="23%"> <img src="images/sonata-warnings.png" alt="Sonata - Detail : Warnings" width="23%">
 
 
 ## Customizing templates
