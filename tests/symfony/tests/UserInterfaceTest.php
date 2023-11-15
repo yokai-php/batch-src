@@ -56,8 +56,7 @@ class UserInterfaceTest extends WebTestCase
     public function testList(): void
     {
         $http = self::createClient();
-        $page = $http->request('get', '/job');
-        file_put_contents(__DIR__ . '/list.html', $http->getResponse()->getContent());
+        $page = $http->request('get', '/jobs');
 
         self::assertResponseIsSuccessful();
         self::assertCount(\count(self::$executions), $page->filter('.job-list > tbody > tr'));
@@ -81,8 +80,7 @@ class UserInterfaceTest extends WebTestCase
         $execution = self::$executions[$job];
 
         $http = self::createClient();
-        $page = $http->request('get', "/job/{$execution->getJobName()}/{$execution->getId()}");
-        file_put_contents(__DIR__ . '/' . $execution->getJobName() . '.html', $http->getResponse()->getContent());
+        $page = $http->request('get', "/jobs/{$execution->getJobName()}/{$execution->getId()}");
 
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('.job-show', "Execution ID {$execution->getId()}");
@@ -124,8 +122,7 @@ class UserInterfaceTest extends WebTestCase
         $execution = self::$executions[$job];
 
         $http = self::createClient();
-        $http->request('get', "/job/{$execution->getJobName()}/{$execution->getId()}/logs");
-        file_put_contents(__DIR__ . '/' . $execution->getJobName() . '.log', $http->getResponse()->getContent());
+        $http->request('get', "/jobs/{$execution->getJobName()}/{$execution->getId()}/logs");
 
         self::assertResponseIsSuccessful();
         $expected($http->getResponse()->getContent());

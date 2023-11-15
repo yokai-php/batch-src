@@ -104,7 +104,7 @@ final class JobControllerTest extends TestCase
                 foreach (self::templatings() as $templating) {
                     yield [
                         fn() => self::fixtures(30),
-                        Request::create('/job'),
+                        Request::create('/jobs'),
                         $formFactory,
                         $security,
                         $templating,
@@ -114,7 +114,7 @@ final class JobControllerTest extends TestCase
                     ];
                     yield [
                         fn() => self::fixtures(30),
-                        Request::create('/job?sort=end_asc'),
+                        Request::create('/jobs?sort=end_asc'),
                         $formFactory,
                         $security,
                         $templating,
@@ -124,7 +124,7 @@ final class JobControllerTest extends TestCase
                     ];
                     yield [
                         fn() => null,
-                        Request::create('/job?sort=unknown'),
+                        Request::create('/jobs?sort=unknown'),
                         $formFactory,
                         $security,
                         $templating,
@@ -132,7 +132,7 @@ final class JobControllerTest extends TestCase
                     ];
                     yield [
                         fn() => self::fixtures(30),
-                        Request::create('/job?page=2'),
+                        Request::create('/jobs?page=2'),
                         $formFactory,
                         $security,
                         $templating,
@@ -148,7 +148,7 @@ final class JobControllerTest extends TestCase
                                 self::fixtures(10, ['jobName' => 'export']);
                                 self::fixtures(10, ['jobName' => 'import']);
                             },
-                            Request::create('/job?filter[jobs][]=export'),
+                            Request::create('/jobs?filter[jobs][]=export'),
                             $formFactory,
                             $security,
                             $templating,
@@ -162,7 +162,7 @@ final class JobControllerTest extends TestCase
                                 self::fixtures(4, ['status' => BatchStatus::RUNNING]);
                                 self::fixtures(10, ['status' => BatchStatus::COMPLETED]);
                             },
-                            Request::create('/job?filter[statuses][]=1'),
+                            Request::create('/jobs?filter[statuses][]=1'),
                             $formFactory,
                             $security,
                             $templating,
@@ -176,7 +176,7 @@ final class JobControllerTest extends TestCase
                                 self::fixtures(5, ['jobName' => 'import']);
                                 self::fixtures(5, ['status' => BatchStatus::COMPLETED]);
                             },
-                            Request::create('/job?filter[jobs][]=export&filter[statuses][]=1&page=2'),
+                            Request::create('/jobs?filter[jobs][]=export&filter[statuses][]=1&page=2'),
                             $formFactory,
                             $security,
                             $templating,
