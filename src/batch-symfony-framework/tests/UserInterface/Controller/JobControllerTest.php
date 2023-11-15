@@ -197,6 +197,7 @@ final class JobControllerTest extends TestCase
         \Closure $fixtures,
         string $job,
         string $id,
+        ?string $path,
         JobSecurity $security,
         TemplatingInterface $templating,
         int $expectedStatus,
@@ -205,7 +206,7 @@ final class JobControllerTest extends TestCase
         $fixtures();
 
         $response = $this->response(
-            fn(JobController $controller) => $controller->view($job, $id),
+            fn(JobController $controller) => $controller->view($job, $id, $path),
             null,
             $security,
             $templating,
@@ -225,23 +226,46 @@ final class JobControllerTest extends TestCase
         foreach (self::securities() as [$security, $granted]) {
             $status = $granted ? Response::HTTP_OK : Response::HTTP_FORBIDDEN;
             foreach (self::templatings() as $templating) {
-                yield [
-                    function () {
-                        $execution = JobExecution::createRoot(
-                            '64edbe399b58e',
-                            'export',
+                $jobWithChildrenFixtures = function () {
+                    $exportExecution = JobExecution::createRoot(
+                        '64edbe399b58e',
+                        'export',
+                        new BatchStatus(BatchStatus::COMPLETED),
+                        new JobParameters(['type' => 'complete']),
+                        new Summary(['count' => 156]),
+                    );
+                    $exportExecution->addWarning(new Warning('Skipped suspicious record', [], ['suspicious_record' => 2]));
+                    $exportExecution->addFailure(new Failure('RuntimeException', 'Missing record #2', 0));
+                    $exportExecution->setStartTime(new \DateTimeImmutable('2021-01-01 10:00'));
+                    $exportExecution->setEndTime(new \DateTimeImmutable('2021-01-01 11:00'));
+                    $exportExecution->addChildExecution(
+                        JobExecution::createChild(
+                            $exportExecution,
+                            'download',
                             new BatchStatus(BatchStatus::COMPLETED),
-                            new JobParameters(['type' => 'complete']),
-                            new Summary(['count' => 156]),
-                        );
-                        $execution->addWarning(new Warning('Skipped suspicious record', [], ['suspicious_record' => 2]));
-                        $execution->addFailure(new Failure('RuntimeException', 'Missing record #2', 0));
-                        $execution->setStartTime(new \DateTimeImmutable('2021-01-01 10:00'));
-                        $execution->setEndTime(new \DateTimeImmutable('2021-01-01 11:00'));
-                        self::$storage->store($execution);
-                    },
+                        ),
+                    );
+                    $exportExecution->addChildExecution(
+                        JobExecution::createChild(
+                            $exportExecution,
+                            'transform',
+                            new BatchStatus(BatchStatus::RUNNING),
+                        ),
+                    );
+                    $exportExecution->addChildExecution(
+                        JobExecution::createChild(
+                            $exportExecution,
+                            'transform',
+                            new BatchStatus(BatchStatus::PENDING),
+                        ),
+                    );
+                    self::$storage->store($exportExecution);
+                };
+                yield [
+                    $jobWithChildrenFixtures,
                     'export',
                     '64edbe399b58e',
+                    null,
                     $security,
                     $templating,
                     $status,
@@ -257,6 +281,20 @@ final class JobControllerTest extends TestCase
                         '"suspicious_record": 2',
                         'RuntimeException',
                         'Missing record #2',
+                    ],
+                ];
+                yield [
+                    $jobWithChildrenFixtures,
+                    'export',
+                    '64edbe399b58e',
+                    'transform',
+                    $security,
+                    $templating,
+                    $status,
+                    [
+                        'Execution ID 64edbe399b58e',
+                        'Job name job.job_name.transform',
+                        'Status Running',
                     ],
                 ];
                 yield [

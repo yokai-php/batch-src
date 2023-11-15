@@ -21,9 +21,26 @@
                     {{ 'job.title.list'|trans }}
                 {% endif %}
             </li>
-            <li class="breadcrumb-item active" aria-current="page">
-                {% include '@YokaiBatch/bootstrap4/_job-name.html.twig' with {execution: execution} only %} (#{{ execution.id }})
-            </li>
+            {% set rootExecution = execution.rootExecution %}
+            {% for parentPath, executionInPath in executionsPath %}
+                {% if loop.last %}
+                    <li class="breadcrumb-item active" aria-current="page">
+                        {% include '@YokaiBatch/bootstrap4/_job-name.html.twig' with {execution: execution} only %} (#{{ execution.id }})
+                    </li>
+                {% else %}
+                    <li class="breadcrumb-item">
+                        {% if loop.first %}
+                            <a href="{{ path('yokai_batch.job_view', { job: executionInPath.jobName, id: executionInPath.id }) }}">
+                                {% include '@YokaiBatch/bootstrap4/_job-name.html.twig' with {execution: execution} only %} (#{{ execution.id }})
+                            </a>
+                        {% else %}
+                            <a href="{{ path('yokai_batch.job_view_child', { job: rootExecution.jobName, id: rootExecution.id, path: parentPath }) }}">
+                                {% include '@YokaiBatch/bootstrap4/_job-name.html.twig' with {execution: execution} only %}
+                            </a>
+                        {% endif %}
+                    </li>
+                {% endif %}
+            {% endfor %}
         </ol>
     </nav>
 {% endblock %}
@@ -36,7 +53,7 @@
         </a>
     {% endif %}
     {% if yokai_batch_grant_logs(execution) %}
-        <a href="{{ path('yokai_batch.job_logs', { job: execution.jobName, id: execution.id }) }}" class="btn btn-primary">
+        <a href="{{ path('yokai_batch.job_logs', { job: execution.rootExecution.jobName, id: execution.rootExecution.id }) }}" class="btn btn-primary">
             <i class="fa fa-download" aria-hidden="true"></i>
             {{ 'job.action.download_logs'|trans }}
         </a>

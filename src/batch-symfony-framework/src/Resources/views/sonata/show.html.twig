@@ -5,7 +5,10 @@
 {# @var execution \Yokai\Batch\JobExecution #}
 
 {% set executionName %}
-    {% include '@YokaiBatch/sonata/_job-name.html.twig' with {execution: execution} only %} (#{{ execution.id }})
+    {% include '@YokaiBatch/sonata/_job-name.html.twig' with {execution: execution} only %}
+    {% if execution.parentExecution is null %}
+        (#{{ execution.id }})
+    {% endif %}
 {% endset %}
 
 {% block title %}
@@ -19,7 +22,7 @@
 {%- block actions -%}
     {% if yokai_batch_grant_logs(execution) %}
         <li>
-            <a href="{{ path('yokai_batch.job_logs', { job: execution.jobName, id: execution.id }) }}">
+            <a href="{{ path('yokai_batch.job_logs', { job: execution.rootExecution.jobName, id: execution.rootExecution.id }) }}">
                 <i class="fa fa-download" aria-hidden="true"></i> {{ 'job.action.download_logs'|trans({}) }}
             </a>
         </li>
@@ -54,11 +57,22 @@
                 </span>
             {% endif %}
         </li>
-        <li>
-            <span>
-                {{ executionName }}
-            </span>
-        </li>
+        {% set rootExecution = execution.rootExecution %}
+        {% for parentPath, executionInPath in executionsPath %}
+            <li>
+                {% if loop.last %}
+                    {% include '@YokaiBatch/sonata/_job-name.html.twig' with {execution: executionInPath} only %}
+                {% elseif loop.first %}
+                    <a href="{{ path('yokai_batch.job_view', { job: executionInPath.jobName, id: executionInPath.id }) }}">
+                        {% include '@YokaiBatch/sonata/_job-name.html.twig' with {execution: executionInPath} only %} (#{{ executionInPath.id }})
+                    </a>
+                {% else %}
+                    <a href="{{ path('yokai_batch.job_view_child', { job: rootExecution.jobName, id: rootExecution.id, path: parentPath }) }}">
+                        {% include '@YokaiBatch/sonata/_job-name.html.twig' with {execution: executionInPath} only %}
+                    </a>
+                {% endif %}
+            </li>
+        {% endfor %}
     </ol>
 {% endblock %}
 

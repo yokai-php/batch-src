@@ -136,7 +136,7 @@ final class JobController
     /**
      * View {@see JobExecution} details in a Twig template.
      */
-    public function view(string $job, string $id): Response
+    public function view(string $job, string $id, ?string $path = null): Response
     {
         try {
             $execution = $this->jobExecutionStorage->retrieve($job, $id);
@@ -146,11 +146,31 @@ final class JobController
 
         $this->security->denyAccessUnlessGrantedView($execution);
 
+        $executionsPath = [
+            '' => $execution,
+        ];
+        if ($path !== null) {
+            $parentPath = [];
+            foreach (\explode('|', $path) as $childName) {
+                $execution = $execution->getChildExecution($childName) ??
+                    throw new NotFoundHttpException();
+                $parentPath[] = $childName;
+                $executionsPath[\implode('|', $parentPath)] = $execution;
+            }
+        }
+
+        $pathPrefix = '';
+        if ($path !== null) {
+            $pathPrefix = $path . '|';
+        }
+
         return new Response(
             $this->twig->render(
                 $this->templating->name('show.html.twig'),
                 $this->templating->context([
                     'execution' => $execution,
+                    'pathPrefix' => $pathPrefix,
+                    'executionsPath' => $executionsPath,
                 ]),
             ),
         );
