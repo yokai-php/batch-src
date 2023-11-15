@@ -7,7 +7,7 @@ The package is shipped with few routes that will allow you and your users, to wa
 
 ## Installation
 
-For the UI to be enabled, it is required that you have some optional dependencies:
+For the UI to be enabled, it is required that you install some dependencies:
 ```shell
 composer require symfony/translation symfony/twig-bundle
 ```
@@ -15,7 +15,7 @@ composer require symfony/translation symfony/twig-bundle
 
 ## Configuration
 
-The UI is disabled by default, you must ask for it to be enabled:
+The UI is disabled by default, you must enable it explicitely:
 ```yaml
 # config/packages/yokai_batch.yaml
 yokai_batch:
