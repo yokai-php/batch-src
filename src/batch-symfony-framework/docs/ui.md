@@ -76,17 +76,18 @@ declare(strict_types=1);
 
 namespace App\Batch;
 
-use Twig\Environment;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\TemplatingInterface;
 
 final class AppTemplating implements TemplatingInterface
 {
-    public function render(Environment $twig, string $name, array $context): string
+    public function name(string $name): string
     {
-        // change $name if you want
-        // add variables to $context if you want
+        return "another-$name"; // change $name if you want
+    }
 
-        return $twig->render($name, $context);
+    public function context(array $context): array;
+    {
+        return \array_merge($context, ['foo' => 'bar']); // add variables to $context if you want
     }
 }
 ```
