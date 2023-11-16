@@ -152,8 +152,7 @@ final class JobController
         if ($path !== null) {
             $parentPath = [];
             foreach (\explode('|', $path) as $childName) {
-                $execution = $execution->getChildExecution($childName) ??
-                    throw new NotFoundHttpException();
+                $execution = $execution->getChildExecution($childName) ?? throw new NotFoundHttpException();
                 $parentPath[] = $childName;
                 $executionsPath[\implode('|', $parentPath)] = $execution;
             }
