@@ -25,7 +25,6 @@ function remote()
 }
 
 remote batch                      git@github.com:yokai-php/batch.git
-remote batch-box-spout            git@github.com:yokai-php/batch-box-spout.git
 remote batch-doctrine-dbal        git@github.com:yokai-php/batch-doctrine-dbal.git
 remote batch-doctrine-orm         git@github.com:yokai-php/batch-doctrine-orm.git
 remote batch-doctrine-persistence git@github.com:yokai-php/batch-doctrine-persistence.git
@@ -39,7 +38,6 @@ remote batch-symfony-serializer   git@github.com:yokai-php/batch-symfony-seriali
 remote batch-symfony-validator    git@github.com:yokai-php/batch-symfony-validator.git
 
 split 'src/batch'                      batch
-split 'src/batch-box-spout'            batch-box-spout
 split 'src/batch-doctrine-dbal'        batch-doctrine-dbal
 split 'src/batch-doctrine-orm'         batch-doctrine-orm
 split 'src/batch-doctrine-persistence' batch-doctrine-persistence
