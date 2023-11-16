@@ -31,7 +31,6 @@ see https://github.com/yokai-php/batch-src/releases/tag/{created tag}
 ```
 - Create a release for the tag, in each packages
   - https://github.com/yokai-php/batch/releases/new
-  - https://github.com/yokai-php/batch-box-spout/releases/new
   - https://github.com/yokai-php/batch-doctrine-dbal/releases/new
   - https://github.com/yokai-php/batch-doctrine-orm/releases/new
   - https://github.com/yokai-php/batch-doctrine-persistence/releases/new
