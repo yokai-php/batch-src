@@ -304,7 +304,7 @@ final class JobControllerTest extends TestCase
                     'unknown.children',
                     $security,
                     $templating,
-                    Response::HTTP_NOT_FOUND,
+                    $status === Response::HTTP_OK ? Response::HTTP_NOT_FOUND : $status,
                 ];
                 yield [
                     fn() => null,
