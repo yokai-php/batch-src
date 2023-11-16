@@ -25,6 +25,7 @@ composer require yokai/batch-symfony-framework
 This package provides:
 
 - [integration](docs/getting-started.md) with Symfony framework
+- a [UI](docs/ui.md) with Symfony framework
 
 
 ## Contribution

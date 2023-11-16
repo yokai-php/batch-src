@@ -30,6 +30,11 @@ final class RegisterJobsCompilerPass implements CompilerPassInterface
 
         $container->getDefinition('yokai_batch.job_registry')
             ->setArgument('$jobs', ServiceLocatorTagPass::register($container, $jobs));
+
+        if ($container->hasDefinition('yokai_batch.ui.filter_form')) {
+            $container->getDefinition('yokai_batch.ui.filter_form')
+                ->setArgument('$jobs', \array_keys($jobs));
+        }
     }
 
     /**

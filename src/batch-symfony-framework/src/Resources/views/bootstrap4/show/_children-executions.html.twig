@@ -1,0 +1,59 @@
+{% trans_default_domain 'YokaiBatchBundle' %}
+
+{# @var execution \Yokai\Batch\JobExecution #}
+{# @var childExecution \Yokai\Batch\JobExecution #}
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>{{ 'job.field.job_name'|trans }}</th>
+        <th>{{ 'job.field.status'|trans }}</th>
+        <th>{{ 'job.field.failures'|trans }}</th>
+        <th>{{ 'job.field.warnings'|trans }}</th>
+        <th>{{ 'job.field.start_time'|trans }}</th>
+        <th>{{ 'job.field.end_time'|trans }}</th>
+        <th></th>
+    </tr>
+    <tbody>
+    {% for childExecution in execution.childExecutions %}
+        <tr>
+            <td>
+                {% include '@YokaiBatch/bootstrap4/_job-name.html.twig' with {execution: childExecution} only %}
+            </td>
+            <td>
+                {% include '@YokaiBatch/bootstrap4/_status.html.twig' with {execution: childExecution} only %}
+            </td>
+            <td>
+                {% if childExecution.failures|length > 0 %}
+                    <span class="badge badge-danger">{{ childExecution.failures|length }}</span>
+                {% else %}
+                    <span class="badge badge-light">0</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if childExecution.warnings|length > 0 %}
+                    <span class="badge badge-warning">{{ childExecution.warnings|length }}</span>
+                {% else %}
+                    <span class="badge badge-light">0</span>
+                {% endif %}
+            </td>
+            <td>
+                {% include '@YokaiBatch/bootstrap4/_datetime.html.twig' with {value: childExecution.startTime} only %}
+            </td>
+            <td>
+                {% include '@YokaiBatch/bootstrap4/_datetime.html.twig' with {value: childExecution.endTime} only %}
+            </td>
+            <td>
+                <div class="btn-group">
+                    <a
+                        href="{{ path('yokai_batch.job_view_child', { job: childExecution.rootExecution.jobName, id: childExecution.rootExecution.id, path: pathPrefix ~ childExecution.jobName }) }}"
+                        class="btn btn-sm btn-default"
+                        title="{{ 'job.action.view'|trans }}"
+                    >
+                        <i class="fa fa-eye" aria-hidden="true"></i>
+                        {{ 'job.action.view'|trans }}
+                    </a>
+                </div>
+            </td>
+        </tr>
+    {% endfor %}
+</table>

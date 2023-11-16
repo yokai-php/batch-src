@@ -51,6 +51,10 @@ final class SourcesTest extends TestCase
         $expectedDevDeps = \array_unique($expectedDevDeps);
         \sort($expectedDevDeps);
         $devDeps = $rootComposer->packagesDev();
+        // regarding packages, this should be a "require-dev" dependency,
+        // but because Symfony framework expect it in "require" to register related services,
+        // we are required to add it in "require"
+        $devDeps[] = 'symfony/form';
         \sort($devDeps);
         self::assertSame(
             [],

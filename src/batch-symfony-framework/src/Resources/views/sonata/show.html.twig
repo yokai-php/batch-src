@@ -1,0 +1,165 @@
+{% extends '@SonataAdmin/CRUD/base_show.html.twig' %}
+
+{% trans_default_domain 'YokaiBatchBundle' %}
+
+{# @var execution \Yokai\Batch\JobExecution #}
+{# @var executionInPath \Yokai\Batch\JobExecution #}
+
+{% set executionName %}
+    {% include '@YokaiBatch/sonata/_job-name.html.twig' with {execution: execution} only %}
+    {% if execution.parentExecution is null %}
+        (#{{ execution.id }})
+    {% endif %}
+{% endset %}
+
+{% block title %}
+    - {{ 'title_show'|trans({'%name%': executionName|u.truncate(15) }, 'SonataAdminBundle') }}
+{% endblock %}
+
+{% block navbar_title %}
+    {{ 'title_show'|trans({'%name%': executionName|u.truncate(100) }, 'SonataAdminBundle') }}
+{% endblock %}
+
+{%- block actions -%}
+    {% if yokai_batch_grant_logs(execution) %}
+        <li>
+            <a href="{{ path('yokai_batch.job_logs', { job: execution.rootExecution.jobName, id: execution.rootExecution.id }) }}">
+                <i class="fa fa-download" aria-hidden="true"></i> {{ 'job.action.download_logs'|trans({}) }}
+            </a>
+        </li>
+    {% endif %}
+    {% if yokai_batch_grant_list() %}
+        <li>
+            <a href="{{ path('yokai_batch.job_list') }}">
+                <i class="fa fa-th-list" aria-hidden="true"></i> {{ 'link_action_list'|trans({}, 'SonataAdminBundle') }}
+            </a>
+        </li>
+    {% endif %}
+{%- endblock -%}
+
+{% block tab_menu %}
+{% endblock %}
+
+{% block breadcrumb %}
+    <ol class="nav navbar-top-links breadcrumb">
+        <li>
+            <a href="{{ path('sonata_admin_dashboard') }}">
+                <i class="fa fa-home"></i>
+            </a>
+        </li>
+        <li>
+            {% if yokai_batch_grant_list() %}
+                <a href="{{ path('yokai_batch.job_list') }}">
+                    {{ 'job.name'|trans }}
+                </a>
+            {% else %}
+                <span>
+                    {{ 'job.name'|trans }}
+                </span>
+            {% endif %}
+        </li>
+        {% set rootExecution = execution.rootExecution %}
+        {% for parentPath, executionInPath in executionsPath %}
+            <li>
+                {% if loop.last %}
+                    <span>
+                        {%- include '@YokaiBatch/sonata/show/_job-name-and-id.html.twig' with {execution: executionInPath} only -%}
+                    </span>
+                {% elseif executionInPath.parentExecution is null %}
+                    <a href="{{ path('yokai_batch.job_view', { job: executionInPath.jobName, id: executionInPath.id }) }}">
+                        {%- include '@YokaiBatch/sonata/show/_job-name-and-id.html.twig' with {execution: executionInPath} only -%}
+                    </a>
+                {% else %}
+                    <a href="{{ path('yokai_batch.job_view_child', { job: rootExecution.jobName, id: rootExecution.id, path: parentPath }) }}">
+                        {%- include '@YokaiBatch/sonata/show/_job-name-and-id.html.twig' with {execution: executionInPath} only -%}
+                    </a>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ol>
+{% endblock %}
+
+{% block show %}
+    <div class="sonata-ba-view">
+        {{ block('show_groups') }}
+    </div>
+{% endblock %}
+
+{% block show_groups %}
+    {% set failures = execution.failures %}
+    {% set warnings = execution.warnings %}
+    {% set jobName = execution.jobName %}
+
+    <div class="job-show">
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a href="#tab_job_general" class="changer-tab" aria-controls="tab_job_general" data-toggle="tab">
+                        {{ 'job.tab.general'|trans }}
+                    </a>
+                </li>
+                {% if failures|length > 0 %}
+                    <li>
+                        <a href="#tab_job_failures" class="changer-tab" aria-controls="tab_job_failures" data-toggle="tab">
+                            {{ 'job.tab.failures'|trans }}
+                        </a>
+                    </li>
+                {% endif %}
+                {% if warnings|length > 0 %}
+                    <li>
+                        <a href="#tab_job_warnings" class="changer-tab" aria-controls="tab_job_warnings" data-toggle="tab">
+                            {{ 'job.tab.warnings'|trans }}
+                        </a>
+                    </li>
+                {% endif %}
+                {% if execution.childExecutions|length > 0 %}
+                    <li>
+                        <a href="#tab_job_children" class="changer-tab" aria-controls="tab_job_children" data-toggle="tab">
+                            {{ 'job.tab.children'|trans }}
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade in active" id="tab_job_general">
+                    <div class="job-show-general">
+                        {% include [
+                            '@YokaiBatch/sonata/show/'~jobName~'/_general.html.twig',
+                            '@YokaiBatch/sonata/show/_general.html.twig'
+                        ] %}
+                    </div>
+                </div>
+                {% if failures|length > 0 %}
+                    <div class="tab-pane fade" id="tab_job_failures">
+                        <div class="job-show-failures">
+                            {% include [
+                                '@YokaiBatch/sonata/show/'~jobName~'/_failures.html.twig',
+                                '@YokaiBatch/sonata/show/_failures.html.twig'
+                            ] %}
+                        </div>
+                    </div>
+                {% endif %}
+                {% if warnings|length > 0 %}
+                    <div class="tab-pane fade" id="tab_job_warnings">
+                        <div class="job-show-warnings">
+                            {% include [
+                                '@YokaiBatch/sonata/show/'~jobName~'/_warnings.html.twig',
+                                '@YokaiBatch/sonata/show/_warnings.html.twig'
+                            ] %}
+                        </div>
+                    </div>
+                {% endif %}
+                {% if execution.childExecutions|length > 0 %}
+                    <div class="tab-pane fade" id="tab_job_children">
+                        <div class="job-show-children_executions">
+                            {% include [
+                                '@YokaiBatch/sonata/show/'~jobName~'/_children-executions.html.twig',
+                                '@YokaiBatch/sonata/show/_children-executions.html.twig'
+                            ] %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

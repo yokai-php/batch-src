@@ -1,0 +1,42 @@
+{% trans_default_domain 'YokaiBatchBundle' %}
+
+{# @var execution \Yokai\Batch\JobExecution #}
+<div class="card">
+    <div class="card-header">
+        {{ 'job.fieldset.information'|trans }}
+    </div>
+    <div class="card-body">
+        <table class="table">
+            <tbody>
+            <tr class="job-show-field-id">
+                <th>{{ 'job.field.execution_id'|trans }}</th>
+                <td>{{ execution.id }}</td>
+            </tr>
+            <tr class="job-show-field-jobName">
+                <th>{{ 'job.field.job_name'|trans }}</th>
+                <td>
+                    {% include '@YokaiBatch/bootstrap4/_job-name.html.twig' with {execution: execution} only %}
+                </td>
+            </tr>
+            <tr class="job-show-field-status">
+                <th>{{ 'job.field.status'|trans }}</th>
+                <td>
+                    {% include '@YokaiBatch/bootstrap4/_status.html.twig' with {execution: execution} only %}
+                </td>
+            </tr>
+            <tr class="job-show-field-startTime">
+                <th>{{ 'job.field.start_time'|trans }}</th>
+                <td>
+                    {%- include '@YokaiBatch/bootstrap4/_datetime.html.twig' with {value: execution.startTime} only -%}
+                </td>
+            </tr>
+            <tr class="job-show-field-endTime">
+                <th>{{ 'job.field.end_time'|trans }}</th>
+                <td>
+                    {%- include '@YokaiBatch/bootstrap4/_datetime.html.twig' with {value: execution.endTime} only -%}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

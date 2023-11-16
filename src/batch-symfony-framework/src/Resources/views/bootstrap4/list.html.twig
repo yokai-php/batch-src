@@ -1,0 +1,154 @@
+{% extends base_template %}{# configured at yokai_batch.ui.templating.base_template #}
+
+{% trans_default_domain 'YokaiBatchBundle' %}
+
+{# @var execution \Yokai\Batch\JobExecution #}
+
+{% set parameters = app.request.query.all('filter') %}
+
+{% block title %}
+    {{ 'job.title.list'|trans }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            {% block breadcrumbs_before '' %}
+            <li class="breadcrumb-item active" aria-current="page">
+                {{ 'job.title.list'|trans }}
+            </li>
+        </ol>
+    </nav>
+{% endblock %}
+
+{% block filter %}
+    {% if form is not null %}
+        {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <button type="submit" class="btn btn-primary">{{ 'job.action.filter'|trans }}</button>
+        {{ form_end(form) }}
+    {% endif %}
+{% endblock %}
+
+{% block table %}
+    <table class="table table-striped job-list">
+        <thead>
+        <tr>
+            <th scope="col">
+                {{ 'job.field.execution_id'|trans }}
+            </th>
+            <th scope="col">
+                {{ 'job.field.job_name'|trans }}
+            </th>
+            <th scope="col">
+                {{ 'job.field.status'|trans }}
+            </th>
+            <th scope="col" class="{% if sort.start.sorted %}sorted sorted-{{ sort.desc ? 'desc' : 'asc' }}{% endif %}">
+                <a href="{{ path('yokai_batch.job_list', { filter: parameters, (sort.parameter): sort.start.switch }) }}">
+                    {{ 'job.field.start_time'|trans }}
+                </a>
+            </th>
+            <th scope="col" class="{% if sort.end.sorted %}sorted sorted-{{ sort.desc ? 'desc' : 'asc' }}{% endif %}">
+                <a href="{{ path('yokai_batch.job_list', { filter: parameters, (sort.parameter): sort.end.switch }) }}">
+                    {{ 'job.field.end_time'|trans }}
+                </a>
+            </th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for execution in executions %}
+            <tr>
+                <td>
+                    {% if yokai_batch_grant_view(execution) %}
+                        <a href="{{ path('yokai_batch.job_view', { job: execution.jobName, id: execution.id }) }}">
+                            {{ execution.id }}
+                        </a>
+                    {% else %}
+                        {{ execution.id }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% include '@YokaiBatch/bootstrap4/_job-name.html.twig' with { execution: execution } only %}
+                </td>
+                <td>
+                    {% include '@YokaiBatch/bootstrap4/_status.html.twig' with { execution: execution } only %}
+                </td>
+                <td>
+                    {% include '@YokaiBatch/bootstrap4/_datetime.html.twig' with {value: execution.startTime} only %}
+                </td>
+                <td>
+                    {% include '@YokaiBatch/bootstrap4/_datetime.html.twig' with {value: execution.endTime} only %}
+                </td>
+                <td>
+                    <div class="btn-group">
+                        {% if yokai_batch_grant_view(execution) %}
+                            <a
+                                href="{{ path('yokai_batch.job_view', { job: execution.jobName, id: execution.id }) }}"
+                                class="btn btn-sm btn-default"
+                                title="{{ 'job.action.view'|trans }}"
+                            >
+                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                {{ 'job.action.view'|trans }}
+                            </a>
+                        {% endif %}
+                        {% if yokai_batch_grant_logs(execution) %}
+                            <a
+                                href="{{ path('yokai_batch.job_logs', { job: execution.jobName, id: execution.id }) }}"
+                                class="btn btn-sm btn-default"
+                                title="{{ 'job.action.download_logs'|trans }}"
+                            >
+                                <i class="fa fa-download" aria-hidden="true"></i>
+                                {{ 'job.action.download_logs'|trans }}
+                            </a>
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block pagination %}
+    {% if executions|length > 0 and (pagination.prev.enabled or pagination.next.enabled) %}
+        <ul class="pagination">
+            {% if pagination.current > 2 %}
+                <li class="page-item">
+                    <a href="{{ path('yokai_batch.job_list', { filter: parameters, (pagination.parameter): 1 }) }}"
+                       title="{{ 'job.action.pagination_first'|trans }}">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">{{ 'job.action.pagination_first'|trans }}</span>
+                    </a>
+                </li>
+            {% endif %}
+
+            {% if pagination.prev.enabled %}
+                <li class="page-item">
+                    <a href="{{ path('yokai_batch.job_list', { filter: parameters, (pagination.parameter): pagination.prev.value }) }}"
+                       title="{{ 'job.action.pagination_prev'|trans }}">
+                        <span aria-hidden="true">&lsaquo;</span>
+                        <span class="sr-only">{{ 'job.action.pagination_prev'|trans }}</span>
+                    </a>
+                </li>
+            {% endif %}
+
+            {% if pagination.next.enabled %}
+                <li class="page-item">
+                    <a href="{{ path('yokai_batch.job_list', { filter: parameters, (pagination.parameter): pagination.next.value }) }}"
+                       title="{{ 'job.action.pagination_next'|trans }}">
+                        <span aria-hidden="true">&rsaquo;</span>
+                        <span class="sr-only">{{ 'job.action.pagination_next'|trans }}</span>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    {{ block('breadcrumbs') }}
+    {{ block('filter') }}
+    {{ block('table') }}
+    {{ block('pagination') }}
+{% endblock %}

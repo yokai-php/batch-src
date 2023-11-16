@@ -1,0 +1,44 @@
+{% trans_default_domain 'YokaiBatchBundle' %}
+
+{# @var execution \Yokai\Batch\JobExecution #}
+<div class="box box-primary">
+    <div class="box-header">
+        <h4 class="box-title">
+            {{ 'job.fieldset.information'|trans }}
+        </h4>
+    </div>
+    <div class="box-body table-responsive no-padding">
+        <table class="table">
+            <tbody>
+            <tr class="sonata-ba-view-container job-show-field-id">
+                <th>{{ 'job.field.execution_id'|trans }}</th>
+                <td>{{ execution.id }}</td>
+            </tr>
+            <tr class="sonata-ba-view-container job-show-field-jobName">
+                <th>{{ 'job.field.job_name'|trans }}</th>
+                <td>
+                    {% include '@YokaiBatch/sonata/_job-name.html.twig' with {execution: execution} only %}
+                </td>
+            </tr>
+            <tr class="sonata-ba-view-container job-show-field-status">
+                <th>{{ 'job.field.status'|trans }}</th>
+                <td>
+                    {% include '@YokaiBatch/sonata/_status.html.twig' with {execution: execution} only %}
+                </td>
+            </tr>
+            <tr class="sonata-ba-view-container job-show-field-startTime">
+                <th>{{ 'job.field.start_time'|trans }}</th>
+                <td>
+                    {%- include '@SonataAdmin/CRUD/display_datetime.html.twig' with {value: execution.startTime} only -%}
+                </td>
+            </tr>
+            <tr class="sonata-ba-view-container job-show-field-endTime">
+                <th>{{ 'job.field.end_time'|trans }}</th>
+                <td>
+                    {%- include '@SonataAdmin/CRUD/display_datetime.html.twig' with {value: execution.endTime} only -%}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

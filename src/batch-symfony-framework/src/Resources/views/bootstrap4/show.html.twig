@@ -1,0 +1,140 @@
+{% extends base_template %}{# configured at yokai_batch.ui.templating.base_template #}
+
+{% trans_default_domain 'YokaiBatchBundle' %}
+
+{# @var execution \Yokai\Batch\JobExecution #}
+{# @var executionInPath \Yokai\Batch\JobExecution #}
+
+{% block title %}
+    {{ 'job.title.view'|trans }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            {% block breadcrumbs_before '' %}
+            <li class="breadcrumb-item">
+                {% if yokai_batch_grant_list() %}
+                    <a href="{{ path('yokai_batch.job_list') }}">
+                        {{ 'job.title.list'|trans }}
+                    </a>
+                {% else %}
+                    {{ 'job.title.list'|trans }}
+                {% endif %}
+            </li>
+            {% set rootExecution = execution.rootExecution %}
+            {% for parentPath, executionInPath in executionsPath %}
+                {% if loop.last %}
+                    <li class="breadcrumb-item active" aria-current="page">
+                        {%- include '@YokaiBatch/bootstrap4/show/_job-name-and-id.html.twig' with {execution: executionInPath} only -%}
+                    </li>
+                {% else %}
+                    <li class="breadcrumb-item">
+                        {% if executionInPath.parentExecution is null %}
+                            <a href="{{ path('yokai_batch.job_view', { job: rootExecution.jobName, id: rootExecution.id }) }}">
+                                {%- include '@YokaiBatch/bootstrap4/show/_job-name-and-id.html.twig' with {execution: executionInPath} only -%}
+                            </a>
+                        {% else %}
+                            <a href="{{ path('yokai_batch.job_view_child', { job: rootExecution.jobName, id: rootExecution.id, path: parentPath }) }}">
+                                {%- include '@YokaiBatch/bootstrap4/show/_job-name-and-id.html.twig' with {execution: executionInPath} only -%}
+                            </a>
+                        {% endif %}
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ol>
+    </nav>
+{% endblock %}
+
+{% block actions %}
+    {% if yokai_batch_grant_list() %}
+        <a href="{{ path('yokai_batch.job_list') }}" class="btn btn-primary">
+            <i class="fa fa-th-list" aria-hidden="true"></i>
+            {{ 'job.action.list'|trans }}
+        </a>
+    {% endif %}
+    {% if yokai_batch_grant_logs(execution) %}
+        <a href="{{ path('yokai_batch.job_logs', { job: execution.rootExecution.jobName, id: execution.rootExecution.id }) }}" class="btn btn-primary">
+            <i class="fa fa-download" aria-hidden="true"></i>
+            {{ 'job.action.download_logs'|trans }}
+        </a>
+    {% endif %}
+{% endblock %}
+
+{% block tabs %}
+    {% set failures = execution.failures %}
+    {% set warnings = execution.warnings %}
+    {% set jobName = execution.jobName %}
+    {% set children = execution.childExecutions %}
+
+    <div class="job-show">
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="general-tab" data-toggle="tab" href="#general" role="tab" aria-controls="general" aria-selected="true">
+                        {{ 'job.tab.general'|trans }}
+                    </a>
+                </li>
+                {% if failures|length > 0 %}
+                    <li class="nav-item">
+                        <a class="nav-link" id="failures-tab" data-toggle="tab" href="#failures" role="tab" aria-controls="failures" aria-selected="false">
+                            {{ 'job.tab.failures'|trans }}
+                        </a>
+                    </li>
+                {% endif %}
+                {% if warnings|length > 0 %}
+                    <li class="nav-item">
+                        <a class="nav-link" id="warnings-tab" data-toggle="tab" href="#warnings" role="tab" aria-controls="warnings" aria-selected="false">
+                            {{ 'job.tab.warnings'|trans }}
+                        </a>
+                    </li>
+                {% endif %}
+                {% if children|length > 0 %}
+                    <li class="nav-item">
+                        <a class="nav-link" id="children-tab" data-toggle="tab" href="#children" role="tab" aria-controls="children" aria-selected="false">
+                            {{ 'job.tab.children'|trans }}
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
+                    {% include [
+                        '@YokaiBatch/bootstrap4/show/'~jobName~'/_general.html.twig',
+                        '@YokaiBatch/bootstrap4/show/_general.html.twig'
+                    ] %}
+                </div>
+                {% if failures|length > 0 %}
+                    <div class="tab-pane fade" id="failures" role="tabpanel" aria-labelledby="failures-tab">
+                        {% include [
+                            '@YokaiBatch/bootstrap4/show/'~jobName~'/_failures.html.twig',
+                            '@YokaiBatch/bootstrap4/show/_failures.html.twig'
+                        ] %}
+                    </div>
+                {% endif %}
+                {% if warnings|length > 0 %}
+                    <div class="tab-pane fade" id="warnings" role="tabpanel" aria-labelledby="warnings-tab">
+                        {% include [
+                            '@YokaiBatch/bootstrap4/show/'~jobName~'/_warnings.html.twig',
+                            '@YokaiBatch/bootstrap4/show/_warnings.html.twig'
+                        ] %}
+                    </div>
+                {% endif %}
+                {% if children|length > 0 %}
+                    <div class="tab-pane fade" id="children" role="tabpanel" aria-labelledby="children-tab">
+                        {% include [
+                            '@YokaiBatch/bootstrap4/show/'~jobName~'/_children-executions.html.twig',
+                            '@YokaiBatch/bootstrap4/show/_children-executions.html.twig'
+                        ] %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block body %}
+    {{ block('breadcrumbs') }}
+    {{ block('actions') }}
+    {{ block('tabs') }}
+{% endblock %}

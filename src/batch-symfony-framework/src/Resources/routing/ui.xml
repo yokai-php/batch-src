@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<routes xmlns="http://symfony.com/schema/routing"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/routing https://symfony.com/schema/routing/routing-1.0.xsd">
+
+    <route id="yokai_batch.job_list" path="/jobs" methods="GET">
+        <default key="_controller">yokai_batch.ui.controller::list</default>
+    </route>
+
+    <route id="yokai_batch.job_view" path="/jobs/{job}/{id}" methods="GET">
+        <default key="_controller">yokai_batch.ui.controller::view</default>
+    </route>
+
+    <route id="yokai_batch.job_view_child" path="/jobs/{job}/{id}/child/{path}" methods="GET">
+        <default key="_controller">yokai_batch.ui.controller::view</default>
+    </route>
+
+    <route id="yokai_batch.job_logs" path="/jobs/{job}/{id}/logs" methods="GET">
+        <default key="_controller">yokai_batch.ui.controller::logs</default>
+    </route>
+
+</routes>

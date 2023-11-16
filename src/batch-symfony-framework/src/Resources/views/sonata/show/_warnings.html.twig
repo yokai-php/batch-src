@@ -1,0 +1,22 @@
+{% trans_default_domain 'YokaiBatchBundle' %}
+
+{# @var execution \Yokai\Batch\JobExecution #}
+{# @var warning \Yokai\Batch\Warning #}
+<table class="table">
+    <thead>
+    <tr>
+        <th>{{ 'job.field.warning.message'|trans }}</th>
+        <th>{{ 'job.field.warning.context'|trans }}</th>
+    </tr>
+    <tbody>
+    {% for warning in warnings %}
+        <tr>
+            <td>{{ warning }}</td>
+            <td>
+                {% if warning.context %}
+                    {% include '@YokaiBatch/sonata/_json.html.twig' with {value: warning.context} only %}
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+</table>

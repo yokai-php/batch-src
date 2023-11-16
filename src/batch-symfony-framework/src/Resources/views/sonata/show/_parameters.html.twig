@@ -1,0 +1,13 @@
+{% trans_default_domain 'YokaiBatchBundle' %}
+
+{# @var execution \Yokai\Batch\JobExecution #}
+<div class="box box-primary">
+    <div class="box-header">
+        <h4 class="box-title">
+            {{ 'job.fieldset.parameters'|trans }}
+        </h4>
+    </div>
+    <div class="box-body">
+        {% include '@YokaiBatch/sonata/_json.html.twig' with {value: execution.parameters.iterator} only %}
+    </div>
+</div>
