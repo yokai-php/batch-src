@@ -298,6 +298,15 @@ final class JobControllerTest extends TestCase
                     ],
                 ];
                 yield [
+                    $jobWithChildrenFixtures,
+                    'export',
+                    '64edbe399b58e',
+                    'unknown.children',
+                    $security,
+                    $templating,
+                    Response::HTTP_NOT_FOUND,
+                ];
+                yield [
                     fn() => null,
                     'job.unknown',
                     'unknown_id',
