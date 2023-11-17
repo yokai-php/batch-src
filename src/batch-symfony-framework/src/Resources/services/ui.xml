@@ -9,7 +9,7 @@
 
         <service id="yokai_batch.ui.controller" public="true"
                  class="Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Controller\JobController">
-            <argument type="service" id="yokai_batch.storage.filesystem"/>
+            <argument type="service" id="Yokai\Batch\Storage\JobExecutionStorageInterface"/>
             <argument type="service" id="form.factory" on-invalid="null"/>
             <argument type="service" id="yokai_batch.ui.security"/>
             <argument type="service" id="twig"/>
