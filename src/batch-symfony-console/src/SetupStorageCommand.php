@@ -20,15 +20,15 @@ final class SetupStorageCommand extends Command
 {
     public function __construct(
         private JobExecutionStorageInterface $storage,
-    )
-    {
+    ) {
         parent::__construct();
     }
 
     protected function configure(): void
     {
         $this
-            ->setHelp(<<<EOF
+            ->setHelp(
+                <<<EOF
 The <info>%command.name%</info> command setups the job execution storage:
 
     <info>php %command.full_name%</info>

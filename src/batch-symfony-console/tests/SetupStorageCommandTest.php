@@ -17,7 +17,9 @@ final class SetupStorageCommandTest extends TestCase
     public function testSetupRequired(): void
     {
         $this->execute(
-            $storage = new class implements JobExecutionStorageInterface, SetupableJobExecutionStorageInterface {
+            $storage = new class() implements
+                JobExecutionStorageInterface,
+                SetupableJobExecutionStorageInterface {
                 public bool $wasSetup = false;
 
                 public function setup(): void
@@ -46,7 +48,7 @@ final class SetupStorageCommandTest extends TestCase
     public function testSetupNotRequired(): void
     {
         $this->execute(
-            new class implements JobExecutionStorageInterface {
+            new class() implements JobExecutionStorageInterface {
                 public function store(JobExecution $execution): void
                 {
                 }

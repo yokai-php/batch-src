@@ -26,8 +26,9 @@ use Yokai\Batch\Storage\SetupableJobExecutionStorageInterface;
  * This {@see JobExecutionStorageInterface} will store
  * {@see JobExecution} in an SQL database using doctrine/dbal.
  */
-final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStorageInterface,
-                                                       SetupableJobExecutionStorageInterface
+final class DoctrineDBALJobExecutionStorage implements
+    QueryableJobExecutionStorageInterface,
+    SetupableJobExecutionStorageInterface
 {
     private const DEFAULT_OPTIONS = [
         'table' => 'yokai_batch_job_execution',
