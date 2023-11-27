@@ -101,8 +101,8 @@ final class DoctrineDBALJobExecutionStorage implements
             \sprintf(
                 'Since yokai/batch-doctrine-dbal 0.5.8: ' .
                 'Method "%s()" is deprecated and will be removed in 0.6.0. Use %s::setup() instead.',
-                \__METHOD__,
-                \__CLASS__,
+                __METHOD__,
+                __CLASS__,
             ),
             \E_USER_DEPRECATED,
         );
