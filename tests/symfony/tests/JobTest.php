@@ -8,15 +8,15 @@ use Generator;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Container;
 use Yokai\Batch\Launcher\JobLauncherInterface;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
 
 final class JobTest extends KernelTestCase
 {
-    protected static $booted = false;
+    protected static bool $booted = false;
 
-    protected static function getContainer(): ContainerInterface
+    protected static function getContainer(): Container
     {
         if (\method_exists(KernelTestCase::class, __FUNCTION__)) {
             return parent::getContainer();
