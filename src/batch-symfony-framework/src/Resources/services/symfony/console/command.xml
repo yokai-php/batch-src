@@ -13,5 +13,11 @@
             <argument type="service" id="yokai_batch.job_executor"/>
             <tag name="console.command"/>
         </service>
+
+        <service id="yokai_batch.cli.setup_storage_command"
+                 class="Yokai\Batch\Bridge\Symfony\Console\SetupStorageCommand">
+            <argument type="service" id="Yokai\Batch\Storage\JobExecutionStorageInterface"/>
+            <tag name="console.command"/>
+        </service>
     </services>
 </container>

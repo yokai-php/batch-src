@@ -34,7 +34,7 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         $schemaManager = $this->connection->getSchemaManager();
 
         self::assertFalse($schemaManager->tablesExist(['yokai_batch_job_execution']));
-        $this->createStorage()->createSchema();
+        $this->createStorage()->setup();
         self::assertTrue($schemaManager->tablesExist(['yokai_batch_job_execution']));
 
         $columns = $schemaManager->listTableColumns('yokai_batch_job_execution');
@@ -61,7 +61,7 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         $schemaManager = $this->connection->getSchemaManager();
 
         self::assertFalse($schemaManager->tablesExist(['acme_job_executions']));
-        $this->createStorage(['table' => 'acme_job_executions'])->createSchema();
+        $this->createStorage(['table' => 'acme_job_executions'])->setup();
         self::assertTrue($schemaManager->tablesExist(['acme_job_executions']));
 
         $columns = $schemaManager->listTableColumns('acme_job_executions');
@@ -86,7 +86,7 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
     public function testStoreInsert(): void
     {
         $storage = $this->createStorage();
-        $storage->createSchema();
+        $storage->setup();
 
         $export = JobExecution::createRoot('123', 'export', new BatchStatus(BatchStatus::RUNNING));
         $export->setStartTime(new DateTimeImmutable('2021-09-23 11:05:00'));
@@ -122,7 +122,7 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
     public function testStoreUpdate(): void
     {
         $storage = $this->createStorage();
-        $storage->createSchema();
+        $storage->setup();
         $storage->store($execution = JobExecution::createRoot('123', 'export'));
         $execution->setStatus(BatchStatus::COMPLETED);
         $storage->store($execution);
@@ -138,7 +138,7 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         $this->expectException(CannotStoreJobExecutionException::class);
 
         $storage = $this->createStorage();
-        /** not calling {@see DoctrineDBALJobExecutionStorage::createSchema} will cause table to not exists */
+        /** not calling {@see DoctrineDBALJobExecutionStorage::setup} will cause table to not exists */
         $storage->store(JobExecution::createRoot('123', 'export'));
     }
 
@@ -147,7 +147,7 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         $this->expectException(JobExecutionNotFoundException::class);
 
         $storage = $this->createStorage();
-        $storage->createSchema();
+        $storage->setup();
         $storage->store($execution = JobExecution::createRoot('123', 'export'));
         $storage->remove($execution);
 
@@ -159,14 +159,14 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         $this->expectException(CannotRemoveJobExecutionException::class);
 
         $storage = $this->createStorage();
-        /** not calling {@see DoctrineDBALJobExecutionStorage::createSchema} will cause table to not exists */
+        /** not calling {@see DoctrineDBALJobExecutionStorage::setup} will cause table to not exists */
         $storage->remove(JobExecution::createRoot('123', 'export'));
     }
 
     public function testRetrieve(): void
     {
         $storage = $this->createStorage();
-        $storage->createSchema();
+        $storage->setup();
         $storage->store(JobExecution::createRoot('123', 'export'));
         $storage->store(JobExecution::createRoot('456', 'import'));
 
@@ -184,7 +184,7 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         $this->expectException(JobExecutionNotFoundException::class);
 
         $storage = $this->createStorage();
-        $storage->createSchema();
+        $storage->setup();
         $storage->store(JobExecution::createRoot('123', 'export'));
 
         $storage->retrieve('export', '456');
@@ -195,7 +195,7 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         $this->expectException(JobExecutionNotFoundException::class);
 
         $storage = $this->createStorage();
-        /** not calling {@see DoctrineDBALJobExecutionStorage::createSchema} will cause table to not exists */
+        /** not calling {@see DoctrineDBALJobExecutionStorage::setup} will cause table to not exists */
         $storage->retrieve('export', '456');
     }
 
@@ -217,7 +217,7 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         $data['logs'] ??= '';
 
         $storage = $this->createStorage();
-        $storage->createSchema();
+        $storage->setup();
         $this->connection->insert('yokai_batch_job_execution', $data);
         $storage->retrieve('export', '123');
     }
@@ -249,7 +249,7 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
     public function testList(): void
     {
         $storage = $this->createStorage();
-        $storage->createSchema();
+        $storage->setup();
         $this->loadFixtures($storage);
 
         self::assertExecutionIds(['123'], $storage->list('export'));
@@ -262,7 +262,7 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
     public function testQuery(QueryBuilder $queryBuilder, array $expectedCouples): void
     {
         $storage = $this->createStorage();
-        $storage->createSchema();
+        $storage->setup();
         $this->loadFixtures($storage);
 
         self::assertExecutions($expectedCouples, $storage->query($queryBuilder->getQuery()));
@@ -341,6 +341,14 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
                 ['import', '789'],
             ],
         ];
+    }
+
+    public function testCreateSchemaDeprecated(): void
+    {
+        $schemaManager = $this->connection->getSchemaManager();
+        self::assertFalse($schemaManager->tablesExist(['yokai_batch_job_execution']));
+        $this->createStorage()->createSchema();
+        self::assertTrue($schemaManager->tablesExist(['yokai_batch_job_execution']));
     }
 
     public static function assertExecutionIds(array $ids, iterable $executions): void

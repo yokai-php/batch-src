@@ -20,12 +20,15 @@ use Yokai\Batch\JobExecution;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
 use Yokai\Batch\Storage\Query;
 use Yokai\Batch\Storage\QueryableJobExecutionStorageInterface;
+use Yokai\Batch\Storage\SetupableJobExecutionStorageInterface;
 
 /**
  * This {@see JobExecutionStorageInterface} will store
  * {@see JobExecution} in an SQL database using doctrine/dbal.
  */
-final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStorageInterface
+final class DoctrineDBALJobExecutionStorage implements
+    QueryableJobExecutionStorageInterface,
+    SetupableJobExecutionStorageInterface
 {
     private const DEFAULT_OPTIONS = [
         'table' => 'yokai_batch_job_execution',
@@ -54,7 +57,7 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
     /**
      * Create required table for this storage.
      */
-    public function createSchema(): void
+    public function setup(): void
     {
         $assetFilter = $this->connection->getConfiguration()->getSchemaAssetsFilter();
         $this->connection->getConfiguration()->setSchemaAssetsFilter(null);
@@ -86,6 +89,24 @@ final class DoctrineDBALJobExecutionStorage implements QueryableJobExecutionStor
         }
 
         $this->connection->getConfiguration()->setSchemaAssetsFilter($assetFilter);
+    }
+
+    /**
+     * Create required table for this storage.
+     * @deprecated
+     */
+    public function createSchema(): void
+    {
+        @\trigger_error(
+            \sprintf(
+                'Since yokai/batch-doctrine-dbal 0.5.8: ' .
+                'Method "%s()" is deprecated and will be removed in 0.6.0. Use %s::setup() instead.',
+                __METHOD__,
+                __CLASS__,
+            ),
+            \E_USER_DEPRECATED,
+        );
+        $this->setup();
     }
 
     public function store(JobExecution $execution): void
