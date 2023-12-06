@@ -345,8 +345,10 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
 
     public function testCreateSchemaDeprecated(): void
     {
-        $storage = $this->createStorage();
-        $storage->createSchema();
+        $schemaManager = $this->connection->getSchemaManager();
+        self::assertFalse($schemaManager->tablesExist(['yokai_batch_job_execution']));
+        $this->createStorage()->createSchema();
+        self::assertTrue($schemaManager->tablesExist(['yokai_batch_job_execution']));
     }
 
     public static function assertExecutionIds(array $ids, iterable $executions): void
