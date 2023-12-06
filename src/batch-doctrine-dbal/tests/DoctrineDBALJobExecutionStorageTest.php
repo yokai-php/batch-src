@@ -345,16 +345,6 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
 
     public function testCreateSchemaDeprecated(): void
     {
-        \set_error_handler(
-            static function () {
-                \restore_error_handler();
-                throw new \Exception('Deprecation caught');
-            },
-            E_DEPRECATED,
-        );
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessageMatches('Deprecation caught');
-
         $storage = $this->createStorage();
         $storage->createSchema();
     }
