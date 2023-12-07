@@ -60,7 +60,9 @@ final class DoctrineDBALJobExecutionStorage implements
     public function setup(): void
     {
         $assetFilter = $this->connection->getConfiguration()->getSchemaAssetsFilter();
-        $this->connection->getConfiguration()->setSchemaAssetsFilter(null);
+        $this->connection->getConfiguration()->setSchemaAssetsFilter(
+            fn(string $tableName) => $tableName === $this->table,
+        );
 
         $schemaManager = method_exists($this->connection, 'createSchemaManager')
             ? $this->connection->createSchemaManager()

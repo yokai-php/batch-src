@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Yokai\Batch\Tests\Bridge\Doctrine\DBAL;
 
 use DateTimeImmutable;
+use Doctrine\DBAL\Schema\Table;
+use Doctrine\DBAL\Types\Types;
 use Generator;
 use RuntimeException;
 use Throwable;
@@ -31,7 +33,7 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
 
     public function testCreateStandardTable(): void
     {
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
 
         self::assertFalse($schemaManager->tablesExist(['yokai_batch_job_execution']));
         $this->createStorage()->setup();
@@ -58,7 +60,7 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
 
     public function testCreateCustomTable(): void
     {
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
 
         self::assertFalse($schemaManager->tablesExist(['acme_job_executions']));
         $this->createStorage(['table' => 'acme_job_executions'])->setup();
@@ -81,6 +83,20 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
             ],
             array_keys($columns)
         );
+    }
+
+    public function testSetupPreserveOtherTables(): void
+    {
+        $schemaManager = $this->connection->createSchemaManager();
+        $table = new Table('user');
+        $table->addColumn('username', Types::STRING);
+        $schemaManager->createTable($table);
+
+        self::assertTrue($schemaManager->tablesExist(['user']));
+        self::assertFalse($schemaManager->tablesExist(['yokai_batch_job_execution']));
+        $this->createStorage()->setup();
+        self::assertTrue($schemaManager->tablesExist(['user']));
+        self::assertTrue($schemaManager->tablesExist(['yokai_batch_job_execution']));
     }
 
     public function testStoreInsert(): void
@@ -345,7 +361,7 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
 
     public function testCreateSchemaDeprecated(): void
     {
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
         self::assertFalse($schemaManager->tablesExist(['yokai_batch_job_execution']));
         $this->createStorage()->createSchema();
         self::assertTrue($schemaManager->tablesExist(['yokai_batch_job_execution']));
