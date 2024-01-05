@@ -97,6 +97,14 @@ final class Kernel extends BaseKernel implements CompilerPassInterface
             ],
             'ui' => [
                 'enabled' => true,
+                'security' => [
+                    'attributes' => [
+                        'list' => 'PUBLIC_ACCESS',
+                        'view' => 'PUBLIC_ACCESS',
+                        'traces' => 'PUBLIC_ACCESS',
+                        'logs' => 'PUBLIC_ACCESS',
+                    ],
+                ],
             ],
         ]);
 
