@@ -15,16 +15,16 @@ install () {
   led in -s ${container} -- composer2 --no-interaction update --no-progress --with-all-dependencies
 }
 
-install "php82" "6.2.*"
-led in -s php82 -- vendor/bin/ecs
-led in -s php82 -- vendor/bin/phpstan analyze
-led in -s php82 -- vendor/bin/phpunit --testsuite=Convention
+install "php83" "7.0.*"
+led in -s php83 -- vendor/bin/ecs
+led in -s php83 -- vendor/bin/phpstan analyze
+led in -s php83 -- vendor/bin/phpunit --testsuite=Convention
 
 matrix=(
-  "php80/5.4.*"
-  "php80/6.0.*"
-  "php82/5.4.*"
-  "php82/6.2.*"
+  "php81/6.4.*"
+  "php83/6.4.*"
+  "php82/7.0.*"
+  "php83/7.0.*"
 )
 for entry in "${matrix[@]}"
 do

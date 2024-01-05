@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Bridge\Symfony\Console;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
@@ -19,10 +20,9 @@ use Yokai\Batch\JobExecution;
 /**
  * Execute any {@see JobInterface} within your CLI.
  */
+#[AsCommand(name: 'yokai:batch:run', description: 'Execute any job.')]
 final class RunJobCommand extends Command
 {
-    protected static $defaultName = 'yokai:batch:run';
-
     public const EXIT_SUCCESS_CODE = 0;
     public const EXIT_ERROR_CODE = 1;
     public const EXIT_WARNING_CODE = 2;
@@ -36,7 +36,6 @@ final class RunJobCommand extends Command
 
     protected function configure(): void
     {
-        $this->setDescription('Execute any job.');
         $this->addArgument('job', InputArgument::REQUIRED, 'The job name to run');
         $this->addArgument('configuration', InputArgument::OPTIONAL, 'The job parameters as a JSON object');
         $this->addUsage('import');
