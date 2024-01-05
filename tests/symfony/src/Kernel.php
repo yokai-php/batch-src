@@ -51,6 +51,20 @@ final class Kernel extends BaseKernel implements CompilerPassInterface
                 'storage_factory_id' => 'session.storage.factory.mock_file',
             ],
         ]);
+        $container->extension('security', [
+            'password_hashers' => [
+                'Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface' => 'auto',
+            ],
+            'providers' => [
+                'users_in_memory' => ['memory' => null],
+            ],
+            'firewalls' => [
+                'main' => [
+                    'lazy' => true,
+                    'provider' => 'users_in_memory',
+                ],
+            ],
+        ]);
         $container->extension('doctrine', [
             'dbal' => [
                 'url' => 'sqlite:///%kernel.project_dir%/var/database.sqlite',
