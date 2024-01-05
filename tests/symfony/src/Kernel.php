@@ -52,16 +52,9 @@ final class Kernel extends BaseKernel implements CompilerPassInterface
             ],
         ]);
         $container->extension('security', [
-            'password_hashers' => [
-                'Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface' => 'auto',
-            ],
-            'providers' => [
-                'users_in_memory' => ['memory' => null],
-            ],
             'firewalls' => [
                 'main' => [
-                    'lazy' => true,
-                    'provider' => 'users_in_memory',
+                    'security' => false,
                 ],
             ],
         ]);
