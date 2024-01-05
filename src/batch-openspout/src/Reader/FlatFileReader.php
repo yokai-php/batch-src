@@ -48,7 +48,7 @@ final class FlatFileReader implements
     {
         /** @var string $path */
         $path = $this->filePath->get($this->jobExecution);
-        $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        $extension = \strtolower(\pathinfo($path, PATHINFO_EXTENSION));
         $reader = match ($extension) {
             'csv' => new CSVReader($this->options),
             'xlsx' => new XLSXReader($this->options),
@@ -70,11 +70,11 @@ final class FlatFileReader implements
             } catch (InvalidRowSizeException $exception) {
                 $this->jobExecution->addWarning(
                     new Warning(
-                        sprintf(
+                        \sprintf(
                             'Expecting row %s to have exactly %d columns(s), but got %d.',
                             $rowIndex,
-                            count($exception->getHeaders()),
-                            count($exception->getRow()),
+                            \count($exception->getHeaders()),
+                            \count($exception->getRow()),
                         ),
                         [],
                         ['headers' => $exception->getHeaders(), 'row' => $exception->getRow()]

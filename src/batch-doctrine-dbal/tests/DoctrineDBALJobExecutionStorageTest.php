@@ -54,7 +54,7 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
                 'child_executions',
                 'logs',
             ],
-            array_keys($columns)
+            \array_keys($columns)
         );
     }
 
@@ -81,7 +81,7 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
                 'child_executions',
                 'logs',
             ],
-            array_keys($columns)
+            \array_keys($columns)
         );
     }
 

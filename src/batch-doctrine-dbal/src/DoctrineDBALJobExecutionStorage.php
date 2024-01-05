@@ -44,7 +44,7 @@ final class DoctrineDBALJobExecutionStorage implements
      */
     public function __construct(ConnectionRegistry $doctrine, array $options)
     {
-        $options = array_filter($options) + self::DEFAULT_OPTIONS;
+        $options = \array_filter($options) + self::DEFAULT_OPTIONS;
         $options['connection'] ??= $doctrine->getDefaultConnectionName();
 
         $this->table = $options['table'];
@@ -64,26 +64,26 @@ final class DoctrineDBALJobExecutionStorage implements
             fn(string $tableName) => $tableName === $this->table,
         );
 
-        $schemaManager = method_exists($this->connection, 'createSchemaManager')
+        $schemaManager = \method_exists($this->connection, 'createSchemaManager')
             ? $this->connection->createSchemaManager()
             : $this->connection->getSchemaManager();
-        $comparator = method_exists($schemaManager, 'createComparator')
+        $comparator = \method_exists($schemaManager, 'createComparator')
             ? $schemaManager->createComparator()
             : new Comparator();
-        $fromSchema = method_exists($schemaManager, 'introspectSchema')
+        $fromSchema = \method_exists($schemaManager, 'introspectSchema')
             ? $schemaManager->introspectSchema()
             : $schemaManager->createSchema();
         $toSchema = $this->getSchema();
-        $schemaDiff = method_exists($comparator, 'compareSchemas')
+        $schemaDiff = \method_exists($comparator, 'compareSchemas')
             ? $comparator->compareSchemas($fromSchema, $toSchema)
             : $comparator->compare($fromSchema, $toSchema);
         $platform = $this->connection->getDatabasePlatform();
-        $schemaDiffQueries = method_exists($platform, 'getAlterSchemaSQL')
+        $schemaDiffQueries = \method_exists($platform, 'getAlterSchemaSQL')
             ? $platform->getAlterSchemaSQL($schemaDiff)
             : $schemaDiff->toSaveSql($platform);
 
         foreach ($schemaDiffQueries as $sql) {
-            if (method_exists($this->connection, 'executeStatement')) {
+            if (\method_exists($this->connection, 'executeStatement')) {
                 $this->connection->executeStatement($sql);
             } else {
                 $this->connection->exec($sql);
@@ -155,21 +155,21 @@ final class DoctrineDBALJobExecutionStorage implements
             ->from($this->table);
 
         $names = $query->jobs();
-        if (count($names) > 0) {
+        if (\count($names) > 0) {
             $qb->andWhere($qb->expr()->in('job_name', ':jobNames'));
             $queryParameters['jobNames'] = $names;
             $queryTypes['jobNames'] = Connection::PARAM_STR_ARRAY;
         }
 
         $ids = $query->ids();
-        if (count($ids) > 0) {
+        if (\count($ids) > 0) {
             $qb->andWhere($qb->expr()->in('id', ':ids'));
             $queryParameters['ids'] = $ids;
             $queryTypes['ids'] = Connection::PARAM_STR_ARRAY;
         }
 
         $statuses = $query->statuses();
-        if (count($statuses) > 0) {
+        if (\count($statuses) > 0) {
             $qb->andWhere($qb->expr()->in('status', ':statuses'));
             $queryParameters['statuses'] = $statuses;
             $queryTypes['statuses'] = Connection::PARAM_INT_ARRAY;

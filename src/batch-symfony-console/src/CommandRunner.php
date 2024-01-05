@@ -20,8 +20,8 @@ class CommandRunner
         private string $logDir,
         PhpExecutableFinder $phpLocator = null,
     ) {
-        $this->consolePath = implode(DIRECTORY_SEPARATOR, [$binDir, 'console']);
-        if (class_exists(PhpExecutableFinder::class)) {
+        $this->consolePath = \implode(DIRECTORY_SEPARATOR, [$binDir, 'console']);
+        if (\class_exists(PhpExecutableFinder::class)) {
             $phpLocator ??= new PhpExecutableFinder();
         }
         $this->phpLocator = $phpLocator;
@@ -35,10 +35,10 @@ class CommandRunner
     public function runAsync(string $commandName, string $logFilename, array $arguments = []): void
     {
         $this->exec(
-            sprintf(
+            \sprintf(
                 '%s >> %s 2>&1 &',
                 $this->buildCommand($commandName, $arguments),
-                implode(DIRECTORY_SEPARATOR, [$this->logDir, $logFilename])
+                \implode(DIRECTORY_SEPARATOR, [$this->logDir, $logFilename])
             )
         );
     }
@@ -48,7 +48,7 @@ class CommandRunner
      */
     protected function exec(string $command): void
     {
-        exec($command);
+        \exec($command);
     }
 
     /**
@@ -56,7 +56,7 @@ class CommandRunner
      */
     private function buildCommand(string $commandName, array $arguments): string
     {
-        return sprintf(
+        return \sprintf(
             '%s %s %s %s',
             $this->phpLocator ? $this->phpLocator->find() : 'php',
             $this->consolePath,

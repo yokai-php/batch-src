@@ -5,6 +5,7 @@ declare(strict_types=1);
 use PHP_CodeSniffer\Standards\Generic\Sniffs\PHP\ForbiddenFunctionsSniff;
 use PhpCsFixer\Fixer\ControlStructure\YodaStyleFixer;
 use PhpCsFixer\Fixer\FunctionNotation\FunctionDeclarationFixer;
+use PhpCsFixer\Fixer\FunctionNotation\NativeFunctionInvocationFixer;
 use Symplify\CodingStandard\Fixer\ArrayNotation\ArrayListItemNewlineFixer;
 use Symplify\CodingStandard\Fixer\ArrayNotation\ArrayOpenerAndCloserNewlineFixer;
 use Symplify\CodingStandard\Fixer\ArrayNotation\StandaloneLineInMultilineArrayFixer;
@@ -50,5 +51,9 @@ return function (ECSConfig $ecsConfig): void {
     ]);
     $ecsConfig->ruleWithConfiguration(FunctionDeclarationFixer::class, [
         'closure_fn_spacing' => 'none',
+    ]);
+    $ecsConfig->ruleWithConfiguration(NativeFunctionInvocationFixer::class, [
+        'scope' => 'namespaced',
+        'include' => ['@all'],
     ]);
 };

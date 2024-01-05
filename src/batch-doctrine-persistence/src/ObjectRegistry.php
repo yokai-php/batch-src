@@ -44,7 +44,7 @@ final class ObjectRegistry
 
                 return $repository->findOneBy($criteria);
             },
-            serialize($criteria)
+            \serialize($criteria)
         );
     }
 
@@ -62,11 +62,11 @@ final class ObjectRegistry
     {
         $manager = $this->doctrine->getManagerForClass($class);
         if ($manager === null) {
-            throw new InvalidArgumentException(sprintf('Class "%s" is not a managed Doctrine entity.', $class));
+            throw new InvalidArgumentException(\sprintf('Class "%s" is not a managed Doctrine entity.', $class));
         }
 
-        $key ??= spl_object_hash($closure);
-        $key = md5($key);
+        $key ??= \spl_object_hash($closure);
+        $key = \md5($key);
 
         $identity = $this->identities[$class][$key] ?? null;
         if ($identity !== null) {

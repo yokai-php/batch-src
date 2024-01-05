@@ -41,7 +41,7 @@ final class JobSecurityTest extends TestCase
 
             public function isGranted(mixed $attribute, mixed $subject = null): bool
             {
-                return in_array($attribute, $this->attributes, true)
+                return \in_array($attribute, $this->attributes, true)
                     && ($subject === null || $subject instanceof JobExecution);
             }
         };

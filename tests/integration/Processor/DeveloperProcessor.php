@@ -22,10 +22,10 @@ final class DeveloperProcessor implements ItemProcessorInterface
     public function process(mixed $item): Developer
     {
         $badges = $this->manager->getRepository(Badge::class)
-            ->findBy(['label' => str_getcsv($item['badges'], '|')])
+            ->findBy(['label' => \str_getcsv($item['badges'], '|')])
         ;
         $repositories = $this->manager->getRepository(Repository::class)
-            ->findBy(['label' => str_getcsv($item['repositories'], '|')])
+            ->findBy(['label' => \str_getcsv($item['repositories'], '|')])
         ;
 
         $developer = new Developer();

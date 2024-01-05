@@ -56,7 +56,7 @@ final class YokaiBatchExtension extends Extension
             'symfony/validator/' => $this->installed('symfony-validator'),
         ];
 
-        foreach (array_keys(array_filter($bridges)) as $resource) {
+        foreach (\array_keys(\array_filter($bridges)) as $resource) {
             $loader->load($resource);
         }
 
@@ -127,7 +127,7 @@ final class YokaiBatchExtension extends Extension
             $defaultStorageDefinition = $container->getDefinition($defaultStorage);
         } catch (ServiceNotFoundException $exception) {
             throw new LogicException(
-                sprintf('Configured default job execution storage service "%s" does not exists.', $defaultStorage),
+                \sprintf('Configured default job execution storage service "%s" does not exists.', $defaultStorage),
                 0,
                 $exception
             );
@@ -146,7 +146,7 @@ final class YokaiBatchExtension extends Extension
             QueryableJobExecutionStorageInterface::class => false,
         ];
         foreach ($interfaces as $interface => $required) {
-            if (!is_a($defaultStorageClass, $interface, true)) {
+            if (!\is_a($defaultStorageClass, $interface, true)) {
                 if ($required) {
                     throw new LogicException(
                         \sprintf(
@@ -207,7 +207,7 @@ final class YokaiBatchExtension extends Extension
                 }
             } catch (ServiceNotFoundException $exception) {
                 throw new LogicException(
-                    sprintf('Configured UI templating service "%s" does not exists.', $templating['service']),
+                    \sprintf('Configured UI templating service "%s" does not exists.', $templating['service']),
                     0,
                     $exception
                 );

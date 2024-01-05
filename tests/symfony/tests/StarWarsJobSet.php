@@ -77,8 +77,8 @@ final class StarWarsJobSet
                 $connection = $entityManager->getConnection();
 
                 $database = $connection->getParams()['path'];
-                if (file_exists($database)) {
-                    unlink($database);
+                if (\file_exists($database)) {
+                    \unlink($database);
                 }
                 $schema = $connection->createSchemaManager();
                 $schema->createDatabase($database);

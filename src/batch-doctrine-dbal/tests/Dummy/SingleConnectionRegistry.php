@@ -27,7 +27,7 @@ final class SingleConnectionRegistry implements ConnectionRegistry
             return $this->connection;
         }
 
-        throw new InvalidArgumentException(sprintf('Doctrine Connection named "%s" does not exist.', $name));
+        throw new InvalidArgumentException(\sprintf('Doctrine Connection named "%s" does not exist.', $name));
     }
 
     public function getConnections()
