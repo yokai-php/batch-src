@@ -19,5 +19,5 @@ parameters:
 
   ignoreErrors:
     # The DependencyInjection returns are complex to deal with
-    - message: '#.*NodeParentInterface\|null.*#'
-      path: ./src/batch-symfony-framework/src/DependencyInjection
+    - message: '#^Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeParentInterface\:\:#'
+      path: ./src/batch-symfony-framework/src/DependencyInjection/Configuration.php
