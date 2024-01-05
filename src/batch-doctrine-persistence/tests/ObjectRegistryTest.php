@@ -59,7 +59,10 @@ class ObjectRegistryTest extends DoctrinePersistenceTestCase
             self::assertSame($this->lucy, $registry->findOneBy(User::class, ['name' => 'Lucy']));
             self::assertNull($registry->findOneBy(User::class, ['name' => 'John']));
 
-            self::assertSame($this->galaxyExplorer, $registry->findOneBy(Product::class, ['name' => 'Galaxy Explorer']));
+            self::assertSame(
+                $this->galaxyExplorer,
+                $registry->findOneBy(Product::class, ['name' => 'Galaxy Explorer'])
+            );
             self::assertSame($this->boutiqueHotel, $registry->findOneBy(Product::class, ['name' => 'Boutique Hotel']));
             self::assertNull($registry->findOneBy(Product::class, ['name' => 'Haunted House']));
         }
@@ -115,7 +118,9 @@ class ObjectRegistryTest extends DoctrinePersistenceTestCase
         // But here in the test, it is not possible to call the repository more than once
         // Hence, if we call reset after using the registry at least once, the repository will fail
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('Method findOneBy with args a:1:{i:0;a:1:{s:4:"name";s:5:"Emmet";}} has already been called');
+        $this->expectExceptionMessage(
+            'Method findOneBy with args a:1:{i:0;a:1:{s:4:"name";s:5:"Emmet";}} has already been called'
+        );
 
         $registry = new ObjectRegistry($this->doctrine);
 

@@ -234,7 +234,9 @@ final class JobControllerTest extends TestCase
                         new JobParameters(['type' => 'complete']),
                         new Summary(['count' => 156]),
                     );
-                    $exportExecution->addWarning(new Warning('Skipped suspicious record', [], ['suspicious_record' => 2]));
+                    $exportExecution->addWarning(
+                        new Warning('Skipped suspicious record', [], ['suspicious_record' => 2])
+                    );
                     $exportExecution->addFailure(new Failure('RuntimeException', 'Missing record #2', 0));
                     $exportExecution->setStartTime(new \DateTimeImmutable('2021-01-01 10:00'));
                     $exportExecution->setEndTime(new \DateTimeImmutable('2021-01-01 11:00'));
@@ -516,7 +518,9 @@ final class JobControllerTest extends TestCase
                         BatchStatus::FAILED,
                     ])),
                     'startTime' => $start = (new \DateTimeImmutable())->setTimestamp(\random_int(0, \time() - 10)),
-                    'endTime' => (new \DateTimeImmutable())->setTimestamp(\random_int($start->getTimestamp(), \time() - 10)),
+                    'endTime' => (new \DateTimeImmutable())->setTimestamp(
+                        \random_int($start->getTimestamp(), \time() - 10)
+                    ),
                 ],
                 $attributes,
             );

@@ -22,8 +22,13 @@ class YokaiBatchExtensionTest extends TestCase
     /**
      * @dataProvider configs
      */
-    public function test(array $config, ?callable $configure, string $storage, ?callable $templating, ?array $security): void
-    {
+    public function test(
+        array $config,
+        ?callable $configure,
+        string $storage,
+        ?callable $templating,
+        ?array $security
+    ): void {
         $container = new ContainerBuilder();
         if ($configure !== null) {
             $configure($container);

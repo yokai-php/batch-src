@@ -8,6 +8,7 @@ use PhpCsFixer\Fixer\FunctionNotation\FunctionDeclarationFixer;
 use Symplify\CodingStandard\Fixer\ArrayNotation\ArrayListItemNewlineFixer;
 use Symplify\CodingStandard\Fixer\ArrayNotation\ArrayOpenerAndCloserNewlineFixer;
 use Symplify\CodingStandard\Fixer\ArrayNotation\StandaloneLineInMultilineArrayFixer;
+use Symplify\CodingStandard\Fixer\LineLength\LineLengthFixer;
 use Symplify\EasyCodingStandard\Config\ECSConfig;
 use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
 
@@ -40,6 +41,9 @@ return function (ECSConfig $ecsConfig): void {
         'equal' => false,
         'identical' => false,
         'less_and_greater' => false,
+    ]);
+    $ecsConfig->ruleWithConfiguration(LineLengthFixer::class, [
+        LineLengthFixer::INLINE_SHORT_LINES => false,
     ]);
     $ecsConfig->ruleWithConfiguration(ForbiddenFunctionsSniff::class, [
         'forbiddenFunctions' => ['dump' => null, 'dd' => null, 'var_dump' => null, 'die' => null],
