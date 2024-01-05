@@ -149,13 +149,13 @@ final class FilesystemJobExecutionStorage implements QueryableJobExecutionStorag
     {
         $path = $this->buildFilePath($execution->getJobName(), $execution->getId());
         $dir = dirname($path);
-        if (!is_dir($dir) && false === @mkdir($dir, 0777, true)) {
+        if (!is_dir($dir) && @mkdir($dir, 0777, true) === false) {
             throw FilesystemException::cannotCreateDir($path);
         }
 
         $content = $this->serializer->serialize($execution);
 
-        if (false === @file_put_contents($path, $content)) {
+        if (@file_put_contents($path, $content) === false) {
             throw FilesystemException::cannotWriteFile($path);
         }
     }
