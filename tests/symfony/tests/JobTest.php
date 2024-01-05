@@ -14,21 +14,6 @@ use Yokai\Batch\Storage\JobExecutionStorageInterface;
 
 final class JobTest extends KernelTestCase
 {
-    protected static $booted = false;
-
-    protected static function getContainer(): ContainerInterface
-    {
-        if (\method_exists(KernelTestCase::class, __FUNCTION__)) {
-            return parent::getContainer();
-        }
-
-        if (!static::$booted) {
-            static::bootKernel();
-        }
-
-        return static::$container;
-    }
-
     /**
      * @dataProvider configs
      */
