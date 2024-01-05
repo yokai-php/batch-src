@@ -1,13 +1,13 @@
 services:
-  php82:
-    container_name: yokai-batch-php82
+  php83:
+    container_name: yokai-batch-php83
     environment:
       PHP_XDEBUG: 1
     extends:
       file: ~/.led/docker-base.yaml
       service: localuser
-    hostname: php82
-    image: ledup/php:8.2
+    hostname: php83
+    image: ledup/php:8.3
     volumes:
       - .:/src
     working_dir: /src
