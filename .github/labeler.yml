@@ -1,8 +1,6 @@
 # https://github.com/actions/labeler
 'yokai/batch':
   - 'src/batch/**'
-'yokai/batch-box-spout':
-  - 'src/batch-box-spout/**'
 'yokai/batch-doctrine-dbal':
   - 'src/batch-doctrine-dbal/**'
 'yokai/batch-doctrine-orm':

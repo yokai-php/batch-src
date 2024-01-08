@@ -93,24 +93,6 @@ final class DoctrineDBALJobExecutionStorage implements
         $this->connection->getConfiguration()->setSchemaAssetsFilter($assetFilter);
     }
 
-    /**
-     * Create required table for this storage.
-     * @deprecated
-     */
-    public function createSchema(): void
-    {
-        @\trigger_error(
-            \sprintf(
-                'Since yokai/batch-doctrine-dbal 0.5.8: ' .
-                'Method "%s()" is deprecated and will be removed in 0.6.0. Use %s::setup() instead.',
-                __METHOD__,
-                __CLASS__,
-            ),
-            \E_USER_DEPRECATED,
-        );
-        $this->setup();
-    }
-
     public function store(JobExecution $execution): void
     {
         try {

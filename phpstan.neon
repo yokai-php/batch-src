@@ -5,7 +5,6 @@ parameters:
   level: max
   paths:
     - src/batch/src/
-    - src/batch-box-spout/src/
     - src/batch-doctrine-dbal/src/
     - src/batch-doctrine-orm/src/
     - src/batch-doctrine-persistence/src/

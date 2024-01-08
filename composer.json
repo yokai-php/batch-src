@@ -53,7 +53,6 @@
   },
   "replace": {
     "yokai/batch": "self.version",
-    "yokai/batch-box-spout": "self.version",
     "yokai/batch-doctrine-dbal": "self.version",
     "yokai/batch-doctrine-orm": "self.version",
     "yokai/batch-doctrine-persistence": "self.version",
@@ -68,7 +67,6 @@
   "autoload": {
     "psr-4": {
       "Yokai\\Batch\\": "src/batch/src/",
-      "Yokai\\Batch\\Bridge\\Box\\Spout\\": "src/batch-box-spout/src/",
       "Yokai\\Batch\\Bridge\\Doctrine\\DBAL\\": "src/batch-doctrine-dbal/src/",
       "Yokai\\Batch\\Bridge\\Doctrine\\ORM\\": "src/batch-doctrine-orm/src/",
       "Yokai\\Batch\\Bridge\\Doctrine\\Persistence\\": "src/batch-doctrine-persistence/src/",
@@ -88,7 +86,6 @@
       "Yokai\\Batch\\Sources\\Tests\\Symfony\\App\\": "tests/symfony/src/",
       "Yokai\\Batch\\Sources\\Tests\\Symfony\\Tests\\": "tests/symfony/tests/",
       "Yokai\\Batch\\Tests\\": "src/batch/tests/",
-      "Yokai\\Batch\\Tests\\Bridge\\Box\\Spout\\": "src/batch-box-spout/tests/",
       "Yokai\\Batch\\Tests\\Bridge\\Doctrine\\DBAL\\": "src/batch-doctrine-dbal/tests/",
       "Yokai\\Batch\\Tests\\Bridge\\Doctrine\\ORM\\": "src/batch-doctrine-orm/tests/",
       "Yokai\\Batch\\Tests\\Bridge\\Doctrine\\Persistence\\": "src/batch-doctrine-persistence/tests/",

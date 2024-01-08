@@ -3,8 +3,6 @@ changelog:
   categories:
     - title: 'Changes made to the core: `yokai/batch`'
       labels: ['yokai/batch']
-    - title: 'Changes made to the `box/spout` bridge: `yokai/batch-box-spout`'
-      labels: ['yokai/batch-box-spout']
     - title: 'Changes made to the `doctrine/dbal` bridge: `yokai/batch-doctrine-dbal`'
       labels: ['yokai/batch-doctrine-dbal']
     - title: 'Changes made to the `doctrine/orm` bridge: `yokai/batch-doctrine-orm`'
