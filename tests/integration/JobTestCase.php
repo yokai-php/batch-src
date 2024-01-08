@@ -33,10 +33,10 @@ abstract class JobTestCase extends TestCase
         if (!self::$run) {
             self::$run = true;
 
-            if (is_dir(self::ARTIFACTS_DIR)) {
-                @rmdir(self::ARTIFACTS_DIR);
-                @mkdir(self::STORAGE_DIR, 0755, true);
-                @mkdir(self::OUTPUT_DIR, 0755, true);
+            if (\is_dir(self::ARTIFACTS_DIR)) {
+                @\rmdir(self::ARTIFACTS_DIR);
+                @\mkdir(self::STORAGE_DIR, 0755, true);
+                @\mkdir(self::OUTPUT_DIR, 0755, true);
             }
         }
     }
@@ -94,12 +94,12 @@ abstract class JobTestCase extends TestCase
         self::assertSame($jobExecution->getJobName(), $storedJobExecution->getJobName());
         self::compareStatuses($jobExecution->getStatus(), $storedJobExecution->getStatus());
         self::assertSame(
-            iterator_to_array($jobExecution->getParameters()),
-            iterator_to_array($storedJobExecution->getParameters())
+            \iterator_to_array($jobExecution->getParameters()),
+            \iterator_to_array($storedJobExecution->getParameters())
         );
         self::assertSame(
-            iterator_to_array($jobExecution->getSummary()),
-            iterator_to_array($storedJobExecution->getSummary())
+            \iterator_to_array($jobExecution->getSummary()),
+            \iterator_to_array($storedJobExecution->getSummary())
         );
         self::compareDates($jobExecution->getStartTime(), $storedJobExecution->getStartTime());
         self::compareDates($jobExecution->getEndTime(), $storedJobExecution->getEndTime());
@@ -142,7 +142,7 @@ abstract class JobTestCase extends TestCase
      */
     private static function compareFailures(array $expected, array $actual)
     {
-        self::assertCount(count($expected), $actual);
+        self::assertCount(\count($expected), $actual);
 
         foreach ($expected as $idx => $expectedFailure) {
             $actualFailure = $actual[$idx] ?? null;
@@ -161,7 +161,7 @@ abstract class JobTestCase extends TestCase
      */
     private static function compareWarnings(array $expected, array $actual)
     {
-        self::assertCount(count($expected), $actual);
+        self::assertCount(\count($expected), $actual);
 
         foreach ($expected as $idx => $expectedWarning) {
             $actualWarning = $actual[$idx] ?? null;

@@ -30,7 +30,7 @@ final class SplitDeveloperXlsxJob implements JobInterface
 
         $reader = new Reader();
         $reader->open($this->inputFile);
-        $sheets = iterator_to_array($reader->getSheetIterator(), false);
+        $sheets = \iterator_to_array($reader->getSheetIterator(), false);
         [$badgeSheet, $repositorySheet] = $sheets;
 
         foreach ($this->sheetToArray($badgeSheet) as $row) {
@@ -60,8 +60,8 @@ final class SplitDeveloperXlsxJob implements JobInterface
         }
 
         foreach ($developers as &$developer) {
-            $developer['badges'] = implode('|', $developer['badges']);
-            $developer['repositories'] = implode('|', $developer['repositories']);
+            $developer['badges'] = \implode('|', $developer['badges']);
+            $developer['repositories'] = \implode('|', $developer['repositories']);
         }
 
         $reader->close();
@@ -88,7 +88,7 @@ final class SplitDeveloperXlsxJob implements JobInterface
 
     private function sheetToArray(SheetInterface $sheet): array
     {
-        return array_map(
+        return \array_map(
             function ($row): array {
                 if ($row instanceof Row) {
                     return $row->toArray();
@@ -96,7 +96,7 @@ final class SplitDeveloperXlsxJob implements JobInterface
 
                 return $row;
             },
-            iterator_to_array(new \LimitIterator($sheet->getRowIterator(), 1), false)
+            \iterator_to_array(new \LimitIterator($sheet->getRowIterator(), 1), false)
         );
     }
 }

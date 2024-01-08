@@ -39,7 +39,7 @@ final class JobFilterType extends AbstractType
             ChoiceType::class,
             [
                 'label' => 'job.field.job_name',
-                'choice_label' => fn($choice, string $key, $value) => sprintf('job.job_name.%s', $key),
+                'choice_label' => fn($choice, string $key, $value) => \sprintf('job.job_name.%s', $key),
                 'choices' => \array_combine($this->jobs, $this->jobs),
                 'required' => false,
                 'multiple' => true,
@@ -50,7 +50,7 @@ final class JobFilterType extends AbstractType
             ChoiceType::class,
             [
                 'label' => 'job.field.status',
-                'choice_label' => fn($choice, string $key, $value) => sprintf('job.status.%s', $key),
+                'choice_label' => fn($choice, string $key, $value) => \sprintf('job.status.%s', $key),
                 'choices' => self::STATUSES,
                 'required' => false,
                 'multiple' => true,

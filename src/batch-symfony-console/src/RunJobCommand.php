@@ -62,7 +62,7 @@ final class RunJobCommand extends Command
     private function guessExecutionExitCode(JobExecution $jobExecution): int
     {
         if ($jobExecution->getStatus()->is(BatchStatus::COMPLETED)) {
-            if (count($jobExecution->getAllWarnings()) === 0) {
+            if (\count($jobExecution->getAllWarnings()) === 0) {
                 return self::EXIT_SUCCESS_CODE;
             }
 
@@ -77,21 +77,21 @@ final class RunJobCommand extends Command
         $jobName = $jobExecution->getJobName();
         if ($jobExecution->getStatus()->is(BatchStatus::COMPLETED)) {
             $warnings = $jobExecution->getAllWarnings();
-            if (count($warnings)) {
+            if (\count($warnings)) {
                 foreach ($warnings as $warning) {
-                    $output->writeln(sprintf('<comment>%s</comment>', $warning), $output::VERBOSITY_VERBOSE);
+                    $output->writeln(\sprintf('<comment>%s</comment>', $warning), $output::VERBOSITY_VERBOSE);
                 }
                 $output->writeln(
-                    sprintf('<comment>%s has been executed with %d warnings.</comment>', $jobName, count($warnings))
+                    \sprintf('<comment>%s has been executed with %d warnings.</comment>', $jobName, \count($warnings))
                 );
             } else {
-                $output->writeln(sprintf('<info>%s has been successfully executed.</info>', $jobName));
+                $output->writeln(\sprintf('<info>%s has been successfully executed.</info>', $jobName));
             }
         } else {
-            $output->writeln(sprintf('<error>An error occurred during the %s execution.</error>', $jobName));
+            $output->writeln(\sprintf('<error>An error occurred during the %s execution.</error>', $jobName));
             foreach ($jobExecution->getAllFailures() as $failure) {
                 $output->writeln(
-                    sprintf(
+                    \sprintf(
                         '<error>Error #%s of class %s: %s</error>',
                         $failure->getCode(),
                         $failure->getClass(),
@@ -99,7 +99,7 @@ final class RunJobCommand extends Command
                     )
                 );
                 if ($failure->getTrace() !== null) {
-                    $output->writeln(sprintf('<error>%s</error>', $failure->getTrace()), $output::VERBOSITY_VERBOSE);
+                    $output->writeln(\sprintf('<error>%s</error>', $failure->getTrace()), $output::VERBOSITY_VERBOSE);
                 }
             }
         }
@@ -112,7 +112,7 @@ final class RunJobCommand extends Command
      */
     private function decodeConfiguration(string $data): array
     {
-        $config = json_decode($data, true, 512, \JSON_THROW_ON_ERROR);
+        $config = \json_decode($data, true, 512, \JSON_THROW_ON_ERROR);
         if (\is_array($config)) {
             return $config;
         }

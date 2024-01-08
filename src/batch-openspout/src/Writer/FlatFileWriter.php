@@ -59,7 +59,7 @@ final class FlatFileWriter implements
             throw new RuntimeException(\sprintf('Cannot create dir "%s".', $dir));
         }
 
-        $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        $extension = \strtolower(\pathinfo($path, PATHINFO_EXTENSION));
         $this->writer = match ($extension) {
             'csv' => new CSVWriter($this->options),
             'xlsx' => new XLSXWriter($this->options),

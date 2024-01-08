@@ -39,7 +39,7 @@ class FlatFileReaderTest extends TestCase
         /** @var \Iterator $got */
         $got = $reader->read();
         self::assertInstanceOf(\Iterator::class, $got);
-        self::assertSame($expected, iterator_to_array($got));
+        self::assertSame($expected, \iterator_to_array($got));
     }
 
     public function sets(): Generator
@@ -206,7 +206,7 @@ class FlatFileReaderTest extends TestCase
                 ['firstName' => 'John', 'lastName' => 'Doe'],
                 ['firstName' => 'Jack', 'lastName' => 'Doe'],
             ],
-            iterator_to_array($result)
+            \iterator_to_array($result)
         );
 
         self::assertSame(
@@ -230,7 +230,7 @@ class FlatFileReaderTest extends TestCase
         $reader = new FlatFileReader(new StaticValueParameterAccessor($file), $options);
         $reader->setJobExecution($jobExecution);
 
-        iterator_to_array($reader->read());
+        \iterator_to_array($reader->read());
     }
 
     public function wrongOptions(): \Generator

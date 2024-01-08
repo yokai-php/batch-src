@@ -110,7 +110,7 @@ final class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->beforeNormalization()
                         ->always(function (string|array $value) {
-                            if (is_string($value)) {
+                            if (\is_string($value)) {
                                 $value = match ($value) {
                                     'bootstrap4' => ['prefix' => '@YokaiBatch/bootstrap4', 'service' => null],
                                     'sonata' => ['service' => 'yokai_batch.ui.sonata_templating', 'prefix' => null],

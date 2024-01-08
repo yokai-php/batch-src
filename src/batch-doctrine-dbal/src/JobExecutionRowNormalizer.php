@@ -37,13 +37,13 @@ final class JobExecutionRowNormalizer
             'id' => $jobExecution->getId(),
             'job_name' => $jobExecution->getJobName(),
             'status' => $jobExecution->getStatus()->getValue(),
-            'parameters' => iterator_to_array($jobExecution->getParameters()),
+            'parameters' => \iterator_to_array($jobExecution->getParameters()),
             'start_time' => $jobExecution->getStartTime(),
             'end_time' => $jobExecution->getEndTime(),
             'summary' => $jobExecution->getSummary()->all(),
-            'failures' => array_map([$this, 'failureToArray'], $jobExecution->getFailures()),
-            'warnings' => array_map([$this, 'warningToArray'], $jobExecution->getWarnings()),
-            'child_executions' => array_map([$this, 'toChildRow'], $jobExecution->getChildExecutions()),
+            'failures' => \array_map([$this, 'failureToArray'], $jobExecution->getFailures()),
+            'warnings' => \array_map([$this, 'warningToArray'], $jobExecution->getWarnings()),
+            'child_executions' => \array_map([$this, 'toChildRow'], $jobExecution->getChildExecutions()),
             'logs' => $jobExecution->getParentExecution() === null ? (string)$jobExecution->getLogs() : null,
         ];
     }
@@ -55,7 +55,7 @@ final class JobExecutionRowNormalizer
      */
     public function fromRow(array $data, JobExecution $parent = null): JobExecution
     {
-        $data['status'] = intval($data['status']);
+        $data['status'] = \intval($data['status']);
         $data['parameters'] = $this->jsonFromString($data['parameters']);
         $data['summary'] = $this->jsonFromString($data['summary']);
         $data['failures'] = $this->jsonFromString($data['failures']);
@@ -63,7 +63,7 @@ final class JobExecutionRowNormalizer
         $data['child_executions'] = $this->jsonFromString($data['child_executions']);
 
         $name = $data['job_name'];
-        $status = new BatchStatus(intval($data['status']));
+        $status = new BatchStatus(\intval($data['status']));
         $parameters = new JobParameters($data['parameters']);
         $summary = new Summary($data['summary']);
 
@@ -106,13 +106,13 @@ final class JobExecutionRowNormalizer
         return [
             'job_name' => $jobExecution->getJobName(),
             'status' => $jobExecution->getStatus()->getValue(),
-            'parameters' => iterator_to_array($jobExecution->getParameters()),
+            'parameters' => \iterator_to_array($jobExecution->getParameters()),
             'start_time' => $this->toDateString($jobExecution->getStartTime()),
             'end_time' => $this->toDateString($jobExecution->getEndTime()),
             'summary' => $jobExecution->getSummary()->all(),
-            'failures' => array_map([$this, 'failureToArray'], $jobExecution->getFailures()),
-            'warnings' => array_map([$this, 'warningToArray'], $jobExecution->getWarnings()),
-            'child_executions' => array_map([$this, 'toChildRow'], $jobExecution->getChildExecutions()),
+            'failures' => \array_map([$this, 'failureToArray'], $jobExecution->getFailures()),
+            'warnings' => \array_map([$this, 'warningToArray'], $jobExecution->getWarnings()),
+            'child_executions' => \array_map([$this, 'toChildRow'], $jobExecution->getChildExecutions()),
         ];
     }
 
@@ -123,11 +123,11 @@ final class JobExecutionRowNormalizer
      */
     private function jsonFromString(array|string $value): array
     {
-        if (is_string($value)) {
-            $value = json_decode($value, true, 512, JSON_THROW_ON_ERROR);
+        if (\is_string($value)) {
+            $value = \json_decode($value, true, 512, JSON_THROW_ON_ERROR);
         }
 
-        if (!is_array($value)) {
+        if (!\is_array($value)) {
             throw UnexpectedValueException::type('array', $value);
         }
 

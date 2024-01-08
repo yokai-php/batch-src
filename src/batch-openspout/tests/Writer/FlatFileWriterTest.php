@@ -303,11 +303,11 @@ CSV;
     private static function assertFileContents(string $filePath, string $inlineData): void
     {
         $type = \strtolower(\pathinfo($filePath, PATHINFO_EXTENSION));
-        $strings = array_merge(...array_map('str_getcsv', explode(PHP_EOL, $inlineData)));
+        $strings = \array_merge(...\array_map('str_getcsv', \explode(PHP_EOL, $inlineData)));
 
         switch ($type) {
             case 'csv':
-                $fileContents = file_get_contents($filePath);
+                $fileContents = \file_get_contents($filePath);
                 foreach ($strings as $string) {
                     self::assertStringContainsString($string, $fileContents);
                 }
@@ -315,15 +315,15 @@ CSV;
 
             case 'xlsx':
                 $pathToSheetFile = $filePath . '#xl/worksheets/sheet1.xml';
-                $xmlContents = file_get_contents('zip://' . $pathToSheetFile);
+                $xmlContents = \file_get_contents('zip://' . $pathToSheetFile);
                 foreach ($strings as $string) {
                     self::assertStringContainsString("<t>$string</t>", $xmlContents);
                 }
                 break;
 
             case 'ods':
-                $sheetContent = file_get_contents('zip://' . $filePath . '#content.xml');
-                if (!preg_match('#<table:table[^>]+>[\s\S]*?<\/table:table>#', $sheetContent, $matches)) {
+                $sheetContent = \file_get_contents('zip://' . $filePath . '#content.xml');
+                if (!\preg_match('#<table:table[^>]+>[\s\S]*?<\/table:table>#', $sheetContent, $matches)) {
                     self::fail('No sheet found in file "' . $filePath . '".');
                 }
                 $sheetXmlAsString = $matches[0];
@@ -337,32 +337,32 @@ CSV;
     private static function assertSheetContents(string $filePath, string $sheet, string $inlineData): void
     {
         $type = \strtolower(\pathinfo($filePath, PATHINFO_EXTENSION));
-        $strings = array_merge(...array_map('str_getcsv', explode(PHP_EOL, $inlineData)));
+        $strings = \array_merge(...\array_map('str_getcsv', \explode(PHP_EOL, $inlineData)));
 
         switch ($type) {
             case 'csv':
-                $fileContents = file_get_contents($filePath);
+                $fileContents = \file_get_contents($filePath);
                 foreach ($strings as $string) {
                     self::assertStringContainsString($string, $fileContents);
                 }
                 break;
 
             case 'xlsx':
-                $workbookContent = file_get_contents('zip://' . $filePath . '#xl/workbook.xml');
-                if (!preg_match('#<sheet name="' . $sheet . '" sheetId="([0-9]+)"#', $workbookContent, $matches)) {
+                $workbookContent = \file_get_contents('zip://' . $filePath . '#xl/workbook.xml');
+                if (!\preg_match('#<sheet name="' . $sheet . '" sheetId="([0-9]+)"#', $workbookContent, $matches)) {
                     self::fail('Sheet ' . $sheet . ' was not found in file "' . $filePath . '".');
                 }
                 $sheetFilename = 'sheet' . $matches[1];
-                $sheetContent = file_get_contents('zip://' . $filePath . '#xl/worksheets/' . $sheetFilename . '.xml');
+                $sheetContent = \file_get_contents('zip://' . $filePath . '#xl/worksheets/' . $sheetFilename . '.xml');
                 foreach ($strings as $string) {
                     self::assertStringContainsString("<t>$string</t>", $sheetContent);
                 }
                 break;
 
             case 'ods':
-                $sheetContent = file_get_contents('zip://' . $filePath . '#content.xml');
+                $sheetContent = \file_get_contents('zip://' . $filePath . '#content.xml');
                 $regex = '#<table:table.+table:name="' . $sheet . '">[\s\S]*?<\/table:table>#';
-                if (!preg_match($regex, $sheetContent, $matches)) {
+                if (!\preg_match($regex, $sheetContent, $matches)) {
                     self::fail('Sheet ' . $sheet . ' was not found in file "' . $filePath . '".');
                 }
                 $sheetXmlAsString = $matches[0];

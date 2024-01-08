@@ -40,7 +40,7 @@ final class RunCommandJobLauncher implements JobLauncherInterface
             $this->logFilename,
             [
                 'job' => $name,
-                'configuration' => json_encode($configuration, JSON_THROW_ON_ERROR),
+                'configuration' => \json_encode($configuration, JSON_THROW_ON_ERROR),
             ]
         );
 

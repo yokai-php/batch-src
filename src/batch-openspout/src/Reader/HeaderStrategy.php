@@ -89,7 +89,7 @@ final class HeaderStrategy
 
         try {
             /** @var array<string, string> $combined */
-            $combined = @array_combine($this->headers, $row);
+            $combined = @\array_combine($this->headers, $row);
         } catch (\ValueError) {
             throw new InvalidRowSizeException($this->headers, $row);
         }

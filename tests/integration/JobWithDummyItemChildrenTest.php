@@ -36,7 +36,7 @@ class JobWithDummyItemChildrenTest extends JobTestCase
             public function write(iterable $items): void
             {
                 foreach ($items as $item) {
-                    file_put_contents($this->file, $item . PHP_EOL, FILE_APPEND);
+                    \file_put_contents($this->file, $item . PHP_EOL, FILE_APPEND);
                 }
             }
         };
@@ -101,6 +101,6 @@ class JobWithDummyItemChildrenTest extends JobTestCase
 OUT;
 
         self::assertFileExists($output);
-        self::assertEquals($expected, file_get_contents($output));
+        self::assertEquals($expected, \file_get_contents($output));
     }
 }
