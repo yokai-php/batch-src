@@ -7,6 +7,7 @@ namespace Yokai\Batch\Bridge\Doctrine\DBAL;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Result;
 use Doctrine\DBAL\Exception as DBALException;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Schema\Comparator;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Types;
@@ -147,33 +148,11 @@ final class DoctrineDBALJobExecutionStorage implements
 
     public function query(Query $query): iterable
     {
-        $queryParameters = [];
-        $queryTypes = [];
-
         $qb = $this->connection->createQueryBuilder();
         $qb->select('*')
             ->from($this->table);
 
-        $names = $query->jobs();
-        if (\count($names) > 0) {
-            $qb->andWhere($qb->expr()->in('job_name', ':jobNames'));
-            $queryParameters['jobNames'] = $names;
-            $queryTypes['jobNames'] = Connection::PARAM_STR_ARRAY;
-        }
-
-        $ids = $query->ids();
-        if (\count($ids) > 0) {
-            $qb->andWhere($qb->expr()->in('id', ':ids'));
-            $queryParameters['ids'] = $ids;
-            $queryTypes['ids'] = Connection::PARAM_STR_ARRAY;
-        }
-
-        $statuses = $query->statuses();
-        if (\count($statuses) > 0) {
-            $qb->andWhere($qb->expr()->in('status', ':statuses'));
-            $queryParameters['statuses'] = $statuses;
-            $queryTypes['statuses'] = Connection::PARAM_INT_ARRAY;
-        }
+        [$queryParameters, $queryTypes] = $this->addWheres($query, $qb);
 
         if ($query->startTime()) {
             $qb->andWhere($qb->expr()->isNotNull('start_time'));
@@ -226,6 +205,18 @@ final class DoctrineDBALJobExecutionStorage implements
         $qb->setFirstResult($query->offset());
 
         yield from $this->queryList($qb->getSQL(), $queryParameters, $queryTypes);
+    }
+
+    public function count(Query $query): int
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('count(*)')
+            ->from($this->table);
+
+        /** @var int $result */
+        $result = $this->connection->executeQuery($qb->getSQL(), ...$this->addWheres($query, $qb))->fetchOne();
+
+        return $result;
     }
 
     private function getSchema(): Schema
@@ -319,7 +310,7 @@ final class DoctrineDBALJobExecutionStorage implements
 
     /**
      * @phpstan-param array<string, mixed>      $parameters
-     * @phpstan-param array<string, int|string> $types
+     * @phpstan-param array<string, array<int|string>|int> $types
      *
      * @phpstan-return Generator<JobExecution>
      */
@@ -356,5 +347,37 @@ final class DoctrineDBALJobExecutionStorage implements
         $this->normalizer ??= new JobExecutionRowNormalizer($this->connection->getDatabasePlatform());
 
         return $this->normalizer;
+    }
+
+    /**
+     * @return array<int, array<string, array<int|string>|int>>
+     */
+    private function addWheres(Query $query, QueryBuilder $qb): array
+    {
+        $queryParameters = [];
+        $queryTypes = [];
+
+        $names = $query->jobs();
+        if (\count($names) > 0) {
+            $qb->andWhere($qb->expr()->in('job_name', ':jobNames'));
+            $queryParameters['jobNames'] = $names;
+            $queryTypes['jobNames'] = Connection::PARAM_STR_ARRAY;
+        }
+
+        $ids = $query->ids();
+        if (\count($ids) > 0) {
+            $qb->andWhere($qb->expr()->in('id', ':ids'));
+            $queryParameters['ids'] = $ids;
+            $queryTypes['ids'] = Connection::PARAM_STR_ARRAY;
+        }
+
+        $statuses = $query->statuses();
+        if (\count($statuses) > 0) {
+            $qb->andWhere($qb->expr()->in('status', ':statuses'));
+            $queryParameters['statuses'] = $statuses;
+            $queryTypes['statuses'] = Connection::PARAM_INT_ARRAY;
+        }
+
+        return [$queryParameters, $queryTypes];
     }
 }
