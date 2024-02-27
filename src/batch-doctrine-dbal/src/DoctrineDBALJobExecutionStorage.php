@@ -175,6 +175,38 @@ final class DoctrineDBALJobExecutionStorage implements
             $queryTypes['statuses'] = Connection::PARAM_INT_ARRAY;
         }
 
+        if ($query->startTime()) {
+            $qb->andWhere($qb->expr()->isNotNull('start_time'));
+        }
+        $startDateFrom = $query->startTime()?->getFrom();
+        if ($startDateFrom) {
+            $qb->andWhere($qb->expr()->gte('start_time', ':startDateFrom'));
+            $queryParameters['startDateFrom'] = $startDateFrom;
+            $queryTypes['startDateFrom'] = Types::DATETIME_IMMUTABLE;
+        }
+        $startDateTo = $query->startTime()?->getTo();
+        if ($startDateTo) {
+            $qb->andWhere($qb->expr()->lte('start_time', ':startDateTo'));
+            $queryParameters['startDateTo'] = $startDateTo;
+            $queryTypes['startDateTo'] = Types::DATETIME_IMMUTABLE;
+        }
+
+        if ($query->endTime()) {
+            $qb->andWhere($qb->expr()->isNotNull('start_time'));
+        }
+        $endDateFrom = $query->endTime()?->getFrom();
+        if ($endDateFrom) {
+            $qb->andWhere($qb->expr()->gte('end_time', ':endDateFrom'));
+            $queryParameters['endDateFrom'] = $endDateFrom;
+            $queryTypes['endDateFrom'] = Types::DATETIME_IMMUTABLE;
+        }
+        $endDateTo = $query->endTime()?->getTo();
+        if ($endDateTo) {
+            $qb->andWhere($qb->expr()->lte('end_time', ':endDateTo'));
+            $queryParameters['endDateTo'] = $endDateTo;
+            $queryTypes['endDateTo'] = Types::DATETIME_IMMUTABLE;
+        }
+
         switch ($query->sort()) {
             case Query::SORT_BY_START_ASC:
                 $qb->orderBy('start_time', 'asc');

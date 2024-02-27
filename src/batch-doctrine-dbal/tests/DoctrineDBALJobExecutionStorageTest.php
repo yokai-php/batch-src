@@ -357,6 +357,55 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
                 ['import', '789'],
             ],
         ];
+        yield 'Filter start time lower boundary' => [
+            (new QueryBuilder())
+                ->startTime(new \DateTimeImmutable('2019-07-01T13:00:01+0200'), null),
+            [
+                ['import', '456'],
+                ['import', '789'],
+            ],
+        ];
+        yield 'Filter start time upper boundary' => [
+            (new QueryBuilder())
+                ->startTime(null, new \DateTimeImmutable('2019-06-30T21:59:59+0200')),
+            [
+                ['export', '123'],
+                ['import', '456'],
+            ],
+        ];
+        yield 'Filter start time boundaries' => [
+            (new QueryBuilder())
+                ->startTime(
+                    new \DateTimeImmutable('2019-07-01T13:00:01+0200'),
+                    new \DateTimeImmutable('2019-06-30T21:59:59+0200'),
+                ),
+            [
+                ['import', '456'],
+            ],
+        ];
+        yield 'Filter end time lower boundary' => [
+            (new QueryBuilder())
+                ->endTime(new \DateTimeImmutable('2019-07-01T13:30:01+0200'), null),
+            [
+                ['import', '456'],
+            ],
+        ];
+        yield 'Filter end time upper boundary' => [
+            (new QueryBuilder())
+                ->endTime(null, new \DateTimeImmutable('2019-07-01T18:29:59+0200')),
+            [
+                ['export', '123'],
+            ],
+        ];
+        yield 'Filter end time boundaries' => [
+            (new QueryBuilder())
+                ->endTime(
+                    new \DateTimeImmutable('2019-07-01T13:30:01+0200'),
+                    new \DateTimeImmutable('2019-07-01T18:29:59+0200'),
+                ),
+            [
+            ],
+        ];
     }
 
     public static function assertExecutionIds(array $ids, iterable $executions): void
