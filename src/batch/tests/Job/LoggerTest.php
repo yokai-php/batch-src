@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yokai\Batch\Sources\Tests\Convention\Job;
+namespace Yokai\Batch\Tests\Job;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
