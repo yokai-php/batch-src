@@ -152,6 +152,10 @@ final class DoctrineDBALJobExecutionStorage implements
         $qb->select('*')
             ->from($this->table);
 
+        /**
+         * @phpstan-var array<string, array<int, int|string>> $queryParameters
+         * @phpstan-var array<string, int> $queryTypes
+         */
         [$queryParameters, $queryTypes] = $this->addWheres($query, $qb);
 
         switch ($query->sort()) {
@@ -278,7 +282,7 @@ final class DoctrineDBALJobExecutionStorage implements
 
     /**
      * @phpstan-param array<string, mixed>      $parameters
-     * @phpstan-param array<string, array<int|string>|int> $types
+     * @phpstan-param array<string, int|string> $types
      *
      * @phpstan-return Generator<JobExecution>
      */
