@@ -106,14 +106,29 @@ The job launcher that will be injected depends on the packages you have installe
 
 
 ## Use the batchLogger
+The aim of the batchLogger is to store log inside the jobExecution. 
 In a symfony project, you can use the batchLogger with the symfony autowiring by naming your variable as `$yokaiBatchLogger` 
 
 ```php
+<?php
+
+namespace App;
+
 use Psr\Log\LoggerInterface;
 
-... 
-__construct(private readonly LoggerInterface $yokaiBatchLogger) {
+final readonly class YourService
+{
+    public function __construct(
+        private LoggerInterface $yokaiBatchLogger,
+    ) {
+    }
+    
+    public function method()
+    {
+        $this->yokaiBatchLogger->error(...);
+    }
 }
+```
 ```
 
 ## On the same subject
