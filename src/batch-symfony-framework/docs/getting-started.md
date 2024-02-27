@@ -104,6 +104,33 @@ The job launcher that will be injected depends on the packages you have installe
 - if `yokai/batch-symfony-console` is installed, you will receive a `Yokai\Batch\Bridge\Symfony\Console\RunCommandJobLauncher`
 - otherwise you will receive a `Yokai\Batch\Launcher\SimpleJobLauncher`
 
+
+## Use the batchLogger
+The aim of the batchLogger is to store log inside the jobExecution. 
+In a symfony project, you can use the batchLogger with the symfony autowiring by naming your variable as `$yokaiBatchLogger` 
+
+```php
+<?php
+
+namespace App;
+
+use Psr\Log\LoggerInterface;
+
+final readonly class YourService
+{
+    public function __construct(
+        private LoggerInterface $yokaiBatchLogger,
+    ) {
+    }
+    
+    public function method()
+    {
+        $this->yokaiBatchLogger->error(...);
+    }
+}
+```
+```
+
 ## On the same subject
 
 - [What is a job execution storage ?](https://github.com/yokai-php/batch/blob/0.x/docs/domain/job-execution-storage.md)

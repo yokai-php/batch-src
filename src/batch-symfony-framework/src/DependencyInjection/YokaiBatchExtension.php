@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yokai\Batch\Bridge\Symfony\Framework\DependencyInjection;
 
 use Composer\InstalledVersions;
+use Psr\Log\LoggerInterface;
 use Sonata\AdminBundle\Templating\TemplateRegistryInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader as ConfigLoader;
@@ -71,6 +72,7 @@ final class YokaiBatchExtension extends Extension
             JobLauncherInterface::class,
             \array_keys(\array_filter($launchers))[0] ?? 'yokai_batch.job_launcher.simple'
         );
+        $container->registerAliasForArgument('yokai_batch.logger', LoggerInterface::class, 'yokaiBatchLogger');
     }
 
     private function installed(string $package): bool

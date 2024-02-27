@@ -74,6 +74,7 @@ final class CountryJobSet
                     '{"iso2":"GB","iso3":"GBR","name":"United Kingdom","continent":"EU","currency":"GBP","phone":"44"}',
                     $jsonl
                 );
+                Assert::assertStringContainsString('log process', $execution->getLogs()->__toString());
             },
         ];
     }
