@@ -226,7 +226,7 @@ class YokaiBatchExtensionTest extends TestCase
                     'default' => 'simple',
                     'launchers' => [
                         'simple' => 'simple://simple',
-                    ]
+                    ],
                 ],
             ],
             null,
@@ -241,7 +241,7 @@ class YokaiBatchExtensionTest extends TestCase
                     'default' => 'console',
                     'launchers' => [
                         'console' => 'console://console',
-                    ]
+                    ],
                 ],
             ],
             null,
@@ -256,7 +256,7 @@ class YokaiBatchExtensionTest extends TestCase
                     'default' => 'messenger',
                     'launchers' => [
                         'messenger' => 'messenger://messenger',
-                    ]
+                    ],
                 ],
             ],
             null,
@@ -271,7 +271,7 @@ class YokaiBatchExtensionTest extends TestCase
                     'default' => 'service',
                     'launchers' => [
                         'service' => 'service://service?service=app.job_launcher',
-                    ]
+                    ],
                 ],
             ],
             fn(ContainerBuilder $container) => $container->register(
@@ -358,17 +358,23 @@ class YokaiBatchExtensionTest extends TestCase
         yield 'Job Launcher : Empty DSN' => [
             ['launcher' => ['default' => 'invalid', 'launchers' => ['invalid' => '']]],
             null,
-            new InvalidConfigurationException('Invalid configuration for path "yokai_batch.launcher.launchers.invalid": Invalid job launcher DSN.'),
+            new InvalidConfigurationException(
+                'Invalid configuration for path "yokai_batch.launcher.launchers.invalid": Invalid job launcher DSN.'
+            ),
         ];
         yield 'Job Launcher : Invalid DSN' => [
             ['launcher' => ['default' => 'invalid', 'launchers' => ['invalid' => 'not a DSN']]],
             null,
-            new InvalidConfigurationException('Invalid configuration for path "yokai_batch.launcher.launchers.invalid": Invalid job launcher DSN.'),
+            new InvalidConfigurationException(
+                'Invalid configuration for path "yokai_batch.launcher.launchers.invalid": Invalid job launcher DSN.'
+            ),
         ];
         yield 'Job Launcher : Unregistered launcher' => [
             ['launcher' => ['default' => 'unknown', 'launchers' => ['simple' => 'simple://simple']]],
             null,
-            new LogicException('Default job launcher "unknown" was not registered in launchers config. Available launchers are ["simple"].'),
+            new LogicException(
+                'Default job launcher "unknown" was not registered in launchers config. Available launchers are ["simple"].'
+            ),
         ];
         yield 'Job Launcher : Unsupported launcher type' => [
             ['launcher' => ['default' => 'invalid', 'launchers' => ['invalid' => 'unknown://unknown']]],
