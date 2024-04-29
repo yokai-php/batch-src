@@ -20,10 +20,8 @@ yokai_batch:
     launcher:
         default: simple
         launchers:
-          simple: simple://simple
-          messenger: messenger://messenger
-          console: console://console?log=batch_execute.log
-          service: service://service?service=app.job_launcher.service
+          simple: ...
+          async: ...
 ```
 
 > **note**: if you do not configure anything here, you will be using the [`SimpleJobLauncher`](https://github.com/yokai-php/batch/blob/0.x/src/Launcher/SimpleJobLauncher.php).
@@ -44,12 +42,18 @@ final class YourAppCode
         private JobLauncherInterface $jobLauncher, // will inject the default job launcher
         private JobLauncherInterface $simpleJobLauncher, // will inject the "simple" job launcher
         private JobLauncherInterface $messengerJobLauncher, // will inject the "messenger" job launcher
-        private JobLauncherInterface $consoleJobLauncher, // will inject the "console" job launcher
-        private JobLauncherInterface $serviceJobLauncher, // will inject the "service" job launcher
     ) {
     }
 }
 ```
+
+All `launchers` are configured using a DSN, every scheme has it's own associated factory.
+- `simple://simple`: a [`SimpleJobLauncher`](https://github.com/yokai-php/batch/blob/0.x/src/Launcher/SimpleJobLauncher.php), no configuration allowed
+- `messenger://messenger`: a [`DispatchMessageJobLauncher`](https://github.com/yokai-php/batch-symfony-messenger/blob/0.x/src/DispatchMessageJobLauncher.php), no configuration allowed
+- `console://console`: a [`RunCommandJobLauncher`](https://github.com/yokai-php/batch-symfony-console/blob/0.x/src/RunCommandJobLauncher.php), configurable options:
+  - `log`: the filename where command output will be redirected (defaults to `batch_execute.log`)
+- `service://service`: pointing to a service of your choice, configurable options:
+  - `service`: the id of the service to use (required, an exception will be thrown otherwise)
 
 ### JobExecution storage
 
