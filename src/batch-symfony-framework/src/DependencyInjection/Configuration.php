@@ -13,6 +13,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  *
  * @phpstan-type Config array{
  *      storage: StorageConfig,
+ *      launcher: LauncherConfig,
  *      ui: UserInterfaceConfig,
  *  }
  * @phpstan-type StorageConfig array{
@@ -25,6 +26,10 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  *          serializer: string,
  *          dir: string,
  *      },
+ *  }
+ * @phpstan-type LauncherConfig array{
+ *      default: string|null,
+ *      launchers: array<string, string>,
  *  }
  * @phpstan-type UserInterfaceConfig array{
  *      enabled: bool,
@@ -53,6 +58,7 @@ final class Configuration implements ConfigurationInterface
         $root
             ->children()
                 ->append($this->storage())
+                ->append($this->launcher())
                 ->append($this->ui())
             ->end()
         ;
@@ -90,6 +96,34 @@ final class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->scalarNode('service')
+                ->end()
+            ->end()
+        ;
+
+        return $node;
+    }
+
+    private function launcher(): ArrayNodeDefinition
+    {
+        /** @var ArrayNodeDefinition $node */
+        $node = (new TreeBuilder('launcher'))->getRootNode();
+
+        $isInvalidDsn = fn(string $value) => \parse_url($value) === false
+            || (\parse_url($value)['scheme'] ?? null) === null;
+
+        $node
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->scalarNode('default')
+                    ->defaultValue('simple')
+                ->end()
+                ->arrayNode('launchers')
+                    ->defaultValue(['simple' => 'simple://simple'])
+                    ->useAttributeAsKey('name')
+                    ->scalarPrototype()
+                    ->validate()
+                        ->ifTrue($isInvalidDsn)->thenInvalid('Invalid job launcher DSN.')
+                    ->end()
                 ->end()
             ->end()
         ;

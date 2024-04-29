@@ -6,16 +6,22 @@ namespace Yokai\Batch\Tests\Bridge\Symfony\Framework\DependencyInjection;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use Yokai\Batch\Bridge\Symfony\Console\RunCommandJobLauncher;
 use Yokai\Batch\Bridge\Symfony\Framework\DependencyInjection\YokaiBatchExtension;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\ConfigurableTemplating;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\SonataAdminTemplating;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\TemplatingInterface;
+use Yokai\Batch\Bridge\Symfony\Messenger\DispatchMessageJobLauncher;
 use Yokai\Batch\Launcher\JobLauncherInterface;
+use Yokai\Batch\Launcher\SimpleJobLauncher;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
 use Yokai\Batch\Storage\NullJobExecutionStorage;
+use Yokai\Batch\Test\Launcher\BufferingJobLauncher;
 
 class YokaiBatchExtensionTest extends TestCase
 {
@@ -26,6 +32,7 @@ class YokaiBatchExtensionTest extends TestCase
         array $config,
         ?callable $configure,
         string $storage,
+        ?string $launcher,
         ?callable $templating,
         ?array $security
     ): void {
@@ -36,9 +43,10 @@ class YokaiBatchExtensionTest extends TestCase
 
         (new YokaiBatchExtension())->load([$config], $container);
 
+        $launcherActualService = (string)$container->getAlias(JobLauncherInterface::class);
         self::assertSame(
-            'yokai_batch.job_launcher.dispatch_message',
-            (string)$container->getAlias(JobLauncherInterface::class)
+            $launcher ?? SimpleJobLauncher::class,
+            $container->getDefinition($launcherActualService)->getClass()
         );
         self::assertSame(
             $storage,
@@ -81,6 +89,7 @@ class YokaiBatchExtensionTest extends TestCase
             'yokai_batch.storage.filesystem',
             null,
             null,
+            null,
         ];
         yield [
             ['storage' => ['filesystem' => null]],
@@ -88,11 +97,13 @@ class YokaiBatchExtensionTest extends TestCase
             'yokai_batch.storage.filesystem',
             null,
             null,
+            null,
         ];
         yield [
             ['storage' => ['dbal' => null]],
             null,
             'yokai_batch.storage.dbal',
+            null,
             null,
             null,
         ];
@@ -105,11 +116,13 @@ class YokaiBatchExtensionTest extends TestCase
             'app.yokai_batch.storage',
             null,
             null,
+            null,
         ];
         yield [
             ['ui' => ['enabled' => true]],
             null,
             'yokai_batch.storage.filesystem',
+            null,
             function (Definition $templating) {
                 self::assertSame(ConfigurableTemplating::class, $templating->getClass());
                 self::assertSame('@YokaiBatch/bootstrap4', $templating->getArgument(0));
@@ -126,6 +139,7 @@ class YokaiBatchExtensionTest extends TestCase
             ['ui' => ['enabled' => true, 'templating' => 'bootstrap4']],
             null,
             'yokai_batch.storage.filesystem',
+            null,
             function (Definition $templating) {
                 self::assertSame(ConfigurableTemplating::class, $templating->getClass());
                 self::assertSame('@YokaiBatch/bootstrap4', $templating->getArgument(0));
@@ -147,6 +161,7 @@ class YokaiBatchExtensionTest extends TestCase
             ],
             null,
             'yokai_batch.storage.filesystem',
+            null,
             function (Definition $templating) {
                 self::assertSame(ConfigurableTemplating::class, $templating->getClass());
                 self::assertSame('yokai-batch/tailwind', $templating->getArgument(0));
@@ -166,6 +181,7 @@ class YokaiBatchExtensionTest extends TestCase
                 ConfigurableTemplating::class,
             ),
             'yokai_batch.storage.filesystem',
+            null,
             function (Definition $templating, string $id) {
                 self::assertSame($id, 'app.yokai_batch_templating');
             },
@@ -193,6 +209,7 @@ class YokaiBatchExtensionTest extends TestCase
             ],
             null,
             'yokai_batch.storage.filesystem',
+            null,
             function (Definition $templating) {
                 self::assertSame(SonataAdminTemplating::class, $templating->getClass());
             },
@@ -202,6 +219,69 @@ class YokaiBatchExtensionTest extends TestCase
                 'traces' => 'ROLE_SUPERADMIN',
                 'logs' => 'ROLE_SUPERADMIN',
             ],
+        ];
+        yield [
+            [
+                'launcher' => [
+                    'default' => 'simple',
+                    'launchers' => [
+                        'simple' => 'simple://simple',
+                    ]
+                ],
+            ],
+            null,
+            'yokai_batch.storage.filesystem',
+            SimpleJobLauncher::class,
+            null,
+            null,
+        ];
+        yield [
+            [
+                'launcher' => [
+                    'default' => 'console',
+                    'launchers' => [
+                        'console' => 'console://console',
+                    ]
+                ],
+            ],
+            null,
+            'yokai_batch.storage.filesystem',
+            RunCommandJobLauncher::class,
+            null,
+            null,
+        ];
+        yield [
+            [
+                'launcher' => [
+                    'default' => 'messenger',
+                    'launchers' => [
+                        'messenger' => 'messenger://messenger',
+                    ]
+                ],
+            ],
+            null,
+            'yokai_batch.storage.filesystem',
+            DispatchMessageJobLauncher::class,
+            null,
+            null,
+        ];
+        yield [
+            [
+                'launcher' => [
+                    'default' => 'service',
+                    'launchers' => [
+                        'service' => 'service://service?service=app.job_launcher',
+                    ]
+                ],
+            ],
+            fn(ContainerBuilder $container) => $container->register(
+                'app.job_launcher',
+                BufferingJobLauncher::class,
+            ),
+            'yokai_batch.storage.filesystem',
+            BufferingJobLauncher::class,
+            null,
+            null,
         ];
     }
 
@@ -274,6 +354,31 @@ class YokaiBatchExtensionTest extends TestCase
                 'must implements interface' .
                 ' "Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\TemplatingInterface".',
             ),
+        ];
+        yield 'Job Launcher : Empty DSN' => [
+            ['launcher' => ['default' => 'invalid', 'launchers' => ['invalid' => '']]],
+            null,
+            new InvalidConfigurationException('Invalid configuration for path "yokai_batch.launcher.launchers.invalid": Invalid job launcher DSN.'),
+        ];
+        yield 'Job Launcher : Invalid DSN' => [
+            ['launcher' => ['default' => 'invalid', 'launchers' => ['invalid' => 'not a DSN']]],
+            null,
+            new InvalidConfigurationException('Invalid configuration for path "yokai_batch.launcher.launchers.invalid": Invalid job launcher DSN.'),
+        ];
+        yield 'Job Launcher : Unregistered launcher' => [
+            ['launcher' => ['default' => 'unknown', 'launchers' => ['simple' => 'simple://simple']]],
+            null,
+            new LogicException('Default job launcher "unknown" was not registered in launchers config. Available launchers are ["simple"].'),
+        ];
+        yield 'Job Launcher : Unsupported launcher type' => [
+            ['launcher' => ['default' => 'invalid', 'launchers' => ['invalid' => 'unknown://unknown']]],
+            null,
+            new LogicException('Unsupported job launcher type "unknown".'),
+        ];
+        yield 'Job Launcher : Unknown service' => [
+            ['launcher' => ['default' => 'service', 'launchers' => ['service' => 'service://service?service=app.unknown']]],
+            null,
+            new ServiceNotFoundException('app.unknown'),
         ];
     }
 }
