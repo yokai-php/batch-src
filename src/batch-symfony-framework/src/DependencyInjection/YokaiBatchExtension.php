@@ -11,24 +11,18 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader as ConfigLoader;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\Loader as DependencyInjectionLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Yokai\Batch\Bridge\Doctrine\DBAL\DoctrineDBALJobExecutionStorage;
-use Yokai\Batch\Bridge\Symfony\Console\CommandRunner;
-use Yokai\Batch\Bridge\Symfony\Console\RunCommandJobLauncher;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Form\JobFilterType;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\ConfigurableTemplating;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\SonataAdminTemplating;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\TemplatingInterface;
-use Yokai\Batch\Bridge\Symfony\Messenger\DispatchMessageJobLauncher;
 use Yokai\Batch\Launcher\JobLauncherInterface;
-use Yokai\Batch\Launcher\SimpleJobLauncher;
 use Yokai\Batch\Storage\FilesystemJobExecutionStorage;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
 use Yokai\Batch\Storage\ListableJobExecutionStorageInterface;
@@ -182,34 +176,7 @@ final class YokaiBatchExtension extends Extension
         }
 
         foreach ($config['launchers'] as $name => $dsn) {
-            $dsnParts = \parse_url($dsn);
-            $launcherType = $dsnParts['scheme'] ?? null;
-            \parse_str($dsnParts['query'] ?? '', $launcherConfig);
-            $definition = match ($launcherType) {
-                'simple' => new Definition(SimpleJobLauncher::class, [
-                    '$jobExecutionAccessor' => new Reference('yokai_batch.job_execution_accessor'),
-                    '$jobExecutor' => new Reference('yokai_batch.job_executor'),
-                ]),
-                'console' => new Definition(RunCommandJobLauncher::class, [
-                    '$jobExecutionFactory' => new Reference('yokai_batch.job_execution_factory'),
-                    '$commandRunner' => new Definition(CommandRunner::class, [
-                        '$binDir' => '%kernel.project_dir%/bin',
-                        '$logDir' => '%kernel.logs_dir%',
-                    ]),
-                    '$jobExecutionStorage' => new Reference(JobExecutionStorageInterface::class),
-                    '$logFilename' => $launcherConfig['log'] ?? 'batch_execute.log',
-                ]),
-                'messenger' => new Definition(DispatchMessageJobLauncher::class, [
-                    '$jobExecutionFactory' => new Reference('yokai_batch.job_execution_factory'),
-                    '$jobExecutionStorage' => new Reference(JobExecutionStorageInterface::class),
-                    '$messageBus' => new Reference(MessageBusInterface::class),
-                ]),
-                'service' => $container->getDefinition($launcherConfig['service'] ?? throw new LogicException(
-                    'Missing "service" parameter to configure the job launcher.',
-                )),
-                default => throw new LogicException('Unsupported job launcher type "' . $launcherType . '".'),
-            };
-
+            $definition = JobLauncherDefinitionFactory::fromDsn($container, $dsn);
             $launcherId = 'yokai_batch.job_launcher.' . $name;
             $container->setDefinition($launcherId, $definition);
             $parameterName = $name . 'JobLauncher';
