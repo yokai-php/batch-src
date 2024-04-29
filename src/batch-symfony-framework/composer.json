@@ -38,6 +38,7 @@
     "suggest": {
         "sonata-project/admin-bundle": "If you want a SonataAdmin like rendering in the user interface",
         "symfony/form": "If you want the JobExecution form filter in the user interface",
+        "symfony/messenger": "If you to launch jobs via messenger",
         "symfony/security-bundle": "If you want to secure the access to JobExecution in the user interface",
         "symfony/translation": "Required if you want to enable the user interface",
         "symfony/twig-bundle": "Required if you want to enable the user interface"
