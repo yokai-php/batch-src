@@ -7,6 +7,7 @@ namespace Yokai\Batch\Sources\Tests\Integration;
 use PHPUnit\Framework\TestCase;
 use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Factory\JobExecutionFactory;
+use Yokai\Batch\Factory\JobExecutionParametersBuilder\NullJobExecutionParametersBuilder;
 use Yokai\Batch\Factory\UniqidJobExecutionIdGenerator;
 use Yokai\Batch\Failure;
 use Yokai\Batch\Job\JobExecutionAccessor;
@@ -51,7 +52,7 @@ abstract class JobTestCase extends TestCase
 
         $launcher = new SimpleJobLauncher(
             new JobExecutionAccessor(
-                new JobExecutionFactory(new UniqidJobExecutionIdGenerator()),
+                new JobExecutionFactory(new UniqidJobExecutionIdGenerator(), new NullJobExecutionParametersBuilder()),
                 $jobExecutionStorage
             ),
             self::createJobExecutor($jobExecutionStorage, [$jobName => $job])

@@ -10,6 +10,7 @@ use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Bridge\Symfony\Messenger\DispatchMessageJobLauncher;
 use Yokai\Batch\Bridge\Symfony\Messenger\LaunchJobMessage;
 use Yokai\Batch\Factory\JobExecutionFactory;
+use Yokai\Batch\Factory\JobExecutionParametersBuilder\NullJobExecutionParametersBuilder;
 use Yokai\Batch\Factory\UniqidJobExecutionIdGenerator;
 use Yokai\Batch\Test\Factory\SequenceJobExecutionIdGenerator;
 use Yokai\Batch\Test\Storage\InMemoryJobExecutionStorage;
@@ -21,7 +22,7 @@ final class DispatchMessageJobLauncherTest extends TestCase
     public function testLaunch(): void
     {
         $jobLauncher = new DispatchMessageJobLauncher(
-            new JobExecutionFactory(new UniqidJobExecutionIdGenerator()),
+            new JobExecutionFactory(new UniqidJobExecutionIdGenerator(), new NullJobExecutionParametersBuilder()),
             $storage = new InMemoryJobExecutionStorage(),
             $messageBus = new BufferingMessageBus()
         );
@@ -41,9 +42,12 @@ final class DispatchMessageJobLauncherTest extends TestCase
     public function testLaunchWithNoId(): void
     {
         $jobLauncher = new DispatchMessageJobLauncher(
-            new JobExecutionFactory(new SequenceJobExecutionIdGenerator(['123456789'])),
+            new JobExecutionFactory(
+                new SequenceJobExecutionIdGenerator(['123456789']),
+                new NullJobExecutionParametersBuilder(),
+            ),
             $storage = new InMemoryJobExecutionStorage(),
-            $messageBus = new BufferingMessageBus()
+            $messageBus = new BufferingMessageBus(),
         );
 
         $jobExecutionFromLauncher = $jobLauncher->launch('testing');
@@ -60,7 +64,7 @@ final class DispatchMessageJobLauncherTest extends TestCase
     public function testLaunchAndMessengerFail(): void
     {
         $jobLauncher = new DispatchMessageJobLauncher(
-            new JobExecutionFactory(new UniqidJobExecutionIdGenerator()),
+            new JobExecutionFactory(new UniqidJobExecutionIdGenerator(), new NullJobExecutionParametersBuilder()),
             $storage = new InMemoryJobExecutionStorage(),
             new FailingMessageBus(new TransportException('This is a test'))
         );
