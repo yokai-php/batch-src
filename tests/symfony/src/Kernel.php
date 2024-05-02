@@ -19,6 +19,7 @@ use Symfony\Component\HttpKernel\Log\Logger;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Yokai\Batch\Bridge\Symfony\Framework\YokaiBatchBundle;
 use Yokai\Batch\Job\JobInterface;
+use Yokai\Batch\Launcher\JobLauncherInterface;
 
 final class Kernel extends BaseKernel implements CompilerPassInterface
 {
@@ -130,6 +131,6 @@ final class Kernel extends BaseKernel implements CompilerPassInterface
 
     public function process(ContainerBuilder $container): void
     {
-        $container->getDefinition('yokai_batch.job_launcher.simple')->setPublic(true);
+        $container->getAlias(JobLauncherInterface::class)->setPublic(true);
     }
 }

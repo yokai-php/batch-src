@@ -50,7 +50,7 @@ final class JobTest extends KernelTestCase
         }
 
         /** @var JobLauncherInterface $launcher */
-        $launcher = $container->get('yokai_batch.job_launcher.simple');
+        $launcher = $container->get(JobLauncherInterface::class);
 
         $execution = $launcher->launch($job, $config ?? []);
 

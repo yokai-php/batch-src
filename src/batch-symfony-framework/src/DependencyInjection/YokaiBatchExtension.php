@@ -33,6 +33,7 @@ use Yokai\Batch\Storage\QueryableJobExecutionStorageInterface;
  *
  * @phpstan-import-type Config from Configuration
  * @phpstan-import-type StorageConfig from Configuration
+ * @phpstan-import-type LauncherConfig from Configuration
  * @phpstan-import-type UserInterfaceConfig from Configuration
  */
 final class YokaiBatchExtension extends Extension
@@ -62,16 +63,9 @@ final class YokaiBatchExtension extends Extension
         }
 
         $this->configureStorage($container, $config['storage']);
+        $this->configureLauncher($container, $config['launcher']);
         $this->configureUserInterface($container, $loader, $config['ui']);
 
-        $launchers = [
-            'yokai_batch.job_launcher.dispatch_message' => $this->installed('symfony-messenger'),
-            'yokai_batch.job_launcher.run_command' => $this->installed('symfony-console'),
-        ];
-        $container->setAlias(
-            JobLauncherInterface::class,
-            \array_keys(\array_filter($launchers))[0] ?? 'yokai_batch.job_launcher.simple'
-        );
         $container->registerAliasForArgument('yokai_batch.logger', LoggerInterface::class, 'yokaiBatchLogger');
     }
 
@@ -166,6 +160,33 @@ final class YokaiBatchExtension extends Extension
                 ->setPublic(true)
             ;
         }
+    }
+
+    /**
+     * @param LauncherConfig $config
+     */
+    private function configureLauncher(ContainerBuilder $container, array $config): void
+    {
+        if (!isset($config['launchers'][$config['default']])) {
+            throw new LogicException(\sprintf(
+                "Default job launcher \"%s\" was not registered in launchers config. Available launchers are %s.",
+                $config['default'],
+                \json_encode(\array_keys($config['launchers']), flags: \JSON_THROW_ON_ERROR),
+            ));
+        }
+
+        foreach ($config['launchers'] as $name => $dsn) {
+            $definition = JobLauncherDefinitionFactory::fromDsn($container, $dsn);
+            $launcherId = 'yokai_batch.job_launcher.' . $name;
+            $container->setDefinition($launcherId, $definition);
+            $parameterName = $name . 'JobLauncher';
+            $container->registerAliasForArgument($launcherId, LoggerInterface::class, $parameterName);
+        }
+
+        $container->setAlias(
+            JobLauncherInterface::class,
+            'yokai_batch.job_launcher.' . $config['default'],
+        );
     }
 
     /**

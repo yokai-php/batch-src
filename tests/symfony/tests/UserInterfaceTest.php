@@ -30,7 +30,7 @@ class UserInterfaceTest extends WebTestCase
 
         $container = self::getContainer();
         /** @var JobLauncherInterface $launcher */
-        $launcher = $container->get('yokai_batch.job_launcher.simple');
+        $launcher = $container->get(JobLauncherInterface::class);
         /** @var array<mixed> $set */
         foreach (JobTest::configs() as $set) {
             /**
