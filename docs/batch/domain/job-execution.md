@@ -2,7 +2,7 @@
 
 ## What is a Job execution ?
 
-A [JobExecution](../../src/JobExecution.php) is the class that holds information about one execution of a [job](job.md).
+A [JobExecution](../../../src/batch/src/JobExecution.php) is the class that holds information about one execution of a [job](job.md).
 
 ## What kind of information does it hold ?
 

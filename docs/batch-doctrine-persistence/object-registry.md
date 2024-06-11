@@ -78,4 +78,4 @@ Otherwise, the query will be the fastest possible because it will use the object
 
 ## On the same subject
 
-- [What is an item job ?](https://github.com/yokai-php/batch/blob/0.x/docs/domain/item-job.md)
+- [What is an item job ?](../batch/domain/item-job.md)

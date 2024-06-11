@@ -105,31 +105,31 @@ final class MarkdownLinksTest extends TestCase
     public function interfaceRules(): iterable
     {
         yield 'JobInterface' => [
-            'batch/docs/domain/job.md',
+            'docs/batch/domain/job.md',
             JobInterface::class,
         ];
         yield 'JobExecutionStorageInterface' => [
-            'batch/docs/domain/job-execution-storage.md',
+            'docs/batch/domain/job-execution-storage.md',
             JobExecutionStorageInterface::class,
         ];
         yield 'JobLauncherInterface' => [
-            'batch/docs/domain/job-launcher.md',
+            'docs/batch/domain/job-launcher.md',
             JobLauncherInterface::class,
         ];
         yield 'JobParameterAccessorInterface' => [
-            'batch/docs/domain/job-parameter-accessor.md',
+            'docs/batch/domain/job-parameter-accessor.md',
             JobParameterAccessorInterface::class,
         ];
         yield 'ItemReaderInterface' => [
-            'batch/docs/domain/item-job/item-reader.md',
+            'docs/batch/domain/item-job/item-reader.md',
             ItemReaderInterface::class,
         ];
         yield 'ItemProcessorInterface' => [
-            'batch/docs/domain/item-job/item-processor.md',
+            'docs/batch/domain/item-job/item-processor.md',
             ItemProcessorInterface::class,
         ];
         yield 'ItemWriterInterface' => [
-            'batch/docs/domain/item-job/item-writer.md',
+            'docs/batch/domain/item-job/item-writer.md',
             ItemWriterInterface::class,
         ];
     }

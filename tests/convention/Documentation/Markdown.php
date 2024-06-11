@@ -27,7 +27,7 @@ final class Markdown
      */
     public static function listFiles(): iterable
     {
-        $files = Finder::create()->files()->in(self::ROOT_DIR . '/src/*/')->name('*.md');
+        $files = Finder::create()->files()->in(self::ROOT_DIR . '/docs/*/')->name('*.md');
 
         foreach ($files as $file) {
             yield self::createDocFile($file);
@@ -39,7 +39,7 @@ final class Markdown
      */
     public static function getFile(string $path): DocFile
     {
-        return self::createDocFile(new SplFileInfo(self::ROOT_DIR . '/src/' . \ltrim($path, '/')));
+        return self::createDocFile(new SplFileInfo(self::ROOT_DIR . '/' . \ltrim($path, '/')));
     }
 
     private static function createDocFile(SplFileInfo $file): DocFile
@@ -83,13 +83,13 @@ final class Markdown
 
     private static function getPackageFromFile(SplFileInfo $file): string
     {
-        $relativePath = \str_replace(\realpath(self::ROOT_DIR) . '/src/', '', $file->getRealPath());
+        $relativePath = \str_replace(\realpath(self::ROOT_DIR) . '/', '', $file->getRealPath());
 
         return \dirname($relativePath);
     }
 
     private static function getFileFromMembers(string $package, string $file): SplFileInfo
     {
-        return new SplFileInfo(self::ROOT_DIR . '/src/' . $package . '/' . \ltrim($file, '/'));
+        return new SplFileInfo(self::ROOT_DIR . '/' . $package . '/' . \ltrim($file, '/'));
     }
 }

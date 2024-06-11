@@ -1,6 +1,6 @@
 # Command
 
-The [RunJobCommand](../src/RunJobCommand.php) can execute any job.
+The [RunJobCommand](../../src/batch-symfony-console/src/RunJobCommand.php) can execute any job.
 
 The command accepts 2 arguments :
 - the job name to execute

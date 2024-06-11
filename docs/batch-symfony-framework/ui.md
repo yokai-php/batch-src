@@ -32,7 +32,7 @@ _yokai_batch:
 
 ### Templating
 
-The templating service is used by the [JobController](../src/UserInterface/Controller/JobController.php) to render its templates.
+The templating service is used by the [JobController](../../src/batch-symfony-framework/src/UserInterface/Controller/JobController.php) to render its templates.
 It's a wrapper around [Twig](https://twig.symfony.com/), for you to control templates used, and variables passed.
 
 > By default
@@ -191,6 +191,6 @@ But you can also register job name dedicated templates if you need some specific
 
 ## On the same subject
 
-- [What is a job execution storage ?](https://github.com/yokai-php/batch/blob/0.x/docs/domain/job-execution-storage.md)
-- [What is a job ?](https://github.com/yokai-php/batch/blob/0.x/docs/domain/job.md)
-- [What is a job launcher ?](https://github.com/yokai-php/batch/blob/0.x/docs/domain/job-launcher.md)
+- [What is a job execution storage ?](../batch/domain/job-execution-storage.md)
+- [What is a job ?](../batch/domain/job.md)
+- [What is a job launcher ?](../batch/domain/job-launcher.md)

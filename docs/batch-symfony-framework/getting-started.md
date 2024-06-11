@@ -24,7 +24,7 @@ yokai_batch:
           async: ...
 ```
 
-> **note**: if you do not configure anything here, you will be using the [`SimpleJobLauncher`](https://github.com/yokai-php/batch/blob/0.x/src/Launcher/SimpleJobLauncher.php).
+> **note**: if you do not configure anything here, you will be using the [`SimpleJobLauncher`](../../src/batch/src/Launcher/SimpleJobLauncher.php).
 
 The `default` job launcher, must reference a launcher name, defined in the `launchers` list.
 The `default` job launcher will be the autowired instance of job launcher when you ask for one.
@@ -48,9 +48,9 @@ final class YourAppCode
 ```
 
 All `launchers` are configured using a DSN, every scheme has it's own associated factory.
-- `simple://simple`: a [`SimpleJobLauncher`](https://github.com/yokai-php/batch/blob/0.x/src/Launcher/SimpleJobLauncher.php), no configuration allowed
-- `messenger://messenger`: a [`DispatchMessageJobLauncher`](https://github.com/yokai-php/batch-symfony-messenger/blob/0.x/src/DispatchMessageJobLauncher.php), no configuration allowed
-- `console://console`: a [`RunCommandJobLauncher`](https://github.com/yokai-php/batch-symfony-console/blob/0.x/src/RunCommandJobLauncher.php), configurable options:
+- `simple://simple`: a [`SimpleJobLauncher`](../../src/batch/src/Launcher/SimpleJobLauncher.php), no configuration allowed
+- `messenger://messenger`: a [`DispatchMessageJobLauncher`](../../src/batch-symfony-messenger/src/DispatchMessageJobLauncher.php), no configuration allowed
+- `console://console`: a [`RunCommandJobLauncher`](../../src/batch-symfony-console/src/RunCommandJobLauncher.php), configurable options:
   - `log`: the filename where command output will be redirected (defaults to `batch_execute.log`)
 - `service://service`: pointing to a service of your choice, configurable options:
   - `service`: the id of the service to use (required, an exception will be thrown otherwise)
@@ -122,7 +122,7 @@ final class NameOfYourJob implements JobInterface, JobWithStaticNameInterface
 ```
 
 > **note**: when registering jobs with dedicated class, you can use the
-> [JobWithStaticNameInterface](../src/JobWithStaticNameInterface.php) interface
+> [JobWithStaticNameInterface](../../src/batch-symfony-framework/src/JobWithStaticNameInterface.php) interface
 > to be able to specify the job name of your service.
 > Otherwise, the service id will be used, and in that case, the service id is the FQCN.
 
@@ -183,6 +183,6 @@ final readonly class YourService
 
 ## On the same subject
 
-- [What is a job execution storage ?](https://github.com/yokai-php/batch/blob/0.x/docs/domain/job-execution-storage.md)
-- [What is a job ?](https://github.com/yokai-php/batch/blob/0.x/docs/domain/job.md)
-- [What is a job launcher ?](https://github.com/yokai-php/batch/blob/0.x/docs/domain/job-launcher.md)
+- [What is a job execution storage ?](../batch/domain/job-execution-storage.md)
+- [What is a job ?](../batch/domain/job.md)
+- [What is a job launcher ?](../batch/domain/job-launcher.md)

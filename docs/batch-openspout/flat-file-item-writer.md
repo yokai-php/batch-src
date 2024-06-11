@@ -1,6 +1,6 @@
 # Item writer with CSV/ODS/XLSX files
 
-The [FlatFileWriter](../src/Writer/FlatFileWriter.php) is a writer that will write to CSV/ODS/XLSX file and each item will
+The [FlatFileWriter](../../src/batch-openspout/src/Writer/FlatFileWriter.php) is a writer that will write to CSV/ODS/XLSX file and each item will
 written its own line.
 
 ```php
@@ -47,4 +47,4 @@ new FlatFileWriter(
 
 ## On the same subject
 
-- [What is an item writer ?](https://github.com/yokai-php/batch/blob/0.x/docs/domain/item-job/item-writer.md)
+- [What is an item writer ?](../batch/domain/item-job/item-writer.md)

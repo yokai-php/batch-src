@@ -1,10 +1,10 @@
 # Job launcher
 
-The [DispatchMessageJobLauncher](../src/DispatchMessageJobLauncher.php) execute 
+The [DispatchMessageJobLauncher](../../src/batch-symfony-messenger/src/DispatchMessageJobLauncher.php) execute 
 jobs via a symfony command message dispatch.
 
-A [LaunchJobMessage](../src/LaunchJobMessage.php) message will be dispatched
-and handled by the [LaunchJobMessageHandler](../src/LaunchJobMessageHandler.php) 
+A [LaunchJobMessage](../../src/batch-symfony-messenger/src/LaunchJobMessage.php) message will be dispatched
+and handled by the [LaunchJobMessageHandler](../../src/batch-symfony-messenger/src/LaunchJobMessageHandler.php) 
 will be called with that message after being routed.
 
 ## How to configure an async transport for the launcher ?
@@ -29,4 +29,4 @@ framework:
 
 ## On the same subject
 
-- [What is a job launcher ?](https://github.com/yokai-php/batch/blob/0.x/docs/domain/job-launcher.md)
+- [What is a job launcher ?](../batch/domain/job-launcher.md)
