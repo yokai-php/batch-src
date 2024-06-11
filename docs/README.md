@@ -144,13 +144,12 @@ $importExecution = $launcher->launch('import', ['path' => '/path/to/file/to/impo
 
 There you go, you have a fully functional stack to start working with the library.
 
-[//]: # (Todo::)
-[//]: # (## Next steps)
+## Next steps
 
-[//]: # (- [Symfony bridge]&#40;symfony.md&#41;)
+- [Symfony bridge](symfony.md)
 
-[//]: # (- [Doctrine bridge]&#40;doctrine.md&#41;)
+- [Doctrine bridge](doctrine.md)
 
-[//]: # (- [Flysystem bridge]&#40;flysystem.md&#41;)
+- [Flysystem bridge](flysystem.md)
 
-[//]: # (- [Box OpenSpout bridge]&#40;openspout.md&#41;)
+- [Box OpenSpout bridge](openspout.md)
