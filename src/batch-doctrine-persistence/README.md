@@ -24,8 +24,8 @@ composer require yokai/batch-doctrine-persistence
 
 This package provides:
 
-- an [item writer](docs/object-item-writer.md) that persists objects through object manager
-- an [object registry](docs/object-registry.md) that remembers found objects identities
+- an [item writer](https://github.com/yokai-php/batch-src/blob/0.x/docs/batch-doctrine-persistence/object-item-writer.md) that persists objects through object manager
+- an [object registry](https://github.com/yokai-php/batch-src/blob/0.x/docs/batch-doctrine-persistence/object-registry.md) that remembers found objects identities
 
 
 ## Contribution

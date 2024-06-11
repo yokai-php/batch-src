@@ -24,8 +24,8 @@ composer require yokai/batch-league-flysystem
 
 This package provides:
 
-- a [job](docs/copy-files-job.md) that copy file(s) from one filesystem to another
-- a [job](docs/move-files-job.md) that move file(s) from one filesystem to another
+- a [job](https://github.com/yokai-php/batch-src/blob/0.x/docs/batch-league-flysystem/copy-files-job.md) that copy file(s) from one filesystem to another
+- a [job](https://github.com/yokai-php/batch-src/blob/0.x/docs/batch-league-flysystem/move-files-job.md) that move file(s) from one filesystem to another
 
 
 ## Contribution

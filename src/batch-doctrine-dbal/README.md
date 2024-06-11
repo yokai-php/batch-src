@@ -24,7 +24,7 @@ composer require yokai/batch-doctrine-dbal
 
 This package provides:
 
-- a [job execution storage](docs/job-execution-storage.md) that stores job executions to a relational database
+- a [job execution storage](https://github.com/yokai-php/batch-src/blob/0.x/docs/batch-doctrine-dbal/job-execution-storage.md) that stores job executions to a relational database
 
 
 ## Contribution
