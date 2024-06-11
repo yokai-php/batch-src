@@ -24,8 +24,8 @@ composer require yokai/batch-symfony-console
 
 This package provides:
 
-- a [job launcher](docs/job-launcher.md) that uses command to launch jobs
-- a [command](docs/command.md) to launch jobs
+- a [job launcher](https://github.com/yokai-php/batch-src/blob/0.x/docs/batch-symfony-console/job-launcher.md) that uses command to launch jobs
+- a [command](https://github.com/yokai-php/batch-src/blob/0.x/docs/batch-symfony-console/command.md) to launch jobs
 
 
 ## Contribution

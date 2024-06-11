@@ -24,7 +24,7 @@ composer require yokai/batch-doctrine-orm
 
 This package provides:
 
-- an [item reader](docs/entity-item-reader.md) that read entities from entity manager
+- an [item reader](https://github.com/yokai-php/batch-src/blob/0.x/docs/batch-doctrine-orm/entity-item-reader.md) that read entities from entity manager
 
 
 ## Contribution

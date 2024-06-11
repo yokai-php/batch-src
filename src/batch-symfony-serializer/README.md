@@ -24,9 +24,9 @@ composer require yokai/batch-symfony-serializer
 
 This package provides:
 
-- an [item processor](docs/normalize-item-processor.md) that uses normalization
-- an [item processor](docs/denormalize-item-processor.md) that uses denormalization
-- a [job execution serializer](docs/job-execution-serializer.md) that uses serialization
+- an [item processor](https://github.com/yokai-php/batch-src/blob/0.x/docs/batch-symfony-serializer/normalize-item-processor.md) that uses normalization
+- an [item processor](https://github.com/yokai-php/batch-src/blob/0.x/docs/batch-symfony-serializer/denormalize-item-processor.md) that uses denormalization
+- a [job execution serializer](https://github.com/yokai-php/batch-src/blob/0.x/docs/batch-symfony-serializer/job-execution-serializer.md) that uses serialization
 
 
 ## Contribution

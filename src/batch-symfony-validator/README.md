@@ -24,7 +24,7 @@ composer require yokai/batch-symfony-validator
 
 This package provides:
 
-- an [item processor](docs/skip-invalid-item-processor.md) that skip invalid items
+- an [item processor](https://github.com/yokai-php/batch-src/blob/0.x/docs/batch-symfony-validator/skip-invalid-item-processor.md) that skip invalid items
 
 
 ## Contribution

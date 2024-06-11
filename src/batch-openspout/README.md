@@ -24,8 +24,8 @@ composer require yokai/batch-openspout
 
 This package provides:
 
-- a [item reader](docs/flat-file-item-reader.md) that read from CSV/XLSX/ODS files
-- a [item writer](docs/flat-file-item-writer.md) that write to CSV/XLSX/ODS files
+- a [item reader](https://github.com/yokai-php/batch-src/blob/0.x/docs/batch-openspout/flat-file-item-reader.md) that read from CSV/XLSX/ODS files
+- a [item writer](https://github.com/yokai-php/batch-src/blob/0.x/docs/batch-openspout/flat-file-item-writer.md) that write to CSV/XLSX/ODS files
 
 
 ## Contribution
