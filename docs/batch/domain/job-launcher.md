@@ -49,17 +49,17 @@ $execution = $launcher->launch('your.job.name', ['job' => ['configuration']]);
 ## What types of launcher exists ?
 
 **Built-in launchers:**
-- [SimpleJobLauncher](../../src/Launcher/SimpleJobLauncher.php):
+- [SimpleJobLauncher](../../../src/batch/src/Launcher/SimpleJobLauncher.php):
   execute the job directly in the same PHP process.
 
 **Launchers from bridges:**
-- [RunCommandJobLauncher (`symfony/console`)](https://github.com/yokai-php/batch-symfony-console/blob/0.x/src/RunCommandJobLauncher.php):
+- [RunCommandJobLauncher (`symfony/console`)](../../../src/batch-symfony-console/src/RunCommandJobLauncher.php):
   execute the job via an asynchronous symfony command.
-- [DispatchMessageJobLauncher (`symfony/messenger`)](https://github.com/yokai-php/batch-symfony-messenger/blob/0.x/src/DispatchMessageJobLauncher.php):
+- [DispatchMessageJobLauncher (`symfony/messenger`)](../../../src/batch-symfony-messenger/src/DispatchMessageJobLauncher.php):
   execute the job via a symfony message dispatch.
 
 **Launchers for testing purpose:**
-- [BufferingJobLauncher](../../src/Test/Launcher/BufferingJobLauncher.php):
+- [BufferingJobLauncher](../../../src/batch/src/Test/Launcher/BufferingJobLauncher.php):
   do not execute job, but store execution in a private var that can be accessed afterwards in your tests.
 
 ## On the same subject

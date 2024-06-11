@@ -1,6 +1,6 @@
 # Item reader with CSV/ODS/XLSX files
 
-The [FlatFileReader](../src/Reader/FlatFileReader.php) is a reader 
+The [FlatFileReader](../../src/batch-openspout/src/Reader/FlatFileReader.php) is a reader 
 that will read from CSV/ODS/XLSX file and return each line as an array.
 
 ```php
@@ -45,4 +45,4 @@ new FlatFileReader(
 
 ## On the same subject
 
-- [What is an item reader ?](https://github.com/yokai-php/batch/blob/0.x/docs/domain/item-job/item-reader.md)
+- [What is an item reader ?](../batch/domain/item-job/item-reader.md)

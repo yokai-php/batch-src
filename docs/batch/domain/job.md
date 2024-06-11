@@ -26,24 +26,24 @@ class DoStuffJob implements JobInterface
 }
 ```
 
-The only requirement is implementing [`JobInterface`](../../src/Job/JobInterface.php),
+The only requirement is implementing [`JobInterface`](../../../src/batch/src/Job/JobInterface.php),
 
 ## What types of job exists ?
 
 **Built-in jobs:**
-- [AbstractDecoratedJob](../../src/Job/AbstractDecoratedJob.php):
+- [AbstractDecoratedJob](../../../src/batch/src/Job/AbstractDecoratedJob.php):
   a job that is designed to be extended, helps job construction.
-- [ItemJob](../../src/Job/Item/ItemJob.php):
+- [ItemJob](../../../src/batch/src/Job/Item/ItemJob.php):
   ETL like, batch processing job ([documentation](item-job.md)).
-- [JobWithChildJobs](../../src/Job/JobWithChildJobs.php):
+- [JobWithChildJobs](../../../src/batch/src/Job/JobWithChildJobs.php):
   a job that trigger other jobs ([documentation](job-with-children.md)).
-- [TriggerScheduledJobsJob](../../src/Trigger/TriggerScheduledJobsJob.php):
+- [TriggerScheduledJobsJob](../../../src/batch/src/Trigger/TriggerScheduledJobsJob.php):
   a job that trigger other jobs when schedule is due (todo documentation).
 
 **Jobs from bridges:**
-- [CopyFilesJob (`league/flysystem`)](https://github.com/yokai-php/batch-league-flysystem/blob/0.x/src/Job/CopyFilesJob.php):
+- [CopyFilesJob (`league/flysystem`)](../../../src/batch-league-flysystem/src/Job/CopyFilesJob.php):
   copy files from one filesystem to another.
-- [MoveFilesJob (`league/flysystem`)](https://github.com/yokai-php/batch-league-flysystem/blob/0.x/src/Job/MoveFilesJob.php):
+- [MoveFilesJob (`league/flysystem`)](../../../src/batch-league-flysystem/src/Job/MoveFilesJob.php):
   move files from one filesystem to another.
 
 ## On the same subject
