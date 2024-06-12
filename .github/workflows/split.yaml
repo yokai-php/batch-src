@@ -1,0 +1,22 @@
+name: 'Packages Split'
+
+on:
+  push:
+    branches:
+      - main
+  release:
+    types: [ published ]
+
+jobs:
+  packages_split:
+    name: "Packages Split"
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - name: "Checkout"
+        run: git clone https://github.com/yann-eugone/test-monorepo /home/runner/work/yann-eugone/test-monorepo && cd $_
+
+      - name: "Gitsplit"
+        run: docker run --rm -t -e GH_TOKEN -v /cache/gitsplit:/cache/gitsplit -v /home/runner/work/yann-eugone/test-monorepo:/srv jderusse/gitsplit gitsplit
+        env:
+          GH_TOKEN: ${{ secrets.GITSPLIT_TOKEN }}
