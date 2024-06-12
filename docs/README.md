@@ -1,4 +1,3 @@
-# Getting started
 ## Installation
 
 ```bash
