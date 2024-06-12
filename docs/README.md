@@ -11,6 +11,8 @@ Batch can also be used as an ETL.
 
 Batch can also work asynchronously.
 
+Batch help you to make reporting during process.
+
 ## How it works ?
 Batch is a library that allows you to declare and execute jobs.
 And having control over each step of the process to be able to extend the technical logic to meet business needs.
