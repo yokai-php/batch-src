@@ -4,39 +4,16 @@
 composer require yokai/batch
 ```
 
-## What is Batch and how does it work?
+## What is Batch ?
+The Batch library solves all your massive data processing problems.
 
-```mermaid
-sequenceDiagram
-    participant App
-    participant SimpleJobLauncher
-    participant JobExecutionAccessor
-    participant JobExecutor
-    participant JobExecutionFactory
-    participant JobInterface
+Batch can also be used as an ETL.
 
-    App-->>SimpleJobLauncher: Give job name and parameters
-    activate SimpleJobLauncher
-    SimpleJobLauncher-->>JobExecutionAccessor:  Give job name and parameters
-    activate JobExecutionAccessor
-    JobExecutionAccessor-->>JobExecutionStorageInterface: Try to find an existing job for name and id
-    JobExecutionAccessor-->>JobExecutionFactory: Ask for JobExecution creation if not found in storage
-    JobExecutionAccessor-->>JobExecutionStorageInterface: Store JobExecution if created
-    JobExecutionAccessor-->>SimpleJobLauncher: Give back a JobExecution
-    deactivate JobExecutionAccessor
-    SimpleJobLauncher-->>JobExecutor: Ask for job execution
-    activate JobExecutor
-    JobExecutor-->>JobExecutor: Ensure job can be executed, change job status
-    JobExecutor-->>JobExecutionStorageInterface: Store JobExecution before job starts
-    JobExecutor-->>JobInterface: Triggers job execution
-    JobInterface-->>JobInterface: Where your code lives
-    JobExecutor-->>JobExecutor: Try/catch all errors and convert to stored failures
-    JobExecutor-->>JobExecutor: Produces events based on end status of JobExecution
-    JobExecutor-->>JobExecutionStorageInterface: Store JobExecution after job ends
-    deactivate JobExecutor
-    SimpleJobLauncher-->>App: Return the JobExecution, executed
-    deactivate SimpleJobLauncher
-```
+Batch can also work asynchronously.
+
+## How it works ?
+Batch is a library that allows you to declare and execute jobs.
+And having control over each step of the process to be able to extend the technical logic to meet business needs.
 
 ## Vocabulary
 
