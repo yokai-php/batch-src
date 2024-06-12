@@ -59,39 +59,12 @@ you have to check the `JobExecution` status that it had returned to know if the 
 
 For use a Job Launcher you need to have:
 - **A Container of Jobs:** A container use any PSR-11 [container implementation](https://packagist.org/providers/psr/container-implementation)
-- **A Storage for Job Executions:** A storage is a way to store the execution of a job, it can be a database, a file, a cache, etc.
-- **A JobExecutor:** The executor is the class that will execute the job.
-- **A JobExecutionAccessor:** The accessor is the class that will access the job execution.
+- **A Storage for Job Executions:** A storage to store the execution of jobs, it can be a database, a file, a cache, etc.
+- **A JobExecutor:** The executor will execute the job.
+- **A JobExecutionAccessor:** The accessor will access the job execution.
 
-But don't worry, `Yokai\batch` give you all the tools you need to start.
-
-You can start by build a `JobContainer` for store your jobs.
-```php
-$jobs = new JobContainer([
-    'your.job.name' => new class implements JobInterface {
-        public function execute(JobExecution $jobExecution): void
-        {
-            // your business logic
-        }
-    },
-]);
-```
-
-For the storage you can use the `NullJobExecutionStorage`.
-```php
-$jobExecutionStorage = new NullJobExecutionStorage();
-```
-If you want see more Storage options, see [Job Execution Storage](batch/domain/job-execution-storage.md)
-
-Next, we can build the `JobLauncher` with the `SimpleJobLauncher` implementation and everything else needed to build it.
-```php
-$launcher = new SimpleJobLauncher(
-    new JobExecutionAccessor(new JobExecutionFactory(new UniqidJobExecutionIdGenerator()), $jobExecutionStorage),
-    new JobExecutor(new JobRegistry($jobs), $jobExecutionStorage, null),
-);
-```
-
-Finally, you will get a script who seems like this:
+#### How to use a Job Launcher ?
+Look here a simple example to use a Job Launcher with the `SimpleJobLauncher`:
 
 ```php
 <?php
@@ -126,12 +99,34 @@ $launcher = new SimpleJobLauncher(
 
 $execution = $launcher->launch('your.job.name', ['job' => ['configuration']]);
 ```
-If you want know more you can look one of this:
+
+#### See More:
 - [Job Launcher](batch/domain/job-launcher.md)
-- [Job Execution](batch/domain/job-execution.md)
+
+### JobExecution:
+
+A [JobExecution](../src/batch/src/JobExecution.php) is the class that holds information about one execution of a job.
+#### What kind of information does it hold ?
+
+- `JobExecution::$jobName` : The Job name (job id)
+- `JobExecution::$id` : The execution id
+- `JobExecution::$parameters` : Some parameters with which job was executed
+- `JobExecution::$status` : A status (pending, running, stopped, completed, abandoned, failed)
+- `JobExecution::$startTime` : Start time
+- `JobExecution::$endTime` : End time
+- `JobExecution::$failures` : A list of failures (usually exceptions)
+- `JobExecution::$warnings` : A list of warnings (usually skipped items)
+- `JobExecution::$summary` : A summary (can contain any data you wish to store)
+- `JobExecution::$logs` : Some logs
+- `JobExecution::$childExecutions` : Some child execution
+
+### JobExecutionStorage
+
+Whenever a job is launched, whether is starts immediately or not, an execution is stored for it.
+The execution are stored to allow you to keep an eye on what is happening.
+This persistence is on the responsibility of the job execution storage.
 - [Job Execution Storage](batch/domain/job-execution-storage.md)
 
-## Step-by-step example
 
 ## Next steps
 - [Getting Started (Nom de l'exemple)](getting-started.md)
