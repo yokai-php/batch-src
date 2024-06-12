@@ -6,6 +6,10 @@
 
 This repository contains sources for all packages from `yokai/batch` suite.
 
+## Documentation
+
+Every package has its own documentation,
+you should start with [core repository documentation](https://github.com/yokai-php/batch-src/blob/0.x/docs/README.md).
 
 ## Packages
 
@@ -28,12 +32,6 @@ Some bridges to popular packages :
 
 And some special packages :
 - [`yokai/batch-symfony-pack`](https://github.com/yokai-php/batch-symfony-pack): Minimal pack for Symfony Framework
-
-
-## Documentation
-
-Every package has its own documentation,
-you should start with [core repository documentation](https://github.com/yokai-php/batch/blob/0.x/README.md).
 
 
 ## Contribution

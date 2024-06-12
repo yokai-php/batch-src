@@ -4,40 +4,6 @@
 composer require yokai/batch
 ```
 
-## What is Batch and how does it work?
-
-```mermaid
-sequenceDiagram
-    participant App
-    participant SimpleJobLauncher
-    participant JobExecutionAccessor
-    participant JobExecutor
-    participant JobExecutionFactory
-    participant JobInterface
-
-    App-->>SimpleJobLauncher: Give job name and parameters
-    activate SimpleJobLauncher
-    SimpleJobLauncher-->>JobExecutionAccessor:  Give job name and parameters
-    activate JobExecutionAccessor
-    JobExecutionAccessor-->>JobExecutionStorageInterface: Try to find an existing job for name and id
-    JobExecutionAccessor-->>JobExecutionFactory: Ask for JobExecution creation if not found in storage
-    JobExecutionAccessor-->>JobExecutionStorageInterface: Store JobExecution if created
-    JobExecutionAccessor-->>SimpleJobLauncher: Give back a JobExecution
-    deactivate JobExecutionAccessor
-    SimpleJobLauncher-->>JobExecutor: Ask for job execution
-    activate JobExecutor
-    JobExecutor-->>JobExecutor: Ensure job can be executed, change job status
-    JobExecutor-->>JobExecutionStorageInterface: Store JobExecution before job starts
-    JobExecutor-->>JobInterface: Triggers job execution
-    JobInterface-->>JobInterface: Where your code lives
-    JobExecutor-->>JobExecutor: Try/catch all errors and convert to stored failures
-    JobExecutor-->>JobExecutor: Produces events based on end status of JobExecution
-    JobExecutor-->>JobExecutionStorageInterface: Store JobExecution after job ends
-    deactivate JobExecutor
-    SimpleJobLauncher-->>App: Return the JobExecution, executed
-    deactivate SimpleJobLauncher
-```
-
 ## Vocabulary
 
 Because when you start with any library
@@ -54,9 +20,32 @@ as it contains the business logic required for what you wish to achieve.
 
 The only requirement is implementing [`JobInterface`](../src/batch/src/Job/JobInterface.php),
 
+For exemple you can have a job for generate a csv:
+```php
+<?php
+
+declare(strict_types=1);
+
+use Yokai\Batch\JobExecution;
+use Yokai\Batch\Job\JobInterface;
+
+class CsvExportJob implements JobInterface
+{
+    public function execute(JobExecution $jobExecution) : void
+    {
+        $file = fopen('path/to/file.csv', 'w');
+            
+        // your export logic here
+        fputcsv($file, ['column1', 'column2']);
+        
+        fclose($file);
+    }
+}
+```
 #### See More:
 For more information about jobs, see [Job](batch/domain/job.md)
 
+[//]: # (Todo: Maybe we can remove Job.md and put the content here)
 ### Job Launcher
 
 The job launcher is responsible for executing/scheduling every jobs.
@@ -73,9 +62,62 @@ For use a Job Launcher you need to have:
 - **A JobExecutor:** The executor will execute the job.
 - **A JobExecutionAccessor:** The accessor will access the job execution.
 
+#### How to use a Job Launcher ?
+Look here a simple example to use a Job Launcher with the `SimpleJobLauncher`:
+
+```php
+<?php
+
+declare(strict_types=1);
+
+use Yokai\Batch\Factory\JobExecutionFactory;
+use Yokai\Batch\Factory\UniqidJobExecutionIdGenerator;
+use Yokai\Batch\Job\JobExecutionAccessor;
+use Yokai\Batch\Job\JobExecutor;
+use Yokai\Batch\Job\JobInterface;
+use Yokai\Batch\JobExecution;
+use Yokai\Batch\Launcher\SimpleJobLauncher;
+use Yokai\Batch\Registry\JobContainer;
+use Yokai\Batch\Registry\JobRegistry;
+use Yokai\Batch\Storage\NullJobExecutionStorage;
+
+$jobs = new JobContainer([
+    'your.job.name' => new class implements JobInterface {
+        public function execute(JobExecution $jobExecution): void
+        {
+            // your business logic
+        }
+    },
+]);
+$jobExecutionStorage = new NullJobExecutionStorage();
+
+$launcher = new SimpleJobLauncher(
+    new JobExecutionAccessor(new JobExecutionFactory(new UniqidJobExecutionIdGenerator()), $jobExecutionStorage),
+    new JobExecutor(new JobRegistry($jobs), $jobExecutionStorage, null),
+);
+
+$execution = $launcher->launch('your.job.name', ['job' => ['configuration']]);
+```
+
+#### See More:
+- [Job Launcher](batch/domain/job-launcher.md)
+
 ### JobExecution:
 
 A [JobExecution](../src/batch/src/JobExecution.php) is the class that holds information about one execution of a job.
+#### What kind of information does it hold ?
+
+- `JobExecution::$jobName` : The Job name (job id)
+- `JobExecution::$id` : The execution id
+- `JobExecution::$parameters` : Some parameters with which job was executed
+- `JobExecution::$status` : A status (pending, running, stopped, completed, abandoned, failed)
+- `JobExecution::$startTime` : Start time
+- `JobExecution::$endTime` : End time
+- `JobExecution::$failures` : A list of failures (usually exceptions)
+- `JobExecution::$warnings` : A list of warnings (usually skipped items)
+- `JobExecution::$summary` : A summary (can contain any data you wish to store)
+- `JobExecution::$logs` : Some logs
+- `JobExecution::$childExecutions` : Some child execution
 
 ### JobExecutionStorage
 
