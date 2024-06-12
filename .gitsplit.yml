@@ -1,0 +1,49 @@
+# Path to a cache directory Used to speed up the split over time by reusing git's objects
+cache_url: "/cache/gitsplit"
+
+# Packages to split
+splits:
+  -
+    prefix: "src/batch"
+    target: "https://${GH_TOKEN}@github.com/yokai-php/batch-documentation.git"
+  -
+    prefix: "docs"
+    target: "https://${GH_TOKEN}@github.com/yokai-php/batch.git"
+  -
+    prefix: "src/batch-doctrine-dbal"
+    target: "https://${GH_TOKEN}@github.com/yokai-php/batch-doctrine-dbal.git"
+  -
+    prefix: "src/batch-doctrine-orm"
+    target: "https://${GH_TOKEN}@github.com/yokai-php/batch-doctrine-orm.git"
+  -
+    prefix: "src/batch-doctrine-persistence"
+    target: "https://${GH_TOKEN}@github.com/yokai-php/batch-doctrine-persistence.git"
+  -
+    prefix: "src/batch-league-flysystem"
+    target: "https://${GH_TOKEN}@github.com/yokai-php/batch-league-flysystem.git"
+  -
+    prefix: "src/batch-openspout"
+    target: "https://${GH_TOKEN}@github.com/yokai-php/batch-openspout.git"
+  -
+    prefix: "src/batch-symfony-console"
+    target: "https://${GH_TOKEN}@github.com/yokai-php/batch-symfony-console.git"
+  -
+    prefix: "src/batch-symfony-framework"
+    target: "https://${GH_TOKEN}@github.com/yokai-php/batch-symfony-framework.git"
+  -
+    prefix: "src/batch-symfony-messenger"
+    target: "https://${GH_TOKEN}@github.com/yokai-php/batch-symfony-messenger.git"
+  -
+    prefix: "src/batch-symfony-pack"
+    target: "https://${GH_TOKEN}@github.com/yokai-php/batch-symfony-pack.git"
+  -
+    prefix: "src/batch-symfony-serializer"
+    target: "https://${GH_TOKEN}@github.com/yokai-php/batch-symfony-serializer.git"
+  -
+    prefix: "src/batch-symfony-validator"
+    target: "https://${GH_TOKEN}@github.com/yokai-php/batch-symfony-validator.git"
+
+# List of references to split (defined as regexp)
+origins:
+  - ^(0\.x)$ # the default branch
+  - ^v\d+\.\d+\.\d+$ # the version tags
