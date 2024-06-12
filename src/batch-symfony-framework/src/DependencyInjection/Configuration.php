@@ -14,6 +14,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  * @phpstan-type Config array{
  *      storage: StorageConfig,
  *      launcher: LauncherConfig,
+ *      parameters: ParametersConfig,
  *      ui: UserInterfaceConfig,
  *  }
  * @phpstan-type StorageConfig array{
@@ -30,6 +31,10 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  * @phpstan-type LauncherConfig array{
  *      default: string|null,
  *      launchers: array<string, string>,
+ *  }
+ * @phpstan-type ParametersConfig array{
+ *      global: array<string, mixed>,
+ *      per_job: array<string, array<string, mixed>>,
  *  }
  * @phpstan-type UserInterfaceConfig array{
  *      enabled: bool,
@@ -59,6 +64,7 @@ final class Configuration implements ConfigurationInterface
             ->children()
                 ->append($this->storage())
                 ->append($this->launcher())
+                ->append($this->parameters())
                 ->append($this->ui())
             ->end()
         ;
@@ -124,6 +130,45 @@ final class Configuration implements ConfigurationInterface
                     ->validate()
                         ->ifTrue($isInvalidDsn)->thenInvalid('Invalid job launcher DSN.')
                     ->end()
+                ->end()
+            ->end()
+        ;
+
+        return $node;
+    }
+
+    private function parameters(): ArrayNodeDefinition
+    {
+        /** @var ArrayNodeDefinition $node */
+        $node = (new TreeBuilder('parameters'))->getRootNode();
+
+        $isStringAssociativeArray = function (mixed $value): bool {
+            if (!\is_array($value)) {
+                return false;
+            }
+
+            foreach ($value as $key => $unused) {
+                if (!\is_string($key)) {
+                    return false;
+                }
+            }
+
+            return true;
+        };
+
+        $node
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('global')
+                    ->useAttributeAsKey('name')
+                    ->variablePrototype()
+                ->end()
+                ->arrayNode('per_job')
+                    ->useAttributeAsKey('name')
+                    ->variablePrototype()
+                    ->validate()
+                        ->ifTrue(fn(mixed $value) => !$isStringAssociativeArray($value))
+                            ->thenInvalid('Should be an array<string, mixed>')
                 ->end()
             ->end()
         ;

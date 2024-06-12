@@ -22,6 +22,8 @@ use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Form\JobFilterType;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\ConfigurableTemplating;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\SonataAdminTemplating;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\TemplatingInterface;
+use Yokai\Batch\Factory\JobExecutionParametersBuilder\PerJobJobExecutionParametersBuilder;
+use Yokai\Batch\Factory\JobExecutionParametersBuilder\StaticJobExecutionParametersBuilder;
 use Yokai\Batch\Launcher\JobLauncherInterface;
 use Yokai\Batch\Storage\FilesystemJobExecutionStorage;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
@@ -34,6 +36,7 @@ use Yokai\Batch\Storage\QueryableJobExecutionStorageInterface;
  * @phpstan-import-type Config from Configuration
  * @phpstan-import-type StorageConfig from Configuration
  * @phpstan-import-type LauncherConfig from Configuration
+ * @phpstan-import-type ParametersConfig from Configuration
  * @phpstan-import-type UserInterfaceConfig from Configuration
  */
 final class YokaiBatchExtension extends Extension
@@ -64,6 +67,7 @@ final class YokaiBatchExtension extends Extension
 
         $this->configureStorage($container, $config['storage']);
         $this->configureLauncher($container, $config['launcher']);
+        $this->configureParameters($container, $config['parameters']);
         $this->configureUserInterface($container, $loader, $config['ui']);
 
         $container->registerAliasForArgument('yokai_batch.logger', LoggerInterface::class, 'yokaiBatchLogger');
@@ -187,6 +191,25 @@ final class YokaiBatchExtension extends Extension
             JobLauncherInterface::class,
             'yokai_batch.job_launcher.' . $config['default'],
         );
+    }
+
+    /**
+     * @param ParametersConfig $config
+     */
+    private function configureParameters(ContainerBuilder $container, array $config): void
+    {
+        if ($config['global'] !== []) {
+            $container->register('yokai_batch.job_execution_parameters_builder.global')
+                ->setClass(StaticJobExecutionParametersBuilder::class)
+                ->setArgument('$parameters', $config['global'])
+                ->addTag('yokai_batch.job_execution_parameters_builder');
+        }
+        if ($config['per_job'] !== []) {
+            $container->register('yokai_batch.job_execution_parameters_builder.per_job')
+                ->setClass(PerJobJobExecutionParametersBuilder::class)
+                ->setArgument('$perJobParameters', $config['per_job'])
+                ->addTag('yokai_batch.job_execution_parameters_builder');
+        }
     }
 
     /**
