@@ -1,26 +1,18 @@
-## Installation
+# Getting Started
 
-```bash
-composer require yokai/batch
-```
+## Project Overview
 
-## Vocabulary
+For a step-by-step presentation of the batch library, we're going to focus on a simple requirement.
+Update products and stocks via an Excel import.
 
-Because when you start with any library
-it is important to understand what are the concepts introduced in it.
 
-This is highly recommended that you read this entire page
-before starting to work with this library.
-
-### Job
+### What is a job technically ?
 A job is the class that is responsible for **what** your code is doing.
 
 This is the class you will have to create (or reuse),
 as it contains the business logic required for what you wish to achieve.
 
-The only requirement is implementing [`JobInterface`](../src/batch/src/Job/JobInterface.php),
-
-For exemple you can have a job for generate a csv:
+The only requirement is implementing [`JobInterface`](../../src/batch/src/Job/JobInterface.php),
 ```php
 <?php
 
@@ -29,32 +21,16 @@ declare(strict_types=1);
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\Job\JobInterface;
 
-class CsvExportJob implements JobInterface
+class DoStuffJob implements JobInterface
 {
     public function execute(JobExecution $jobExecution) : void
     {
-        $file = fopen('path/to/file.csv', 'w');
-            
-        // your export logic here
-        fputcsv($file, ['column1', 'column2']);
-        
-        fclose($file);
+        // your logic here
     }
 }
 ```
-#### See More:
-For more information about jobs, see [Job](batch/domain/job.md)
 
-[//]: # (Todo: Maybe we can remove Job.md and put the content here)
-### Job Launcher
-
-The job launcher is responsible for executing/scheduling every jobs.
-
-Yeah, executing OR scheduling. There is multiple implementation of a job launcher across bridges.
-Job's execution might be asynchronous, and thus, when you ask the job launcher to "launch" a job,
-you have to check the `JobExecution` status that it had returned to know if the job is already executed.
-
-#### What is needed to use a Job Launcher ?
+### How to launch a job ?
 
 For use a Job Launcher you need to have:
 - **A Container of Jobs:** A container use any PSR-11 [container implementation](https://packagist.org/providers/psr/container-implementation)
@@ -99,12 +75,10 @@ $launcher = new SimpleJobLauncher(
 $execution = $launcher->launch('your.job.name', ['job' => ['configuration']]);
 ```
 
-#### See More:
-- [Job Launcher](batch/domain/job-launcher.md)
+#### More information you need know:
+##### JobExecution:
 
-### JobExecution:
-
-A [JobExecution](../src/batch/src/JobExecution.php) is the class that holds information about one execution of a job.
+A [JobExecution](../../src/batch/src/JobExecution.php) is the class that holds information about one execution of a job.
 #### What kind of information does it hold ?
 
 - `JobExecution::$jobName` : The Job name (job id)
@@ -119,34 +93,9 @@ A [JobExecution](../src/batch/src/JobExecution.php) is the class that holds info
 - `JobExecution::$logs` : Some logs
 - `JobExecution::$childExecutions` : Some child execution
 
-### JobExecutionStorage
+#### JobExecutionStorage
 
 Whenever a job is launched, whether is starts immediately or not, an execution is stored for it.
 The execution are stored to allow you to keep an eye on what is happening.
 This persistence is on the responsibility of the job execution storage.
-- [Job Execution Storage](batch/domain/job-execution-storage.md)
-
-
-## Next steps
-- [Getting Started (Nom de l'exemple)](getting-started.md)
-- Framework:
-  - [Symfony](symfony.md)
-- Bridge:
-  - Doctrine:
-    - [Dbal](batch-doctrine-dbal/job-execution-storage.md)
-    - [ORM](batch-doctrine-orm/entity-item-reader.md)
-    - [Persistence](batch-doctrine-persistence/object-registry.md)
-
-[//]: # (    Todo: link object-item-writer.md ?)
-- [Flysystem bridge](flysystem.md)
-- [Box OpenSpout bridge](openspout.md)
-
-[//]: # (Todo: La partie symfony est-elle vraiment utile ? Ou peut être que l'on peut la mettre dans une catégorie a pat entiére ?)
-- Symfony:
-  - [Console](batch-symfony-console/command.md)
-  - [Messenger](batch-symfony-messenger/job-launcher.md)
-  - [Serializer](batch-symfony-serializer/job-execution-serializer.md)
-  - [Validator](batch-symfony-validator/skip-invalid-item-processor.md)
-
-[//]: # (Idée d'exemple pour le getting started:)
-[//]: # (- Un import like Cizeta sans symfony)
+- [Job Execution Storage](../batch/domain/job-execution-storage.md)
