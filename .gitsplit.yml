@@ -4,10 +4,10 @@ cache_url: "/cache/gitsplit"
 # Packages to split
 splits:
   -
-    prefix: "src/batch"
+    prefix: "docs"
     target: "https://${GH_TOKEN}@github.com/yokai-php/batch-documentation.git"
   -
-    prefix: "docs"
+    prefix: "src/batch"
     target: "https://${GH_TOKEN}@github.com/yokai-php/batch.git"
   -
     prefix: "src/batch-doctrine-dbal"
