@@ -62,28 +62,3 @@ Whenever a job is launched, whether is starts immediately or not, an execution i
 The execution are stored to allow you to keep an eye on what is happening.
 This persistence is on the responsibility of the job execution storage.
 - [Job Execution Storage](batch/domain/job-execution-storage.md)
-
-
-## Next steps
-- [Getting Started (Nom de l'exemple)](getting-started.md)
-- Framework:
-  - [Symfony](symfony.md)
-- Bridge:
-  - Doctrine:
-    - [Dbal](batch-doctrine-dbal/job-execution-storage.md)
-    - [ORM](batch-doctrine-orm/entity-item-reader.md)
-    - [Persistence](batch-doctrine-persistence/object-registry.md)
-
-[//]: # (    Todo: link object-item-writer.md ?)
-- [Flysystem bridge](flysystem.md)
-- [Box OpenSpout bridge](openspout.md)
-
-[//]: # (Todo: La partie symfony est-elle vraiment utile ? Ou peut être que l'on peut la mettre dans une catégorie a pat entiére ?)
-- Symfony:
-  - [Console](batch-symfony-console/command.md)
-  - [Messenger](batch-symfony-messenger/job-launcher.md)
-  - [Serializer](batch-symfony-serializer/job-execution-serializer.md)
-  - [Validator](batch-symfony-validator/skip-invalid-item-processor.md)
-
-[//]: # (Idée d'exemple pour le getting started:)
-[//]: # (- Un import like Cizeta sans symfony)
