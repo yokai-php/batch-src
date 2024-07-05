@@ -8,7 +8,7 @@ This repository contains sources for all packages from `yokai/batch` suite.
 
 ## Documentation
 
-You should start with [centralized documentation](https://github.com/yokai-php/batch-src/blob/0.x/docs/README.md).
+Read on https://yokai-batch.readthedocs.io.
 
 ## Packages
 
