@@ -28,14 +28,14 @@ What types of item processors exists?
 
 * From ``symfony/validator`` bridge:
 
-  * `SkipInvalidItemProcessor <https://github.com/yokai-php/batch-symfony-validator/blob/0.x/src/src/SkipInvalidItemProcessor.php>`__:
+  * `SkipInvalidItemProcessor <https://github.com/yokai-php/batch-symfony-validator/blob/0.x/src/SkipInvalidItemProcessor.php>`__:
     validate item and throw exception if invalid that will cause item to be skipped.
 
 * From ``symfony/serializer`` bridge:
 
-  * `DenormalizeItemProcessor <https://github.com/yokai-php/batch-symfony-serializer/blob/0.x/src/src/DenormalizeItemProcessor.php>`__:
+  * `DenormalizeItemProcessor <https://github.com/yokai-php/batch-symfony-serializer/blob/0.x/src/DenormalizeItemProcessor.php>`__:
     denormalize each item.
-  * `NormalizeItemProcessor <https://github.com/yokai-php/batch-symfony-serializer/blob/0.x/src/src/NormalizeItemProcessor.php>`__:
+  * `NormalizeItemProcessor <https://github.com/yokai-php/batch-symfony-serializer/blob/0.x/src/NormalizeItemProcessor.php>`__:
     normalize each item.
 
 **Item processors for testing purpose:**

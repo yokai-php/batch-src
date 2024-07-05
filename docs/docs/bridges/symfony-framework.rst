@@ -21,7 +21,7 @@ you will be able to register these using configuration:
 
 .. note::
    If you do not configure anything here, you will be using the
-   `SimpleJobLauncher <https://github.com/yokai-php/batch/blob/0.x/src/src/Launcher/SimpleJobLauncher.php>`__.
+   `SimpleJobLauncher <https://github.com/yokai-php/batch/blob/0.x/src/Launcher/SimpleJobLauncher.php>`__.
 
 | The ``default`` job launcher, must reference a launcher name, defined in the ``launchers`` list.
 | The ``default`` job launcher will be the autowired instance of job launcher when you ask for one.
@@ -46,9 +46,9 @@ you will be able to register these using configuration:
 
 All ``launchers`` are configured using a DSN, every scheme has it’s own associated factory:
 
-* ``simple://simple``: a `SimpleJobLauncher <https://github.com/yokai-php/batch/blob/0.x/src/src/Launcher/SimpleJobLauncher.php>`__, no configuration allowed
-* ``messenger://messenger``: a `DispatchMessageJobLauncher <https://github.com/yokai-php/batch-symfony-messenger/blob/0.x/src/src/DispatchMessageJobLauncher.php>`__, no configuration allowed
-* ``console://console``: a `RunCommandJobLauncher <https://github.com/yokai-php/batch-symfony-console/blob/0.x/src/src/RunCommandJobLauncher.php>`__, configurable options:
+* ``simple://simple``: a `SimpleJobLauncher <https://github.com/yokai-php/batch/blob/0.x/src/Launcher/SimpleJobLauncher.php>`__, no configuration allowed
+* ``messenger://messenger``: a `DispatchMessageJobLauncher <https://github.com/yokai-php/batch-symfony-messenger/blob/0.x/src/DispatchMessageJobLauncher.php>`__, no configuration allowed
+* ``console://console``: a `RunCommandJobLauncher <https://github.com/yokai-php/batch-symfony-console/blob/0.x/src/RunCommandJobLauncher.php>`__, configurable options:
 
   * ``log``: the filename where command output will be redirected (defaults to ``batch_execute.log``)
 
@@ -129,7 +129,7 @@ Templating
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 | The templating service is used by the
-  `JobController <https://github.com/yokai-php/batch-symfony-framework/blob/0.x/src/src/UserInterface/Controller/JobController.php>`__
+  `JobController <https://github.com/yokai-php/batch-symfony-framework/blob/0.x/src/UserInterface/Controller/JobController.php>`__
   to render its templates.
 | It’s a wrapper around `Twig <https://twig.symfony.com/>`__, for you to control templates used,
   and variables passed.

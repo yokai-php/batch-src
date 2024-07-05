@@ -38,24 +38,24 @@ What types of item writers exists?
 
 * From ``symfony/messenger`` bridge:
 
-  * `DispatchEachItemAsMessageWriter <https://github.com/yokai-php/batch-symfony-messenger/blob/0.x/src/src/Writer/DispatchEachItemAsMessageWriter.php>`__:
+  * `DispatchEachItemAsMessageWriter <https://github.com/yokai-php/batch-symfony-messenger/blob/0.x/src/Writer/DispatchEachItemAsMessageWriter.php>`__:
     dispatch each item as a message in a bus.
 
 * From ``doctrine/dbal`` bridge:
 
-  * `DoctrineDBALInsertWriter <https://github.com/yokai-php/batch-doctrine-dbal/blob/0.x/src/src/DoctrineDBALInsertWriter.php>`__:
+  * `DoctrineDBALInsertWriter <https://github.com/yokai-php/batch-doctrine-dbal/blob/0.x/src/DoctrineDBALInsertWriter.php>`__:
     write items by inserting in a table via a Doctrine ``Connection``.
-  * `DoctrineDBALUpsertWriter <https://github.com/yokai-php/batch-doctrine-dbal/blob/0.x/src/src/DoctrineDBALUpsertWriter.php>`__:
+  * `DoctrineDBALUpsertWriter <https://github.com/yokai-php/batch-doctrine-dbal/blob/0.x/src/DoctrineDBALUpsertWriter.php>`__:
     write items by inserting/updating in a table via a Doctrine ``Connection``.
 
 * From ``doctrine/persistence`` bridge:
 
-  * `ObjectWriter <https://github.com/yokai-php/batch-doctrine-persistence/blob/0.x/src/src/ObjectWriter.php>`__:
+  * `ObjectWriter <https://github.com/yokai-php/batch-doctrine-persistence/blob/0.x/src/ObjectWriter.php>`__:
     write items to any Doctrine ``ObjectManager``.
 
 * From ``openspout/openspout`` bridge:
 
-  * `FlatFileWriter <https://github.com/yokai-php/batch-openspout/blob/0.x/src/src/Writer/FlatFileWriter.php>`__:
+  * `FlatFileWriter <https://github.com/yokai-php/batch-openspout/blob/0.x/src/Writer/FlatFileWriter.php>`__:
     write items to any CSV/ODS/XLSX file.
 
 **Item writers for testing purpose:**

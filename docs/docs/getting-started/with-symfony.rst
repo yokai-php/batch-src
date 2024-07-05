@@ -57,7 +57,7 @@ Creating the job class
 
 .. hint::
    | When registering jobs with dedicated class, you can use the
-     `JobWithStaticNameInterface <https://github.com/yokai-php/batch-symfony-framework/blob/0.x/src/src/JobWithStaticNameInterface.php>`__
+     `JobWithStaticNameInterface <https://github.com/yokai-php/batch-symfony-framework/blob/0.x/src/JobWithStaticNameInterface.php>`__
      interface to be able to specify the job name of your service.
    | Otherwise, the service id will be used, and in that case, the service id is the FQCN.
 

@@ -6,7 +6,7 @@ todo
 Command
 ------------------------------------------------------------
 
-The `RunJobCommand <https://github.com/yokai-php/batch-symfony-console/blob/0.x/src/src/RunJobCommand.php>`__
+The `RunJobCommand <https://github.com/yokai-php/batch-symfony-console/blob/0.x/src/RunJobCommand.php>`__
 can execute any job.
 
 The command accepts 2 arguments:
@@ -24,7 +24,7 @@ Examples:
 Job launcher
 ------------------------------------------------------------
 
-The `RunCommandJobLauncher <https://github.com/yokai-php/batch-symfony-console/blob/0.x/src/src/RunCommandJobLauncher.php>`__
+The `RunCommandJobLauncher <https://github.com/yokai-php/batch-symfony-console/blob/0.x/src/RunCommandJobLauncher.php>`__
 execute jobs via an asynchronous symfony command.
 
 The command called is ``yokai:batch:run``, and the command will actually execute the job.

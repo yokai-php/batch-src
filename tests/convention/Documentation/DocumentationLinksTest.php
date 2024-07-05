@@ -17,14 +17,14 @@ use Yokai\Batch\Sources\Tests\Convention\Packages;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
 
 /**
- * Some assertions on markdown documentation files.
+ * Some assertions on Sphinx documentation files.
  */
-final class MarkdownLinksTest extends TestCase
+final class DocumentationLinksTest extends TestCase
 {
     private const DEFAULT_BRANCH = '0.x';
 
     /**
-     * Ensure that all links in markdown files points to valid internal resources.
+     * Ensure that all links in Sphinx files points to valid internal resources.
      *
      * @dataProvider filesWithLinks
      */
@@ -32,13 +32,9 @@ final class MarkdownLinksTest extends TestCase
     {
         /** @var DocLink $link */
         foreach ($file->links as $link) {
-            if ($link->package !== $file->package) {
-                self::assertTrue($link->absolute, 'When pointing to another package, links must be absolute.');
-            }
-
             self::assertNotFalse(
                 $link->pointsToFile->getRealPath(),
-                "Link \"{$link->label}\" in \"{$link->pointsToFile->getRealPath()}\"," .
+                "Link \"{$link->label}\" in \"{$link->pointsToFile->getPathname()}\"," .
                 " is pointing to \"{$link->uri}\" which reference an internal file that do not exists."
             );
 
@@ -49,7 +45,7 @@ final class MarkdownLinksTest extends TestCase
     public function filesWithLinks(): iterable
     {
         /** @var DocFile $file */
-        foreach (Markdown::listFiles() as $file) {
+        foreach (Sphinx::listFiles() as $file) {
             if (\count($file->links) === 0) {
                 continue;
             }
@@ -78,7 +74,7 @@ final class MarkdownLinksTest extends TestCase
         }
 
         // Find all links in these files that points to file that implement these interfaces
-        $file = Markdown::getFile($filepath);
+        $file = Sphinx::getFile($filepath);
         /** @var DocLink $link */
         foreach ($file->links as $link) {
             if (!\str_ends_with($link->uri, '.php')) {
@@ -105,31 +101,31 @@ final class MarkdownLinksTest extends TestCase
     public function interfaceRules(): iterable
     {
         yield 'JobInterface' => [
-            'docs/batch/domain/job.md',
+            'docs/docs/core-concepts/job.rst',
             JobInterface::class,
         ];
         yield 'JobExecutionStorageInterface' => [
-            'docs/batch/domain/job-execution-storage.md',
+            'docs/docs/core-concepts/job-execution-storage.rst',
             JobExecutionStorageInterface::class,
         ];
         yield 'JobLauncherInterface' => [
-            'docs/batch/domain/job-launcher.md',
+            'docs/docs/core-concepts/job-launcher.rst',
             JobLauncherInterface::class,
         ];
         yield 'JobParameterAccessorInterface' => [
-            'docs/batch/domain/job-parameter-accessor.md',
+            'docs/docs/core-concepts/job-parameter-accessor.rst',
             JobParameterAccessorInterface::class,
         ];
         yield 'ItemReaderInterface' => [
-            'docs/batch/domain/item-job/item-reader.md',
+            'docs/docs/core-concepts/item-job/item-reader.rst',
             ItemReaderInterface::class,
         ];
         yield 'ItemProcessorInterface' => [
-            'docs/batch/domain/item-job/item-processor.md',
+            'docs/docs/core-concepts/item-job/item-processor.rst',
             ItemProcessorInterface::class,
         ];
         yield 'ItemWriterInterface' => [
-            'docs/batch/domain/item-job/item-writer.md',
+            'docs/docs/core-concepts/item-job/item-writer.rst',
             ItemWriterInterface::class,
         ];
     }

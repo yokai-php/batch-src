@@ -17,7 +17,7 @@ How do I store my Job Execution?
 
 You should never be forced to store ``JobExecution`` yourself.
 
-This is `JobLauncher <job-launcher>`__\ ’s job to store it whenever
+This is the role of the :doc:`JobLauncher</core-concepts/job-launcher>` job to store it whenever
 it is required (usually at the beginning and the end of the job
 execution).
 

@@ -32,19 +32,19 @@ What types of item readers exists?
 
 * From ``openspout/openspout`` bridge:
 
-  * `FlatFileReader <https://github.com/yokai-php/batch-openspout/blob/0.x/src/src/Reader/FlatFileReader.php>`__:
+  * `FlatFileReader <https://github.com/yokai-php/batch-openspout/blob/0.x/src/Reader/FlatFileReader.php>`__:
     read from any CSV/ODS/XLSX file.
 
 * From ``doctrine/dbal`` bridge:
 
-  * `DoctrineDBALQueryOffsetReader <https://github.com/yokai-php/batch-doctrine-dbal/blob/0.x/src/src/DoctrineDBALQueryOffsetReader.php>`__:
+  * `DoctrineDBALQueryOffsetReader <https://github.com/yokai-php/batch-doctrine-dbal/blob/0.x/src/DoctrineDBALQueryOffsetReader.php>`__:
     execute an SQL query and iterate over results, using a limit + offset pagination strategy.
-  * `DoctrineDBALQueryCursorReader <https://github.com/yokai-php/batch-doctrine-dbal/blob/0.x/src/src/DoctrineDBALQueryCursorReader.php>`__:
+  * `DoctrineDBALQueryCursorReader <https://github.com/yokai-php/batch-doctrine-dbal/blob/0.x/src/DoctrineDBALQueryCursorReader.php>`__:
     execute an SQL query and iterate over results, using a column based cursor strategy.
 
 * From ``doctrine/orm`` bridge:
 
-  * `EntityReader <https://github.com/yokai-php/batch-doctrine-orm/blob/0.x/src/src/EntityReader.php>`__:
+  * `EntityReader <https://github.com/yokai-php/batch-doctrine-orm/blob/0.x/src/EntityReader.php>`__:
     read from any Doctrine ORM entity.
 
 **Item readers for testing purpose:**

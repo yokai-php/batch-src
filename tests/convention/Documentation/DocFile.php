@@ -7,12 +7,11 @@ namespace Yokai\Batch\Sources\Tests\Convention\Documentation;
 use SplFileInfo;
 
 /**
- * A Markdown documentation file.
+ * A Sphinx documentation file.
  */
 final class DocFile
 {
     public function __construct(
-        public string $package,
         public SplFileInfo $file,
         /**
          * @var array<DocLink>
