@@ -1,3 +1,0 @@
-# Entity item reader
-
-todo

@@ -1,3 +1,0 @@
-# Object item writer
-
-todo
