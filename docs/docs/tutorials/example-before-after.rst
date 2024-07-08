@@ -1,4 +1,4 @@
-Example: Before/After using Yokai Batch
+Example: Before/After showcase
 ============================================================
 
 .. note::
