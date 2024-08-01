@@ -11,8 +11,8 @@
         }
     ],
     "require": {
-        "yokai/batch": "^0.5.0",
-        "yokai/batch-symfony-console": "^0.5.0",
-        "yokai/batch-symfony-framework": "^0.5.0"
+        "yokai/batch": "^0.6.0",
+        "yokai/batch-symfony-console": "^0.6.0",
+        "yokai/batch-symfony-framework": "^0.6.0"
     }
 }
