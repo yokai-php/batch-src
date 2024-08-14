@@ -116,6 +116,7 @@
             {% if pagination.current > 2 %}
                 <li class="page-item">
                     <a href="{{ path('yokai_batch.job_list', { filter: parameters, (pagination.parameter): 1 }) }}"
+                       class="page-link"
                        title="{{ 'job.action.pagination_first'|trans }}">
                         <span aria-hidden="true">&laquo;</span>
                         <span class="sr-only">{{ 'job.action.pagination_first'|trans }}</span>
@@ -126,6 +127,7 @@
             {% if pagination.prev.enabled %}
                 <li class="page-item">
                     <a href="{{ path('yokai_batch.job_list', { filter: parameters, (pagination.parameter): pagination.prev.value }) }}"
+                       class="page-link"
                        title="{{ 'job.action.pagination_prev'|trans }}">
                         <span aria-hidden="true">&lsaquo;</span>
                         <span class="sr-only">{{ 'job.action.pagination_prev'|trans }}</span>
@@ -136,6 +138,7 @@
             {% if pagination.next.enabled %}
                 <li class="page-item">
                     <a href="{{ path('yokai_batch.job_list', { filter: parameters, (pagination.parameter): pagination.next.value }) }}"
+                       class="page-link"
                        title="{{ 'job.action.pagination_next'|trans }}">
                         <span aria-hidden="true">&rsaquo;</span>
                         <span class="sr-only">{{ 'job.action.pagination_next'|trans }}</span>
