@@ -60,7 +60,7 @@
         </li>
         {% set rootExecution = execution.rootExecution %}
         {% for parentPath, executionInPath in executionsPath %}
-            <li>
+            <li {% if loop.last %}class="active"{% endif %}>
                 {% if loop.last %}
                     <span>
                         {%- include '@YokaiBatch/sonata/show/_job-name-and-id.html.twig' with {execution: executionInPath} only -%}
