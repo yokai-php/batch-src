@@ -162,6 +162,7 @@ final class Configuration implements ConfigurationInterface
                 ->arrayNode('global')
                     ->useAttributeAsKey('name')
                     ->variablePrototype()
+                    ->end()
                 ->end()
                 ->arrayNode('per_job')
                     ->useAttributeAsKey('name')
@@ -169,6 +170,7 @@ final class Configuration implements ConfigurationInterface
                     ->validate()
                         ->ifTrue(fn(mixed $value) => !$isStringAssociativeArray($value))
                             ->thenInvalid('Should be an array<string, mixed>')
+                    ->end()
                 ->end()
             ->end()
         ;
