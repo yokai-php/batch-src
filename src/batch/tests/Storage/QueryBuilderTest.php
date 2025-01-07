@@ -224,5 +224,13 @@ class QueryBuilderTest extends TestCase
             fn() => (new QueryBuilder())->limit(1, -1),
             UnexpectedValueException::min(0, -1),
         ];
+        yield 'QueryBuilder::startTime with inversed boundaries' => [
+            fn() => (new QueryBuilder())->startTime(new \DateTimeImmutable('2024-01-01T00:00:00+0200'), new \DateTimeImmutable('2023-12-31T23:59:59+0200')),
+            new UnexpectedValueException('TimeFilter expect "from" boundary to be lower than "to" boundary.'),
+        ];
+        yield 'QueryBuilder::endTime with inversed boundaries' => [
+            fn() => (new QueryBuilder())->endTime(new \DateTimeImmutable('2024-01-01T00:00:00+0200'), new \DateTimeImmutable('2023-12-31T23:59:59+0200')),
+            new UnexpectedValueException('TimeFilter expect "from" boundary to be lower than "to" boundary.'),
+        ];
     }
 }
