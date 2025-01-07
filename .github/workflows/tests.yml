@@ -88,9 +88,9 @@ jobs:
           symfony-version: '7.0.*'
           coverage-mode: 'xdebug'
       - name: "Run tests with phpunit/phpunit"
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         run: |
           vendor/bin/phpunit --testsuite=Code --coverage-clover coverage.xml
       - name: "Upload coverage to Codecov"
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v5
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
