@@ -378,7 +378,7 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
                     new \DateTimeImmutable('2019-07-01T17:29:29+0200'),
                 ),
             [
-                ['export', '123'],
+                // none
             ],
         ];
         yield 'Filter end time lower boundary' => [
