@@ -362,14 +362,12 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
                 ->startTime(new \DateTimeImmutable('2019-07-01T13:00:01+0200'), null),
             [
                 ['import', '456'],
-                ['import', '789'],
             ],
         ];
         yield 'Filter start time upper boundary' => [
             (new QueryBuilder())
-                ->startTime(null, new \DateTimeImmutable('2019-06-30T21:59:59+0200')),
+                ->startTime(null, new \DateTimeImmutable('2019-06-30T22:00:00+0200')),
             [
-                ['export', '123'],
                 ['import', '456'],
             ],
         ];
@@ -377,7 +375,7 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
             (new QueryBuilder())
                 ->startTime(
                     new \DateTimeImmutable('2019-07-01T13:00:01+0200'),
-                    new \DateTimeImmutable('2019-06-30T21:59:59+0200'),
+                    new \DateTimeImmutable('2019-06-30T22:00:00+0200'),
                 ),
             [
                 ['import', '456'],
