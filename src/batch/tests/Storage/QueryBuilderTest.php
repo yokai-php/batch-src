@@ -56,35 +56,98 @@ class QueryBuilderTest extends TestCase
         ];
         yield 'Query job statuses' => [
             fn() => (new QueryBuilder())->statuses([BatchStatus::ABANDONED, BatchStatus::STOPPED]),
-            new Query($jobNames, $ids, [BatchStatus::ABANDONED, BatchStatus::STOPPED], $startTime, $endTime, $sortBy, $limit, $offset),
+            new Query(
+                jobs: $jobNames,
+                ids: $ids,
+                statuses: [BatchStatus::ABANDONED, BatchStatus::STOPPED],
+                startTime: $startTime,
+                endTime: $endTime,
+                sort: $sortBy,
+                limit: $limit,
+                offset: $offset
+            ),
         ];
         yield 'Query with sort' => [
             fn() => (new QueryBuilder())->sort(Query::SORT_BY_START_DESC),
-            new Query($jobNames, $ids, $statuses, $startTime, $endTime, Query::SORT_BY_START_DESC, $limit, $offset),
+            new Query(
+                jobs: $jobNames,
+                ids: $ids,
+                statuses: $statuses,
+                startTime: $startTime,
+                endTime: $endTime,
+                sort: Query::SORT_BY_START_DESC,
+                limit: $limit,
+                offset: $offset
+            ),
         ];
         yield 'Query with limit' => [
             fn() => (new QueryBuilder())->limit(30, 60),
-            new Query($jobNames, $ids, $statuses, $startTime, $endTime, $sortBy, 30, 60),
+            new Query(
+                jobs: $jobNames,
+                ids: $ids,
+                statuses: $statuses,
+                startTime: $startTime,
+                endTime: $endTime,
+                sort: $sortBy,
+                limit: 30,
+                offset: 60
+            ),
         ];
         $startTimeFrom = new \DateTimeImmutable('2023-07-07 15:18');
         $startTimeTo = new \DateTime('2023-07-07 16:30');
         yield 'Query with start time boundary' => [
             fn() => (new QueryBuilder())->startTime($startTimeFrom, $startTimeTo),
-            new Query($jobNames, $ids, $statuses, new TimeFilter($startTimeFrom, $startTimeTo), null, $sortBy, $limit, $offset),
+            new Query(
+                jobs: $jobNames,
+                ids: $ids,
+                statuses: $statuses,
+                startTime: new TimeFilter($startTimeFrom, $startTimeTo),
+                endTime: null,
+                sort: $sortBy,
+                limit: $limit,
+                offset: $offset
+            ),
         ];
         yield 'Query with start time boundary reset' => [
             fn() => (new QueryBuilder())->startTime($startTimeFrom, $startTimeTo)->startTime(null, null),
-            new Query($jobNames, $ids, $statuses, null, null, $sortBy, $limit, $offset),
+            new Query(
+                jobs: $jobNames,
+                ids: $ids,
+                statuses: $statuses,
+                startTime: null,
+                endTime: null,
+                sort: $sortBy,
+                limit: $limit,
+                offset: $offset
+            ),
         ];
         $endTimeFrom = new \DateTimeImmutable('2023-07-07 15:18');
         $endTimeTo = new \DateTime('2023-07-07 16:30');
         yield 'Query with end time boundary' => [
             fn() => (new QueryBuilder())->endTime($endTimeFrom, $endTimeTo),
-            new Query($jobNames, $ids, $statuses, null, new TimeFilter($endTimeFrom, $endTimeTo), $sortBy, $limit, $offset),
+            new Query(
+                jobs: $jobNames,
+                ids: $ids,
+                statuses: $statuses,
+                startTime: null,
+                endTime: new TimeFilter($endTimeFrom, $endTimeTo),
+                sort: $sortBy,
+                limit: $limit,
+                offset: $offset
+            ),
         ];
         yield 'Query with end time boundary reset' => [
             fn() => (new QueryBuilder())->endTime($endTimeFrom, $endTimeTo)->endTime(null, null),
-            new Query($jobNames, $ids, $statuses, null, null, $sortBy, $limit, $offset),
+            new Query(
+                jobs: $jobNames,
+                ids: $ids,
+                statuses: $statuses,
+                startTime: null,
+                endTime: null,
+                sort: $sortBy,
+                limit: $limit,
+                offset: $offset
+            ),
         ];
         yield 'Query complex' => [
             fn() => (new QueryBuilder())
@@ -96,14 +159,14 @@ class QueryBuilderTest extends TestCase
                 ->sort(Query::SORT_BY_END_DESC)
                 ->limit(6, 12),
             new Query(
-                ['export', 'import'],
-                ['123', '456'],
-                [BatchStatus::RUNNING, BatchStatus::COMPLETED],
-                new TimeFilter($startTimeFrom, $startTimeTo),
-                new TimeFilter($endTimeFrom, $endTimeTo),
-                Query::SORT_BY_END_DESC,
-                6,
-                12
+                jobs: ['export', 'import'],
+                ids: ['123', '456'],
+                statuses: [BatchStatus::RUNNING, BatchStatus::COMPLETED],
+                startTime: new TimeFilter($startTimeFrom, $startTimeTo),
+                endTime: new TimeFilter($endTimeFrom, $endTimeTo),
+                sort: Query::SORT_BY_END_DESC,
+                limit: 6,
+                offset: 12
             ),
         ];
     }
