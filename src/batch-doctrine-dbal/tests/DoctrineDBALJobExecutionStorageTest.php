@@ -368,17 +368,17 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
             (new QueryBuilder())
                 ->startTime(null, new \DateTimeImmutable('2019-06-30T22:00:00+0200')),
             [
-                ['import', '456'],
+                ['import', '789'],
             ],
         ];
         yield 'Filter start time boundaries' => [
             (new QueryBuilder())
                 ->startTime(
                     new \DateTimeImmutable('2019-07-01T13:00:01+0200'),
-                    new \DateTimeImmutable('2019-06-30T22:00:00+0200'),
+                    new \DateTimeImmutable('2019-07-01T17:29:29+0200'),
                 ),
             [
-                ['import', '456'],
+                ['export', '123'],
             ],
         ];
         yield 'Filter end time lower boundary' => [
