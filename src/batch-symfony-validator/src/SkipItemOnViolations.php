@@ -18,7 +18,7 @@ final class SkipItemOnViolations implements SkipItemCauseInterface
 {
     public function __construct(
         /**
-         * @phpstan-var ConstraintViolationListInterface<ConstraintViolationInterface>
+         * @var ConstraintViolationListInterface<ConstraintViolationInterface>
          */
         private ConstraintViolationListInterface $violations
     ) {
@@ -48,7 +48,7 @@ final class SkipItemOnViolations implements SkipItemCauseInterface
     }
 
     /**
-     * @phpstan-return ConstraintViolationListInterface<ConstraintViolationInterface>
+     * @return ConstraintViolationListInterface<ConstraintViolationInterface>
      */
     public function getViolations(): ConstraintViolationListInterface
     {

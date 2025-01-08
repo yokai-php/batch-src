@@ -29,7 +29,7 @@ final class JobExecutionRowNormalizer
     /**
      * Convert a {@see JobExecution} object to a row data array.
      *
-     * @phpstan-return array<string, mixed>
+     * @return array<string, mixed>
      */
     public function toRow(JobExecution $jobExecution): array
     {
@@ -51,7 +51,7 @@ final class JobExecutionRowNormalizer
     /**
      * Convert a row data array to a {@see JobExecution} object.
      *
-     * @phpstan-param array<string, mixed> $data
+     * @param array<string, mixed> $data
      */
     public function fromRow(array $data, JobExecution $parent = null): JobExecution
     {
@@ -99,7 +99,7 @@ final class JobExecutionRowNormalizer
     }
 
     /**
-     * @phpstan-return array<string, mixed>
+     * @return array<string, mixed>
      */
     private function toChildRow(JobExecution $jobExecution): array
     {
@@ -117,9 +117,9 @@ final class JobExecutionRowNormalizer
     }
 
     /**
-     * @phpstan-param array<int|string, mixed>|string $value
+     * @param array<int|string, mixed>|string $value
      *
-     * @phpstan-return array<int|string, mixed>
+     * @return array<int|string, mixed>
      */
     private function jsonFromString(array|string $value): array
     {
@@ -144,7 +144,7 @@ final class JobExecutionRowNormalizer
     }
 
     /**
-     * @phpstan-return array<string, mixed>
+     * @return array<string, mixed>
      */
     private function failureToArray(Failure $failure): array
     {
@@ -158,7 +158,7 @@ final class JobExecutionRowNormalizer
     }
 
     /**
-     * @phpstan-param array<string, mixed> $array
+     * @param array<string, mixed> $array
      */
     private function failureFromArray(array $array): Failure
     {
@@ -172,7 +172,7 @@ final class JobExecutionRowNormalizer
     }
 
     /**
-     * @phpstan-return array<string, mixed>
+     * @return array<string, mixed>
      */
     private function warningToArray(Warning $warning): array
     {
@@ -184,7 +184,7 @@ final class JobExecutionRowNormalizer
     }
 
     /**
-     * @phpstan-param array<string, mixed> $array
+     * @param array<string, mixed> $array
      */
     private function warningFromArray(array $array): Warning
     {

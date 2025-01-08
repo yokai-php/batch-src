@@ -108,7 +108,7 @@ final class RunJobCommand extends Command
     /**
      * @throws InvalidArgumentException
      *
-     * @phpstan-return array<string, mixed>
+     * @return array<string, mixed>
      */
     private function decodeConfiguration(string $data): array
     {

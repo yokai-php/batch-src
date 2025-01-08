@@ -30,7 +30,7 @@ class CommandRunner
     /**
      * Run a command asynchronously.
      *
-     * @phpstan-param array<string, mixed> $arguments
+     * @param array<string, mixed> $arguments
      */
     public function runAsync(string $commandName, string $logFilename, array $arguments = []): void
     {
@@ -52,7 +52,7 @@ class CommandRunner
     }
 
     /**
-     * @phpstan-param array<string, mixed> $arguments
+     * @param array<string, mixed> $arguments
      */
     private function buildCommand(string $commandName, array $arguments): string
     {

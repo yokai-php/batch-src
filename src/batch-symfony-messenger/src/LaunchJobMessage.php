@@ -12,7 +12,7 @@ final class LaunchJobMessage
     public function __construct(
         private string $jobName,
         /**
-         * @phpstan-var array<string, mixed>
+         * @var array<string, mixed>
          */
         private array $configuration = [],
     ) {
@@ -24,7 +24,7 @@ final class LaunchJobMessage
     }
 
     /**
-     * @phpstan-return array<string, mixed>
+     * @return array<string, mixed>
      */
     public function getConfiguration(): array
     {

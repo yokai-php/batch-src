@@ -45,7 +45,7 @@ final class SkipInvalidItemProcessor implements ItemProcessorInterface
     /**
      * @param Constraint[]|null $constraints
      *
-     * @phpstan-return Iterator<string>
+     * @return Iterator<string>
      */
     private function normalizeConstraints(?array $constraints): Iterator
     {
