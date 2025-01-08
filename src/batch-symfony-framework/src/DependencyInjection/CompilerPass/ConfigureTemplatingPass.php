@@ -10,6 +10,9 @@ use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\TemplatingInterface;
 
+/**
+ * This compiler pass ensure that service behind {@see TemplatingInterface} is having the proper interface.
+ */
 final class ConfigureTemplatingPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void

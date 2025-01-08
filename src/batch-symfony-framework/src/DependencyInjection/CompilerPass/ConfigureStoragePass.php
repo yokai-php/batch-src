@@ -12,6 +12,10 @@ use Yokai\Batch\Storage\JobExecutionStorageInterface;
 use Yokai\Batch\Storage\ListableJobExecutionStorageInterface;
 use Yokai\Batch\Storage\QueryableJobExecutionStorageInterface;
 
+/**
+ * This compiler pass ensure that service behind {@see JobExecutionStorageInterface} is having the proper interface.
+ * Also, if that service implements some optional interfaces, we create some autowiring alias for these.
+ */
 final class ConfigureStoragePass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void

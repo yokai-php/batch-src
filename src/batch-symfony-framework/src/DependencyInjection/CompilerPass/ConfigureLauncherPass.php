@@ -10,6 +10,9 @@ use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Yokai\Batch\Launcher\JobLauncherInterface;
 
+/**
+ * This compiler pass ensure that service behind {@see JobLauncherInterface} is having the proper interface.
+ */
 final class ConfigureLauncherPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
