@@ -15,6 +15,6 @@ final class TimeBasedUuidJobExecutionIdGeneratorTest extends TestCase
     {
         $id = (new TimeBasedUuidJobExecutionIdGenerator(new UuidFactory()))->generate();
 
-        self::assertSame($id, UuidV6::fromString($id)->toString());
+        self::assertTrue(UuidV6::isValid($id));
     }
 }

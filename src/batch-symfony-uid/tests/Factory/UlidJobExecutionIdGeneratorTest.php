@@ -15,6 +15,6 @@ final class UlidJobExecutionIdGeneratorTest extends TestCase
     {
         $id = (new UlidJobExecutionIdGenerator(new UlidFactory()))->generate();
 
-        self::assertSame($id, Ulid::fromString($id)->toString());
+        self::assertTrue(Ulid::isValid($id));
     }
 }

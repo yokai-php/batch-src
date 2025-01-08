@@ -15,6 +15,6 @@ final class RandomBasedUuidJobExecutionIdGeneratorTest extends TestCase
     {
         $id = (new RandomBasedUuidJobExecutionIdGenerator(new UuidFactory()))->generate();
 
-        self::assertSame($id, UuidV4::fromString($id)->toString());
+        self::assertTrue(UuidV4::isValid($id));
     }
 }

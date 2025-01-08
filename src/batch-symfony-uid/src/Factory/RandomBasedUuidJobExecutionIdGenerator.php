@@ -20,6 +20,6 @@ final class RandomBasedUuidJobExecutionIdGenerator implements JobExecutionIdGene
 
     public function generate(): string
     {
-        return $this->uuidFactory->randomBased()->create()->toString();
+        return $this->uuidFactory->randomBased()->create()->toRfc4122();
     }
 }

@@ -20,6 +20,6 @@ final class TimeBasedUuidJobExecutionIdGenerator implements JobExecutionIdGenera
 
     public function generate(): string
     {
-        return $this->uuidFactory->timeBased()->create()->toString();
+        return $this->uuidFactory->timeBased()->create()->toRfc4122();
     }
 }

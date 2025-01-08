@@ -20,6 +20,6 @@ final class UlidJobExecutionIdGenerator implements JobExecutionIdGeneratorInterf
 
     public function generate(): string
     {
-        return $this->ulidFactory->create()->toString();
+        return $this->ulidFactory->create()->toBase32();
     }
 }
