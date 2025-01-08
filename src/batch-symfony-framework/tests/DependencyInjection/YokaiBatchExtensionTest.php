@@ -462,11 +462,15 @@ class YokaiBatchExtensionTest extends TestCase
     {
         yield 'Per job parameters value must be an array' => [
             ['parameters' => ['per_job' => ['job.foo' => 'string']]],
-            new InvalidConfigurationException('Invalid configuration for path "yokai_batch.parameters.per_job.job.foo": Should be an array<string, mixed>.'),
+            new InvalidConfigurationException(
+                'Invalid configuration for path "yokai_batch.parameters.per_job.job.foo": Should be an array<string, mixed>.'
+            ),
         ];
         yield 'Per job parameters value must be a string indexed array' => [
             ['parameters' => ['per_job' => ['job.foo' => [1, 2, 3]]]],
-            new InvalidConfigurationException('Invalid configuration for path "yokai_batch.parameters.per_job.job.foo": Should be an array<string, mixed>.'),
+            new InvalidConfigurationException(
+                'Invalid configuration for path "yokai_batch.parameters.per_job.job.foo": Should be an array<string, mixed>.'
+            ),
         ];
     }
 
