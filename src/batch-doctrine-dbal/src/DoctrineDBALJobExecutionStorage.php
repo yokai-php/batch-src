@@ -153,42 +153,10 @@ final class DoctrineDBALJobExecutionStorage implements
             ->from($this->table);
 
         /**
-         * @phpstan-var array<string, array<int, int|string>> $queryParameters
-         * @phpstan-var array<string, int> $queryTypes
+         * @phpstan-var array<string, mixed> $queryParameters
+         * @phpstan-var array<string, string|int> $queryTypes
          */
         [$queryParameters, $queryTypes] = $this->addWheres($query, $qb);
-
-        if ($query->startTime()) {
-            $qb->andWhere($qb->expr()->isNotNull('start_time'));
-        }
-        $startDateFrom = $query->startTime()?->getFrom();
-        if ($startDateFrom) {
-            $qb->andWhere($qb->expr()->gte('start_time', ':startDateFrom'));
-            $queryParameters['startDateFrom'] = $startDateFrom;
-            $queryTypes['startDateFrom'] = Types::DATETIME_IMMUTABLE;
-        }
-        $startDateTo = $query->startTime()?->getTo();
-        if ($startDateTo) {
-            $qb->andWhere($qb->expr()->lte('start_time', ':startDateTo'));
-            $queryParameters['startDateTo'] = $startDateTo;
-            $queryTypes['startDateTo'] = Types::DATETIME_IMMUTABLE;
-        }
-
-        if ($query->endTime()) {
-            $qb->andWhere($qb->expr()->isNotNull('start_time'));
-        }
-        $endDateFrom = $query->endTime()?->getFrom();
-        if ($endDateFrom) {
-            $qb->andWhere($qb->expr()->gte('end_time', ':endDateFrom'));
-            $queryParameters['endDateFrom'] = $endDateFrom;
-            $queryTypes['endDateFrom'] = Types::DATETIME_IMMUTABLE;
-        }
-        $endDateTo = $query->endTime()?->getTo();
-        if ($endDateTo) {
-            $qb->andWhere($qb->expr()->lte('end_time', ':endDateTo'));
-            $queryParameters['endDateTo'] = $endDateTo;
-            $queryTypes['endDateTo'] = Types::DATETIME_IMMUTABLE;
-        }
 
         switch ($query->sort()) {
             case Query::SORT_BY_START_ASC:
@@ -217,8 +185,14 @@ final class DoctrineDBALJobExecutionStorage implements
         $qb->select('count(*)')
             ->from($this->table);
 
+        /**
+         * @phpstan-var array<string, mixed> $queryParameters
+         * @phpstan-var array<string, string|int> $queryTypes
+         */
+        [$queryParameters, $queryTypes] = $this->addWheres($query, $qb);
+
         /** @var int $result */
-        $result = $this->connection->executeQuery($qb->getSQL(), ...$this->addWheres($query, $qb))->fetchOne();
+        $result = $this->connection->executeQuery($qb->getSQL(), $queryParameters, $queryTypes)->fetchOne();
 
         return $result;
     }
@@ -354,7 +328,7 @@ final class DoctrineDBALJobExecutionStorage implements
     }
 
     /**
-     * @return array<int, array<string, array<int|string>|int>>
+     * @return array{array<string, mixed>, array<string, string|int>}
      */
     private function addWheres(Query $query, QueryBuilder $qb): array
     {
@@ -380,6 +354,38 @@ final class DoctrineDBALJobExecutionStorage implements
             $qb->andWhere($qb->expr()->in('status', ':statuses'));
             $queryParameters['statuses'] = $statuses;
             $queryTypes['statuses'] = Connection::PARAM_INT_ARRAY;
+        }
+
+        if ($query->startTime()) {
+            $qb->andWhere($qb->expr()->isNotNull('start_time'));
+        }
+        $startDateFrom = $query->startTime()?->getFrom();
+        if ($startDateFrom) {
+            $qb->andWhere($qb->expr()->gte('start_time', ':startDateFrom'));
+            $queryParameters['startDateFrom'] = $startDateFrom;
+            $queryTypes['startDateFrom'] = Types::DATETIME_IMMUTABLE;
+        }
+        $startDateTo = $query->startTime()?->getTo();
+        if ($startDateTo) {
+            $qb->andWhere($qb->expr()->lte('start_time', ':startDateTo'));
+            $queryParameters['startDateTo'] = $startDateTo;
+            $queryTypes['startDateTo'] = Types::DATETIME_IMMUTABLE;
+        }
+
+        if ($query->endTime()) {
+            $qb->andWhere($qb->expr()->isNotNull('start_time'));
+        }
+        $endDateFrom = $query->endTime()?->getFrom();
+        if ($endDateFrom) {
+            $qb->andWhere($qb->expr()->gte('end_time', ':endDateFrom'));
+            $queryParameters['endDateFrom'] = $endDateFrom;
+            $queryTypes['endDateFrom'] = Types::DATETIME_IMMUTABLE;
+        }
+        $endDateTo = $query->endTime()?->getTo();
+        if ($endDateTo) {
+            $qb->andWhere($qb->expr()->lte('end_time', ':endDateTo'));
+            $queryParameters['endDateTo'] = $endDateTo;
+            $queryTypes['endDateTo'] = Types::DATETIME_IMMUTABLE;
         }
 
         return [$queryParameters, $queryTypes];

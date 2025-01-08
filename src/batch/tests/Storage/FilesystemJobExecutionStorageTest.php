@@ -142,7 +142,7 @@ class FilesystemJobExecutionStorageTest extends TestCase
     /**
      * @dataProvider query
      */
-    public function testQueryWithProvider(QueryBuilder $query, array $expectedCouples, ?int $expectedCount = null): void
+    public function testQueryWithProvider(QueryBuilder $query, array $expectedCouples): void
     {
         $storage = $this->createStorage(
             __DIR__ . '/fixtures/filesystem-job-execution',
@@ -150,8 +150,7 @@ class FilesystemJobExecutionStorageTest extends TestCase
         );
 
         self::assertExecutions($expectedCouples, $storage->query($query->getQuery()));
-        $expectedCount ??= count($expectedCouples);
-        self::assertEquals($expectedCount, $storage->count($query->getQuery()));
+        self::assertEquals(\count($expectedCouples), $storage->count($query->getQuery()));
     }
 
     public function query(): \Generator
