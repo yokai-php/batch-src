@@ -22,10 +22,9 @@ composer require yokai/batch-symfony-framework
 
 ## Documentation
 
-This package provides:
+Please read the [getting started documentation page](https://yokai-batch.readthedocs.io/en/0.x/getting-started/with-symfony.html).
 
-- [integration](https://github.com/yokai-php/batch-src/blob/0.x/docs/batch-symfony-framework/getting-started.md) with Symfony framework
-- a [UI](https://github.com/yokai-php/batch-src/blob/0.x/docs/batch-symfony-framework/ui.md) with Symfony framework
+Or the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/0.x/bridges/symfony-framework.html).
 
 
 ## Contribution

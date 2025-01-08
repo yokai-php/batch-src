@@ -22,9 +22,15 @@ composer require yokai/batch-doctrine-dbal
 
 ## Documentation
 
+Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/0.x/bridges/doctrine-dbal.html).
+
 This package provides:
 
-- a [job execution storage](https://github.com/yokai-php/batch-src/blob/0.x/docs/batch-doctrine-dbal/job-execution-storage.md) that stores job executions to a relational database
+- an [item job writer](https://github.com/yokai-php/batch-doctrine-dbal/blob/0.x/src/DoctrineDBALInsertWriter.php) that insert into an SQL table
+- a [job execution storage](https://github.com/yokai-php/batch-doctrine-dbal/blob/0.x/src/DoctrineDBALJobExecutionStorage.php) that stores job executions to a relational database
+- an [item job reader](https://github.com/yokai-php/batch-doctrine-dbal/blob/0.x/src/DoctrineDBALQueryCursorReader.php) that read from an SQL table using cursor pagination
+- an [item job reader](https://github.com/yokai-php/batch-doctrine-dbal/blob/0.x/src/DoctrineDBALQueryOffsetReader.php) that read from an SQL table using limit + offset pagination
+- an [item job writer](https://github.com/yokai-php/batch-doctrine-dbal/blob/0.x/src/DoctrineDBALUpsertWriter.php) that insert or update into an SQL table
 
 
 ## Contribution

@@ -22,10 +22,12 @@ composer require yokai/batch-doctrine-persistence
 
 ## Documentation
 
+Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/0.x/bridges/doctrine-persistence.html).
+
 This package provides:
 
-- an [item writer](https://github.com/yokai-php/batch-src/blob/0.x/docs/batch-doctrine-persistence/object-item-writer.md) that persists objects through object manager
-- an [object registry](https://github.com/yokai-php/batch-src/blob/0.x/docs/batch-doctrine-persistence/object-registry.md) that remembers found objects identities
+- an [object registry](https://github.com/yokai-php/batch-doctrine-persistence/blob/0.x/src/ObjectRegistry.php) that remembers found objects identities
+- an [item writer](https://github.com/yokai-php/batch-doctrine-persistence/blob/0.x/src/ObjectWriter.php) that persists objects through object manager
 
 
 ## Contribution

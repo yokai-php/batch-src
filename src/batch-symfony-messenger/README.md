@@ -22,10 +22,12 @@ composer require yokai/batch-symfony-messenger
 
 ## Documentation
 
+Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/0.x/bridges/symfony-messenger.html).
+
 This package provides:
 
-- a [job launcher](https://github.com/yokai-php/batch-src/blob/0.x/docs/batch-symfony-messenger/job-launcher.md) that uses messages to launch jobs
-- a [writer](https://github.com/yokai-php/batch-src/blob/0.x/docs/batch-symfony-messenger/dispatch-each-item-writer.md) that will write each item as a message
+- a [job launcher](https://github.com/yokai-php/batch-symfony-messenger/blob/0.x/src/DispatchMessageJobLauncher.php) that uses messages to launch jobs
+- an [item job writer](https://github.com/yokai-php/batch-symfony-messenger/blob/0.x/src/Writer/DispatchEachItemAsMessageWriter.php) that will write each item as a message
 
 
 ## Contribution

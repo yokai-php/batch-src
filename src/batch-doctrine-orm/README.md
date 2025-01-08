@@ -22,9 +22,11 @@ composer require yokai/batch-doctrine-orm
 
 ## Documentation
 
+Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/0.x/bridges/doctrine-orm.html).
+
 This package provides:
 
-- an [item reader](https://github.com/yokai-php/batch-src/blob/0.x/docs/batch-doctrine-orm/entity-item-reader.md) that read entities from entity manager
+- an [item job reader](https://github.com/yokai-php/batch-doctrine-orm/blob/0.x/src/EntityReader.php) that read all entities of a type
 
 
 ## Contribution
