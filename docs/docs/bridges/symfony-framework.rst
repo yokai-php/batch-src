@@ -89,6 +89,30 @@ You can have only one storage for your ``JobExecution``, and you have several op
    | :doc:`What is a job execution? </core-concepts/job-execution>`
    | :doc:`What is a job execution storage? </core-concepts/job-execution-storage>`
 
+Configure the JobExecution id generator
+------------------------------------------------------------
+
+When it is created, every ``JobExecution`` is assigned with a unique identifier.
+You can configure what your id will be like:
+
+* ``uniqid``: a `UniqidJobExecutionIdGenerator <https://github.com/yokai-php/batch/blob/0.x/src/Factory/UniqidJobExecutionIdGenerator.php>`__
+* ``symfony.uuid.random``: a `RandomBasedUuidJobExecutionIdGenerator <https://github.com/yokai-php/batch-symfony-uid/blob/0.x/src/Factory/RandomBasedUuidJobExecutionIdGenerator.php>`__
+* ``symfony.uuid.time``: a `TimeBasedUuidJobExecutionIdGenerator <https://github.com/yokai-php/batch-symfony-uid/blob/0.x/src/Factory/TimeBasedUuidJobExecutionIdGenerator.php>`__
+* ``symfony.ulid``: a `UlidJobExecutionIdGenerator <https://github.com/yokai-php/batch-symfony-uid/blob/0.x/src/Factory/UlidJobExecutionIdGenerator.php>`__
+
+.. note::
+   | The default storage is ``uniqid``, because it only requires the function with the same name that is a PHP standard.
+
+.. code-block:: yaml
+
+    # config/packages/yokai_batch.yaml
+    yokai_batch:
+        id: uniqid
+        # Or with yokai/batch-symfony-uid (& symfony/uid)
+        # id: symfony.uuid.random
+        # id: symfony.uuid.time
+        # id: symfony.ulid
+
 User interface to visualize ``JobExecution``
 ------------------------------------------------------------
 
