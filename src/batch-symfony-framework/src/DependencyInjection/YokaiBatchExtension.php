@@ -11,8 +11,8 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader as ConfigLoader;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\Loader as DependencyInjectionLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Form\AbstractType;
@@ -27,8 +27,6 @@ use Yokai\Batch\Factory\JobExecutionParametersBuilder\StaticJobExecutionParamete
 use Yokai\Batch\Launcher\JobLauncherInterface;
 use Yokai\Batch\Storage\FilesystemJobExecutionStorage;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
-use Yokai\Batch\Storage\ListableJobExecutionStorageInterface;
-use Yokai\Batch\Storage\QueryableJobExecutionStorageInterface;
 
 /**
  * Dependency injection extension for yokai/batch Symfony Bundle.
@@ -123,47 +121,10 @@ final class YokaiBatchExtension extends Extension
             $defaultStorage = 'yokai_batch.storage.filesystem';
         }
 
-        try {
-            $defaultStorageDefinition = $container->getDefinition($defaultStorage);
-        } catch (ServiceNotFoundException $exception) {
-            throw new LogicException(
-                \sprintf('Configured default job execution storage service "%s" does not exists.', $defaultStorage),
-                0,
-                $exception
-            );
-        }
-
-        $defaultStorageClass = $defaultStorageDefinition->getClass();
-        if ($defaultStorageClass === null) {
-            throw new LogicException(
-                \sprintf('Job execution storage service "%s", has no class.', $defaultStorage)
-            );
-        }
-
-        $interfaces = [
-            JobExecutionStorageInterface::class => true,
-            ListableJobExecutionStorageInterface::class => false,
-            QueryableJobExecutionStorageInterface::class => false,
-        ];
-        foreach ($interfaces as $interface => $required) {
-            if (!\is_a($defaultStorageClass, $interface, true)) {
-                if ($required) {
-                    throw new LogicException(
-                        \sprintf(
-                            'Job execution storage service "%s", is of class "%s", and must implements interface "%s".',
-                            $defaultStorage,
-                            $defaultStorageClass,
-                            $interface
-                        )
-                    );
-                }
-                continue;
-            }
-            $container
-                ->setAlias($interface, $defaultStorage)
-                ->setPublic(true)
-            ;
-        }
+        $container
+            ->setAlias(JobExecutionStorageInterface::class, $defaultStorage)
+            ->setPublic(true)
+        ;
     }
 
     /**
@@ -179,17 +140,24 @@ final class YokaiBatchExtension extends Extension
             ));
         }
 
+        $launcherIdPerLauncherName = [];
         foreach ($config['launchers'] as $name => $dsn) {
-            $definition = JobLauncherDefinitionFactory::fromDsn($container, $dsn);
-            $launcherId = 'yokai_batch.job_launcher.' . $name;
-            $container->setDefinition($launcherId, $definition);
+            $definitionOrReference = JobLauncherDefinitionFactory::fromDsn($dsn);
+            if ($definitionOrReference instanceof Definition) {
+                $launcherId = 'yokai_batch.job_launcher.' . $name;
+                $container->setDefinition($launcherId, $definitionOrReference);
+            } else {
+                $launcherId = (string)$definitionOrReference;
+            }
+
+            $launcherIdPerLauncherName[$name] = $launcherId;
             $parameterName = $name . 'JobLauncher';
             $container->registerAliasForArgument($launcherId, LoggerInterface::class, $parameterName);
         }
 
         $container->setAlias(
             JobLauncherInterface::class,
-            'yokai_batch.job_launcher.' . $config['default'],
+            $launcherIdPerLauncherName[$config['default']],
         );
     }
 
@@ -240,25 +208,6 @@ final class YokaiBatchExtension extends Extension
 
         $templating = $config['templating'];
         if ($templating['service'] !== null) {
-            try {
-                $templatingClass = $container->getDefinition($templating['service'])->getClass();
-                if ($templatingClass === null || !\is_a($templatingClass, TemplatingInterface::class, true)) {
-                    throw new LogicException(
-                        \sprintf(
-                            'Configured UI templating service "%s" must implements interface "%s".',
-                            $templating['service'],
-                            TemplatingInterface::class,
-                        ),
-                    );
-                }
-            } catch (ServiceNotFoundException $exception) {
-                throw new LogicException(
-                    \sprintf('Configured UI templating service "%s" does not exists.', $templating['service']),
-                    0,
-                    $exception
-                );
-            }
-
             $container->setAlias(TemplatingInterface::class, $templating['service']);
         } elseif ($templating['prefix'] !== null) {
             $container->register('yokai_batch.ui.templating', ConfigurableTemplating::class)

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Bridge\Symfony\Framework\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Reference;
@@ -24,7 +23,7 @@ final class JobLauncherDefinitionFactory
     /**
      * Build a service definition from DSN string.
      */
-    public static function fromDsn(ContainerBuilder $container, string $dsn): Definition
+    public static function fromDsn(string $dsn): Definition|Reference
     {
         $dsnParts = \parse_url($dsn);
         $launcherType = $dsnParts['scheme'] ?? null;
@@ -35,7 +34,7 @@ final class JobLauncherDefinitionFactory
             'simple' => self::simple(),
             'console' => self::console($launcherConfig),
             'messenger' => self::messenger(),
-            'service' => self::service($container, $launcherConfig),
+            'service' => self::service($launcherConfig),
             default => throw new LogicException('Unsupported job launcher type "' . $launcherType . '".'),
         };
     }
@@ -78,12 +77,12 @@ final class JobLauncherDefinitionFactory
     /**
      * @param array<string, string> $config
      */
-    private static function service(ContainerBuilder $container, array $config): Definition
+    private static function service(array $config): Reference
     {
         $service = $config['service'] ?? throw new LogicException(
             'Missing "service" parameter to configure the job launcher.',
         );
 
-        return $container->getDefinition($service);
+        return new Reference($service);
     }
 }
