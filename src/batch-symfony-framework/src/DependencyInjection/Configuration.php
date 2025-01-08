@@ -169,7 +169,7 @@ final class Configuration implements ConfigurationInterface
                     ->variablePrototype()
                     ->validate()
                         ->ifTrue(fn(mixed $value) => !$isStringAssociativeArray($value))
-                            ->thenInvalid('Should be an array<string, mixed>')
+                            ->thenInvalid('Should be an array<string, mixed>.')
                     ->end()
                 ->end()
             ->end()
