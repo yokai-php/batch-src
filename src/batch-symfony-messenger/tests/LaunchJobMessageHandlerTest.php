@@ -9,6 +9,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Yokai\Batch\Bridge\Symfony\Messenger\LaunchJobMessage;
 use Yokai\Batch\Bridge\Symfony\Messenger\LaunchJobMessageHandler;
 use Yokai\Batch\Factory\JobExecutionFactory;
+use Yokai\Batch\Factory\JobExecutionParametersBuilder\NullJobExecutionParametersBuilder;
 use Yokai\Batch\Job\JobExecutionAccessor;
 use Yokai\Batch\Job\JobExecutor;
 use Yokai\Batch\Job\JobInterface;
@@ -35,7 +36,10 @@ final class LaunchJobMessageHandlerTest extends TestCase
         $jobExecutionStorage = new InMemoryJobExecutionStorage();
         $handler = new LaunchJobMessageHandler(
             new JobExecutionAccessor(
-                new JobExecutionFactory(new SequenceJobExecutionIdGenerator(['123456'])),
+                new JobExecutionFactory(
+                    new SequenceJobExecutionIdGenerator(['123456']),
+                    new NullJobExecutionParametersBuilder(),
+                ),
                 $jobExecutionStorage,
             ),
             new JobExecutor(

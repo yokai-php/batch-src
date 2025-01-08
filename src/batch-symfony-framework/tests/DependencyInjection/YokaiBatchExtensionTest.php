@@ -7,6 +7,7 @@ namespace Yokai\Batch\Tests\Bridge\Symfony\Framework\DependencyInjection;
 use Exception;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
+use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
@@ -17,6 +18,10 @@ use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\ConfigurableTe
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\SonataAdminTemplating;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\TemplatingInterface;
 use Yokai\Batch\Bridge\Symfony\Messenger\DispatchMessageJobLauncher;
+use Yokai\Batch\Factory\JobExecutionParametersBuilder\ChainJobExecutionParametersBuilder;
+use Yokai\Batch\Factory\JobExecutionParametersBuilder\PerJobJobExecutionParametersBuilder;
+use Yokai\Batch\Factory\JobExecutionParametersBuilder\StaticJobExecutionParametersBuilder;
+use Yokai\Batch\Factory\JobExecutionParametersBuilderInterface;
 use Yokai\Batch\Launcher\JobLauncherInterface;
 use Yokai\Batch\Launcher\SimpleJobLauncher;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
@@ -386,5 +391,112 @@ class YokaiBatchExtensionTest extends TestCase
             null,
             new ServiceNotFoundException('app.unknown'),
         ];
+    }
+
+    /**
+     * @dataProvider parameters
+     */
+    public function testParameters(array $config, array|null $global, array|null $perJob): void
+    {
+        $container = $this->createContainer($config);
+
+        $globalService = $this->getDefinition($container, 'yokai_batch.job_execution_parameters_builder.global');
+        if ($global !== null) {
+            self::assertNotNull($globalService);
+            self::assertSame(StaticJobExecutionParametersBuilder::class, $globalService->getClass());
+            self::assertTrue($globalService->hasTag('yokai_batch.job_execution_parameters_builder'));
+            self::assertSame($global, $globalService->getArgument('$parameters'));
+        } else {
+            self::assertNull($globalService);
+        }
+        $perJobService = $this->getDefinition($container, 'yokai_batch.job_execution_parameters_builder.per_job');
+        if ($perJob !== null) {
+            self::assertNotNull($perJobService);
+            self::assertSame(PerJobJobExecutionParametersBuilder::class, $perJobService->getClass());
+            self::assertTrue($perJobService->hasTag('yokai_batch.job_execution_parameters_builder'));
+            self::assertSame($perJob, $perJobService->getArgument('$perJobParameters'));
+        } else {
+            self::assertNull($perJobService);
+        }
+        $defaultService = $this->getDefinition($container, JobExecutionParametersBuilderInterface::class);
+        self::assertNotNull($defaultService);
+        self::assertSame(ChainJobExecutionParametersBuilder::class, $defaultService->getClass());
+        $defaultServiceBuilders = $defaultService->getArgument(0);
+        self::assertTrue($defaultServiceBuilders instanceof TaggedIteratorArgument);
+        /** @var TaggedIteratorArgument $defaultServiceBuilders */
+        self::assertSame('yokai_batch.job_execution_parameters_builder', $defaultServiceBuilders->getTag());
+    }
+
+    public function parameters(): \Generator
+    {
+        yield 'Global parameters' => [
+            ['parameters' => ['global' => ['global' => true]]],
+            ['global' => true],
+            null,
+        ];
+        yield 'Per job parameters' => [
+            ['parameters' => ['per_job' => ['job.foo' => ['foo' => true], 'job.bar' => ['bar' => true]]]],
+            null,
+            ['job.foo' => ['foo' => true], 'job.bar' => ['bar' => true]],
+        ];
+        yield 'Global AND per job parameters' => [
+            ['parameters' => [
+                'global' => ['global' => true],
+                'per_job' => ['job.foo' => ['foo' => true], 'job.bar' => ['bar' => true]],
+            ]],
+            ['global' => true],
+            ['job.foo' => ['foo' => true], 'job.bar' => ['bar' => true]],
+        ];
+    }
+
+    /**
+     * @dataProvider invalidParameters
+     */
+    public function testInvalidParameters(array $config, \Exception $error): void
+    {
+        $this->expectExceptionObject($error);
+        $this->createContainer($config);
+    }
+
+    public function invalidParameters(): \Generator
+    {
+        yield 'Per job parameters value must be an array' => [
+            ['parameters' => ['per_job' => ['job.foo' => 'string']]],
+            new InvalidConfigurationException(
+                'Invalid configuration for path "yokai_batch.parameters.per_job.job.foo": Should be an array<string, mixed>.'
+            ),
+        ];
+        yield 'Per job parameters value must be a string indexed array' => [
+            ['parameters' => ['per_job' => ['job.foo' => [1, 2, 3]]]],
+            new InvalidConfigurationException(
+                'Invalid configuration for path "yokai_batch.parameters.per_job.job.foo": Should be an array<string, mixed>.'
+            ),
+        ];
+    }
+
+    private function createContainer(array $config, \Closure|null $configure = null): ContainerBuilder
+    {
+        $container = new ContainerBuilder();
+        if ($configure !== null) {
+            $configure($container);
+        }
+        $container->registerExtension(new YokaiBatchExtension());
+        $container->loadFromExtension('yokai_batch', $config);
+
+        $container->getCompilerPassConfig()->setOptimizationPasses([]);
+        $container->getCompilerPassConfig()->setRemovingPasses([]);
+        $container->getCompilerPassConfig()->setAfterRemovingPasses([]);
+        $container->compile();
+
+        return $container;
+    }
+
+    private function getDefinition(ContainerBuilder $container, string $id): Definition|null
+    {
+        try {
+            return $container->findDefinition($id);
+        } catch (ServiceNotFoundException) {
+            return null;
+        }
     }
 }
