@@ -282,6 +282,7 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         $this->loadFixtures($storage);
 
         self::assertExecutions($expectedCouples, $storage->query($queryBuilder->getQuery()));
+        self::assertSame(\count($expectedCouples), $storage->count($queryBuilder->getQuery()));
     }
 
     public function queries(): Generator
