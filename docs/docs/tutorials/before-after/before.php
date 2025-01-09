@@ -34,7 +34,7 @@ final class ImportCommand extends Command
         $families = [];
         while ($line = \fgets($file)) {
             try {
-                $data = \json_decode($line, true, 512, JSON_THROW_ON_ERROR);
+                $data = \json_decode($line, true, 512, \JSON_THROW_ON_ERROR);
                 \assert(\is_array($data));
             } catch (\JsonException) {
                 continue;
@@ -52,7 +52,9 @@ final class ImportCommand extends Command
                 foreach ($families as $family) {
                     $manager->persist($family);
                 }
-                $manager->flush($family);
+
+                $manager->flush();
+                $families = [];
             }
         }
 
@@ -62,6 +64,7 @@ final class ImportCommand extends Command
             foreach ($families as $family) {
                 $manager->persist($family);
             }
+
             $manager->flush();
         }
 
