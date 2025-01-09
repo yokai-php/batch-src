@@ -1,6 +1,9 @@
 Bridge with ``league/flysystem``
 ============================================================
 
+See `official documentation <https://flysystem.thephpleague.com>`__ on The League of Extraordinary Packages's website.
+
+
 Copy files job
 ------------------------------------------------------------
 
