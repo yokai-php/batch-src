@@ -22,10 +22,11 @@ composer require yokai/batch-symfony-console
 
 ## Documentation
 
+Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/0.x/bridges/symfony-console.html).
+
 This package provides:
 
-- a [job launcher](https://github.com/yokai-php/batch-src/blob/0.x/docs/batch-symfony-console/job-launcher.md) that uses command to launch jobs
-- a [command](https://github.com/yokai-php/batch-src/blob/0.x/docs/batch-symfony-console/command.md) to launch jobs
+- a [job launcher](https://github.com/yokai-php/batch-symfony-console/blob/0.x/src/RunCommandJobLauncher.php) that uses CLI command to launch jobs
 
 
 ## Contribution

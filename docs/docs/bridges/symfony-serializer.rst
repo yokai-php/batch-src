@@ -8,11 +8,6 @@ Denormalize item processor
 
 todo
 
-Job execution serializer
-------------------------------------------------------------
-
-todo
-
 Normalize item processor
 ------------------------------------------------------------
 

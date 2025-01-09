@@ -22,10 +22,13 @@ composer require yokai/batch-league-flysystem
 
 ## Documentation
 
+Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/0.x/bridges/league-flysystem.html).
+
 This package provides:
 
-- a [job](https://github.com/yokai-php/batch-src/blob/0.x/docs/batch-league-flysystem/copy-files-job.md) that copy file(s) from one filesystem to another
-- a [job](https://github.com/yokai-php/batch-src/blob/0.x/docs/batch-league-flysystem/move-files-job.md) that move file(s) from one filesystem to another
+- a [job](https://github.com/yokai-php/batch-league-flysystem/blob/0.x/src/Job/CopyFilesJob.php) that copy file(s) from one filesystem to another
+- a [job](https://github.com/yokai-php/batch-league-flysystem/blob/0.x/src/Job/MoveFilesJob.php) that move file(s) from one filesystem to another
+- a [scheduler](https://github.com/yokai-php/batch-league-flysystem/blob/0.x/src/Scheduler/FileFoundScheduler.php) that triggers job when file is found on a filesystem
 
 
 ## Contribution
