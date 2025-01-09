@@ -8,6 +8,9 @@ Store JobExecution objects in an SQL database
 .. literalinclude:: doctrine-dbal/job-execution-storage.php.php
    :language: php
 
+.. seealso::
+   | :doc:`What is a job execution storage? </core-concepts/job-execution-storage>`
+
 
 Read from a paginated SQL query
 ------------------------------------------------------------
@@ -23,6 +26,9 @@ Read from a paginated SQL query
    Because of how `SQL offset works <https://hackernoon.com/dont-offset-your-sql-querys-performance>`__,
    if the total result set you are querying is very large, you might consider using a cursor query instead.
 
+.. seealso::
+   | :doc:`What is an item job? </core-concepts/item-job>`
+
 
 Read from a cursored SQL query
 ------------------------------------------------------------
@@ -34,6 +40,9 @@ Read from a cursored SQL query
 .. literalinclude:: doctrine-dbal/cursor-reader.php
    :language: php
 
+.. seealso::
+   | :doc:`What is an item job? </core-concepts/item-job>`
+
 
 Write items using inserts in a SQL table
 ------------------------------------------------------------
@@ -43,6 +52,9 @@ Write items using inserts in a SQL table
 
 .. literalinclude:: doctrine-dbal/insert-writer.php
    :language: php
+
+.. seealso::
+   | :doc:`What is an item job? </core-concepts/item-job>`
 
 
 Write items using upsert in a SQL table
@@ -63,3 +75,6 @@ Write items using upsert in a SQL table
 
 .. literalinclude:: doctrine-dbal/upsert-writer-example.php
    :language: php
+
+.. seealso::
+   | :doc:`What is an item job? </core-concepts/item-job>`
