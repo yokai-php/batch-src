@@ -27,7 +27,7 @@ Read from a paginated SQL query
    if the total result set you are querying is very large, you might consider using a cursor query instead.
 
 .. seealso::
-   | :doc:`What is an item job? </core-concepts/item-job>`
+   | :doc:`What is an item reader? </core-concepts/item-job/item-reader>`
 
 
 Read from a cursored SQL query
@@ -41,7 +41,7 @@ Read from a cursored SQL query
    :language: php
 
 .. seealso::
-   | :doc:`What is an item job? </core-concepts/item-job>`
+   | :doc:`What is an item reader? </core-concepts/item-job/item-reader>`
 
 
 Write items using inserts in a SQL table
@@ -54,7 +54,7 @@ Write items using inserts in a SQL table
    :language: php
 
 .. seealso::
-   | :doc:`What is an item job? </core-concepts/item-job>`
+   | :doc:`What is an item writer? </core-concepts/item-job/item-writer>`
 
 
 Write items using upsert in a SQL table
@@ -77,4 +77,4 @@ Write items using upsert in a SQL table
    :language: php
 
 .. seealso::
-   | :doc:`What is an item job? </core-concepts/item-job>`
+   | :doc:`What is an item writer? </core-concepts/item-job/item-writer>`
