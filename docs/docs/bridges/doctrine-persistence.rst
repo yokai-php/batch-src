@@ -14,7 +14,7 @@ Object item writer
    :language: php
 
 .. seealso::
-   | :doc:`What is an item job? </core-concepts/item-job>`
+   | :doc:`What is an item writer? </core-concepts/item-job/item-writer>`
 
 
 Object registry util
