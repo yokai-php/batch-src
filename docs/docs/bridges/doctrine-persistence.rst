@@ -1,6 +1,9 @@
 Bridge with ``doctrine/persistence``
 ============================================================
 
+See `official documentation <https://www.doctrine-project.org/projects/persistence.html>`__ on Doctrine's website.
+
+
 Object item writer
 ------------------------------------------------------------
 
