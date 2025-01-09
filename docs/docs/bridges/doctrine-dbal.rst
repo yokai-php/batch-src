@@ -1,6 +1,8 @@
 Bridge with ``doctrine/dbal``
 ============================================================
 
+See `official documentation <https://www.doctrine-project.org/projects/dbal.html>`__ on Doctrine's website.
+
 
 Store JobExecution objects in an SQL database
 ------------------------------------------------------------
