@@ -1,49 +1,29 @@
 Bridge with ``doctrine/persistence``
 ============================================================
 
-todo
-
 Object item writer
 ------------------------------------------------------------
 
-todo
+| The writer will persist every items on the appropriate ``ObjectManager``.
+| It expect that items are objects.
+| Objects can be on different ``ObjectManager``, only encountered ones will be flushed.
 
-Object registry
+``ObjectManager->flush()`` is called every time the ``ItemJob`` hit the batch size.
+
+.. literalinclude:: doctrine-persistence/object-writer.php
+   :language: php
+
+.. seealso::
+   | :doc:`What is an item job? </core-concepts/job>`
+
+
+Object registry util
 ------------------------------------------------------------
 
 Imagine that in an ``ItemJob`` you need to find objects from a database.
 
-.. code-block:: php
-
-    <?php
-
-    use App\Entity\Product;
-    use Doctrine\Persistence\ObjectRepository;
-    use Yokai\Batch\Job\Item\ItemProcessorInterface;
-
-    class DenormalizeProductProcessor implements ItemProcessorInterface
-    {
-        public function __construct(
-            private ObjectRepository $repository,
-        ) {
-        }
-
-        /**
-         * @param array<string, mixed> $item
-         */
-        public function process(mixed $item): Product
-        {
-            $product = $this->repository->findOneBy(['sku' => $item['sku']]);
-
-            $product ??= new Product($item['sku']);
-
-            $product->setName($item['name']);
-            $product->setPrice($item['price']);
-            //...
-
-            return $product;
-        }
-    }
+.. literalinclude:: doctrine-persistence/object-registry-before.php
+   :language: php
 
 | The problem here is that every time you will call ``findOneBy``, you
   will have to query the database. The object might already be in
@@ -53,38 +33,8 @@ Imagine that in an ``ItemJob`` you need to find objects from a database.
 | The role of the ``ObjectRegistry`` is to remember found objects
   identities, and query these objects with it instead.
 
-.. code-block:: diff
-
-    use App\Entity\Product;
-    -use Doctrine\Persistence\ObjectRepository;
-    +use Yokai\Batch\Bridge\Doctrine\Persistence\ObjectRegistry;
-    use Yokai\Batch\Job\Item\ItemProcessorInterface;
-
-    class DenormalizeProductProcessor implements ItemProcessorInterface
-    {
-        public function __construct(
-    -        private ObjectRepository $repository,
-    +        private ObjectRegistry $registry,
-        ) {
-        }
-
-        /**
-         * @param array<string, mixed> $item
-         */
-        public function process(mixed $item): Product
-        {
-    -        $product = $this->repository->findOneBy(['sku' => $item['sku']]);
-    +        $product = $this->registry->findOneBy(Product::class, ['sku' => $item['sku']]);
-
-            $product ??= new Product($item['sku']);
-
-            $product->setName($item['name']);
-            $product->setPrice($item['price']);
-            //...
-
-            return $product;
-        }
-    }
+.. literalinclude:: doctrine-persistence/object-registry-after.diff
+   :language: diff
 
 | The first time, the query will hit the database, and the object identity
   will be remembered in the registry.
