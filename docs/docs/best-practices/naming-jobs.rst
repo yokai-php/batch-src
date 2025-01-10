@@ -25,7 +25,7 @@ However, we strongly recommend that you choose a convention and adhere to it con
 In a Symfony project
 ------------------------------------------------------------
 
-| As required by the Framework works, ``Jobs`` must be registered as services.
+| Because of the way the framework works, ``Jobs`` must be registered as services.
 | All services tagged with ``yokai_batch.job`` are collected in a ``CompilerPass``, and provided to the ``JobRegistry``.
 
 You can manually tag all your jobs and specify the job name withing the tag:
