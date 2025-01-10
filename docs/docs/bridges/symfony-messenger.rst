@@ -1,7 +1,7 @@
 Bridge with ``symfony/messenger``
 ============================================================
 
-See `official documentation <https://symfony.com/doc/current/messenger.html>`__ on Symfony's website.
+Refer to the `official documentation <https://symfony.com/doc/current/messenger.html>`__ on Symfony's website.
 
 
 Launch Job through Messenger dispatcher
@@ -46,7 +46,7 @@ You will end with something like:
 Dispatch item with messenger writer
 ------------------------------------------------------------
 
-| This item writer will dispatch every item in Symfony's messenger bus.
+| This item writer will dispatches each item through Symfony's messenger bus.
 | Items must be objects that messenger can handle.
 
 .. literalinclude:: symfony-messenger/dispatch-each-item-as-message-writer.php
