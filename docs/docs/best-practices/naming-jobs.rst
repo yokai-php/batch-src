@@ -12,35 +12,35 @@ A name is a simple ``string``, with the only requirement that every job must hav
 Decide on a convention
 ------------------------------------------------------------
 
-There is no recommandation we can make here, you can use whatever notation you prefer:
+There is no specific recommandation, you can use whichever notation you prefer, such as:
 
 * ``ImportUser``
 * ``import_user``
 * ``import.user``
-* or anything else
+* or any other format
 
-But we strongly recommend that you pick a convention and try to stick to it.
+However, we strongly recommend that you choose a convention and adhere to it consistently.
 
 
 In a Symfony project
 ------------------------------------------------------------
 
-| Because this is how the Framework works, ``Jobs`` must be registered as services.
-| All services tagged with ``yokai_batch.job`` are collected in a ``CompilerPass``, and given to the ``JobRegistry``.
+| Because of the way the framework works, ``Jobs`` must be registered as services.
+| All services tagged with ``yokai_batch.job`` are collected in a ``CompilerPass``, and provided to the ``JobRegistry``.
 
-You can tag manually all your jobs, and fill the job name withing the tag:
+You can manually tag all your jobs and specify the job name withing the tag:
 
 .. literalinclude:: naming-jobs/symfony-manual-tag.php
    :language: php
 
-You can autoconfigure all services with ``JobInterface`` to be tagged,
-and the job name will be the service id (most of the time the FQCN):
+Alternatively, you can autoconfigure all services implementing ``JobInterface`` to be tagged.
+In this case, the job name will be the service ID (usually the FQCN):
 
 .. literalinclude:: naming-jobs/symfony-autowire-tag.yaml
    :language: yaml
 
-Finally, if you want all services to be tagged using autoconfigure, but still want to pick job names,
-you can implement ``JobWithStaticNameInterface`` in your jobs:
+Finally, if you want to autoconfigure all services while still manually specifying job names,
+you can implement the ``JobWithStaticNameInterface`` in your jobs:
 
 .. literalinclude:: naming-jobs/symfony-interface-tag.php
    :language: php
