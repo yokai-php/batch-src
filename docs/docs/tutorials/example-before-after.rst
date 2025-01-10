@@ -23,7 +23,7 @@ We have a ``jsonl`` file, containing data that we want, and we must import it in
 Before: Without Yokai Batch
 ------------------------------------------------------------
 
-The easy way to do so is to create the one script you already written thousands of times:
+The easiest way to do this is to create the one script you have already written thousands of times:
 
 .. literalinclude:: before-after/before.php
    :language: php
@@ -38,13 +38,13 @@ The easy way to do so is to create the one script you already written thousands 
 After: With Yokai Batch
 ------------------------------------------------------------
 
-| Now, using ``yokai/batch``, we will be able to factorize most of this code to only show the business part :
+| Now, using ``yokai/batch``, we will be able to factorize most of this code to show only the business part :
 
 .. literalinclude:: before-after/after.php
    :language: php
 
 .. note::
-   | Most of the classes of that snippet are from ``Yokai\Batch`` namespace, you will reuse lot of those along the way.
+   | Most of the classes of that snippet are from ``Yokai\Batch`` namespace, you will reuse a lot of those along the way.
    | After all, batch processing is almost always the same, the only things that changes are:
 
      * the data source you are reading from
