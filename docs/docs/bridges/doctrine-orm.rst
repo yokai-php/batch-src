@@ -1,13 +1,13 @@
 Bridge with ``doctrine/orm``
 ============================================================
 
-See `official documentation <https://www.doctrine-project.org/projects/orm.html>`__ on Doctrine's website.
+Refer to the  `official documentation <https://www.doctrine-project.org/projects/orm.html>`__ on Doctrine's website.
 
 
 Read from entities in database
 ------------------------------------------------------------
 
-The reader will yield every entity of certain class, one after the other.
+The reader will yield each entity of a specified class, one at a time.
 
 .. literalinclude:: doctrine-orm/entity-reader.php
    :language: php
