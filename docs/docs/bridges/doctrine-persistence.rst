@@ -1,49 +1,32 @@
 Bridge with ``doctrine/persistence``
 ============================================================
 
-todo
+Refer to the  `official documentation <https://www.doctrine-project.org/projects/persistence.html>`__ on Doctrine's website.
+
 
 Object item writer
 ------------------------------------------------------------
 
-todo
+| The writer will persist every items on the appropriate ``ObjectManager``.
+| It expect that items are objects.
+|  Objects can belong to different ``ObjectManager`` instances, only the encountered ones will be flushed.
 
-Object registry
+``ObjectManager->flush()`` is called every time the ``ItemJob`` reaches the batch size.
+
+.. literalinclude:: doctrine-persistence/object-writer.php
+   :language: php
+
+.. seealso::
+   | :doc:`What is an item writer? </core-concepts/item-job/item-writer>`
+
+
+Object registry util
 ------------------------------------------------------------
 
 Imagine that in an ``ItemJob`` you need to find objects from a database.
 
-.. code-block:: php
-
-    <?php
-
-    use App\Entity\Product;
-    use Doctrine\Persistence\ObjectRepository;
-    use Yokai\Batch\Job\Item\ItemProcessorInterface;
-
-    class DenormalizeProductProcessor implements ItemProcessorInterface
-    {
-        public function __construct(
-            private ObjectRepository $repository,
-        ) {
-        }
-
-        /**
-         * @param array<string, mixed> $item
-         */
-        public function process(mixed $item): Product
-        {
-            $product = $this->repository->findOneBy(['sku' => $item['sku']]);
-
-            $product ??= new Product($item['sku']);
-
-            $product->setName($item['name']);
-            $product->setPrice($item['price']);
-            //...
-
-            return $product;
-        }
-    }
+.. literalinclude:: doctrine-persistence/object-registry-before.php
+   :language: php
 
 | The problem here is that every time you will call ``findOneBy``, you
   will have to query the database. The object might already be in
@@ -53,38 +36,8 @@ Imagine that in an ``ItemJob`` you need to find objects from a database.
 | The role of the ``ObjectRegistry`` is to remember found objects
   identities, and query these objects with it instead.
 
-.. code-block:: diff
-
-    use App\Entity\Product;
-    -use Doctrine\Persistence\ObjectRepository;
-    +use Yokai\Batch\Bridge\Doctrine\Persistence\ObjectRegistry;
-    use Yokai\Batch\Job\Item\ItemProcessorInterface;
-
-    class DenormalizeProductProcessor implements ItemProcessorInterface
-    {
-        public function __construct(
-    -        private ObjectRepository $repository,
-    +        private ObjectRegistry $registry,
-        ) {
-        }
-
-        /**
-         * @param array<string, mixed> $item
-         */
-        public function process(mixed $item): Product
-        {
-    -        $product = $this->repository->findOneBy(['sku' => $item['sku']]);
-    +        $product = $this->registry->findOneBy(Product::class, ['sku' => $item['sku']]);
-
-            $product ??= new Product($item['sku']);
-
-            $product->setName($item['name']);
-            $product->setPrice($item['price']);
-            //...
-
-            return $product;
-        }
-    }
+.. literalinclude:: doctrine-persistence/object-registry-after.diff
+   :language: diff
 
 | The first time, the query will hit the database, and the object identity
   will be remembered in the registry.
@@ -94,4 +47,4 @@ Imagine that in an ``ItemJob`` you need to find objects from a database.
 | Otherwise, the query will be the fastest possible because it will use the object identity.
 
 .. seealso::
-   | :doc:`What is an item job? </core-concepts/job>`
+   | :doc:`What is an item job? </core-concepts/item-job>`
