@@ -9,9 +9,9 @@ Object item writer
 
 | The writer will persist every items on the appropriate ``ObjectManager``.
 | It expect that items are objects.
-| Objects can be on different ``ObjectManager``, only encountered ones will be flushed.
+|  Objects can belong to different ``ObjectManager`` instances, only the encountered ones will be flushed.
 
-``ObjectManager->flush()`` is called every time the ``ItemJob`` hit the batch size.
+``ObjectManager->flush()`` is called every time the ``ItemJob`` reaches the batch size.
 
 .. literalinclude:: doctrine-persistence/object-writer.php
    :language: php
