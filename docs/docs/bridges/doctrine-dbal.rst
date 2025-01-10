@@ -1,7 +1,7 @@
 Bridge with ``doctrine/dbal``
 ============================================================
 
-See `official documentation <https://www.doctrine-project.org/projects/dbal.html>`__ on Doctrine's website.
+Refer to the `official documentation <https://www.doctrine-project.org/projects/dbal.html>`__ on Doctrine's website.
 
 
 Store JobExecution objects in an SQL database
@@ -17,16 +17,17 @@ Store JobExecution objects in an SQL database
 Read from a paginated SQL query
 ------------------------------------------------------------
 
-| The reader will yield every row fetched by an SQL query, one after the other, as an associative array.
-| The provided SQL query **MUST** contains ``{limit}`` and ``{offset}`` placeholders to work.
-| The limit & offset will be used to execute the query as many time as needed.
+| The reader will yield each row fetched by an SQL query, one at a time, as an associative array.
+| The provided SQL query MUST include {limit} and {offset} placeholders to function correctly.
+| The limit and offset will be used to execute the query as many times as needed.
 
 .. literalinclude:: doctrine-dbal/offset-reader.php
    :language: php
 
 .. warning::
-   Because of how `SQL offset works <https://hackernoon.com/dont-offset-your-sql-querys-performance>`__,
-   if the total result set you are querying is very large, you might consider using a cursor query instead.
+   Due to the nature of SQL offset <https://hackernoon.com/dont-offset-your-sql-querys-performance>__,
+   if the total result set is very large, consider using a cursor-based query instead.
+
 
 .. seealso::
    | :doc:`What is an item reader? </core-concepts/item-job/item-reader>`
@@ -35,9 +36,9 @@ Read from a paginated SQL query
 Read from a cursored SQL query
 ------------------------------------------------------------
 
-| The reader will yield every row fetched by an SQL query, one after the other, as an associative array.
-| The provided SQL query **MUST** contains ``{after}`` and ``{limit}`` placeholders to work.
-| The after & limit will be used to execute the query as many time as needed.
+| The reader will yield each row fetched by an SQL query, one at a time, as an associative array.
+| The provided SQL query MUST include {after} and {limit} placeholders to function correctly.
+| The after and limit will be used to execute the query as many times as needed.
 
 .. literalinclude:: doctrine-dbal/cursor-reader.php
    :language: php
@@ -49,8 +50,8 @@ Read from a cursored SQL query
 Write items using inserts in a SQL table
 ------------------------------------------------------------
 
-| The writer will insert every item in the same SQL table.
-| It expect that items are associative arrays.
+| The writer will insert each item into the same SQL table.
+| It expects that items are associative arrays.
 
 .. literalinclude:: doctrine-dbal/insert-writer.php
    :language: php
@@ -62,18 +63,18 @@ Write items using inserts in a SQL table
 Write items using upsert in a SQL table
 ------------------------------------------------------------
 
-| The writer will insert or update every item in a SQL table the item can control.
-| It expect that items are ``DoctrineDBALUpsert`` objects.
+| The writer will insert or update each item in an SQL table, with the item determining the behavior.
+| It expects that items are DoctrineDBALUpsert objects.
 
 .. literalinclude:: doctrine-dbal/upsert-writer.php
    :language: php
 
-| Usually, this writer requires a ``ItemProcessorInterface`` that will transform items into ``DoctrineDBALUpsert``.
-| The object will contain:
+| Typically, this writer requires an ItemProcessorInterface to transform items into DoctrineDBALUpsert objects.
+| These objects should contain:
 
-* the table where record should be inserted/updated
-* all the data you expect to insert/update
-* one field and value that will be used to update whenever identity is known
+* The table where the record should be inserted or updated
+* All the data to insert or update
+* A field and value that will be used to identify the record to update (when applicable)
 
 .. literalinclude:: doctrine-dbal/upsert-writer-example.php
    :language: php
