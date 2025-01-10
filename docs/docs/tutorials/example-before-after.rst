@@ -1,18 +1,14 @@
 Example: Before/After showcase
 ============================================================
 
-.. note::
-   | The code involved in this example is part of the test suite of **Yokai Batch**.
-   | You can find the original code in the source repository:
-     `Data <https://github.com/yokai-php/batch-src/tree/0.x/tests/symfony/data/star-wars>`__,
-     `Entities <https://github.com/yokai-php/batch-src/tree/0.x/tests/symfony/src/Entity/StarWars>`__,
-     `Jobs <https://github.com/yokai-php/batch-src/tree/0.x/tests/symfony/src/Job/StarWars>`__,
-     `Tests <https://github.com/yokai-php/batch-src/blob/0.x/tests/symfony/tests/StarWarsJobSet.php>`__
+| This documentation will help you understand the difference between a classic code you could write.
+| Versus a code that had been written using ``yokai/batch`` library.
+
 
 What are we trying to do?
 ------------------------------------------------------------
 
-We have a ``jsonl`` file, containing data that we want to import in our database.
+We have a ``jsonl`` file, containing data that we want, and we must import it in our database, via ``doctrine/orm``.
 
 .. code-block:: jsonl
 
@@ -21,10 +17,13 @@ We have a ``jsonl`` file, containing data that we want to import in our database
     {"code":"headphones","attributes":["description","headphone_connectivity","name","picture","power_requirements","price","release_date","sku","snr","thd","weight"],"attribute_as_label":"name","attribute_as_image":"picture","labels":{"en_US":"Headphones","fr_FR":"Casques audio","de_DE":"Kopfh\u00f6rer"}}
 
 .. note::
-   | todo
+   | This file is obviously much larger than these 3 lines, you might have thousands lines to process.
+
 
 Before: Without Yokai Batch
 ------------------------------------------------------------
+
+The easiest way to do this is to create the one script you have already written thousands of times:
 
 .. literalinclude:: before-after/before.php
    :language: php
@@ -35,14 +34,19 @@ Before: Without Yokai Batch
    | As your team grow, it will become more important to avoid duplicating things like this.
    | Because it is likely that someone will forget one of those little things, code will start acting funny.
 
+
 After: With Yokai Batch
 ------------------------------------------------------------
+
+| Now, using ``yokai/batch``, we will be able to factorize most of this code to show only the business part :
 
 .. literalinclude:: before-after/after.php
    :language: php
 
 .. note::
-   | todo
+   | Most of the classes of that snippet are from ``Yokai\Batch`` namespace, you will reuse a lot of those along the way.
+   | After all, batch processing is almost always the same, the only things that changes are:
 
-.. hint::
-   | todo parler du fait que c'est pas obligé d'avoir un storage, etc...
+     * the data source you are reading from
+     * some transformations you are performing on that source
+     * the data source you are writing to
