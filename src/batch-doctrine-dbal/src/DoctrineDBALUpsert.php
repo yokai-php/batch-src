@@ -13,11 +13,11 @@ final class DoctrineDBALUpsert
     public function __construct(
         private string $table,
         /**
-         * @phpstan-var array<string, mixed>
+         * @var array<string, mixed>
          */
         private array $data,
         /**
-         * @phpstan-var array<string, mixed>
+         * @var array<string, mixed>
          */
         private array $identity = [],
     ) {
@@ -29,7 +29,7 @@ final class DoctrineDBALUpsert
     }
 
     /**
-     * @phpstan-return array<string, mixed>
+     * @return array<string, mixed>
      */
     public function getData(): array
     {
@@ -37,7 +37,7 @@ final class DoctrineDBALUpsert
     }
 
     /**
-     * @phpstan-return array<string, mixed>
+     * @return array<string, mixed>
      */
     public function getIdentity(): array
     {

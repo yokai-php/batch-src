@@ -19,7 +19,7 @@ final class NormalizeItemProcessor implements ItemProcessorInterface
         private NormalizerInterface $normalizer,
         private ?string $format = null,
         /**
-         * @phpstan-var array<string, mixed>
+         * @var array<string, mixed>
          */
         private array $context = [],
     ) {

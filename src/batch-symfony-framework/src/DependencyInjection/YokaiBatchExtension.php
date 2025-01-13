@@ -40,7 +40,7 @@ use Yokai\Batch\Storage\JobExecutionStorageInterface;
 final class YokaiBatchExtension extends Extension
 {
     /**
-     * @phpstan-param list<array<string, mixed>> $configs
+     * @param list<array<string, mixed>> $configs
      */
     public function load(array $configs, ContainerBuilder $container): void
     {

@@ -43,7 +43,7 @@ final class DoctrineDBALQueryOffsetReader implements ItemReaderInterface
     }
 
     /**
-     * @phpstan-return Generator<array<string, string>>
+     * @return Generator<array<string, string>>
      */
     public function read(): Generator
     {

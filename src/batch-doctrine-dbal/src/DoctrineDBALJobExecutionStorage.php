@@ -41,7 +41,7 @@ final class DoctrineDBALJobExecutionStorage implements
     private JobExecutionRowNormalizer $normalizer;
 
     /**
-     * @phpstan-param array{connection?: string, table?: string} $options
+     * @param array{connection?: string, table?: string} $options
      */
     public function __construct(ConnectionRegistry $doctrine, array $options)
     {
@@ -153,8 +153,8 @@ final class DoctrineDBALJobExecutionStorage implements
             ->from($this->table);
 
         /**
-         * @phpstan-var array<string, mixed> $queryParameters
-         * @phpstan-var array<string, string|int> $queryTypes
+         * @var array<string, mixed> $queryParameters
+         * @var array<string, string|int> $queryTypes
          */
         [$queryParameters, $queryTypes] = $this->addWheres($query, $qb);
 
@@ -186,8 +186,8 @@ final class DoctrineDBALJobExecutionStorage implements
             ->from($this->table);
 
         /**
-         * @phpstan-var array<string, mixed> $queryParameters
-         * @phpstan-var array<string, string|int> $queryTypes
+         * @var array<string, mixed> $queryParameters
+         * @var array<string, string|int> $queryTypes
          */
         [$queryParameters, $queryTypes] = $this->addWheres($query, $qb);
 
@@ -226,7 +226,7 @@ final class DoctrineDBALJobExecutionStorage implements
     }
 
     /**
-     * @phpstan-return array<string, string>
+     * @return array<string, string>
      */
     private function types(): array
     {
@@ -246,7 +246,7 @@ final class DoctrineDBALJobExecutionStorage implements
     }
 
     /**
-     * @phpstan-return array<string, string>
+     * @return array<string, string>
      */
     private function identity(JobExecution $execution): array
     {
@@ -257,7 +257,7 @@ final class DoctrineDBALJobExecutionStorage implements
     }
 
     /**
-     * @phpstan-return array<string, string>
+     * @return array<string, string>
      * @throws DBALException
      */
     private function fetchRow(string $jobName, string $id): array
@@ -287,10 +287,10 @@ final class DoctrineDBALJobExecutionStorage implements
     }
 
     /**
-     * @phpstan-param array<string, mixed>      $parameters
-     * @phpstan-param array<string, int|string> $types
+     * @param array<string, mixed>      $parameters
+     * @param array<string, int|string> $types
      *
-     * @phpstan-return Generator<JobExecution>
+     * @return Generator<JobExecution>
      */
     private function queryList(string $query, array $parameters, array $types): Generator
     {
@@ -305,7 +305,7 @@ final class DoctrineDBALJobExecutionStorage implements
     }
 
     /**
-     * @phpstan-return array<string, mixed>
+     * @return array<string, mixed>
      */
     private function toRow(JobExecution $jobExecution): array
     {
@@ -313,7 +313,7 @@ final class DoctrineDBALJobExecutionStorage implements
     }
 
     /**
-     * @phpstan-param array<string, mixed> $row
+     * @param array<string, mixed> $row
      */
     private function fromRow(array $row): JobExecution
     {

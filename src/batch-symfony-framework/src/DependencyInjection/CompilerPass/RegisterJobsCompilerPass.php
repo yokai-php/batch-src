@@ -38,7 +38,7 @@ final class RegisterJobsCompilerPass implements CompilerPassInterface
     }
 
     /**
-     * @phpstan-param array<string, mixed> $attributes
+     * @param array<string, mixed> $attributes
      */
     private function getJobName(string $id, Definition $definition, array $attributes): string
     {
