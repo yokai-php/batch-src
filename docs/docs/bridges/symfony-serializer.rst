@@ -3,6 +3,8 @@ Bridge with ``symfony/serializer``
 
 Refer to the `official documentation <https://symfony.com/doc/current/serializer.html>`__ on Symfony's website.
 
+This bridge provides a ways to (de)normalize items in batch job execution.
+
 
 Denormalize item processor
 ------------------------------------------------------------

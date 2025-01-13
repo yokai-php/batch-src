@@ -3,6 +3,8 @@ Bridge with ``symfony/validator``
 
 Refer to the  `official documentation <https://symfony.com/doc/current/validation.html>`__ on Symfony's website.
 
+This bridge provides a ways to skip invalid items in batch job execution.
+
 
 Skip invalid item processor
 ------------------------------------------------------------

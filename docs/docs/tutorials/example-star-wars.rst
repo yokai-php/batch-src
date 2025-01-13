@@ -75,7 +75,7 @@ All three imports behavior the same way:
 | We chose the easiest way here: introducing an abstract class for all our jobs.
 | We could have been creating a ``JobFactory``, but it's matter of taste.
 
-.. literalinclude:: star-wars/job-parent.php
+.. literalinclude:: star-wars/job-abstract.php
    :language: php
 
 A job for the whole import

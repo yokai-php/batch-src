@@ -3,6 +3,8 @@ Bridge with ``league/flysystem``
 
 Refer to the `official documentation <https://flysystem.thephpleague.com>`__ on The League of Extraordinary Packages's website.
 
+This bridge provides multiple filesystem manipulations to read/write files from any storage.
+
 
 Copy files job
 ------------------------------------------------------------
