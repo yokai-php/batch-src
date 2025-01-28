@@ -104,6 +104,7 @@ Explore some of the things that could be built with **Yokai Batch**:
    Symfony Messenger </bridges/symfony-messenger>
    Symfony Serializer </bridges/symfony-serializer>
    Symfony Validator </bridges/symfony-validator>
+   Symfony UID </bridges/symfony-uid>
 
 .. toctree::
    :maxdepth: 2
