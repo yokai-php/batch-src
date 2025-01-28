@@ -27,6 +27,7 @@ Some bridges to popular packages :
 | [`symfony/framework-bundle`](https://github.com/yokai-php/batch-symfony-framework) | Bundle to integrate with Symfony framework                     |
 | [`symfony/messenger`](https://github.com/yokai-php/batch-symfony-messenger)        | Trigger jobs using message dispatch                            |
 | [`symfony/serializer`](https://github.com/yokai-php/batch-symfony-serializer)      | Process items using (de)normalization                          |
+| [`symfony/uid`](https://github.com/yokai-php/batch-symfony-uid)                    | Use UIDs for JobExecution ids                                  |
 | [`symfony/validator`](https://github.com/yokai-php/batch-symfony-validator)        | Skip invalid items during process                              |
 
 And some special packages :
