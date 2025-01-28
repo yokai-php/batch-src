@@ -17,3 +17,4 @@ Here is the complete list of what to expect:
    Symfony Messenger </bridges/symfony-messenger>
    Symfony Serializer </bridges/symfony-serializer>
    Symfony Validator </bridges/symfony-validator>
+   Symfony UID </bridges/symfony-uid>
