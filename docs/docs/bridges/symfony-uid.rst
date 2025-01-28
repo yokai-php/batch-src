@@ -1,8 +1,10 @@
 Bridge with ``symfony/uid``
 ============================================================
 
-The UID component provides utilities to work with unique identifiers (UIDs) such as UUIDs and ULIDs.
-Please have a look to `Symfony's component documentation <https://symfony.com/doc/current/components/uid.html>`__.
+| The UID component provides utilities to work with unique identifiers (UIDs) such as UUIDs and ULIDs.
+| Refer to the `official documentation <https://symfony.com/doc/current/components/uid.html>`__ on Symfony's website.
+
+This bridge provides ways to generate ``JobExecution`` ids.
 
 
 Random based UUIDs ``JobExecution`` ids
@@ -10,19 +12,11 @@ Random based UUIDs ``JobExecution`` ids
 
 Use ``RandomBasedUuidJobExecutionIdGenerator`` for time based UUIDs ``JobExecution`` ids.
 
-.. code-block:: php
+.. literalinclude:: symfony-uid/random-based-uuid-job-execution-id-generator.php
+   :language: php
 
-    <?php
-
-    use Symfony\Component\Uid\Factory\UuidFactory;
-    use Yokai\Batch\Bridge\Symfony\Uid\Factory\RandomBasedUuidJobExecutionIdGenerator;
-    use Yokai\Batch\Factory\JobExecutionFactory;
-    use Yokai\Batch\Factory\JobExecutionParametersBuilder\NullJobExecutionParametersBuilder;
-
-    (new JobExecutionFactory(
-        (new RandomBasedUuidJobExecutionIdGenerator(new UuidFactory())),
-        new NullJobExecutionParametersBuilder(),
-    ))->create('job.foo');
+.. seealso::
+   | :doc:`What is a job execution storage? </core-concepts/job-execution-storage>`
 
 
 Time based UUIDs ``JobExecution`` ids
@@ -30,19 +24,11 @@ Time based UUIDs ``JobExecution`` ids
 
 Use ``TimeBasedUuidJobExecutionIdGenerator`` for time based UUIDs ``JobExecution`` ids.
 
-.. code-block:: php
+.. literalinclude:: symfony-uid/time-based-uuid-job-execution-id-generator.php
+   :language: php
 
-    <?php
-
-    use Symfony\Component\Uid\Factory\UuidFactory;
-    use Yokai\Batch\Bridge\Symfony\Uid\Factory\TimeBasedUuidJobExecutionIdGenerator;
-    use Yokai\Batch\Factory\JobExecutionFactory;
-    use Yokai\Batch\Factory\JobExecutionParametersBuilder\NullJobExecutionParametersBuilder;
-
-    (new JobExecutionFactory(
-        (new TimeBasedUuidJobExecutionIdGenerator(new UuidFactory())),
-        new NullJobExecutionParametersBuilder(),
-    ))->create('job.foo');
+.. seealso::
+   | :doc:`What is a job execution storage? </core-concepts/job-execution-storage>`
 
 
 ULIDs ``JobExecution`` ids
@@ -50,16 +36,8 @@ ULIDs ``JobExecution`` ids
 
 Use ``UlidJobExecutionIdGenerator`` for ULIDs ``JobExecution`` ids.
 
-.. code-block:: php
+.. literalinclude:: symfony-uid/ulid-job-execution-id-generator.php
+   :language: php
 
-    <?php
-
-    use Symfony\Component\Uid\Factory\UuidFactory;
-    use Yokai\Batch\Bridge\Symfony\Uid\Factory\UlidJobExecutionIdGenerator;
-    use Yokai\Batch\Factory\JobExecutionFactory;
-    use Yokai\Batch\Factory\JobExecutionParametersBuilder\NullJobExecutionParametersBuilder;
-
-    (new JobExecutionFactory(
-        (new UlidJobExecutionIdGenerator(new UuidFactory())),
-        new NullJobExecutionParametersBuilder(),
-    ))->create('job.foo');
+.. seealso::
+   | :doc:`What is a job execution storage? </core-concepts/job-execution-storage>`
