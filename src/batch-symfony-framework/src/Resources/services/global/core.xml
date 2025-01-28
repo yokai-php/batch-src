@@ -31,9 +31,6 @@
             <argument type="service" id="event_dispatcher" on-invalid="null"/>
         </service>
 
-        <service id="yokai_batch.job_execution_id_generator.uniqid"
-                 class="Yokai\Batch\Factory\UniqidJobExecutionIdGenerator"/>
-
         <service id="yokai_batch.job_execution_parameters_builder.chain"
                  class="Yokai\Batch\Factory\JobExecutionParametersBuilder\ChainJobExecutionParametersBuilder">
             <argument type="tagged_iterator" tag="yokai_batch.job_execution_parameters_builder"/>

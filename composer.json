@@ -31,6 +31,7 @@
     "symfony/framework-bundle": "^6.4|^7.0",
     "symfony/messenger": "^6.4|^7.0",
     "symfony/serializer": "^6.4|^7.0",
+    "symfony/uid": "^6.4|^7.0",
     "symfony/validator": "^6.4|^7.0"
   },
   "require-dev": {
@@ -62,6 +63,7 @@
     "yokai/batch-symfony-framework": "self.version",
     "yokai/batch-symfony-messenger": "self.version",
     "yokai/batch-symfony-serializer": "self.version",
+    "yokai/batch-symfony-uid": "self.version",
     "yokai/batch-symfony-validator": "self.version"
   },
   "autoload": {
@@ -76,6 +78,7 @@
       "Yokai\\Batch\\Bridge\\Symfony\\Framework\\": "src/batch-symfony-framework/src/",
       "Yokai\\Batch\\Bridge\\Symfony\\Messenger\\": "src/batch-symfony-messenger/src/",
       "Yokai\\Batch\\Bridge\\Symfony\\Serializer\\": "src/batch-symfony-serializer/src/",
+      "Yokai\\Batch\\Bridge\\Symfony\\Uid\\": "src/batch-symfony-uid/src/",
       "Yokai\\Batch\\Bridge\\Symfony\\Validator\\": "src/batch-symfony-validator/src/"
     }
   },
@@ -95,6 +98,7 @@
       "Yokai\\Batch\\Tests\\Bridge\\Symfony\\Framework\\": "src/batch-symfony-framework/tests/",
       "Yokai\\Batch\\Tests\\Bridge\\Symfony\\Messenger\\": "src/batch-symfony-messenger/tests/",
       "Yokai\\Batch\\Tests\\Bridge\\Symfony\\Serializer\\": "src/batch-symfony-serializer/tests/",
+      "Yokai\\Batch\\Tests\\Bridge\\Symfony\\Uid\\": "src/batch-symfony-uid/tests/",
       "Yokai\\Batch\\Tests\\Bridge\\Symfony\\Validator\\": "src/batch-symfony-validator/tests/"
     }
   }

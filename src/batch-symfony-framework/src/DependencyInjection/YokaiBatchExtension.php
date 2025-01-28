@@ -22,6 +22,7 @@ use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Form\JobFilterType;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\ConfigurableTemplating;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\SonataAdminTemplating;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\TemplatingInterface;
+use Yokai\Batch\Factory\JobExecutionIdGeneratorInterface;
 use Yokai\Batch\Factory\JobExecutionParametersBuilder\PerJobJobExecutionParametersBuilder;
 use Yokai\Batch\Factory\JobExecutionParametersBuilder\StaticJobExecutionParametersBuilder;
 use Yokai\Batch\Launcher\JobLauncherInterface;
@@ -67,6 +68,9 @@ final class YokaiBatchExtension extends Extension
         $this->configureLauncher($container, $config['launcher']);
         $this->configureParameters($container, $config['parameters']);
         $this->configureUserInterface($container, $loader, $config['ui']);
+
+        $jobExecutionIdGeneratorDefinition = JobExecutionIdGeneratorDefinitionFactory::fromType($config['id']);
+        $container->setDefinition(JobExecutionIdGeneratorInterface::class, $jobExecutionIdGeneratorDefinition);
 
         $container->registerAliasForArgument('yokai_batch.logger', LoggerInterface::class, 'yokaiBatchLogger');
     }

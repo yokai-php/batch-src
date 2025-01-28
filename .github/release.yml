@@ -23,5 +23,7 @@ changelog:
       labels: ['yokai/batch-symfony-pack']
     - title: 'Changes made to the `symfony/serializer` bridge: `yokai/batch-symfony-serializer`'
       labels: ['yokai/batch-symfony-serializer']
+    - title: 'Changes made to the `symfony/uid` bridge: `yokai/batch-symfony-uid`'
+      labels: ['yokai/batch-symfony-uid']
     - title: 'Changes made to the `symfony/validator` bridge: `yokai/batch-symfony-validator`'
       labels: ['yokai/batch-symfony-validator']

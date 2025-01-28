@@ -19,10 +19,15 @@ use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\ConfigurableTe
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\SonataAdminTemplating;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\TemplatingInterface;
 use Yokai\Batch\Bridge\Symfony\Messenger\DispatchMessageJobLauncher;
+use Yokai\Batch\Bridge\Symfony\Uid\Factory\RandomBasedUuidJobExecutionIdGenerator;
+use Yokai\Batch\Bridge\Symfony\Uid\Factory\TimeBasedUuidJobExecutionIdGenerator;
+use Yokai\Batch\Bridge\Symfony\Uid\Factory\UlidJobExecutionIdGenerator;
+use Yokai\Batch\Factory\JobExecutionIdGeneratorInterface;
 use Yokai\Batch\Factory\JobExecutionParametersBuilder\ChainJobExecutionParametersBuilder;
 use Yokai\Batch\Factory\JobExecutionParametersBuilder\PerJobJobExecutionParametersBuilder;
 use Yokai\Batch\Factory\JobExecutionParametersBuilder\StaticJobExecutionParametersBuilder;
 use Yokai\Batch\Factory\JobExecutionParametersBuilderInterface;
+use Yokai\Batch\Factory\UniqidJobExecutionIdGenerator;
 use Yokai\Batch\Launcher\JobLauncherInterface;
 use Yokai\Batch\Launcher\SimpleJobLauncher;
 use Yokai\Batch\Storage\FilesystemJobExecutionStorage;
@@ -374,6 +379,41 @@ class YokaiBatchExtensionTest extends TestCase
             new InvalidConfigurationException(
                 'Invalid configuration for path "yokai_batch.parameters.per_job.job.foo": Should be an array<string, mixed>.'
             ),
+        ];
+    }
+
+    /**
+     * @dataProvider id
+     */
+    public function testId(array $config, string $idGenerator): void
+    {
+        $container = $this->createContainer($config);
+
+        $idGeneratorDefinition = $this->getDefinition($container, JobExecutionIdGeneratorInterface::class);
+        self::assertSame($idGenerator, $idGeneratorDefinition->getClass());
+    }
+
+    public function id(): \Generator
+    {
+        yield 'Default config' => [
+            [],
+            UniqidJobExecutionIdGenerator::class,
+        ];
+        yield 'Explicit uniqid' => [
+            ['id' => 'uniqid'],
+            UniqidJobExecutionIdGenerator::class,
+        ];
+        yield 'Symfony random based UUID' => [
+            ['id' => 'symfony.uuid.random'],
+            RandomBasedUuidJobExecutionIdGenerator::class,
+        ];
+        yield 'Symfony time based UUID' => [
+            ['id' => 'symfony.uuid.time'],
+            TimeBasedUuidJobExecutionIdGenerator::class,
+        ];
+        yield 'Symfony ULID' => [
+            ['id' => 'symfony.ulid'],
+            UlidJobExecutionIdGenerator::class,
         ];
     }
 

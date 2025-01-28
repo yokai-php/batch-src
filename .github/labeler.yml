@@ -21,5 +21,7 @@
   - 'src/batch-symfony-pack/**'
 'yokai/batch-symfony-serializer':
   - 'src/batch-symfony-serializer/**'
+'yokai/batch-symfony-uid':
+  - 'src/batch-symfony-uid/**'
 'yokai/batch-symfony-validator':
   - 'src/batch-symfony-validator/**'

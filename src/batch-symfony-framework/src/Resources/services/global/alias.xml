@@ -19,9 +19,6 @@
         <service id="Yokai\Batch\Job\JobExecutor"
                  alias="yokai_batch.job_executor"/>
 
-        <service id="Yokai\Batch\Factory\JobExecutionIdGeneratorInterface"
-                 alias="yokai_batch.job_execution_id_generator.uniqid"/>
-
         <service id="Yokai\Batch\Factory\JobExecutionParametersBuilderInterface"
                  alias="yokai_batch.job_execution_parameters_builder.chain"/>
     </services>

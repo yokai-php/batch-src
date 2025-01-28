@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yokai\Batch\Bridge\Symfony\Framework\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -15,6 +16,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  *      storage: StorageConfig,
  *      launcher: LauncherConfig,
  *      parameters: ParametersConfig,
+ *      id: string,
  *      ui: UserInterfaceConfig,
  *  }
  * @phpstan-type StorageConfig array{
@@ -65,6 +67,7 @@ final class Configuration implements ConfigurationInterface
                 ->append($this->storage())
                 ->append($this->launcher())
                 ->append($this->parameters())
+                ->append($this->id())
                 ->append($this->ui())
             ->end()
         ;
@@ -176,6 +179,24 @@ final class Configuration implements ConfigurationInterface
         ;
 
         return $node;
+    }
+
+    private function id(): NodeDefinition
+    {
+        /** @var ArrayNodeDefinition $node */
+        $node = (new TreeBuilder('root'))->getRootNode();
+
+        $node
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->enumNode('id')
+                    ->values(JobExecutionIdGeneratorDefinitionFactory::TYPES)
+                    ->defaultValue(JobExecutionIdGeneratorDefinitionFactory::DEFAULT)
+                ->end()
+            ->end()
+        ;
+
+        return $node->getChildNodeDefinitions()['id'];
     }
 
     private function ui(): ArrayNodeDefinition

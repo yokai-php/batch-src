@@ -40,6 +40,9 @@ splits:
     prefix: "src/batch-symfony-serializer"
     target: "https://${GH_TOKEN}@github.com/yokai-php/batch-symfony-serializer.git"
   -
+    prefix: "src/batch-symfony-uid"
+    target: "https://${GH_TOKEN}@github.com/yokai-php/batch-symfony-uid.git"
+  -
     prefix: "src/batch-symfony-validator"
     target: "https://${GH_TOKEN}@github.com/yokai-php/batch-symfony-validator.git"
 
