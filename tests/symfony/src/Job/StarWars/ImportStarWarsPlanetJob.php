@@ -25,7 +25,7 @@ final class ImportStarWarsPlanetJob extends AbstractImportStartWarsEntityJob
         KernelInterface $kernel,
         ValidatorInterface $validator,
         ManagerRegistry $doctrine,
-        JobExecutionStorageInterface $executionStorage
+        JobExecutionStorageInterface $executionStorage,
     ) {
         parent::__construct(
             $kernel->getProjectDir() . '/data/star-wars/planets.csv',
@@ -36,14 +36,14 @@ final class ImportStarWarsPlanetJob extends AbstractImportStartWarsEntityJob
                 $entity->orbitalPeriod = $item['orbital_period'] ? (int)$item['orbital_period'] : null;
                 $entity->population = $item['population'] ? (int)$item['population'] : null;
                 $entity->terrain = \array_filter(
-                    \array_map('trim', \explode(',', (string)$item['terrain']))
+                    \array_map('trim', \explode(',', (string)$item['terrain'])),
                 );
 
                 return $entity;
             },
             $validator,
             $doctrine,
-            $executionStorage
+            $executionStorage,
         );
     }
 }

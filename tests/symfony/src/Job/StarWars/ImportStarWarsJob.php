@@ -31,7 +31,7 @@ final class ImportStarWarsJob extends AbstractDecoratedJob implements JobWithSta
                 ImportStarWarsPlanetJob::getJobName(),
                 ImportStarWarsSpecieJob::getJobName(),
                 ImportStarWarsCharacterJob::getJobName(),
-            ])
+            ]),
         );
     }
 }

@@ -70,7 +70,7 @@ final class ObjectWriter implements ItemWriterInterface
     private function createInvalidItemException(mixed $item): InvalidArgumentException
     {
         return new InvalidArgumentException(
-            \sprintf('Items to write must be object managed by Doctrine. Got "%s".', \get_debug_type($item))
+            \sprintf('Items to write must be object managed by Doctrine. Got "%s".', \get_debug_type($item)),
         );
     }
 }

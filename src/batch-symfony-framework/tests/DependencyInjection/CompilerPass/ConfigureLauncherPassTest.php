@@ -26,7 +26,7 @@ final class ConfigureLauncherPassTest extends TestCase
     public function testMissingService(): void
     {
         $this->expectExceptionObject(
-            new LogicException('Job launcher service "app.yokai_batch_job_launcher" does not exists.')
+            new LogicException('Job launcher service "app.yokai_batch_job_launcher" does not exists.'),
         );
         $this->process(function (ContainerBuilder $container) {
             $container->setAlias(JobLauncherInterface::class, 'app.yokai_batch_job_launcher');

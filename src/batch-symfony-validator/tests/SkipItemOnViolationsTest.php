@@ -30,7 +30,7 @@ class SkipItemOnViolationsTest extends TestCase
         self::assertSame([], $execution->getWarnings()[0]->getParameters());
         self::assertSame(
             ['itemIndex' => 'itemIndex', 'item' => 'item', 'violations' => $expectedViolations],
-            $execution->getWarnings()[0]->getContext()
+            $execution->getWarnings()[0]->getContext(),
         );
     }
 

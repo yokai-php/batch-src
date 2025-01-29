@@ -77,7 +77,7 @@ final class JobExecutionRowNormalizer
                 $status,
                 $parameters,
                 $summary,
-                new JobExecutionLogs($data['logs'])
+                new JobExecutionLogs($data['logs']),
             );
         }
 
@@ -134,7 +134,7 @@ final class JobExecutionRowNormalizer
         return $value;
     }
 
-    private function dateFromString(?string $date): ?DateTimeImmutable
+    private function dateFromString(null|string $date): null|DateTimeImmutable
     {
         if ($date === null) {
             return null;
@@ -167,7 +167,7 @@ final class JobExecutionRowNormalizer
             $array['message'],
             $array['code'],
             $array['parameters'],
-            $array['trace']
+            $array['trace'],
         );
     }
 
@@ -191,7 +191,7 @@ final class JobExecutionRowNormalizer
         return new Warning($array['message'], $array['parameters'], $array['context']);
     }
 
-    private function toDateString(?DateTimeInterface $date): ?string
+    private function toDateString(null|DateTimeInterface $date): null|string
     {
         if ($date === null) {
             return null;

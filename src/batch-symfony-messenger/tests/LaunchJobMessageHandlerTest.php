@@ -24,7 +24,7 @@ final class LaunchJobMessageHandlerTest extends TestCase
 
     public function testInvoke(): void
     {
-        $job = new class() implements JobInterface {
+        $job = new class implements JobInterface {
             public JobExecution $execution;
 
             public function execute(JobExecution $jobExecution): void
@@ -45,8 +45,8 @@ final class LaunchJobMessageHandlerTest extends TestCase
             new JobExecutor(
                 JobRegistry::fromJobArray(['foo' => $job]),
                 $jobExecutionStorage,
-                null
-            )
+                null,
+            ),
         );
         $handler->__invoke(new LaunchJobMessage('foo', ['bar' => 'BAR']));
 
@@ -54,7 +54,7 @@ final class LaunchJobMessageHandlerTest extends TestCase
         self::assertSame('123456', $job->execution->getId());
         self::assertSame(
             ['bar' => 'BAR', '_id' => '123456'],
-            $job->execution->getParameters()->all()
+            $job->execution->getParameters()->all(),
         );
     }
 }

@@ -39,7 +39,7 @@ abstract class DoctrineDBALTestCase extends TestCase
 
         return \array_map(
             fn(array $row) => \array_map('strval', $row),
-            $results->fetchAllAssociative()
+            $results->fetchAllAssociative(),
         );
     }
 }

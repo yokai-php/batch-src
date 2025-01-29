@@ -27,7 +27,7 @@ class DecoratedRepositoryFactory implements RepositoryFactory
     public function getRepository(EntityManagerInterface $entityManager, $entityName): ObjectRepository
     {
         return $this->repositories[$entityName] ??= new $this->class(
-            $this->decorated->getRepository($entityManager, $entityName)
+            $this->decorated->getRepository($entityManager, $entityName),
         );
     }
 }

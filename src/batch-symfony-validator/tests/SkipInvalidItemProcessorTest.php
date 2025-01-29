@@ -19,7 +19,7 @@ class SkipInvalidItemProcessorTest extends TestCase
     /**
      * @dataProvider groups
      */
-    public function testProcessValid(?array $groups): void
+    public function testProcessValid(null|array $groups): void
     {
         $validator = Validation::createValidator();
         $processor = new SkipInvalidItemProcessor($validator, [new NotBlank(['groups' => $groups])], $groups);
@@ -29,12 +29,13 @@ class SkipInvalidItemProcessorTest extends TestCase
     /**
      * @dataProvider groups
      */
-    public function testProcessInvalid(?array $groups): void
+    public function testProcessInvalid(null|array $groups): void
     {
         $validator = Validation::createValidator();
         $processor = new SkipInvalidItemProcessor($validator, [new Blank(['groups' => ['Default', 'Full']])], $groups);
 
         $exception = null;
+
         try {
             $processor->process('invalid item not blank');
         } catch (SkipItemException $exception) {

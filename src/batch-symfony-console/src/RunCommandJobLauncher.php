@@ -41,7 +41,7 @@ final class RunCommandJobLauncher implements JobLauncherInterface
             [
                 'job' => $name,
                 'configuration' => \json_encode($configuration, JSON_THROW_ON_ERROR),
-            ]
+            ],
         );
 
         return $jobExecution;

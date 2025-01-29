@@ -25,7 +25,7 @@ class MoveFilesJob implements JobInterface
         private JobParameterAccessorInterface $location,
         private FilesystemOperator $source,
         private FilesystemWriter $destination,
-        private ?Closure $transformLocation = null,
+        private null|Closure $transformLocation = null,
     ) {
     }
 
@@ -50,42 +50,46 @@ class MoveFilesJob implements JobInterface
             try {
                 $this->destination->writeStream(
                     $destinationLocation,
-                    $this->source->readStream($sourceLocation)
+                    $this->source->readStream($sourceLocation),
                 );
                 $this->source->delete($sourceLocation);
             } catch (UnableToReadFile $exception) {
                 $jobExecution->addFailureException($exception, [], false);
                 $jobExecution->getLogger()->error(
                     'Unable to read file from filesystem.',
-                    ['file' => $sourceLocation]
+                    ['file' => $sourceLocation],
                 );
+
                 continue;
             } catch (UnableToWriteFile $exception) {
                 $jobExecution->addFailureException($exception, [], false);
                 $jobExecution->getLogger()->error(
                     'Unable to write file to filesystem.',
-                    ['file' => $destinationLocation]
+                    ['file' => $destinationLocation],
                 );
+
                 continue;
             } catch (UnableToDeleteFile $exception) {
                 $jobExecution->addFailureException($exception, [], false);
                 $jobExecution->getLogger()->error(
                     'Unable to delete file from filesystem.',
-                    ['file' => $sourceLocation]
+                    ['file' => $sourceLocation],
                 );
+
                 continue;
             } catch (FilesystemException $exception) {
                 $jobExecution->addFailureException($exception, [], false);
                 $jobExecution->getLogger()->error(
                     'Unable to move file.',
-                    ['source' => $sourceLocation, 'destination' => $destinationLocation]
+                    ['source' => $sourceLocation, 'destination' => $destinationLocation],
                 );
+
                 continue;
             }
 
             $jobExecution->getLogger()->notice(
                 'Moved file from filesystem to another.',
-                ['source' => $sourceLocation, 'destination' => $destinationLocation]
+                ['source' => $sourceLocation, 'destination' => $destinationLocation],
             );
         }
     }

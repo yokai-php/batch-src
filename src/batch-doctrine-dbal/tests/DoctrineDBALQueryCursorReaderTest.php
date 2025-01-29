@@ -33,12 +33,12 @@ class DoctrineDBALQueryCursorReaderTest extends DoctrineDBALTestCase
             'id',
             0,
             null,
-            4 // we will take 4 records at once : 3 queries expected
+            4, // we will take 4 records at once : 3 queries expected
         );
 
         $read = \array_map(
             fn(array $row) => \array_map('strval', $row),
-            \iterator_to_array($reader->read(), false)
+            \iterator_to_array($reader->read(), false),
         );
 
         self::assertSame([
@@ -61,7 +61,7 @@ class DoctrineDBALQueryCursorReaderTest extends DoctrineDBALTestCase
             $this->doctrine,
             'SELECT * FROM some table WHERE id > 0 LIMIT {limit};',
             'id',
-            0
+            0,
         );
     }
 
@@ -72,7 +72,7 @@ class DoctrineDBALQueryCursorReaderTest extends DoctrineDBALTestCase
             $this->doctrine,
             'SELECT * FROM some table WHERE id > {after} LIMIT 1;',
             'id',
-            0
+            0,
         );
     }
 
@@ -85,7 +85,7 @@ class DoctrineDBALQueryCursorReaderTest extends DoctrineDBALTestCase
             'id',
             0,
             null,
-            -1 // must be > 0
+            -1, // must be > 0
         );
     }
 

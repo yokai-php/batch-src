@@ -68,7 +68,7 @@ class DoctrineDBALUpsertWriterTest extends DoctrineDBALTestCase
         self::assertSame('Update affected more than one line.', $warnings[0]->getMessage());
         self::assertSame(
             ['table' => 'food', 'identity' => ['type' => 'fruit'], 'count' => 2],
-            $warnings[0]->getContext()
+            $warnings[0]->getContext(),
         );
     }
 

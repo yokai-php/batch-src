@@ -30,7 +30,7 @@ final class EntityReader implements ItemReaderInterface
             throw UnexpectedValueException::type(
                 EntityManagerInterface::class,
                 $manager,
-                'Provided class must be a valid Doctrine entity.'
+                'Provided class must be a valid Doctrine entity.',
             );
         }
 

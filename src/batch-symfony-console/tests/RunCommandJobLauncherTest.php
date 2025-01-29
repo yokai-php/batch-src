@@ -33,7 +33,7 @@ class RunCommandJobLauncherTest extends TestCase
             new JobExecutionFactory(new UniqidJobExecutionIdGenerator(), new NullJobExecutionParametersBuilder()),
             $commandRunner->reveal(),
             $storage = new InMemoryJobExecutionStorage(),
-            'test.log'
+            'test.log',
         );
 
         $jobExecutionFromLauncher = $launcher->launch('testing', $config);

@@ -51,7 +51,7 @@ final class StarWarsJobSet
                     FROM star_wars_character as character
                     LEFT JOIN star_wars_planet homeworld on homeworld.id = character.home_world_id
                     LEFT JOIN star_wars_specie specie on specie.id = character.specie_id
-                    SQL
+                    SQL,
                 )->fetchAllAssociative();
 
                 Assert::assertContains(
@@ -60,7 +60,7 @@ final class StarWarsJobSet
                         'homeworld' => 'Tatooine',
                         'species' => 'Human',
                     ],
-                    $results
+                    $results,
                 );
                 Assert::assertContains(
                     [
@@ -68,7 +68,7 @@ final class StarWarsJobSet
                         'homeworld' => null,
                         'species' => null,
                     ],
-                    $results
+                    $results,
                 );
             },
             static function (ContainerInterface $container) {

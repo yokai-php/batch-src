@@ -18,7 +18,7 @@ final class SplitDeveloperXlsxJob implements JobInterface
         private string $inputFile,
         private string $outputBadgeFile,
         private string $outputRepositoryFile,
-        private string $outputDeveloperFile
+        private string $outputDeveloperFile,
     ) {
     }
 
@@ -73,7 +73,7 @@ final class SplitDeveloperXlsxJob implements JobInterface
         unset(
             $badges,
             $repositories,
-            $developers
+            $developers,
         );
     }
 
@@ -96,7 +96,7 @@ final class SplitDeveloperXlsxJob implements JobInterface
 
                 return $row;
             },
-            \iterator_to_array(new \LimitIterator($sheet->getRowIterator(), 1), false)
+            \iterator_to_array(new \LimitIterator($sheet->getRowIterator(), 1), false),
         );
     }
 }

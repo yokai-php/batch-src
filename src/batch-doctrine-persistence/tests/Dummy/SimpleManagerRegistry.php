@@ -32,7 +32,7 @@ final class SimpleManagerRegistry extends AbstractManagerRegistry
             $managers,
             $defaultConnection ?? 'unknown',
             $defaultEntityManager ?? 'unknown',
-            Proxy::class
+            Proxy::class,
         );
     }
 

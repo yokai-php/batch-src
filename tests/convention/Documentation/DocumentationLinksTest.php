@@ -35,7 +35,7 @@ final class DocumentationLinksTest extends TestCase
             self::assertNotFalse(
                 $link->pointsToFile->getRealPath(),
                 "Link \"{$link->label}\" in \"{$link->pointsToFile->getPathname()}\"," .
-                " is pointing to \"{$link->uri}\" which reference an internal file that do not exists."
+                " is pointing to \"{$link->uri}\" which reference an internal file that do not exists.",
             );
 
             self::assertSame(self::DEFAULT_BRANCH, $link->branch, 'All links must be wired on default branch.');
@@ -94,7 +94,7 @@ final class DocumentationLinksTest extends TestCase
         self::assertSame(
             $expectedClasses,
             $actualClasses,
-            "All classes implementing \"{$interface}\" should be linked in \"{$filepath}\"."
+            "All classes implementing \"{$interface}\" should be linked in \"{$filepath}\".",
         );
     }
 

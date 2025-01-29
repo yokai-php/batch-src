@@ -147,31 +147,31 @@ class UserInterfaceTest extends WebTestCase
                 self::assertStringContainsString('Starting child job {"job":"star-wars.import:planet"}', $content);
                 self::assertStringContainsString(
                     'Job produced summary {"job":"star-wars.import:planet","read":61,"processed":60,"skipped":1,"invalid":1,"write":60}',
-                    $content
+                    $content,
                 );
                 self::assertStringContainsString(
                     'Job executed successfully {"job":"star-wars.import:planet"',
-                    $content
+                    $content,
                 );
 
                 self::assertStringContainsString('Starting child job {"job":"star-wars.import:specie"}', $content);
                 self::assertStringContainsString(
                     'Job produced summary {"job":"star-wars.import:specie","read":37,"processed":37,"write":37}',
-                    $content
+                    $content,
                 );
                 self::assertStringContainsString(
                     'Job executed successfully {"job":"star-wars.import:specie"',
-                    $content
+                    $content,
                 );
 
                 self::assertStringContainsString('Starting child job {"job":"star-wars.import:character"}', $content);
                 self::assertStringContainsString(
                     'Job produced summary {"job":"star-wars.import:character","read":87,"processed":87,"write":87}',
-                    $content
+                    $content,
                 );
                 self::assertStringContainsString(
                     'Job executed successfully {"job":"star-wars.import:character"',
-                    $content
+                    $content,
                 );
 
                 self::assertStringContainsString('Job executed successfully {"job":"star-wars.import"', $content);

@@ -45,7 +45,7 @@ final class SourcesTest extends TestCase
         self::assertSame(
             [],
             \array_diff($expectedProdDeps, $prodDeps),
-            'Dependencies of all packages are required in root composer.json'
+            'Dependencies of all packages are required in root composer.json',
         );
 
         $expectedDevDeps = \array_unique($expectedDevDeps);
@@ -59,7 +59,7 @@ final class SourcesTest extends TestCase
         self::assertSame(
             [],
             \array_diff($expectedDevDeps, $devDeps),
-            'Dev dependencies of all packages are required in root composer.json'
+            'Dev dependencies of all packages are required in root composer.json',
         );
 
         $replace = $rootComposer->replace();
@@ -68,7 +68,7 @@ final class SourcesTest extends TestCase
         self::assertSame(
             $expectedReplace,
             $replace,
-            'All packages are replaced in root composer.json'
+            'All packages are replaced in root composer.json',
         );
 
         $prodAutoload = $rootComposer->autoload();
@@ -77,7 +77,7 @@ final class SourcesTest extends TestCase
         self::assertSame(
             [],
             \array_diff($expectedProdAutoload, $prodAutoload),
-            'All packages autoload rules are duplicated in root composer.json'
+            'All packages autoload rules are duplicated in root composer.json',
         );
 
         $devAutoload = $rootComposer->autoloadDev();
@@ -86,7 +86,7 @@ final class SourcesTest extends TestCase
         self::assertSame(
             [],
             \array_diff($expectedDevAutoload, $devAutoload),
-            'All packages dev autoload rules are duplicated in root composer.json'
+            'All packages dev autoload rules are duplicated in root composer.json',
         );
     }
 }

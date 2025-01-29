@@ -25,12 +25,12 @@ final class DoctrineDBALQueryOffsetReader implements ItemReaderInterface
     {
         if (\mb_strpos($sql, '{limit}') === false || \mb_strpos($sql, '{offset}') === false) {
             throw new InvalidArgumentException(
-                \sprintf('%s $sql argument must contains "{limit}" and "{offset}" for pagination.', __METHOD__)
+                \sprintf('%s $sql argument must contains "{limit}" and "{offset}" for pagination.', __METHOD__),
             );
         }
         if ($batch <= 0) {
             throw new InvalidArgumentException(
-                \sprintf('%s $batch argument must be a positive integer.', __METHOD__)
+                \sprintf('%s $batch argument must be a positive integer.', __METHOD__),
             );
         }
 
@@ -52,7 +52,7 @@ final class DoctrineDBALQueryOffsetReader implements ItemReaderInterface
         do {
             /** @var Result $statement */
             $statement = $this->connection->executeQuery(
-                \strtr($this->sql, ['{limit}' => $this->batch, '{offset}' => $iteration * $this->batch])
+                \strtr($this->sql, ['{limit}' => $this->batch, '{offset}' => $iteration * $this->batch]),
             );
 
             /** @var array<array<string, string>> $rows */

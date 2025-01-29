@@ -12,6 +12,7 @@ abstract class CommentsTestCase extends TestCase
     {
         if (!\preg_match_all('/.@see [^ }]+./', $comment, $matches)) {
             self::assertTrue(true);
+
             return;
         }
 

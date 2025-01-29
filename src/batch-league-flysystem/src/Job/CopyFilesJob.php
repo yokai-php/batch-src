@@ -24,7 +24,7 @@ class CopyFilesJob implements JobInterface
         private JobParameterAccessorInterface $location,
         private FilesystemReader $source,
         private FilesystemWriter $destination,
-        private ?Closure $transformLocation = null,
+        private null|Closure $transformLocation = null,
     ) {
     }
 
@@ -49,34 +49,37 @@ class CopyFilesJob implements JobInterface
             try {
                 $this->destination->writeStream(
                     $destinationLocation,
-                    $this->source->readStream($sourceLocation)
+                    $this->source->readStream($sourceLocation),
                 );
             } catch (UnableToReadFile $exception) {
                 $jobExecution->addFailureException($exception, [], false);
                 $jobExecution->getLogger()->error(
                     'Unable to read file from filesystem.',
-                    ['file' => $sourceLocation]
+                    ['file' => $sourceLocation],
                 );
+
                 continue;
             } catch (UnableToWriteFile $exception) {
                 $jobExecution->addFailureException($exception, [], false);
                 $jobExecution->getLogger()->error(
                     'Unable to write file to filesystem.',
-                    ['file' => $destinationLocation]
+                    ['file' => $destinationLocation],
                 );
+
                 continue;
             } catch (FilesystemException $exception) {
                 $jobExecution->addFailureException($exception, [], false);
                 $jobExecution->getLogger()->error(
                     'Unable to copy file.',
-                    ['source' => $sourceLocation, 'destination' => $destinationLocation]
+                    ['source' => $sourceLocation, 'destination' => $destinationLocation],
                 );
+
                 continue;
             }
 
             $jobExecution->getLogger()->notice(
                 'Copied file from filesystem to another.',
-                ['source' => $sourceLocation, 'destination' => $destinationLocation]
+                ['source' => $sourceLocation, 'destination' => $destinationLocation],
             );
         }
     }

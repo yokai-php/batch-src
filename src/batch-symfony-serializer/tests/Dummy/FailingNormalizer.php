@@ -23,7 +23,7 @@ final class FailingNormalizer implements NormalizerInterface, DenormalizerInterf
     public function normalize(
         mixed $object,
         string $format = null,
-        array $context = []
+        array $context = [],
     ): array|string|int|float|bool|\ArrayObject|null {
         throw $this->exception;
     }
@@ -38,7 +38,7 @@ final class FailingNormalizer implements NormalizerInterface, DenormalizerInterf
         throw $this->exception;
     }
 
-    public function getSupportedTypes(?string $format): array
+    public function getSupportedTypes(null|string $format): array
     {
         return ['*' => true];
     }

@@ -27,7 +27,7 @@ final class ImportStarWarsCharacterJob extends AbstractImportStartWarsEntityJob
         KernelInterface $kernel,
         ValidatorInterface $validator,
         ManagerRegistry $doctrine,
-        JobExecutionStorageInterface $executionStorage
+        JobExecutionStorageInterface $executionStorage,
     ) {
         parent::__construct(
             $kernel->getProjectDir() . '/data/star-wars/characters.csv',
@@ -45,7 +45,7 @@ final class ImportStarWarsCharacterJob extends AbstractImportStartWarsEntityJob
             },
             $validator,
             $doctrine,
-            $executionStorage
+            $executionStorage,
         );
     }
 }

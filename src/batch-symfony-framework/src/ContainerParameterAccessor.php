@@ -28,7 +28,7 @@ final class ContainerParameterAccessor implements JobParameterAccessorInterface
         } catch (InvalidArgumentException $exception) {
             throw new CannotAccessParameterException(
                 \sprintf('Cannot access "%s" parameter from container parameters', $this->name),
-                $exception
+                $exception,
             );
         }
     }

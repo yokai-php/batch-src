@@ -58,6 +58,7 @@ final class PackagesTest extends TestCase
                 foreach ($requirePrefixes as $prefix) {
                     if (\str_starts_with($use, $prefix)) {
                         self::assertTrue(true);
+
                         continue 2;
                     }
                 }
@@ -85,7 +86,7 @@ final class PackagesTest extends TestCase
             self::assertCount(
                 1,
                 $distinctVersions,
-                "{$dependency} is configured on the same version : " . \json_encode($distinctVersions)
+                "{$dependency} is configured on the same version : " . \json_encode($distinctVersions),
             );
         }
     }

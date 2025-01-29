@@ -26,7 +26,7 @@ final class ImportStarWarsSpecieJob extends AbstractImportStartWarsEntityJob
         KernelInterface $kernel,
         ValidatorInterface $validator,
         ManagerRegistry $doctrine,
-        JobExecutionStorageInterface $executionStorage
+        JobExecutionStorageInterface $executionStorage,
     ) {
         parent::__construct(
             $kernel->getProjectDir() . '/data/star-wars/species.csv',
@@ -44,7 +44,7 @@ final class ImportStarWarsSpecieJob extends AbstractImportStartWarsEntityJob
             },
             $validator,
             $doctrine,
-            $executionStorage
+            $executionStorage,
         );
     }
 }

@@ -31,7 +31,7 @@ final class JobController
 
     public function __construct(
         private QueryableJobExecutionStorageInterface $jobExecutionStorage,
-        private ?FormFactoryInterface $formFactory,
+        private null|FormFactoryInterface $formFactory,
         private JobSecurity $security,
         private Environment $twig,
         private TemplatingInterface $templating,
@@ -60,7 +60,7 @@ final class JobController
                 [
                     'method' => Request::METHOD_GET,
                     'csrf_protection' => false,
-                ]
+                ],
             );
             $filter->handleRequest($request);
 
@@ -136,7 +136,7 @@ final class JobController
     /**
      * View {@see JobExecution} details in a Twig template.
      */
-    public function view(string $job, string $id, ?string $path = null): Response
+    public function view(string $job, string $id, null|string $path = null): Response
     {
         try {
             $execution = $this->jobExecutionStorage->retrieve($job, $id);
@@ -192,7 +192,7 @@ final class JobController
         $response = new Response((string)$execution->getLogs());
         $response->headers->set(
             'Content-Disposition',
-            $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filename)
+            $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filename),
         );
         $response->headers->set('Content-Type', 'application/log');
 

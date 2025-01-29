@@ -42,7 +42,7 @@ abstract class AbstractImportStartWarsEntityJob extends AbstractDecoratedJob imp
         Closure $process,
         ValidatorInterface $validator,
         ManagerRegistry $doctrine,
-        JobExecutionStorageInterface $executionStorage
+        JobExecutionStorageInterface $executionStorage,
     ) {
         parent::__construct(
             new ItemJob(
@@ -51,18 +51,18 @@ abstract class AbstractImportStartWarsEntityJob extends AbstractDecoratedJob imp
                     new StaticValueParameterAccessor($file),
                     null,
                     null,
-                    HeaderStrategy::combine()
+                    HeaderStrategy::combine(),
                 ),
                 new ChainProcessor([
                     new ArrayMapProcessor(
-                        fn(string $value) => $value === 'NA' ? null : $value
+                        fn(string $value) => $value === 'NA' ? null : $value,
                     ),
                     new CallbackProcessor($process),
                     new SkipInvalidItemProcessor($validator),
                 ]),
                 new ObjectWriter($doctrine),
-                $executionStorage
-            )
+                $executionStorage,
+            ),
         );
     }
 }

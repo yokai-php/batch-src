@@ -13,7 +13,7 @@ use Symfony\Component\Process\PhpExecutableFinder;
 class CommandRunner
 {
     private string $consolePath;
-    private ?PhpExecutableFinder $phpLocator;
+    private null|PhpExecutableFinder $phpLocator;
 
     public function __construct(
         string $binDir,
@@ -38,8 +38,8 @@ class CommandRunner
             \sprintf(
                 '%s >> %s 2>&1 &',
                 $this->buildCommand($commandName, $arguments),
-                \implode(DIRECTORY_SEPARATOR, [$this->logDir, $logFilename])
-            )
+                \implode(DIRECTORY_SEPARATOR, [$this->logDir, $logFilename]),
+            ),
         );
     }
 
@@ -61,7 +61,7 @@ class CommandRunner
             $this->phpLocator ? $this->phpLocator->find() : 'php',
             $this->consolePath,
             $commandName,
-            (string)(new ArrayInput($arguments))
+            (string)(new ArrayInput($arguments)),
         );
     }
 }

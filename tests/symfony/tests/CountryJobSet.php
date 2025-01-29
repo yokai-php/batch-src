@@ -35,7 +35,7 @@ final class CountryJobSet
                         'currency' => 'EUR',
                         'phone' => '33',
                     ],
-                    $summary
+                    $summary,
                 );
                 Assert::assertContains(
                     [
@@ -46,7 +46,7 @@ final class CountryJobSet
                         'currency' => 'GBP',
                         'phone' => '44',
                     ],
-                    $summary
+                    $summary,
                 );
 
                 // assert written CSV file
@@ -55,11 +55,11 @@ final class CountryJobSet
                 Assert::assertCount(self::COUNT_IN_CSV, $csv);
                 Assert::assertContains(
                     'FR,FRA,France,EU,EUR,33',
-                    $csv
+                    $csv,
                 );
                 Assert::assertContains(
                     'GB,GBR,"United Kingdom",EU,GBP,44',
-                    $csv
+                    $csv,
                 );
 
                 // assert written JSONL file
@@ -68,11 +68,11 @@ final class CountryJobSet
                 Assert::assertCount(self::COUNT, $jsonl);
                 Assert::assertContains(
                     '{"iso2":"FR","iso3":"FRA","name":"France","continent":"EU","currency":"EUR","phone":"33"}',
-                    $jsonl
+                    $jsonl,
                 );
                 Assert::assertContains(
                     '{"iso2":"GB","iso3":"GBR","name":"United Kingdom","continent":"EU","currency":"GBP","phone":"44"}',
-                    $jsonl
+                    $jsonl,
                 );
                 Assert::assertStringContainsString('log process', $execution->getLogs()->__toString());
             },
