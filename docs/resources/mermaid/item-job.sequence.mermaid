@@ -1,0 +1,16 @@
+sequenceDiagram
+    participant ItemJob
+    participant ItemReader
+    participant ItemProcessor
+    participant ItemWriter
+    participant JobExecutionStorage
+
+    activate ItemJob
+    ItemJob-->>ItemReader: Iterates on each element of the reader
+    ItemJob-->>ItemProcessor: Give a job name and parameters
+    ItemProcessor-->>ItemProcessor: Transform the item or throw an exception to skip
+    ItemJob-->>ItemJob: Stack the transformed item to a list
+    ItemJob-->>ItemWriter: Whenever the list reach the batch size, all items are written
+    ItemJob-->>JobExecutionStorage: Every time we ask for a batch write, the JobExecution is stored
+    ItemJob-->>ItemWriter: After iterating over the list from ItemReader, if list is not empty, all items are written
+    activate ItemJob

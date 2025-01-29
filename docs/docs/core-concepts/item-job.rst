@@ -13,6 +13,12 @@ This is just a job that has been prepared to batch handle items.
 If you are familiar with the concept of an `ETL <https://en.wikipedia.org/wiki/Extract,_transform,_load>`__,
 this is pretty much the same.
 
+Architecture
+------------------------------------------------------------
+
+.. image:: /_static/images/diagram/item-job.class.svg
+.. image:: /_static/images/diagram/item-job.sequence.svg
+
 How to create an item job?
 ------------------------------------------------------------
 

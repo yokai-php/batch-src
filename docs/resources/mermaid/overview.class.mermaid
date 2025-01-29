@@ -1,0 +1,36 @@
+classDiagram
+    JobLauncher --> JobExecutionAccessor: 1 - Ask for JobExecution matching arguments
+    JobExecutionAccessor --> JobExecutionFactory: 3 - Create new JobExecution with arguments
+    JobExecutionAccessor --> JobExecutionStorage: 2 - Try to get existing JobExecution from storage
+    JobExecutionAccessor --> JobExecutionStorage: 4 - If JobExecution was created, store it
+    JobLauncher --> Infrastructure: 5 - Ask for job execution via infrastructure (optionnaly)
+    Infrastructure --> JobExecutionStorage: 6 - Retrieve JobExecution
+    Infrastructure --> JobExecutor: 7 - Ask for job execution
+    JobExecutor --> Job: 8 - Access corresponding Job class and execute it
+    class JobLauncher {
+        <<interface>>
+        launch(string jobName, array parameters) JobExecution
+    }
+    class JobExecutionAccessor {
+        JobExecutionStorage storage
+        JobExecutionFactory factory
+        get(string jobName, array parameters) JobExecution
+    }
+    class JobExecutionFactory {
+        create(string jobName, array parameters) JobExecution
+    }
+    class JobExecutionStorage {
+        <<interface>>
+        retrieve(string jobName, string executionId) JobExecution
+        store(JobExecution execution) void
+    }
+    class Infrastructure {
+        Depends on JobLauncher implementation
+    }
+    class JobExecutor {
+        execute(JobExecution execution) void
+    }
+    class Job {
+        <<interface>>
+        execute(JobExecution execution) void
+    }
