@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\HttpKernel\Log\Logger;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
+use Yokai\Batch\Bridge\Doctrine\Persistence\ObjectRegistry;
 use Yokai\Batch\Bridge\Symfony\Framework\YokaiBatchBundle;
 use Yokai\Batch\Job\JobInterface;
 use Yokai\Batch\Launcher\JobLauncherInterface;
@@ -112,6 +113,11 @@ final class Kernel extends BaseKernel implements CompilerPassInterface
         $container->services()
             ->set('logger', Logger::class)
             ->args([null, '%kernel.logs_dir%/test.log', null, new Reference(RequestStack::class)])
+            ->private();
+
+        $container->services()
+            ->set(ObjectRegistry::class)
+            ->autowire(true)
             ->private();
 
         $container->services()

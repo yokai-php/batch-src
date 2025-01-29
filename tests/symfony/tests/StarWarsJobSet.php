@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Yokai\Batch\Sources\Tests\Symfony\Tests;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Tools\SchemaTool;
 use Generator;
 use PHPUnit\Framework\Assert;
 use Psr\Container\ContainerInterface;
@@ -20,7 +18,7 @@ final class StarWarsJobSet
 {
     public static function sets(): Generator
     {
-        yield [
+        yield 'Star Wars Import' => [
             ImportStarWarsJob::getJobName(),
             static function (JobExecution $execution, ContainerInterface $container) {
                 /** @var Connection $connection */
@@ -70,21 +68,6 @@ final class StarWarsJobSet
                     ],
                     $results,
                 );
-            },
-            static function (ContainerInterface $container) {
-                /** @var EntityManagerInterface $entityManager */
-                $entityManager = $container->get('doctrine.orm.default_entity_manager');
-                $connection = $entityManager->getConnection();
-
-                $database = $connection->getParams()['path'];
-                if (\file_exists($database)) {
-                    \unlink($database);
-                }
-                $schema = $connection->createSchemaManager();
-                $schema->createDatabase($database);
-
-                (new SchemaTool($entityManager))
-                    ->createSchema($entityManager->getMetadataFactory()->getAllMetadata());
             },
         ];
     }

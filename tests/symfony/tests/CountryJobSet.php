@@ -17,7 +17,7 @@ final class CountryJobSet
 
     public static function sets(): Generator
     {
-        yield [
+        yield 'Country' => [
             CountryJob::getJobName(),
             static function (JobExecution $execution) {
                 JobAssert::assertIsSuccessful($execution);

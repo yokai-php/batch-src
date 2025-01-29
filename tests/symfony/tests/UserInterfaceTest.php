@@ -17,6 +17,7 @@ class UserInterfaceTest extends WebTestCase
     private const TRANSLATIONS = [
         'country' => 'Country import',
         'star-wars.import' => 'Star Wars import',
+        'rick-and-morty.import' => 'Rick and Morty import',
     ];
 
     /**

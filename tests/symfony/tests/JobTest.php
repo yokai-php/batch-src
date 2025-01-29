@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Sources\Tests\Symfony\Tests;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\SchemaTool;
 use Generator;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -16,18 +18,15 @@ final class JobTest extends KernelTestCase
     /**
      * @dataProvider configs
      */
-    public function testUsingCli(string $job, callable $assert, callable $setup = null, array $config = []): void
+    public function testUsingCli(string $job, callable $assert): void
     {
         $kernel = self::createKernel();
         $container = self::getContainer();
-
-        if ($setup !== null) {
-            $setup($container);
-        }
+        self::setupDatabase();
 
         $application = new Application($kernel);
 
-        $config['_id'] = $id = \uniqid();
+        $config = ['_id' => $id = \uniqid()];
 
         $command = $application->find('yokai:batch:run');
         $commandTester = new CommandTester($command);
@@ -41,13 +40,10 @@ final class JobTest extends KernelTestCase
     /**
      * @dataProvider configs
      */
-    public function testUsingLauncher(string $job, callable $assert, callable $setup = null, array $config = []): void
+    public function testUsingLauncher(string $job, callable $assert): void
     {
         $container = self::getContainer();
-
-        if ($setup !== null) {
-            $setup($container);
-        }
+        self::setupDatabase();
 
         /** @var JobLauncherInterface $launcher */
         $launcher = $container->get(JobLauncherInterface::class);
@@ -61,5 +57,23 @@ final class JobTest extends KernelTestCase
     {
         yield from CountryJobSet::sets();
         yield from StarWarsJobSet::sets();
+        yield from RickAndMortyJobSet::sets();
+    }
+
+    private static function setupDatabase(): void
+    {
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = self::getContainer()->get('doctrine.orm.default_entity_manager');
+        $connection = $entityManager->getConnection();
+
+        $database = $connection->getParams()['path'];
+        if (\file_exists($database)) {
+            \unlink($database);
+        }
+        $schema = $connection->createSchemaManager();
+        $schema->createDatabase($database);
+
+        (new SchemaTool($entityManager))
+            ->createSchema($entityManager->getMetadataFactory()->getAllMetadata());
     }
 }
