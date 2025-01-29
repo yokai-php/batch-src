@@ -1,0 +1,67 @@
+#!/usr/bin/env php
+<?php
+
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Process\Process;
+use Symfony\Component\Yaml\Yaml;
+
+require_once __DIR__ . '/../../vendor/autoload.php';
+
+$action = Yaml::parseFile(__DIR__ . '/../../.github/actions/install/action.yml');
+$composer = \array_filter(\explode(\PHP_EOL, $action['runs']['steps'][1]['run']));
+
+$io = new SymfonyStyle(new ArrayInput([]), new ConsoleOutput());
+
+$execute = function (array $job, string $php = null, string $symfony = null) use ($io, $composer) {
+    $io->section($job['name']);
+
+    if ($php === null && $symfony === null) {
+        ['php-version' => $php, 'symfony-version' => $symfony] = $job['steps'][1]['with'];
+    } else {
+        $io->definitionList(
+            ['PHP' => $php],
+            ['Symfony' => $symfony],
+        );
+    }
+
+    $process = function (string $command, bool $output) use ($io, $php) {
+        $container = 'php' . \str_replace('.', '', $php);
+        $command = "led in -s {$container} -- {$command}";
+
+        $callback = null;
+        if ($output) {
+            $io->writeln($command);
+            $callback = function ($type, $buffer) {
+                echo $buffer;
+            };
+        }
+
+        Process::fromShellCommandline($command)->mustRun($callback);
+    };
+
+    foreach ($composer as $command) {
+        $process(\str_replace('${{ inputs.symfony-version }}', $symfony, $command), false);
+    }
+    $process($job['steps'][2]['run'], true);
+};
+
+$tests = Yaml::parseFile(__DIR__ . '/../../.github/workflows/tests.yml');
+
+try {
+    $execute($tests['jobs']['checkstyke']);
+    $execute($tests['jobs']['phpstan']);
+    $execute($tests['jobs']['conventions']);
+
+    $phpunitTestingMatrix = $tests['jobs']['phpunit']['strategy']['matrix']['include'];
+    foreach ($phpunitTestingMatrix as ['php-version' => $php, 'symfony-version' => $symfony]) {
+        $execute($tests['jobs']['phpunit'], $php, $symfony);
+    }
+} catch (\Throwable) {
+    $io->error('An error occurred, abort tests.');
+}
+
+$io->success('Revert changes made to composer.json');
+Process::fromShellCommandline('git restore composer.json')->mustRun();
+Process::fromShellCommandline('led in -- composer update')->mustRun();

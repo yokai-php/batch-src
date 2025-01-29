@@ -37,4 +37,5 @@ runs:
         composer require --quiet --no-update "symfony/filesystem:${{ inputs.symfony-version }}" --dev
         composer require --quiet --no-update "symfony/finder:${{ inputs.symfony-version }}" --dev
         composer require --quiet --no-update "symfony/process:${{ inputs.symfony-version }}" --dev
-        composer update --no-interaction --no-progress --no-suggest
+        composer require --quiet --no-update "symfony/yaml:${{ inputs.symfony-version }}" --dev
+        composer update --no-interaction --no-progress

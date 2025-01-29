@@ -49,6 +49,7 @@
     "symfony/security-bundle": "^6.4|^7.0",
     "symfony/translation": "^6.4|^7.0",
     "symfony/twig-bundle": "^6.4|^7.0",
+    "symfony/yaml": "^6.4|^7.0",
     "symplify/easy-coding-standard": "^11.3"
   },
   "replace": {
