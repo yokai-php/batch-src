@@ -22,9 +22,9 @@ class FlatFileReaderTest extends TestCase
      */
     public function testRead(
         string $file,
-        ?object $options,
-        ?callable $sheetFilter,
-        ?callable $headers,
+        null|object $options,
+        null|callable $sheetFilter,
+        null|callable $headers,
         array $expected,
     ): void {
         $jobExecution = JobExecution::createRoot('123456789', 'parent');
@@ -32,7 +32,7 @@ class FlatFileReaderTest extends TestCase
             new StaticValueParameterAccessor($file),
             $options,
             $sheetFilter ? $sheetFilter() : null,
-            $headers ? $headers() : null
+            $headers ? $headers() : null,
         );
         $reader->setJobExecution($jobExecution);
 
@@ -206,16 +206,16 @@ class FlatFileReaderTest extends TestCase
                 ['firstName' => 'John', 'lastName' => 'Doe'],
                 ['firstName' => 'Jack', 'lastName' => 'Doe'],
             ],
-            \iterator_to_array($result)
+            \iterator_to_array($result),
         );
 
         self::assertSame(
             'Expecting row 3 to have exactly 2 columns(s), but got 3.',
-            $jobExecution->getWarnings()[0]->getMessage()
+            $jobExecution->getWarnings()[0]->getMessage(),
         );
         self::assertSame(
             ['headers' => ['firstName', 'lastName'], 'row' => ['Jane', 'Doe', 'too much data']],
-            $jobExecution->getWarnings()[0]->getContext()
+            $jobExecution->getWarnings()[0]->getContext(),
         );
     }
 

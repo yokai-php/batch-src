@@ -20,7 +20,7 @@ final class DenormalizeItemProcessorTest extends TestCase
     /**
      * @dataProvider sets
      */
-    public function testProcess(string $type, ?string $format, array $context, $item, $expected): void
+    public function testProcess(string $type, null|string $format, array $context, $item, $expected): void
     {
         $denormalizer = new DummyNormalizer(true, $expected);
         $processor = new DenormalizeItemProcessor($denormalizer, $type, $format, $context);
@@ -31,12 +31,13 @@ final class DenormalizeItemProcessorTest extends TestCase
     /**
      * @dataProvider sets
      */
-    public function testUnsupported(string $type, ?string $format, array $context, $item): void
+    public function testUnsupported(string $type, null|string $format, array $context, $item): void
     {
         $denormalizer = new DummyNormalizer(false, null);
         $processor = new DenormalizeItemProcessor($denormalizer, $type, $format, $context);
 
         $exception = null;
+
         try {
             $processor->process($item);
         } catch (SkipItemException $exception) {
@@ -53,12 +54,13 @@ final class DenormalizeItemProcessorTest extends TestCase
     /**
      * @dataProvider sets
      */
-    public function testException(string $type, ?string $format, array $context, $item): void
+    public function testException(string $type, null|string $format, array $context, $item): void
     {
         $denormalizer = new FailingNormalizer($exceptionThrown = new UnsupportedException());
         $processor = new DenormalizeItemProcessor($denormalizer, $type, $format, $context);
 
         $exception = null;
+
         try {
             $processor->process($item);
         } catch (SkipItemException $exception) {

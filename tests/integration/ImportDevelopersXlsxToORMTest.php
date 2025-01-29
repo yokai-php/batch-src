@@ -96,7 +96,7 @@ class ImportDevelopersXlsxToORMTest extends JobTestCase
                     $inputFile,
                     $outputBadgeFile,
                     $outputRepositoryFile,
-                    $outputDeveloperFile
+                    $outputDeveloperFile,
                 ),
                 'import' => new JobWithChildJobs(
                     $executionStorage,
@@ -106,33 +106,33 @@ class ImportDevelopersXlsxToORMTest extends JobTestCase
                             $csvReader(self::OUTPUT_BADGE_FILE),
                             new BadgeProcessor(),
                             $objectWriter,
-                            $executionStorage
+                            $executionStorage,
                         ),
                         'import-repository' => new ItemJob(
                             PHP_INT_MAX,
                             $csvReader(self::OUTPUT_REPOSITORY_FILE),
                             new RepositoryProcessor(),
                             $objectWriter,
-                            $executionStorage
+                            $executionStorage,
                         ),
                         'import-developer' => new ItemJob(
                             5,
                             $csvReader(self::OUTPUT_DEVELOPER_FILE),
                             new DeveloperProcessor($entityManager),
                             $objectWriter,
-                            $executionStorage
+                            $executionStorage,
                         ),
                     ]),
-                    ['import-badge', 'import-repository', 'import-developer']
+                    ['import-badge', 'import-repository', 'import-developer'],
                 ),
             ]),
-            ['split', 'import']
+            ['split', 'import'],
         );
     }
 
     protected function assertAgainstExecution(
         JobExecutionStorageInterface $jobExecutionStorage,
-        JobExecution $jobExecution
+        JobExecution $jobExecution,
     ): void {
         parent::assertAgainstExecution($jobExecutionStorage, $jobExecution);
 

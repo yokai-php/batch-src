@@ -21,11 +21,11 @@ final class SkipInvalidItemProcessor implements ItemProcessorInterface
         /**
          * @var Constraint[]|null
          */
-        private ?array $contraints = null,
+        private null|array $contraints = null,
         /**
          * @var string[]|null
          */
-        private ?array $groups = null,
+        private null|array $groups = null,
     ) {
     }
 
@@ -47,7 +47,7 @@ final class SkipInvalidItemProcessor implements ItemProcessorInterface
      *
      * @return Iterator<string>
      */
-    private function normalizeConstraints(?array $constraints): Iterator
+    private function normalizeConstraints(null|array $constraints): Iterator
     {
         foreach ($constraints ?? [] as $constraint) {
             yield $constraint::class;

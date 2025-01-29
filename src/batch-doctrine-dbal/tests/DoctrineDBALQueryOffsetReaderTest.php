@@ -31,12 +31,12 @@ class DoctrineDBALQueryOffsetReaderTest extends DoctrineDBALTestCase
             $this->doctrine,
             'SELECT * FROM numbers LIMIT {limit} OFFSET {offset};',
             null,
-            4 // we will take 4 records at once : 3 queries expected
+            4, // we will take 4 records at once : 3 queries expected
         );
 
         $read = \array_map(
             fn(array $row) => \array_map('strval', $row),
-            \iterator_to_array($reader->read(), false)
+            \iterator_to_array($reader->read(), false),
         );
 
         self::assertSame([
@@ -72,7 +72,7 @@ class DoctrineDBALQueryOffsetReaderTest extends DoctrineDBALTestCase
             $this->doctrine,
             'SELECT * FROM some table LIMIT {limit} OFFSET {offset};',
             null,
-            0 // must be > 0
+            0, // must be > 0
         );
     }
 }

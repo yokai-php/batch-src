@@ -37,13 +37,13 @@ class CommandRunnerTest extends TestCase
             ->method('exec')
             ->with(
                 '/usr/bin/php /path/to/bin/console yokai:testing:test 1 ' .
-                '\'{"json":["value",2]}"\' --opt --option=foo >> /path/to/logs/test.log 2>&1 &'
+                '\'{"json":["value",2]}"\' --opt --option=foo >> /path/to/logs/test.log 2>&1 &',
             );
 
         $runner->runAsync(
             'yokai:testing:test',
             'test.log',
-            ['arg1' => '1', 'arg2' => '{"json":["value",2]}"', '--opt', '--option' => 'foo']
+            ['arg1' => '1', 'arg2' => '{"json":["value",2]}"', '--opt', '--option' => 'foo'],
         );
     }
 }

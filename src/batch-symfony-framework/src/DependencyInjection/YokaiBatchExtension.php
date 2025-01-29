@@ -88,7 +88,7 @@ final class YokaiBatchExtension extends Extension
             [
                 new DependencyInjectionLoader\XmlFileLoader($container, $locator),
                 new DependencyInjectionLoader\DirectoryLoader($container, $locator),
-            ]
+            ],
         );
 
         return new ConfigLoader\DelegatingLoader($resolver);
@@ -111,7 +111,7 @@ final class YokaiBatchExtension extends Extension
                             'connection' => $config['dbal']['connection'],
                             'table' => $config['dbal']['table'],
                         ],
-                    ]
+                    ],
                 )
             ;
 

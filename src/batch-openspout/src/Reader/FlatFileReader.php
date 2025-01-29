@@ -77,8 +77,8 @@ final class FlatFileReader implements
                             \count($exception->getRow()),
                         ),
                         [],
-                        ['headers' => $exception->getHeaders(), 'row' => $exception->getRow()]
-                    )
+                        ['headers' => $exception->getHeaders(), 'row' => $exception->getRow()],
+                    ),
                 );
             }
         }

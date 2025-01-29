@@ -35,7 +35,7 @@ final class ObjectRegistry
      *
      * @return T|null
      */
-    public function findOneBy(string $class, array $criteria): ?object
+    public function findOneBy(string $class, array $criteria): null|object
     {
         return $this->findOneUsing(
             $class,
@@ -44,7 +44,7 @@ final class ObjectRegistry
 
                 return $repository->findOneBy($criteria);
             },
-            \serialize($criteria)
+            \serialize($criteria),
         );
     }
 
@@ -58,7 +58,7 @@ final class ObjectRegistry
      *
      * @return T|null
      */
-    public function findOneUsing(string $class, \Closure $closure, string $key = null): ?object
+    public function findOneUsing(string $class, \Closure $closure, string $key = null): null|object
     {
         $manager = $this->doctrine->getManagerForClass($class);
         if ($manager === null) {

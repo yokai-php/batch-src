@@ -17,7 +17,7 @@ final class NormalizeItemProcessor implements ItemProcessorInterface
 {
     public function __construct(
         private NormalizerInterface $normalizer,
-        private ?string $format = null,
+        private null|string $format = null,
         /**
          * @var array<string, mixed>
          */
@@ -37,7 +37,7 @@ final class NormalizeItemProcessor implements ItemProcessorInterface
             throw SkipItemException::onError(
                 $item,
                 $exception,
-                ['format' => $this->format, 'context' => $this->context]
+                ['format' => $this->format, 'context' => $this->context],
             );
         }
     }

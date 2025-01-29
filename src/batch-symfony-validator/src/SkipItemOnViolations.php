@@ -20,7 +20,7 @@ final class SkipItemOnViolations implements SkipItemCauseInterface
         /**
          * @var ConstraintViolationListInterface<ConstraintViolationInterface>
          */
-        private ConstraintViolationListInterface $violations
+        private ConstraintViolationListInterface $violations,
     ) {
     }
 
@@ -34,7 +34,7 @@ final class SkipItemOnViolations implements SkipItemCauseInterface
                 '%s: %s (invalid value: %s)',
                 $violation->getPropertyPath(),
                 $violation->getMessage(),
-                $this->normalizeInvalidValue($violation->getInvalidValue())
+                $this->normalizeInvalidValue($violation->getInvalidValue()),
             );
         }
 
@@ -42,8 +42,8 @@ final class SkipItemOnViolations implements SkipItemCauseInterface
             new Warning(
                 'Violations were detected by validator.',
                 [],
-                ['itemIndex' => $index, 'item' => $item, 'violations' => $violations]
-            )
+                ['itemIndex' => $index, 'item' => $item, 'violations' => $violations],
+            ),
         );
     }
 

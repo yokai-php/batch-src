@@ -18,7 +18,7 @@ final class ClassCommentsTest extends CommentsTestCase
     {
         self::assertNotFalse(
             $class->getDocComment(),
-            "{$class->getName()} must have comment."
+            "{$class->getName()} must have comment.",
         );
     }
 

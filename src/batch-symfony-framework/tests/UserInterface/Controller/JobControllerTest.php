@@ -72,7 +72,7 @@ final class JobControllerTest extends TestCase
     public function testList(
         \Closure $fixtures,
         Request $request,
-        ?FormFactoryInterface $formFactory,
+        null|FormFactoryInterface $formFactory,
         JobSecurity $security,
         TemplatingInterface $templating,
         int $expectedStatus,
@@ -197,7 +197,7 @@ final class JobControllerTest extends TestCase
         \Closure $fixtures,
         string $job,
         string $id,
-        ?string $path,
+        null|string $path,
         JobSecurity $security,
         TemplatingInterface $templating,
         int $expectedStatus,
@@ -235,7 +235,7 @@ final class JobControllerTest extends TestCase
                         new Summary(['count' => 156]),
                     );
                     $exportExecution->addWarning(
-                        new Warning('Skipped suspicious record', [], ['suspicious_record' => 2])
+                        new Warning('Skipped suspicious record', [], ['suspicious_record' => 2]),
                     );
                     $exportExecution->addFailure(new Failure('RuntimeException', 'Missing record #2', 0));
                     $exportExecution->setStartTime(new \DateTimeImmutable('2021-01-01 10:00'));
@@ -447,7 +447,7 @@ final class JobControllerTest extends TestCase
      */
     private function response(
         \Closure $closure,
-        ?FormFactoryInterface $formFactory,
+        null|FormFactoryInterface $formFactory,
         JobSecurity $security,
         TemplatingInterface $templating,
     ): Response {
@@ -461,7 +461,7 @@ final class JobControllerTest extends TestCase
     }
 
     private function controller(
-        ?FormFactoryInterface $formFactory,
+        null|FormFactoryInterface $formFactory,
         JobSecurity $security,
         TemplatingInterface $templating,
     ): JobController {
@@ -519,7 +519,7 @@ final class JobControllerTest extends TestCase
                     ])),
                     'startTime' => $start = (new \DateTimeImmutable())->setTimestamp(\random_int(0, \time() - 10)),
                     'endTime' => (new \DateTimeImmutable())->setTimestamp(
-                        \random_int($start->getTimestamp(), \time() - 10)
+                        \random_int($start->getTimestamp(), \time() - 10),
                     ),
                 ],
                 $attributes,
@@ -545,7 +545,7 @@ final class JobControllerTest extends TestCase
     {
         self::assertThat($crawler, LogicalAnd::fromConstraints(
             new DomCrawlerConstraint\CrawlerSelectorExists($selector),
-            new DomCrawlerConstraint\CrawlerSelectorTextContains($selector, $text)
+            new DomCrawlerConstraint\CrawlerSelectorTextContains($selector, $text),
         ));
     }
 

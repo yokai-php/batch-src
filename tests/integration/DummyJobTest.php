@@ -13,7 +13,7 @@ class DummyJobTest extends JobTestCase
 {
     protected function createJob(JobExecutionStorageInterface $executionStorage): JobInterface
     {
-        return new class() implements JobInterface {
+        return new class implements JobInterface {
             public function execute(JobExecution $jobExecution): void
             {
                 $jobExecution->getSummary()->set('done', true);
@@ -28,7 +28,7 @@ class DummyJobTest extends JobTestCase
 
     protected function assertAgainstExecution(
         JobExecutionStorageInterface $jobExecutionStorage,
-        JobExecution $jobExecution
+        JobExecution $jobExecution,
     ): void {
         parent::assertAgainstExecution($jobExecutionStorage, $jobExecution);
 

@@ -25,7 +25,7 @@ class FindOneByCalledOnlyOnceWhenFoundRepositoryDecorator implements ObjectRepos
         return $this->decorated->findAll();
     }
 
-    public function findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null)
+    public function findBy(array $criteria, null|array $orderBy = null, $limit = null, $offset = null)
     {
         return $this->decorated->findBy($criteria, $orderBy, $limit, $offset);
     }
@@ -52,7 +52,7 @@ class FindOneByCalledOnlyOnceWhenFoundRepositoryDecorator implements ObjectRepos
         $key = \md5($method . $serializedArgs = \serialize($args));
         if (isset($this->calls[$key])) {
             throw new \LogicException(
-                'Method ' . $method . ' with args ' . $serializedArgs . ' has already been called'
+                'Method ' . $method . ' with args ' . $serializedArgs . ' has already been called',
             );
         }
 

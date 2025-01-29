@@ -18,7 +18,7 @@ final class DenormalizeItemProcessor implements ItemProcessorInterface
     public function __construct(
         private DenormalizerInterface $denormalizer,
         private string $type,
-        private ?string $format = null,
+        private null|string $format = null,
         /**
          * @var array<string, mixed>
          */
@@ -38,7 +38,7 @@ final class DenormalizeItemProcessor implements ItemProcessorInterface
             throw SkipItemException::onError(
                 $item,
                 $exception,
-                ['format' => $this->format, 'context' => $this->context]
+                ['format' => $this->format, 'context' => $this->context],
             );
         }
 

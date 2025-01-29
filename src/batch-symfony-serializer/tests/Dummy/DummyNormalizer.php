@@ -23,7 +23,7 @@ final class DummyNormalizer implements NormalizerInterface, DenormalizerInterfac
     public function normalize(
         mixed $object,
         string $format = null,
-        array $context = []
+        array $context = [],
     ): array|string|int|float|bool|\ArrayObject|null {
         return $this->value;
     }
@@ -38,7 +38,7 @@ final class DummyNormalizer implements NormalizerInterface, DenormalizerInterfac
         return $this->value;
     }
 
-    public function getSupportedTypes(?string $format): array
+    public function getSupportedTypes(null|string $format): array
     {
         return ['*' => true];
     }

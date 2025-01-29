@@ -20,7 +20,7 @@ final class NormalizeItemProcessorTest extends TestCase
     /**
      * @dataProvider sets
      */
-    public function testProcess(?string $format, array $context, $item, $expected): void
+    public function testProcess(null|string $format, array $context, $item, $expected): void
     {
         $normalizer = new DummyNormalizer(true, $expected);
         $processor = new NormalizeItemProcessor($normalizer, $format, $context);
@@ -31,12 +31,13 @@ final class NormalizeItemProcessorTest extends TestCase
     /**
      * @dataProvider sets
      */
-    public function testUnsupported(?string $format, array $context, $item): void
+    public function testUnsupported(null|string $format, array $context, $item): void
     {
         $normalizer = new DummyNormalizer(false, null);
         $processor = new NormalizeItemProcessor($normalizer, $format, $context);
 
         $exception = null;
+
         try {
             $processor->process($item);
         } catch (SkipItemException $exception) {
@@ -53,12 +54,13 @@ final class NormalizeItemProcessorTest extends TestCase
     /**
      * @dataProvider sets
      */
-    public function testException(?string $format, array $context, $item): void
+    public function testException(null|string $format, array $context, $item): void
     {
         $normalizer = new FailingNormalizer($exceptionThrown = new BadMethodCallException());
         $processor = new NormalizeItemProcessor($normalizer, $format, $context);
 
         $exception = null;
+
         try {
             $processor->process($item);
         } catch (SkipItemException $exception) {

@@ -82,7 +82,7 @@ final class RunJobCommand extends Command
                     $output->writeln(\sprintf('<comment>%s</comment>', $warning), $output::VERBOSITY_VERBOSE);
                 }
                 $output->writeln(
-                    \sprintf('<comment>%s has been executed with %d warnings.</comment>', $jobName, \count($warnings))
+                    \sprintf('<comment>%s has been executed with %d warnings.</comment>', $jobName, \count($warnings)),
                 );
             } else {
                 $output->writeln(\sprintf('<info>%s has been successfully executed.</info>', $jobName));
@@ -95,8 +95,8 @@ final class RunJobCommand extends Command
                         '<error>Error #%s of class %s: %s</error>',
                         $failure->getCode(),
                         $failure->getClass(),
-                        $failure
-                    )
+                        $failure,
+                    ),
                 );
                 if ($failure->getTrace() !== null) {
                     $output->writeln(\sprintf('<error>%s</error>', $failure->getTrace()), $output::VERBOSITY_VERBOSE);

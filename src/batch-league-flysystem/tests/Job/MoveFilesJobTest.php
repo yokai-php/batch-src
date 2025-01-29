@@ -70,11 +70,11 @@ class MoveFilesJobTest extends TestCase
 
         self::assertFalse(
             $destination->has('source-file.txt'),
-            'file-1.txt does not exists yet on destination filesystem'
+            'file-1.txt does not exists yet on destination filesystem',
         );
         self::assertFalse(
             $destination->has('destination-file.txt'),
-            'destination-file.txt does not exists yet on destination filesystem'
+            'destination-file.txt does not exists yet on destination filesystem',
         );
 
         $job = new MoveFilesJob($location, $source, $destination, $transformDestination);
@@ -83,11 +83,11 @@ class MoveFilesJobTest extends TestCase
         self::assertFalse($source->has('source-file.txt'), 'source-file.txt does exists anymore on source filesystem');
         self::assertFalse(
             $destination->has('source-file.txt'),
-            'source-file.txt still not exists on destination filesystem'
+            'source-file.txt still not exists on destination filesystem',
         );
         self::assertTrue(
             $destination->has('destination-file.txt'),
-            'destination-file.txt now exists on destination filesystem'
+            'destination-file.txt now exists on destination filesystem',
         );
         self::assertSame('SOURCE TO BE MOVED', $destination->read('destination-file.txt'));
     }

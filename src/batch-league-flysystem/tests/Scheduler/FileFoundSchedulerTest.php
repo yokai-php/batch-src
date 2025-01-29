@@ -33,7 +33,7 @@ class FileFoundSchedulerTest extends TestCase
         self::assertEquals(
             [new ScheduledJob('test.scheduled')],
             $scheduled,
-            'file.txt exists on filesystem, job was scheduled'
+            'file.txt exists on filesystem, job was scheduled',
         );
     }
 
@@ -48,7 +48,7 @@ class FileFoundSchedulerTest extends TestCase
             $location,
             'test.scheduled',
             ['parameter' => 'value', 'important' => true],
-            'fake.job.id'
+            'fake.job.id',
         );
 
         $scheduled = $scheduler->get($execution);
@@ -59,7 +59,7 @@ class FileFoundSchedulerTest extends TestCase
         self::assertEquals(
             [new ScheduledJob('test.scheduled', ['parameter' => 'value', 'important' => true], 'fake.job.id')],
             $scheduled,
-            'file.txt exists on filesystem, job was scheduled'
+            'file.txt exists on filesystem, job was scheduled',
         );
     }
 
@@ -74,7 +74,7 @@ class FileFoundSchedulerTest extends TestCase
             $location,
             'test.scheduled',
             fn() => ['parameter' => 'value', 'important' => true],
-            fn() => 'fake.job.id'
+            fn() => 'fake.job.id',
         );
 
         $scheduled = $scheduler->get($execution);
@@ -85,7 +85,7 @@ class FileFoundSchedulerTest extends TestCase
         self::assertEquals(
             [new ScheduledJob('test.scheduled', ['parameter' => 'value', 'important' => true], 'fake.job.id')],
             $scheduled,
-            'file.txt exists on filesystem, job was scheduled'
+            'file.txt exists on filesystem, job was scheduled',
         );
     }
 
@@ -116,12 +116,12 @@ class FileFoundSchedulerTest extends TestCase
         self::assertSame(
             [],
             $scheduled,
-            'file.txt exists on filesystem but got exception on checking existence, no job scheduled'
+            'file.txt exists on filesystem but got exception on checking existence, no job scheduled',
         );
         self::assertCount(1, $execution->getFailures());
         self::assertStringContainsString(
             'Unable to assert that location exists on filesystem.',
-            (string)$execution->getLogs()
+            (string)$execution->getLogs(),
         );
     }
 }

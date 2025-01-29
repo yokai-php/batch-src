@@ -24,8 +24,8 @@ final class CountryJsonFileReader implements ItemReaderInterface, JobExecutionAw
     {
         $data = (array)\json_decode(
             (string)\file_get_contents(
-                (string)$this->filePath->get($this->jobExecution)
-            )
+                (string)$this->filePath->get($this->jobExecution),
+            ),
         );
         foreach ($data as $code => $value) {
             yield ['code' => $code, 'value' => $value];

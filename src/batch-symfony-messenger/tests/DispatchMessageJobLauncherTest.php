@@ -24,7 +24,7 @@ final class DispatchMessageJobLauncherTest extends TestCase
         $jobLauncher = new DispatchMessageJobLauncher(
             new JobExecutionFactory(new UniqidJobExecutionIdGenerator(), new NullJobExecutionParametersBuilder()),
             $storage = new InMemoryJobExecutionStorage(),
-            $messageBus = new BufferingMessageBus()
+            $messageBus = new BufferingMessageBus(),
         );
 
         $jobExecutionFromLauncher = $jobLauncher->launch('testing', ['_id' => '123456789', 'foo' => ['bar']]);
@@ -66,7 +66,7 @@ final class DispatchMessageJobLauncherTest extends TestCase
         $jobLauncher = new DispatchMessageJobLauncher(
             new JobExecutionFactory(new UniqidJobExecutionIdGenerator(), new NullJobExecutionParametersBuilder()),
             $storage = new InMemoryJobExecutionStorage(),
-            new FailingMessageBus(new TransportException('This is a test'))
+            new FailingMessageBus(new TransportException('This is a test')),
         );
 
         $jobExecutionFromLauncher = $jobLauncher->launch('testing');

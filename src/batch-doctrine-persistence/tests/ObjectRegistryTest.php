@@ -28,14 +28,14 @@ class ObjectRegistryTest extends DoctrinePersistenceTestCase
         $authConfig->setRepositoryFactory(
             new DecoratedRepositoryFactory(
                 FindOneByCalledOnlyOnceWhenFoundRepositoryDecorator::class,
-                $authConfig->getRepositoryFactory()
-            )
+                $authConfig->getRepositoryFactory(),
+            ),
         );
         $shopConfig->setRepositoryFactory(
             new DecoratedRepositoryFactory(
                 FindOneByCalledOnlyOnceWhenFoundRepositoryDecorator::class,
-                $shopConfig->getRepositoryFactory()
-            )
+                $shopConfig->getRepositoryFactory(),
+            ),
         );
     }
 
@@ -61,7 +61,7 @@ class ObjectRegistryTest extends DoctrinePersistenceTestCase
 
             self::assertSame(
                 $this->galaxyExplorer,
-                $registry->findOneBy(Product::class, ['name' => 'Galaxy Explorer'])
+                $registry->findOneBy(Product::class, ['name' => 'Galaxy Explorer']),
             );
             self::assertSame($this->boutiqueHotel, $registry->findOneBy(Product::class, ['name' => 'Boutique Hotel']));
             self::assertNull($registry->findOneBy(Product::class, ['name' => 'Haunted House']));
@@ -119,7 +119,7 @@ class ObjectRegistryTest extends DoctrinePersistenceTestCase
         // Hence, if we call reset after using the registry at least once, the repository will fail
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage(
-            'Method findOneBy with args a:1:{i:0;a:1:{s:4:"name";s:5:"Emmet";}} has already been called'
+            'Method findOneBy with args a:1:{i:0;a:1:{s:4:"name";s:5:"Emmet";}} has already been called',
         );
 
         $registry = new ObjectRegistry($this->doctrine);

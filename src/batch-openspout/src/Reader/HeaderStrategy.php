@@ -23,7 +23,7 @@ final class HeaderStrategy
         /**
          * @var list<string>|null
          */
-        private ?array $headers
+        private null|array $headers,
     ) {
     }
 

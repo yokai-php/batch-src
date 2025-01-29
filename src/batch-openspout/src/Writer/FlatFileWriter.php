@@ -36,7 +36,7 @@ final class FlatFileWriter implements
 {
     use JobExecutionAwareTrait;
 
-    private ?WriterInterface $writer = null;
+    private null|WriterInterface $writer = null;
     private bool $headersAdded = false;
 
     public function __construct(
@@ -46,7 +46,7 @@ final class FlatFileWriter implements
         /**
          * @var list<string>|null
          */
-        private ?array $headers = null,
+        private null|array $headers = null,
     ) {
     }
 
@@ -129,6 +129,7 @@ final class FlatFileWriter implements
         foreach ($this->writer->getSheets() as $sheet) {
             if ($sheet->getName() === $name) {
                 $this->writer->setCurrentSheet($sheet);
+
                 return;
             }
         }

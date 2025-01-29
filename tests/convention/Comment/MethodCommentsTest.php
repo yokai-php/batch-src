@@ -27,7 +27,7 @@ final class MethodCommentsTest extends CommentsTestCase
         self::assertNotEmpty(
             $comment,
             "{$this->methodFQCN($method)} is a public method and must have comment." .
-            " In {$this->fileAndLine($method)}."
+            " In {$this->fileAndLine($method)}.",
         );
     }
 

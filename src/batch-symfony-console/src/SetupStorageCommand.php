@@ -32,7 +32,7 @@ final class SetupStorageCommand extends Command
 The <info>%command.name%</info> command setups the job execution storage:
 
     <info>php %command.full_name%</info>
-EOF
+EOF,
             )
         ;
     }

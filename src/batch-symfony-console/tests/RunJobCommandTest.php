@@ -45,7 +45,7 @@ class RunJobCommandTest extends TestCase
         $this->executor = new JobExecutor(
             JobRegistry::fromJobArray([self::JOBNAME => $this->job->reveal()]),
             new InMemoryJobExecutionStorage(),
-            null
+            null,
         );
     }
 
@@ -76,6 +76,7 @@ class RunJobCommandTest extends TestCase
                 $jobExecution = $args[0];
                 $jobExecution->addFailureException(new \RuntimeException('1st exception', 100));
                 $jobExecution->addFailureException(new \LogicException('2nd exception', 200));
+
                 throw new \Exception('The exception that failed the job', 300);
             });
 
@@ -91,7 +92,7 @@ class RunJobCommandTest extends TestCase
             self::assertStringContainsString('Error #200 of class LogicException: 2nd exception', $display);
             self::assertStringContainsString(
                 'Error #300 of class Exception: The exception that failed the job',
-                $display
+                $display,
             );
         }
     }

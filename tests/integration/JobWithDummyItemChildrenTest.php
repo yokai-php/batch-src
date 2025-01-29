@@ -49,24 +49,24 @@ class JobWithDummyItemChildrenTest extends JobTestCase
                     new StaticIterableReader([1, 2, 3]),
                     new NullProcessor(),
                     $fileLineWriter,
-                    $executionStorage
+                    $executionStorage,
                 ),
                 'four-five-six' => new ItemJob(
                     2,
                     new StaticIterableReader([4, 5, 6]),
                     new NullProcessor(),
                     $fileLineWriter,
-                    $executionStorage
+                    $executionStorage,
                 ),
                 'seven-height-nine' => new ItemJob(
                     3,
                     new StaticIterableReader([7, 8, 9]),
                     new NullProcessor(),
                     $fileLineWriter,
-                    $executionStorage
+                    $executionStorage,
                 ),
             ]),
-            ['one-two-three', 'four-five-six', 'seven-height-nine']
+            ['one-two-three', 'four-five-six', 'seven-height-nine'],
         );
     }
 
@@ -77,7 +77,7 @@ class JobWithDummyItemChildrenTest extends JobTestCase
 
     protected function assertAgainstExecution(
         JobExecutionStorageInterface $jobExecutionStorage,
-        JobExecution $jobExecution
+        JobExecution $jobExecution,
     ): void {
         parent::assertAgainstExecution($jobExecutionStorage, $jobExecution);
 

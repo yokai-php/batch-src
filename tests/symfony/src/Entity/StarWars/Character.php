@@ -25,18 +25,18 @@ class Character
 
     #[ORM\Column(type: 'string', unique: true)]
     #[Assert\NotNull]
-    public ?string $name;
+    public null|string $name;
 
     #[ORM\Column(type: 'integer', nullable: true)]
-    public ?int $birthYear;
+    public null|int $birthYear;
 
     #[ORM\Column(type: 'string')]
     #[Assert\NotNull]
-    public ?string $gender;
+    public null|string $gender;
 
     #[ORM\ManyToOne(targetEntity: Planet::class)]
-    public ?Planet $homeWorld;
+    public null|Planet $homeWorld;
 
     #[ORM\ManyToOne(targetEntity: Specie::class)]
-    public ?Specie $specie;
+    public null|Specie $specie;
 }

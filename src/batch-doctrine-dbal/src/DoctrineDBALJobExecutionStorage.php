@@ -162,12 +162,15 @@ final class DoctrineDBALJobExecutionStorage implements
             case Query::SORT_BY_START_ASC:
                 $qb->orderBy('start_time', 'asc');
                 break;
+
             case Query::SORT_BY_START_DESC:
                 $qb->orderBy('start_time', 'desc');
                 break;
+
             case Query::SORT_BY_END_ASC:
                 $qb->orderBy('end_time', 'asc');
                 break;
+
             case Query::SORT_BY_END_DESC:
                 $qb->orderBy('end_time', 'desc');
                 break;
@@ -273,7 +276,7 @@ final class DoctrineDBALJobExecutionStorage implements
         $statement = $this->connection->executeQuery(
             $qb->getSQL(),
             ['jobName' => $jobName, 'id' => $id],
-            ['jobName' => Types::STRING, 'id' => Types::STRING]
+            ['jobName' => Types::STRING, 'id' => Types::STRING],
         );
 
         /** @var array<string, string>|null $row */

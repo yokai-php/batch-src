@@ -26,7 +26,7 @@ final class ConfigureTemplatingPassTest extends TestCase
     public function testMissingService(): void
     {
         $this->expectExceptionObject(
-            new LogicException('UI templating service "app.yokai_batch_templating" does not exists.')
+            new LogicException('UI templating service "app.yokai_batch_templating" does not exists.'),
         );
         $this->process(function (ContainerBuilder $container) {
             $container->setAlias(TemplatingInterface::class, 'app.yokai_batch_templating');

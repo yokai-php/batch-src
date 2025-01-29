@@ -49,8 +49,8 @@ final class DoctrineDBALUpsertWriter implements
                             new Warning(
                                 'Update affected more than one line.',
                                 [],
-                                ['table' => $item->getTable(), 'identity' => $item->getIdentity(), 'count' => $affected]
-                            )
+                                ['table' => $item->getTable(), 'identity' => $item->getIdentity(), 'count' => $affected],
+                            ),
                         );
                     }
 

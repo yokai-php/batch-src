@@ -67,10 +67,10 @@ final class CountryJob extends AbstractDecoratedJob implements
     public function __construct(
         JobExecutionStorageInterface $executionStorage,
         KernelInterface $kernel,
-        LoggerInterface $yokaiBatchLogger
+        LoggerInterface $yokaiBatchLogger,
     ) {
         $writePath = fn(string $format) => new StaticValueParameterAccessor(
-            ARTIFACT_DIR . '/symfony/country/countries.' . $format
+            ARTIFACT_DIR . '/symfony/country/countries.' . $format,
         );
         $reader = function (string $key) use ($kernel) {
             $path = new StaticValueParameterAccessor($kernel->getProjectDir() . '/data/country/' . $key . '.json');
@@ -94,7 +94,7 @@ final class CountryJob extends AbstractDecoratedJob implements
                 new SequenceReader(\array_map($reader, $fragments)),
                 $this,
                 $this,
-                $executionStorage
+                $executionStorage,
             ),
         );
     }
@@ -111,7 +111,7 @@ final class CountryJob extends AbstractDecoratedJob implements
         foreach ($items as $item) {
             $this->countries[$item['iso2']] = \array_merge(
                 $this->countries[$item['iso2']] ?? [],
-                $item
+                $item,
             );
         }
     }

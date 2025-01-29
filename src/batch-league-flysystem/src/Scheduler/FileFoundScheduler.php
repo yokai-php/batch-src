@@ -45,7 +45,7 @@ final class FileFoundScheduler implements SchedulerInterface
             $execution->addFailureException($exception, [], false);
             $execution->getLogger()->error(
                 'Unable to assert that location exists on filesystem.',
-                ['file' => $location]
+                ['file' => $location],
             );
 
             return [];

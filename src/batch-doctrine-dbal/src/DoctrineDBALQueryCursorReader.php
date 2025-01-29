@@ -39,12 +39,12 @@ final class DoctrineDBALQueryCursorReader implements ItemReaderInterface
     ) {
         if (!\str_contains($sql, '{after}') || !\str_contains($sql, '{limit}')) {
             throw new InvalidArgumentException(
-                \sprintf('%s $sql argument must contains "{after}" and "{limit}" for pagination.', __METHOD__)
+                \sprintf('%s $sql argument must contains "{after}" and "{limit}" for pagination.', __METHOD__),
             );
         }
         if ($batch <= 0) {
             throw new InvalidArgumentException(
-                \sprintf('%s $batch argument must be a positive integer.', __METHOD__)
+                \sprintf('%s $batch argument must be a positive integer.', __METHOD__),
             );
         }
 
@@ -64,7 +64,7 @@ final class DoctrineDBALQueryCursorReader implements ItemReaderInterface
         do {
             /** @var Result $statement */
             $statement = $this->connection->executeQuery(
-                \strtr($this->sql, ['{limit}' => $this->batch, '{after}' => $after])
+                \strtr($this->sql, ['{limit}' => $this->batch, '{after}' => $after]),
             );
 
             /** @var array<array<string, string>> $rows */
@@ -74,7 +74,7 @@ final class DoctrineDBALQueryCursorReader implements ItemReaderInterface
             if ($lastRowIdx !== null) {
                 if (!isset($rows[$lastRowIdx][$this->column])) {
                     throw new LogicException(
-                        \sprintf('Query must include "%s" column in results.', $this->column)
+                        \sprintf('Query must include "%s" column in results.', $this->column),
                     );
                 }
                 $after = $rows[$lastRowIdx][$this->column];

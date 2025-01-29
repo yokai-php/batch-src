@@ -22,7 +22,7 @@ final class JobAssert
         int $read,
         int $processed,
         int $write,
-        int $skipped = null
+        int $skipped = null,
     ): void {
         Assert::assertSame($read, $execution->getSummary()->get('read'));
         Assert::assertSame($processed, $execution->getSummary()->get('processed'));

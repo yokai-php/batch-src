@@ -53,9 +53,9 @@ abstract class JobTestCase extends TestCase
         $launcher = new SimpleJobLauncher(
             new JobExecutionAccessor(
                 new JobExecutionFactory(new UniqidJobExecutionIdGenerator(), new NullJobExecutionParametersBuilder()),
-                $jobExecutionStorage
+                $jobExecutionStorage,
             ),
-            self::createJobExecutor($jobExecutionStorage, [$jobName => $job])
+            self::createJobExecutor($jobExecutionStorage, [$jobName => $job]),
         );
 
         $jobExecution = $launcher->launch($jobName);
@@ -81,11 +81,11 @@ abstract class JobTestCase extends TestCase
 
     protected function assertAgainstExecution(
         JobExecutionStorageInterface $jobExecutionStorage,
-        JobExecution $jobExecution
+        JobExecution $jobExecution,
     ): void {
         $this->compareExecutions(
             $jobExecution,
-            $jobExecutionStorage->retrieve($jobExecution->getJobName(), $jobExecution->getId())
+            $jobExecutionStorage->retrieve($jobExecution->getJobName(), $jobExecution->getId()),
         );
     }
 
@@ -96,11 +96,11 @@ abstract class JobTestCase extends TestCase
         self::compareStatuses($jobExecution->getStatus(), $storedJobExecution->getStatus());
         self::assertSame(
             \iterator_to_array($jobExecution->getParameters()),
-            \iterator_to_array($storedJobExecution->getParameters())
+            \iterator_to_array($storedJobExecution->getParameters()),
         );
         self::assertSame(
             \iterator_to_array($jobExecution->getSummary()),
-            \iterator_to_array($storedJobExecution->getSummary())
+            \iterator_to_array($storedJobExecution->getSummary()),
         );
         self::compareDates($jobExecution->getStartTime(), $storedJobExecution->getStartTime());
         self::compareDates($jobExecution->getEndTime(), $storedJobExecution->getEndTime());
@@ -111,7 +111,7 @@ abstract class JobTestCase extends TestCase
         foreach ($jobExecution->getChildExecutions() as $childExecution) {
             $this->compareExecutions(
                 $childExecution,
-                $storedJobExecution->getChildExecution($childExecution->getJobName())
+                $storedJobExecution->getChildExecution($childExecution->getJobName()),
             );
         }
     }
@@ -120,7 +120,7 @@ abstract class JobTestCase extends TestCase
     {
         yield new FilesystemJobExecutionStorage(
             new JsonJobExecutionSerializer(),
-            self::STORAGE_DIR
+            self::STORAGE_DIR,
         );
     }
 
@@ -129,11 +129,11 @@ abstract class JobTestCase extends TestCase
         self::assertSame($expected->getValue(), $actual->getValue());
     }
 
-    private static function compareDates(?\DateTimeInterface $expected, ?\DateTimeInterface $actual)
+    private static function compareDates(null|\DateTimeInterface $expected, null|\DateTimeInterface $actual)
     {
         self::assertSame(
             $expected ? $expected->format(\DateTime::ISO8601) : null,
-            $actual ? $actual->format(\DateTime::ISO8601) : null
+            $actual ? $actual->format(\DateTime::ISO8601) : null,
         );
     }
 
