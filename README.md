@@ -33,7 +33,6 @@ Some bridges to popular packages :
 And some special packages :
 - [`yokai/batch-symfony-pack`](https://github.com/yokai-php/batch-symfony-pack): Minimal pack for Symfony Framework
 
-
 ## Contribution
 
 Please feel free to open an [issue](https://github.com/yokai-php/batch-src/issues)
@@ -43,6 +42,14 @@ in the [main repository](https://github.com/yokai-php/batch-src).
 The library was originally created by [Yann Eugoné](https://github.com/yann-eugone).
 See the list of [contributors](https://github.com/yokai-php/batch-src/contributors).
 
+### Install
+
+```shell
+git clone git@github.com:yokai-php/batch-src.git batch-src && cd $_
+git config core.hooksPath .led/githooks
+led up
+led in -- composer install
+```
 
 ## License
 
