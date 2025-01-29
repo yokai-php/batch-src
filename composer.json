@@ -51,7 +51,7 @@
     "symfony/twig-bundle": "^6.4|^7.0",
     "symfony/yaml": "^6.4|^7.0",
     "symplify/easy-coding-standard": "^12.5",
-    "symfony/http-client": "^7.2"
+    "symfony/http-client": "^6.4|^7.0"
   },
   "replace": {
     "yokai/batch": "self.version",
