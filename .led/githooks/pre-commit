@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/hook.sh"
+
+led in -- vendor/bin/ecs
+led in -- vendor/bin/phpstan
+led in -- vendor/bin/phpunit --testsuite=Convention

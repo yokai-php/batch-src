@@ -1,2 +1,4 @@
 [service]
 	project-name = yokai-batch
+[default]
+	container = php83
