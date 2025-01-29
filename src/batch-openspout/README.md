@@ -1,4 +1,4 @@
-# box/spout bridge for Batch processing library
+# openspout/openspout bridge for Batch processing library
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/yokai/batch-openspout?style=flat-square)](https://packagist.org/packages/yokai/batch-openspout)
 [![Downloads Monthly](https://img.shields.io/packagist/dm/yokai/batch-openspout?style=flat-square)](https://packagist.org/packages/yokai/batch-openspout)
