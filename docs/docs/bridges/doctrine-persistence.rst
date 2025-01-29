@@ -3,13 +3,16 @@ Bridge with ``doctrine/persistence``
 
 Refer to the  `official documentation <https://www.doctrine-project.org/projects/persistence.html>`__ on Doctrine's website.
 
+| This bridge provides SQL database querying mechanisms, whenever you need to read/write from it.
+| Along with utility classes for memory management in jobs execution.
+
 
 Object item writer
 ------------------------------------------------------------
 
 | The writer will persist every items on the appropriate ``ObjectManager``.
 | It expect that items are objects.
-|  Objects can belong to different ``ObjectManager`` instances, only the encountered ones will be flushed.
+| Objects can belong to different ``ObjectManager`` instances, only the encountered ones will be flushed.
 
 ``ObjectManager->flush()`` is called every time the ``ItemJob`` reaches the batch size.
 

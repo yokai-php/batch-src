@@ -3,6 +3,9 @@ Bridge with ``symfony/messenger``
 
 Refer to the `official documentation <https://symfony.com/doc/current/messenger.html>`__ on Symfony's website.
 
+| This bridge provides a way launch job using message bus.
+| Along with ways to interact with messenger inside jobs.
+
 
 Launch Job through Messenger dispatcher
 ------------------------------------------------------------

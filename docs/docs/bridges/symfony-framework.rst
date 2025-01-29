@@ -1,7 +1,10 @@
 Bridge with ``symfony/framework-bundle``
 ============================================================
 
-The ``Messenger`` component for ``Symfony`` allows dispatch messages through a bus.
+Refer to the `official documentation <https://symfony.com/doc/current/index.html>`__ on Symfony's website.
+
+This bridge provides library configuration, and services registering in a Symfony framework project.
+
 
 Configure the Job launcher(s)
 ------------------------------------------------------------
@@ -28,21 +31,8 @@ you will be able to register these using configuration:
 | All ``launchers`` will be registered as a service, and an autowire named alias will be configured for it.
 | For instance, in the example below, you will be able to register all these launchers like this:
 
-.. code-block:: php
-
-    <?php
-
-    use Yokai\Batch\Launcher\JobLauncherInterface;
-
-    final class YourAppCode
-    {
-        public function __construct(
-            private JobLauncherInterface $jobLauncher, // will inject the default job launcher
-            private JobLauncherInterface $simpleJobLauncher, // will inject the "simple" job launcher
-            private JobLauncherInterface $messengerJobLauncher, // will inject the "messenger" job launcher
-        ) {
-        }
-    }
+.. literalinclude:: symfony-framework/job-launcher-usage.php
+   :language: php
 
 All ``launchers`` are configured using a DSN, every scheme has it’s own associated factory:
 
@@ -58,6 +48,7 @@ All ``launchers`` are configured using a DSN, every scheme has it’s own associ
 
 .. seealso::
    | :doc:`What is a job launcher? </core-concepts/job-launcher>`
+
 
 Configure the JobExecution storage
 ------------------------------------------------------------
@@ -165,6 +156,7 @@ By default
 
 You can configure a prefix for all templates:
 
+
 .. code-block:: yaml
 
     # config/packages/yokai_batch.yaml
@@ -201,26 +193,8 @@ If these are not enough, or if you need to add more variables to context, you ca
 
 And create the class that will cover the templating:
 
-.. code-block:: php
-
-    <?php
-
-    namespace App\Batch;
-
-    use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\TemplatingInterface;
-
-    final class AppTemplating implements TemplatingInterface
-    {
-        public function name(string $name): string
-        {
-            return "another-$name"; // change $name if you want
-        }
-
-        public function context(array $context): array;
-        {
-            return \array_merge($context, ['foo' => 'bar']); // add variables to $context if you want
-        }
-    }
+.. literalinclude:: symfony-framework/ui-templating-custom.php
+   :language: php
 
 .. note::
    You can also use the
@@ -262,31 +236,8 @@ Every security attribute the bundle is using is configurable:
 | Optionally, you can register a voter for these attributes.
 | This is especially useful if you need different access control rules per ``JobExecution``.
 
-.. code-block:: php
-
-    <?php
-
-    namespace App\Security;
-
-    use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-    use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-    use Yokai\Batch\JobExecution;
-
-    final class JobVoter extends Voter
-    {
-        protected function supports(string $attribute, mixed $subject): bool
-        {
-            return \str_starts_with($attribute, 'JOB_');
-        }
-
-        /**
-         * @param JobExecution|null $subject
-         */
-        protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
-        {
-            // TODO: Implement voteOnAttribute() method.
-        }
-    }
+.. literalinclude:: symfony-framework/ui-voter.php
+   :language: php
 
 Integration with SonataAdminBundle
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -344,26 +295,8 @@ Logger service that log in ``JobExecution``
 | In a Symfony project, you can use that with the symfony autowiring
   by naming your variable as ``$yokaiBatchLogger``
 
-.. code-block:: php
-
-    <?php
-
-    namespace App;
-
-    use Psr\Log\LoggerInterface;
-
-    final readonly class YourService
-    {
-        public function __construct(
-            private LoggerInterface $yokaiBatchLogger,
-        ) {
-        }
-
-        public function method()
-        {
-            $this->yokaiBatchLogger->error(...);
-        }
-    }
+.. literalinclude:: symfony-framework/logger-usage.php
+   :language: php
 
 .. seealso::
    | :doc:`What is the job execution? </core-concepts/job-execution>`

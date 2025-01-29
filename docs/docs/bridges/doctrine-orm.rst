@@ -3,6 +3,8 @@ Bridge with ``doctrine/orm``
 
 Refer to the  `official documentation <https://www.doctrine-project.org/projects/orm.html>`__ on Doctrine's website.
 
+This bridge provides SQL database querying mechanisms, wrapped in entities, whenever you need to read/write from it.
+
 
 Read from entities in database
 ------------------------------------------------------------

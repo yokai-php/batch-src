@@ -3,6 +3,9 @@ Bridge with ``doctrine/dbal``
 
 Refer to the `official documentation <https://www.doctrine-project.org/projects/dbal.html>`__ on Doctrine's website.
 
+| This bridge provides SQL database querying mechanisms, whenever you need to read/write from it.
+| Along with the ability to store your ``JobExecution`` in an SQL database.
+
 
 Store JobExecution objects in an SQL database
 ------------------------------------------------------------
