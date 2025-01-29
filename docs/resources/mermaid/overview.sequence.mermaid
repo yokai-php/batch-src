@@ -1,0 +1,21 @@
+sequenceDiagram
+    participant YourApp
+    participant JobLauncher
+    participant JobExecutor
+    participant JobExecutionStorage
+    participant YourAppJob
+
+    activate JobLauncher
+    YourApp-->>JobLauncher: Give a job name and parameters
+    JobLauncher-->>JobLauncher: Creates JobExecution
+    JobLauncher-->>JobExecutor: Ask for job's execution
+    activate JobExecutor
+    JobExecutor-->>JobExecutionStorage: Store JobExecution
+    JobExecutor-->>YourAppJob: Ensure job can be executed, and start execution
+    JobExecutor-->>JobExecutor: Catch exceptions during execution
+    JobExecutor-->>JobExecutor: Change JobExecution status
+    JobExecutor-->>JobExecutionStorage: Store JobExecution
+    JobExecutor-->>JobLauncher: JobExecution was filled
+    deactivate JobExecutor
+    JobLauncher-->>YourApp: Return the JobExecution, executed
+    deactivate JobLauncher

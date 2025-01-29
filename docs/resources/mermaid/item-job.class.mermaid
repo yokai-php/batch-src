@@ -1,0 +1,29 @@
+classDiagram
+    ItemJob --> ItemReader: 1 - Iterate over read items
+    ItemJob --> ItemProcessor: 2 - Transform each read item<br>capture exceptions, might decide to skip item<br>
+    ItemJob --> ItemWriter: 3 - Write batch of items every time batchSize is reached<br>and remaining batch of items at the end of execution (if any)
+    ItemJob --> JobExecutionStorage: 4 - Every time a batch of items is written<br>the JobExecution is stored
+    class ItemJob {
+        int batchSize
+        ItemReader reader
+        ItemProcessor processor
+        ItemWriter writer
+        JobExecutionStorage storage
+        execute(JobExecution execution) void
+    }
+    class ItemReader {
+        <<interface>>
+        read() iterable~mixed~
+    }
+    class ItemProcessor {
+        <<interface>>
+        read(mixed item) mixed
+    }
+    class ItemWriter {
+        <<interface>>
+        read(iterable~mixed~ items) void
+    }
+    class JobExecutionStorage {
+        <<interface>>
+        store(JobExecution execution) void
+    }
