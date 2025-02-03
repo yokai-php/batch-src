@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Sources\Tests\Symfony\App\Job\StarWars;
 
-use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Yokai\Batch\Bridge\Symfony\Framework\JobWithStaticNameInterface;
+use Yokai\Batch\Job\JobInterface;
+use Yokai\Batch\JobExecution;
 use Yokai\Batch\Sources\Tests\Symfony\App\Entity\StarWars\Planet;
-use Yokai\Batch\Storage\JobExecutionStorageInterface;
 
 /**
  * Star Wars {@see Planet} entity import.
- * See {@see AbstractImportStartWarsEntityJob} parent class for more details.
  */
-final class ImportStarWarsPlanetJob extends AbstractImportStartWarsEntityJob
+final class ImportStarWarsPlanetJob implements JobInterface, JobWithStaticNameInterface
 {
     public static function getJobName(): string
     {
@@ -22,13 +20,14 @@ final class ImportStarWarsPlanetJob extends AbstractImportStartWarsEntityJob
     }
 
     public function __construct(
-        KernelInterface $kernel,
-        ValidatorInterface $validator,
-        ManagerRegistry $doctrine,
-        JobExecutionStorageInterface $executionStorage,
+        private readonly ImportStarWarsJobFactory $factory,
     ) {
-        parent::__construct(
-            $kernel->getProjectDir() . '/data/star-wars/planets.csv',
+    }
+
+    public function execute(JobExecution $jobExecution): void
+    {
+        $this->factory->create(
+            __DIR__ . '/../../../data/star-wars/planets.csv',
             function (array $item) {
                 $entity = new Planet();
                 $entity->name = $item['name'];
@@ -41,9 +40,6 @@ final class ImportStarWarsPlanetJob extends AbstractImportStartWarsEntityJob
 
                 return $entity;
             },
-            $validator,
-            $doctrine,
-            $executionStorage,
-        );
+        )->execute($jobExecution);
     }
 }
