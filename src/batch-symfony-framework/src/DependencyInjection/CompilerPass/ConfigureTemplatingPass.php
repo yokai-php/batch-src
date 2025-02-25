@@ -17,6 +17,10 @@ final class ConfigureTemplatingPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
+        if (!$container->hasAlias(TemplatingInterface::class)) {
+            return;
+        }
+
         $templatingActualService = (string)$container->getAlias(TemplatingInterface::class);
 
         try {

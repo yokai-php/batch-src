@@ -18,6 +18,7 @@ use Yokai\Batch\Bridge\Symfony\Framework\DependencyInjection\YokaiBatchExtension
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\ConfigurableTemplating;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\SonataAdminTemplating;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\TemplatingInterface;
+use Yokai\Batch\Bridge\Symfony\Framework\YokaiBatchBundle;
 use Yokai\Batch\Bridge\Symfony\Messenger\DispatchMessageJobLauncher;
 use Yokai\Batch\Bridge\Symfony\Uid\Factory\RandomBasedUuidJobExecutionIdGenerator;
 use Yokai\Batch\Bridge\Symfony\Uid\Factory\TimeBasedUuidJobExecutionIdGenerator;
@@ -423,12 +424,16 @@ class YokaiBatchExtensionTest extends TestCase
         if ($configure !== null) {
             $configure($container);
         }
-        $container->registerExtension(new YokaiBatchExtension());
+        $bundle = new YokaiBatchBundle();
+        $extension = $bundle->getContainerExtension();
+        \assert($extension instanceof YokaiBatchExtension);
+        $container->registerExtension($extension);
         $container->loadFromExtension('yokai_batch', $config);
 
         $container->getCompilerPassConfig()->setOptimizationPasses([]);
         $container->getCompilerPassConfig()->setRemovingPasses([]);
         $container->getCompilerPassConfig()->setAfterRemovingPasses([]);
+        $bundle->build($container);
         $container->compile();
 
         return $container;
