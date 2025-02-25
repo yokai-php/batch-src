@@ -15,25 +15,29 @@ final class DummyNormalizer implements NormalizerInterface, DenormalizerInterfac
     ) {
     }
 
-    public function supportsNormalization(mixed $data, string $format = null, array $context = []): bool
+    public function supportsNormalization(mixed $data, string|null $format = null, array $context = []): bool
     {
         return $this->supports;
     }
 
     public function normalize(
         mixed $object,
-        string $format = null,
+        string|null $format = null,
         array $context = [],
     ): array|string|int|float|bool|\ArrayObject|null {
         return $this->value;
     }
 
-    public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = []): bool
-    {
+    public function supportsDenormalization(
+        mixed $data,
+        string $type,
+        string|null $format = null,
+        array $context = [],
+    ): bool {
         return $this->supports;
     }
 
-    public function denormalize(mixed $data, string $type, string $format = null, array $context = []): mixed
+    public function denormalize(mixed $data, string $type, string|null $format = null, array $context = []): mixed
     {
         return $this->value;
     }

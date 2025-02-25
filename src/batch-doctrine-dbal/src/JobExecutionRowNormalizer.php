@@ -53,7 +53,7 @@ final class JobExecutionRowNormalizer
      *
      * @param array<string, mixed> $data
      */
-    public function fromRow(array $data, JobExecution $parent = null): JobExecution
+    public function fromRow(array $data, JobExecution|null $parent = null): JobExecution
     {
         $data['status'] = \intval($data['status']);
         $data['parameters'] = $this->jsonFromString($data['parameters']);

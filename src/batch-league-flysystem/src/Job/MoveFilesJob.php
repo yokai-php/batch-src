@@ -25,7 +25,7 @@ class MoveFilesJob implements JobInterface
         private JobParameterAccessorInterface $location,
         private FilesystemOperator $source,
         private FilesystemWriter $destination,
-        private null|Closure $transformLocation = null,
+        private Closure|null $transformLocation = null,
     ) {
     }
 

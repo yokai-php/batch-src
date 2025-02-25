@@ -156,8 +156,10 @@ class RunJobCommandTest extends TestCase
         yield 'debug' => [OutputInterface::VERBOSITY_DEBUG];
     }
 
-    private function execute(string $configuration = null, int $verbosity = OutputInterface::VERBOSITY_NORMAL): array
-    {
+    private function execute(
+        string|null $configuration = null,
+        int $verbosity = OutputInterface::VERBOSITY_NORMAL,
+    ): array {
         $options = ['verbosity' => $verbosity];
         $input = ['job' => self::JOBNAME];
         if ($configuration !== null) {

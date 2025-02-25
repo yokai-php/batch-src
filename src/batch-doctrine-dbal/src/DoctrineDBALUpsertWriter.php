@@ -25,7 +25,7 @@ final class DoctrineDBALUpsertWriter implements
 
     private Connection $connection;
 
-    public function __construct(ConnectionRegistry $doctrine, string $connection = null)
+    public function __construct(ConnectionRegistry $doctrine, string|null $connection = null)
     {
         $connection ??= $doctrine->getDefaultConnectionName();
         /** @var Connection $connection */

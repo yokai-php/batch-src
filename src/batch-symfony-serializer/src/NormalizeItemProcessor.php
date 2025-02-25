@@ -17,7 +17,7 @@ final class NormalizeItemProcessor implements ItemProcessorInterface
 {
     public function __construct(
         private NormalizerInterface $normalizer,
-        private null|string $format = null,
+        private string|null $format = null,
         /**
          * @var array<string, mixed>
          */

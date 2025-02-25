@@ -25,7 +25,7 @@ class FindOneByCalledOnlyOnceWhenFoundRepositoryDecorator implements ObjectRepos
         return $this->decorated->findAll();
     }
 
-    public function findBy(array $criteria, null|array $orderBy = null, $limit = null, $offset = null)
+    public function findBy(array $criteria, array|null $orderBy = null, $limit = null, $offset = null)
     {
         return $this->decorated->findBy($criteria, $orderBy, $limit, $offset);
     }

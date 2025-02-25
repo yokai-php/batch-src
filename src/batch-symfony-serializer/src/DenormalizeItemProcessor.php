@@ -18,7 +18,7 @@ final class DenormalizeItemProcessor implements ItemProcessorInterface
     public function __construct(
         private DenormalizerInterface $denormalizer,
         private string $type,
-        private null|string $format = null,
+        private string|null $format = null,
         /**
          * @var array<string, mixed>
          */
