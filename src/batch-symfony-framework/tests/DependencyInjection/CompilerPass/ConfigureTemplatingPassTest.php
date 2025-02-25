@@ -23,6 +23,14 @@ final class ConfigureTemplatingPassTest extends TestCase
         self::assertTrue(true, 'No exception was raised');
     }
 
+    public function testMissingAlias(): void
+    {
+        $this->process(function (ContainerBuilder $container) {
+        });
+
+        self::assertTrue(true, 'No exception was raised');
+    }
+
     public function testMissingService(): void
     {
         $this->expectExceptionObject(
