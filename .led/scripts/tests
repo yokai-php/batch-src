@@ -14,7 +14,7 @@ $composer = \array_filter(\explode(\PHP_EOL, $action['runs']['steps'][1]['run'])
 
 $io = new SymfonyStyle(new ArrayInput([]), new ConsoleOutput());
 
-$execute = function (array $job, string $php = null, string $symfony = null) use ($io, $composer) {
+$execute = function (array $job, string|null $php = null, string|null $symfony = null) use ($io, $composer) {
     $io->section($job['name']);
 
     if ($php === null && $symfony === null) {

@@ -21,11 +21,11 @@ final class SkipInvalidItemProcessor implements ItemProcessorInterface
         /**
          * @var Constraint[]|null
          */
-        private null|array $contraints = null,
+        private array|null $contraints = null,
         /**
          * @var string[]|null
          */
-        private null|array $groups = null,
+        private array|null $groups = null,
     ) {
     }
 

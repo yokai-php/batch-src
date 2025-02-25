@@ -37,8 +37,8 @@ final class FlatFileReader implements
     public function __construct(
         private JobParameterAccessorInterface $filePath,
         private CSVOptions|ODSOptions|XLSXOptions|null $options = null,
-        SheetFilter $sheetFilter = null,
-        HeaderStrategy $headerStrategy = null,
+        SheetFilter|null $sheetFilter = null,
+        HeaderStrategy|null $headerStrategy = null,
     ) {
         $this->sheetFilter = $sheetFilter ?? SheetFilter::all();
         $this->headerStrategy = $headerStrategy ?? HeaderStrategy::none();

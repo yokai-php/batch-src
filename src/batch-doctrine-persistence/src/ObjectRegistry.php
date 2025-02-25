@@ -58,7 +58,7 @@ final class ObjectRegistry
      *
      * @return T|null
      */
-    public function findOneUsing(string $class, \Closure $closure, string $key = null): null|object
+    public function findOneUsing(string $class, \Closure $closure, string|null $key = null): null|object
     {
         $manager = $this->doctrine->getManagerForClass($class);
         if ($manager === null) {

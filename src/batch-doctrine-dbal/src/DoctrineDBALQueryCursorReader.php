@@ -34,7 +34,7 @@ final class DoctrineDBALQueryCursorReader implements ItemReaderInterface
         private string $sql,
         private string $column,
         private mixed $start,
-        string $connection = null,
+        string|null $connection = null,
         private int $batch = 500,
     ) {
         if (!\str_contains($sql, '{after}') || !\str_contains($sql, '{limit}')) {

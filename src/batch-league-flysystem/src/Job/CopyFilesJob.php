@@ -24,7 +24,7 @@ class CopyFilesJob implements JobInterface
         private JobParameterAccessorInterface $location,
         private FilesystemReader $source,
         private FilesystemWriter $destination,
-        private null|Closure $transformLocation = null,
+        private Closure|null $transformLocation = null,
     ) {
     }
 

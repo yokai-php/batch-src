@@ -36,7 +36,7 @@ final class FlatFileWriter implements
 {
     use JobExecutionAwareTrait;
 
-    private null|WriterInterface $writer = null;
+    private WriterInterface|null $writer = null;
     private bool $headersAdded = false;
 
     public function __construct(
@@ -46,7 +46,7 @@ final class FlatFileWriter implements
         /**
          * @var list<string>|null
          */
-        private null|array $headers = null,
+        private array|null $headers = null,
     ) {
     }
 

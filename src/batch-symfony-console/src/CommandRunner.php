@@ -18,7 +18,7 @@ class CommandRunner
     public function __construct(
         string $binDir,
         private string $logDir,
-        PhpExecutableFinder $phpLocator = null,
+        PhpExecutableFinder|null $phpLocator = null,
     ) {
         $this->consolePath = \implode(DIRECTORY_SEPARATOR, [$binDir, 'console']);
         if (\class_exists(PhpExecutableFinder::class)) {

@@ -21,7 +21,7 @@ final class DoctrineDBALInsertWriter implements ItemWriterInterface
     public function __construct(
         ConnectionRegistry $doctrine,
         private string $table,
-        string $connection = null,
+        string|null $connection = null,
     ) {
         $connection ??= $doctrine->getDefaultConnectionName();
         /** @var Connection $connection */

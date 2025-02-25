@@ -24,7 +24,7 @@ final class WriteToSheetItem
      *
      * @param array<int, bool|\DateInterval|\DateTimeInterface|float|int|string> $item
      */
-    public static function array(string $sheet, array $item, Style $style = null): self
+    public static function array(string $sheet, array $item, Style|null $style = null): self
     {
         return new self($sheet, Row::fromValues($item, $style));
     }

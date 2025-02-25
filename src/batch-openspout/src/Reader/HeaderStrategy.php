@@ -32,7 +32,7 @@ final class HeaderStrategy
      *
      * @param list<string>|null $headers
      */
-    public static function skip(array $headers = null): self
+    public static function skip(array|null $headers = null): self
     {
         return new self(self::SKIP, $headers);
     }
@@ -50,7 +50,7 @@ final class HeaderStrategy
      *
      * @param list<string>|null $headers
      */
-    public static function none(array $headers = null): self
+    public static function none(array|null $headers = null): self
     {
         return new self(self::NONE, $headers);
     }

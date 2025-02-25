@@ -136,7 +136,7 @@ final class JobController
     /**
      * View {@see JobExecution} details in a Twig template.
      */
-    public function view(string $job, string $id, null|string $path = null): Response
+    public function view(string $job, string $id, string|null $path = null): Response
     {
         try {
             $execution = $this->jobExecutionStorage->retrieve($job, $id);
