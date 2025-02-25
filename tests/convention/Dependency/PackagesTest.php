@@ -91,6 +91,31 @@ final class PackagesTest extends TestCase
         }
     }
 
+    /**
+     * Every individual package must declare explicit dependencies, based on use statements.
+     *
+     * @dataProvider packages
+     */
+    public function testPackagesAreUsingCurrentYokaiVersion(Package $package): void
+    {
+        $expectedVersion = '^0.7.0'; //todo
+
+        $expected = [];
+        $actual = [];
+        foreach ($package->composer->require() as $require => $version) {
+            if (\str_starts_with($require, 'yokai/')) {
+                $expected[$require] = $expectedVersion;
+                $actual[$require] = $version;
+            }
+        }
+
+        self::assertSame(
+            $expected,
+            $actual,
+            "{$package->name} must use current yokai/* packages version: {$expectedVersion}.",
+        );
+    }
+
     public function packages(): iterable
     {
         /** @var Package $package */
