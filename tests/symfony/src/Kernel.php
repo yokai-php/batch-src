@@ -40,6 +40,16 @@ final class Kernel extends BaseKernel implements CompilerPassInterface
         return \dirname(__DIR__);
     }
 
+    public function getLogDir(): string
+    {
+        $logDir = parent::getLogDir();
+        if (!\is_dir($logDir)) {
+            \mkdir($logDir, recursive: true);
+        }
+
+        return $logDir;
+    }
+
     protected function configureContainer(ContainerConfigurator $container): void
     {
         $container->extension('framework', [
