@@ -6,6 +6,8 @@
 
 This repository contains sources for all packages from `yokai/batch` suite.
 
+TEST
+
 ## Documentation
 
 Read on https://yokai-batch.readthedocs.io.
