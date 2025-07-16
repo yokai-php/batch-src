@@ -144,7 +144,7 @@ final class YokaiBatchExtension extends Extension
             ));
         }
 
-        $container->setParameter('yokai_batch.launcher.messenger_routing', $config['messenger']['routing']);
+        $container->setParameter('yokai_batch.launcher.messenger_routing', $config['messenger']['routing'] ?? []);
 
         $launcherIdPerLauncherName = [];
         foreach ($config['launchers'] as $name => $dsn) {

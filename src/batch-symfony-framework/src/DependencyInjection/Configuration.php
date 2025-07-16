@@ -33,7 +33,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  * @phpstan-type LauncherConfig array{
  *      default: string|null,
  *      launchers: array<string, string>,
- *      messenger: array{
+ *      messenger?: array{
  *          routing: array<string, string>,
  *      },
  *  }
