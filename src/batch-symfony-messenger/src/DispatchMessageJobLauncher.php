@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Bridge\Symfony\Messenger;
 
+use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\TransportNamesStamp;
 use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Factory\JobExecutionFactory;
 use Yokai\Batch\JobExecution;
@@ -21,6 +23,7 @@ final class DispatchMessageJobLauncher implements JobLauncherInterface
         private JobExecutionFactory $jobExecutionFactory,
         private JobExecutionStorageInterface $jobExecutionStorage,
         private MessageBusInterface $messageBus,
+        private MessengerJobsConfiguration $messengerJobsConfiguration,
     ) {
     }
 
@@ -33,9 +36,17 @@ final class DispatchMessageJobLauncher implements JobLauncherInterface
         $jobExecution->setStatus(BatchStatus::PENDING);
         $this->jobExecutionStorage->store($jobExecution);
 
+        $message = new LaunchJobMessage($name, $configuration);
+
+        // if it was configured a specific transport name for this job, add a stamp to force it
+        $transportName = $this->messengerJobsConfiguration->getTransportNameForJobName($name);
+        if ($transportName !== null) {
+            $message = (new Envelope($message))
+                ->with(new TransportNamesStamp($transportName));
+        }
+
         try {
-            // dispatch message
-            $this->messageBus->dispatch(new LaunchJobMessage($name, $configuration));
+            $this->messageBus->dispatch($message);
         } catch (ExceptionInterface $exception) {
             // if a messenger exception occurs, it will be converted to job failure
             $jobExecution->setStatus(BatchStatus::FAILED);
