@@ -50,7 +50,8 @@ You will end with something like:
 How to configure different transport for your jobs?
 ------------------------------------------------------------
 
-On some projects, you will end with different messenger transports, and will want to run
+On some projects, you will end with different messenger transports,
+and will not want to run all jobs on the same transport.
 
 | Because we are using the same message class for all jobs, there is no way to configure this in Symfony.
 | Instead, you will have to configure a job name to transport routing, in our side of the configuration.
