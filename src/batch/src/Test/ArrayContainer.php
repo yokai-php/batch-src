@@ -24,7 +24,7 @@ final class ArrayContainer implements ContainerInterface
     public function get(string $id): mixed
     {
         if (!isset($this->container[$id])) {
-            $message = \sprintf('You have requested a non-existent container entrt "%s".', $id);
+            $message = \sprintf('You have requested a non-existent container entry "%s".', $id);
 
             throw new class($message) extends Exception implements NotFoundExceptionInterface {
             };
