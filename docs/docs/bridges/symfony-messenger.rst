@@ -19,6 +19,7 @@ message will be dispatched and handled by the
 `LaunchJobMessageHandler <https://github.com/yokai-php/batch-symfony-messenger/blob/0.x/src/LaunchJobMessageHandler.php>`__
 will be called with that message after being routed.
 
+
 How to configure an async transport for the launcher?
 ------------------------------------------------------------
 
@@ -44,6 +45,31 @@ You will end with something like:
    | :doc:`What is a job launcher? </core-concepts/job-launcher>`
    | :doc:`Getting started with Symfony Framework </getting-started/with-symfony>`
    | :doc:`Bridge with Symfony Framework </bridges/symfony-framework>`
+
+
+How to configure different transport for your jobs?
+------------------------------------------------------------
+
+On some projects, you will end with different messenger transports,
+and will not want to run all jobs on the same transport.
+
+| Because we are using the same message class for all jobs, there is no way to configure this in Symfony.
+| Instead, you will have to configure a job name to transport routing, in our side of the configuration.
+| It is very likely to the messenger routing configuration, but you will use the job name instead of the message class.
+
+.. code-block:: yaml
+
+    # config/packages/yokai_batch.yaml
+    yokai_batch:
+        launchers:
+            messenger:
+                routing:
+                    export_job_name: async_with_low_priority
+                    import_job_name: async_with_high_priority
+
+.. seealso::
+   | :doc:`What is a job launcher? </core-concepts/job-launcher>`
+   | :doc:`Getting started with Symfony Framework </getting-started/with-symfony>`
 
 
 Dispatch item with messenger writer

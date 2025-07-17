@@ -11,6 +11,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Yokai\Batch\Bridge\Symfony\Console\CommandRunner;
 use Yokai\Batch\Bridge\Symfony\Console\RunCommandJobLauncher;
 use Yokai\Batch\Bridge\Symfony\Messenger\DispatchMessageJobLauncher;
+use Yokai\Batch\Bridge\Symfony\Messenger\MessengerJobsConfiguration;
 use Yokai\Batch\Launcher\JobLauncherInterface;
 use Yokai\Batch\Launcher\SimpleJobLauncher;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
@@ -71,6 +72,9 @@ final class JobLauncherDefinitionFactory
             '$jobExecutionFactory' => new Reference('yokai_batch.job_execution_factory'),
             '$jobExecutionStorage' => new Reference(JobExecutionStorageInterface::class),
             '$messageBus' => new Reference(MessageBusInterface::class),
+            '$messengerJobsConfiguration' => new Definition(MessengerJobsConfiguration::class, [
+                '$routing' => '%yokai_batch.launcher.messenger_routing%',
+            ]),
         ]);
     }
 
