@@ -61,11 +61,11 @@ and will not want to run all jobs on the same transport.
 
     # config/packages/yokai_batch.yaml
     yokai_batch:
-        launchers:
-            messenger:
-                routing:
-                    export_job_name: async_with_low_priority
-                    import_job_name: async_with_high_priority
+      launchers:
+        messenger:
+          routing:
+            export_job_name: async_with_low_priority
+            import_job_name: async_with_high_priority
 
 .. seealso::
    | :doc:`What is a job launcher? </core-concepts/job-launcher>`

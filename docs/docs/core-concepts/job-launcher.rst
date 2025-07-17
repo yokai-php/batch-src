@@ -65,6 +65,9 @@ What types of launcher exists?
 * `SimpleJobLauncher <https://github.com/yokai-php/batch/tree/0.x/src/Launcher/SimpleJobLauncher.php>`__:
   execute the job directly in the same PHP process.
 
+* `RoutingJobLauncher <https://github.com/yokai-php/batch/tree/0.x/src/Launcher/RoutingJobLauncher.php>`__:
+  pick the appropriate job launcher for each job, based on the configuration you provide.
+
 **Launchers from bridges:**
 
 * From ``symfony/console`` bridge:
