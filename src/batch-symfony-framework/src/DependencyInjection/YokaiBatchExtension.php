@@ -146,7 +146,7 @@ final class YokaiBatchExtension extends Extension
 
         $container->setParameter('yokai_batch.launcher.messenger_routing', $config['messenger']['routing'] ?? []);
 
-        $launcherIdPerLauncherName = [];
+        $idPerLauncherName = [];
         foreach ($config['launchers'] as $name => $dsn) {
             $definitionOrReference = JobLauncherDefinitionFactory::fromDsn($dsn);
             if ($definitionOrReference instanceof Definition) {
@@ -156,15 +156,23 @@ final class YokaiBatchExtension extends Extension
                 $launcherId = (string)$definitionOrReference;
             }
 
-            $launcherIdPerLauncherName[$name] = $launcherId;
+            $idPerLauncherName[$name] = $launcherId;
             $parameterName = $name . 'JobLauncher';
             $container->registerAliasForArgument($launcherId, JobLauncherInterface::class, $parameterName);
         }
 
-        $container->setAlias(
-            JobLauncherInterface::class,
-            $launcherIdPerLauncherName[$config['default']],
-        );
+        $default = $idPerLauncherName[$config['default']];
+
+        $routing = $config['routing'] ?? [];
+        if ($routing !== []) {
+            $container->setDefinition(
+                $launcherId = 'yokai_batch.job_launcher.routing',
+                JobLauncherDefinitionFactory::routing($container, $idPerLauncherName, $default, $routing),
+            );
+            $default = $launcherId;
+        }
+
+        $container->setAlias(JobLauncherInterface::class, $default);
     }
 
     /**

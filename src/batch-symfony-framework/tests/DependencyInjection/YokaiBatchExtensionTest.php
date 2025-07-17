@@ -30,6 +30,7 @@ use Yokai\Batch\Factory\JobExecutionParametersBuilder\StaticJobExecutionParamete
 use Yokai\Batch\Factory\JobExecutionParametersBuilderInterface;
 use Yokai\Batch\Factory\UniqidJobExecutionIdGenerator;
 use Yokai\Batch\Launcher\JobLauncherInterface;
+use Yokai\Batch\Launcher\RoutingJobLauncher;
 use Yokai\Batch\Launcher\SimpleJobLauncher;
 use Yokai\Batch\Storage\FilesystemJobExecutionStorage;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
@@ -77,13 +78,22 @@ class YokaiBatchExtensionTest extends TestCase
     /**
      * @dataProvider launcher
      */
-    public function testLauncher(array $config, \Closure|null $configure, array $launchers, string $default): void
-    {
+    public function testLauncher(
+        array $config,
+        \Closure|null $configure,
+        array $launchers,
+        string $default,
+        \Closure|null $assert = null,
+    ): void {
         $container = $this->createContainer($config, $configure);
 
         self::assertSame($default, (string)$container->getAlias(JobLauncherInterface::class));
         foreach ($launchers as $id => $class) {
             self::assertSame($class, $container->getDefinition($id)->getClass());
+        }
+
+        if ($assert) {
+            $assert($container);
         }
     }
 
@@ -112,6 +122,43 @@ class YokaiBatchExtensionTest extends TestCase
             ],
             'yokai_batch.job_launcher.messenger',
         ];
+        yield 'Messenger launcher routing' => [
+            [
+                'launcher' => [
+                    'default' => 'messenger',
+                    'launchers' => [
+                        'messenger' => 'messenger://messenger',
+                    ],
+                    'messenger' => [
+                        'routing' => [
+                            'job1' => 'async',
+                            'job2' => 'sync',
+                        ],
+                    ],
+                ],
+            ],
+            null,
+            [
+                'yokai_batch.job_launcher.messenger' => DispatchMessageJobLauncher::class,
+            ],
+            'yokai_batch.job_launcher.messenger',
+            function (ContainerBuilder $container) {
+                $messengerJobsConfiguration = $container->getDefinition('yokai_batch.job_launcher.messenger')
+                    ->getArgument('$messengerJobsConfiguration');
+                self::assertInstanceOf(Definition::class, $messengerJobsConfiguration);
+                self::assertSame(
+                    '%yokai_batch.launcher.messenger_routing%',
+                    $messengerJobsConfiguration->getArgument('$routing'),
+                );
+                self::assertSame(
+                    [
+                        'job1' => 'async',
+                        'job2' => 'sync',
+                    ],
+                    $container->getParameter('yokai_batch.launcher.messenger_routing'),
+                );
+            },
+        ];
         yield 'Service launcher' => [
             [
                 'launcher' => [
@@ -127,6 +174,39 @@ class YokaiBatchExtensionTest extends TestCase
             ),
             ['app.job_launcher' => BufferingJobLauncher::class],
             'app.job_launcher',
+        ];
+        yield 'Routing launcher' => [
+            [
+                'launcher' => [
+                    'default' => 'simple',
+                    'launchers' => [
+                        'simple' => 'simple://simple',
+                        'messenger' => 'messenger://messenger',
+                        'console' => 'console://console',
+                    ],
+                    'routing' => [
+                        'job1' => 'messenger',
+                        'job2' => 'console',
+                    ],
+                ],
+            ],
+            null,
+            [
+                'yokai_batch.job_launcher.simple' => SimpleJobLauncher::class,
+                'yokai_batch.job_launcher.messenger' => DispatchMessageJobLauncher::class,
+                'yokai_batch.job_launcher.console' => RunCommandJobLauncher::class,
+                'yokai_batch.job_launcher.routing' => RoutingJobLauncher::class,
+            ],
+            'yokai_batch.job_launcher.routing',
+            function (ContainerBuilder $container) {
+                self::assertSame(
+                    [
+                        'job1' => 'messenger',
+                        'job2' => 'console',
+                    ],
+                    $container->getDefinition('yokai_batch.job_launcher.routing')->getArgument('$routing'),
+                );
+            },
         ];
     }
 

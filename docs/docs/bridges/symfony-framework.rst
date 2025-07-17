@@ -16,11 +16,11 @@ you will be able to register these using configuration:
 
     # config/packages/yokai_batch.yaml
     yokai_batch:
-        launcher:
-            default: simple
-            launchers:
-              simple: ...
-              async: ...
+      launcher:
+        default: simple
+        launchers:
+          simple: ...
+          async: ...
 
 .. note::
    If you do not configure anything here, you will be using the
@@ -46,6 +46,31 @@ All ``launchers`` are configured using a DSN, every scheme has it’s own associ
 
   * ``service``: the id of the service to use (required, an exception will be thrown otherwise)
 
+
+| You might define multiple job launchers, and will want to configure the relation between job and launcher.
+| For instance, you might prefer running some jobs with an async job launcher, but not all.
+| You can configure this routing like the following:
+
+.. code-block:: yaml
+
+    # config/packages/yokai_batch.yaml
+    yokai_batch:
+      launcher:
+        default: simple
+        launchers:
+          simple: simple://simple
+          console: console://console
+        routing:
+          export_job_name: simple
+          import_job_name: console
+
+.. note::
+   It is not required to configure every single job in the ``routing``.
+   The ``default`` will be the fallback for all jobs you did not not configured in the ``routing``.
+
+.. note::
+   If you configure ``config.launcher.routing``, it will replace your configured default from autowiring perspective.
+
 .. seealso::
    | :doc:`What is a job launcher? </core-concepts/job-launcher>`
 
@@ -64,12 +89,12 @@ You can have only one storage for your ``JobExecution``, and you have several op
 
     # config/packages/yokai_batch.yaml
     yokai_batch:
-        storage:
-            filesystem: ~
-            # Or with yokai/batch-doctrine-dbal (& doctrine/dbal)
-            # dbal: ~
-            # Or with a service of yours
-            # service: ~
+      storage:
+        filesystem: ~
+        # Or with yokai/batch-doctrine-dbal (& doctrine/dbal)
+        # dbal: ~
+        # Or with a service of yours
+        # service: ~
 
 .. note::
    | The default storage is ``filesystem``, because it only requires a writeable filesystem.
@@ -98,11 +123,11 @@ You can configure what your id will be like:
 
     # config/packages/yokai_batch.yaml
     yokai_batch:
-        id: uniqid
-        # Or with yokai/batch-symfony-uid (& symfony/uid)
-        # id: symfony.uuid.random
-        # id: symfony.uuid.time
-        # id: symfony.ulid
+      id: uniqid
+      # Or with yokai/batch-symfony-uid (& symfony/uid)
+      # id: symfony.uuid.random
+      # id: symfony.uuid.time
+      # id: symfony.ulid
 
 User interface to visualize ``JobExecution``
 ------------------------------------------------------------
