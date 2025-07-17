@@ -156,7 +156,7 @@ final class YokaiBatchExtension extends Extension
 
             $launcherIdPerLauncherName[$name] = $launcherId;
             $parameterName = $name . 'JobLauncher';
-            $container->registerAliasForArgument($launcherId, LoggerInterface::class, $parameterName);
+            $container->registerAliasForArgument($launcherId, JobLauncherInterface::class, $parameterName);
         }
 
         $container->setAlias(
