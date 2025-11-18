@@ -8,6 +8,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Result;
 use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Doctrine\DBAL\Schema\AbstractAsset;
 use Doctrine\DBAL\Schema\Comparator;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Types;
@@ -62,7 +63,11 @@ final class DoctrineDBALJobExecutionStorage implements
     {
         $assetFilter = $this->connection->getConfiguration()->getSchemaAssetsFilter();
         $this->connection->getConfiguration()->setSchemaAssetsFilter(
-            fn(string $tableName) => $tableName === $this->table,
+            function (string|AbstractAsset $table) {
+                $table = $table instanceof AbstractAsset ? $table->getName() : $table;
+
+                return $table === $this->table;
+            },
         );
 
         $schemaManager = \method_exists($this->connection, 'createSchemaManager')
