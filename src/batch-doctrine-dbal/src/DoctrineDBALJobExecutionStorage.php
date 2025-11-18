@@ -61,7 +61,8 @@ final class DoctrineDBALJobExecutionStorage implements
      */
     public function setup(): void
     {
-        $assetFilter = $this->connection->getConfiguration()->getSchemaAssetsFilter();
+        $assetFilter = $this->connection->getConfiguration()->getSchemaAssetsFilter()
+            ?? fn() => true;
         $this->connection->getConfiguration()->setSchemaAssetsFilter(
             function (string|AbstractAsset $table) {
                 $table = $table instanceof AbstractAsset ? $table->getName() : $table;
