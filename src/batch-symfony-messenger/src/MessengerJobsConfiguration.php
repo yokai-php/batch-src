@@ -10,7 +10,9 @@ namespace Yokai\Batch\Bridge\Symfony\Messenger;
 final class MessengerJobsConfiguration
 {
     public function __construct(
-        /** @var array<string, string> */
+        /**
+         * @var array<string, string>
+         */
         private array $routing,
     ) {
     }
