@@ -26,6 +26,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Loader\XmlFileLoader;
 use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Security\Core\Authorization\AccessDecision;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
@@ -418,8 +419,11 @@ final class JobControllerTest extends TestCase
                         {
                         }
 
-                        public function isGranted(mixed $attribute, mixed $subject = null): bool
-                        {
+                        public function isGranted(
+                            mixed $attribute,
+                            mixed $subject = null,
+                            AccessDecision|null $accessDecision = null,
+                        ): bool {
                             return $this->granted;
                         }
                     },

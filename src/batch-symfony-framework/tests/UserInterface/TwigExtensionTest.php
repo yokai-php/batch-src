@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yokai\Batch\Tests\Bridge\Symfony\Framework\UserInterface;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Security\Core\Authorization\AccessDecision;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
@@ -44,8 +45,11 @@ TWIG
                         {
                         }
 
-                        public function isGranted(mixed $attribute, mixed $subject = null): bool
-                        {
+                        public function isGranted(
+                            mixed $attribute,
+                            mixed $subject = null,
+                            AccessDecision|null $accessDecision = null,
+                        ): bool {
                             return $this->granted;
                         }
                     },
