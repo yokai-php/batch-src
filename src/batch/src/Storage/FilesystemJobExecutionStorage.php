@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Storage;
 
+use Generator;
 use Throwable;
 use Yokai\Batch\Exception\CannotRemoveJobExecutionException;
 use Yokai\Batch\Exception\CannotStoreJobExecutionException;
 use Yokai\Batch\Exception\FilesystemException;
 use Yokai\Batch\Exception\JobExecutionNotFoundException;
 use Yokai\Batch\JobExecution;
+use Yokai\Batch\JobExecutionResultFile;
 use Yokai\Batch\Serializer\JobExecutionSerializerInterface;
 
 /**
@@ -30,8 +32,9 @@ use Yokai\Batch\Serializer\JobExecutionSerializerInterface;
 final class FilesystemJobExecutionStorage implements QueryableJobExecutionStorageInterface
 {
     public function __construct(
-        private JobExecutionSerializerInterface $serializer,
-        private string $directory,
+        private readonly JobExecutionSerializerInterface $serializer,
+        private readonly JobExecutionSerializerInterface $partialSerializer,
+        private readonly string $directory,
     ) {
     }
 
@@ -83,88 +86,44 @@ final class FilesystemJobExecutionStorage implements QueryableJobExecutionStorag
         }
     }
 
+    /**
+     * @return Generator<JobExecution>
+     */
     public function query(Query $query): iterable
     {
-        $candidates = [];
-        $glob = new \GlobIterator(
-            \implode(DIRECTORY_SEPARATOR, [$this->directory, '**', '*']) . '.' . $this->serializer->extension(),
-        );
-        /** @var \SplFileInfo $file */
-        foreach ($glob as $file) {
+        $jobExecutionResultFiles = $this->getResultFiles($query);
+
+        $offset = $query->offset();
+        $max = $offset + $query->limit();
+        foreach ($jobExecutionResultFiles as $i => $jobExecutionResultFile) {
+            if ($i < $offset) {
+                continue;
+            }
+
+            if ($i >= $max) {
+                break;
+            }
+
             try {
-                $execution = $this->fileToExecution($file->getPathname());
+                yield $this->fileToExecution($jobExecutionResultFile->path);
             } catch (Throwable) {
-                // todo should we do something
                 continue;
             }
-
-            $names = $query->jobs();
-            if (\count($names) > 0 && !\in_array($execution->getJobName(), $names, true)) {
-                continue;
-            }
-
-            $ids = $query->ids();
-            if (\count($ids) > 0 && !\in_array($execution->getId(), $ids, true)) {
-                continue;
-            }
-
-            $statuses = $query->statuses();
-            if (\count($statuses) > 0 && !$execution->getStatus()->isOneOf($statuses)) {
-                continue;
-            }
-
-            $startTime = $execution->getStartTime();
-            $startDateFrom = $query->startTime()?->getFrom();
-            if ($startDateFrom !== null && ($startTime === null || $startTime < $startDateFrom)) {
-                continue;
-            }
-            $startDateTo = $query->startTime()?->getTo();
-            if ($startDateTo !== null && ($startTime === null || $startTime > $startDateTo)) {
-                continue;
-            }
-
-            $endTime = $execution->getEndTime();
-            $endDateFrom = $query->endTime()?->getFrom();
-            if ($endDateFrom !== null && ($endTime === null || $endTime < $endDateFrom)) {
-                continue;
-            }
-            $endDateTo = $query->endTime()?->getTo();
-            if ($endDateTo !== null && ($endTime === null || $endTime > $endDateTo)) {
-                continue;
-            }
-
-            $candidates[] = $execution;
         }
-
-        $order = match ($query->sort()) {
-            Query::SORT_BY_START_ASC => static function (JobExecution $left, JobExecution $right): int {
-                return $left->getStartTime() <=> $right->getStartTime();
-            },
-            Query::SORT_BY_START_DESC => static function (JobExecution $left, JobExecution $right): int {
-                return $right->getStartTime() <=> $left->getStartTime();
-            },
-            Query::SORT_BY_END_ASC => static function (JobExecution $left, JobExecution $right): int {
-                return $left->getEndTime() <=> $right->getEndTime();
-            },
-            Query::SORT_BY_END_DESC => static function (JobExecution $left, JobExecution $right): int {
-                return $right->getEndTime() <=> $left->getEndTime();
-            },
-            default => null,
-        };
-
-        if ($order) {
-            \uasort($candidates, $order);
-        }
-
-        return \array_slice($candidates, $query->offset(), $query->limit());
     }
 
     public function count(Query $query): int
     {
-        /** @var JobExecution[] $result */
-        $result = $this->query($query);
+        $total = \count($this->getResultFiles($query));
 
-        return \count($result);
+        $offset = $query->offset();
+        if ($offset >= $total) {
+            return 0;
+        }
+
+        $remaining = $total - $offset;
+
+        return \min($remaining, $query->limit());
     }
 
     private function buildFilePath(string $jobName, string $executionId): string
@@ -196,5 +155,146 @@ final class FilesystemJobExecutionStorage implements QueryableJobExecutionStorag
         }
 
         return $this->serializer->unserialize($content);
+    }
+
+    private function fileToPartialExecution(string $file): JobExecution
+    {
+        $handle = \fopen($file, 'rb+');
+        if ($handle === false) {
+            throw FilesystemException::cannotReadFile($file);
+        }
+
+        try {
+            // Read only the first bytes to avoid memory leaking by reading the whole file
+            $content = \fread($handle, 2048);
+            if ($content === false) {
+                throw FilesystemException::cannotReadFile($file);
+            }
+        } finally {
+            \fclose($handle);
+        }
+
+        return $this->partialSerializer->unserialize($content);
+    }
+
+    /**
+     * @return list<JobExecutionResultFile>
+     */
+    private function getResultFiles(Query $query): array
+    {
+        // As the values below will be constant through the loop, we extract and compute them once
+
+        $queryNames = $query->jobs();
+        $hasQueryNames = \count($queryNames) > 0;
+
+        $queryIds = $query->ids();
+        $hasQueryIds = \count($queryIds) > 0;
+
+        $queryStatuses = $query->statuses();
+        $hasQueryStatuses = \count($queryStatuses) > 0;
+
+        $queryStartDateFrom = $query->startTime()?->getFrom();
+        $hasQueryStartDateFrom = $queryStartDateFrom !== null;
+
+        $queryStartDateTo = $query->startTime()?->getTo();
+        $hasQueryStartDateTo = $queryStartDateTo !== null;
+
+        $queryEndDateFrom = $query->endTime()?->getFrom();
+        $hasQueryEndDateFrom = $queryEndDateFrom !== null;
+
+        $queryEndDateTo = $query->endTime()?->getTo();
+        $hasQueryEndDateTo = $queryEndDateTo !== null;
+
+        // To avoid OOM, we first filter files by reading only metadata from each file,
+        // then we sort and paginate the resulting list of files,
+        // and finally we read the content of the selected files only to yield JobExecution instances.
+
+        /** @var list<JobExecutionResultFile> $jobExecutionResultFiles */
+        $jobExecutionResultFiles = [];
+
+        $glob = new \GlobIterator($this->buildFilePath('**', '*'));
+
+        /** @var \SplFileInfo $file */
+        foreach ($glob as $file) {
+            $filePathName = $file->getPathname();
+
+            try {
+                $execution = $this->fileToPartialExecution($filePathName);
+            } catch (Throwable $exception) {
+                \error_log(
+                    \sprintf(
+                        'Cannot read job execution result from file "%s": %s',
+                        $filePathName,
+                        $exception->getMessage(),
+                    ),
+                );
+
+                continue;
+            }
+
+            if ($hasQueryNames && !\in_array($execution->getJobName(), $queryNames, true)) {
+                continue;
+            }
+
+            if ($hasQueryIds && !\in_array($execution->getId(), $queryIds, true)) {
+                continue;
+            }
+
+            if ($hasQueryStatuses && !$execution->getStatus()->isOneOf($queryStatuses)) {
+                continue;
+            }
+
+            $startTime = $execution->getStartTime();
+            if ($hasQueryStartDateFrom && ($startTime === null || $startTime < $queryStartDateFrom)) {
+                continue;
+            }
+            if ($hasQueryStartDateTo && ($startTime === null || $startTime > $queryStartDateTo)) {
+                continue;
+            }
+
+            $endTime = $execution->getEndTime();
+            if ($hasQueryEndDateFrom && ($endTime === null || $endTime < $queryEndDateFrom)) {
+                continue;
+            }
+            if ($hasQueryEndDateTo && ($endTime === null || $endTime > $queryEndDateTo)) {
+                continue;
+            }
+
+            $jobExecutionResultFiles[] = new JobExecutionResultFile($filePathName, $startTime, $endTime);
+        }
+
+        $order = match ($query->sort()) {
+            Query::SORT_BY_START_ASC => static function (
+                JobExecutionResultFile $left,
+                JobExecutionResultFile $right,
+            ): int {
+                return $left->jobStartTime <=> $right->jobStartTime;
+            },
+            Query::SORT_BY_START_DESC => static function (
+                JobExecutionResultFile $left,
+                JobExecutionResultFile $right,
+            ): int {
+                return $right->jobStartTime <=> $left->jobStartTime;
+            },
+            Query::SORT_BY_END_ASC => static function (
+                JobExecutionResultFile $left,
+                JobExecutionResultFile $right,
+            ): int {
+                return $left->jobEndTime <=> $right->jobEndTime;
+            },
+            Query::SORT_BY_END_DESC => static function (
+                JobExecutionResultFile $left,
+                JobExecutionResultFile $right,
+            ): int {
+                return $right->jobEndTime <=> $left->jobEndTime;
+            },
+            default => null,
+        };
+
+        if ($order) {
+            \usort($jobExecutionResultFiles, $order);
+        }
+
+        return $jobExecutionResultFiles;
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Storage;
 
 use PHPUnit\Framework\TestCase;
+use Yokai\Batch\Serializer\JsonJobExecutionPartialSerializer;
 use Yokai\Batch\Serializer\JsonJobExecutionSerializer;
 use Yokai\Batch\Storage\FilesystemJobExecutionStorage;
 use Yokai\Batch\Storage\QueryBuilder;
@@ -21,7 +22,8 @@ class FilesystemJobExecutionStorageMemoryTest extends TestCase
     {
         $this->storage = new FilesystemJobExecutionStorage(
             new JsonJobExecutionSerializer(),
-            __DIR__.'/fixtures/filesystem-job-execution-large',
+            new JsonJobExecutionPartialSerializer(),
+            __DIR__ . '/fixtures/filesystem-job-execution-large',
         );
 
         $this->memoryBefore = \memory_get_usage(true);

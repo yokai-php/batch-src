@@ -46,6 +46,7 @@ use Yokai\Batch\Failure;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\JobExecutionLogs;
 use Yokai\Batch\JobParameters;
+use Yokai\Batch\Serializer\JsonJobExecutionPartialSerializer;
 use Yokai\Batch\Serializer\JsonJobExecutionSerializer;
 use Yokai\Batch\Storage\FilesystemJobExecutionStorage;
 use Yokai\Batch\Summary;
@@ -59,7 +60,11 @@ final class JobControllerTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        self::$storage = new FilesystemJobExecutionStorage(new JsonJobExecutionSerializer(), self::STORAGE_DIR);
+        self::$storage = new FilesystemJobExecutionStorage(
+            new JsonJobExecutionSerializer(),
+            new JsonJobExecutionPartialSerializer(),
+            self::STORAGE_DIR,
+        );
     }
 
     protected function setUp(): void
