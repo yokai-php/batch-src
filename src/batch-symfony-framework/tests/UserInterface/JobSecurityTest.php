@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yokai\Batch\Tests\Bridge\Symfony\Framework\UserInterface;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Security\Core\Authorization\AccessDecision;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\JobSecurity;
@@ -39,8 +40,11 @@ final class JobSecurityTest extends TestCase
             {
             }
 
-            public function isGranted(mixed $attribute, mixed $subject = null): bool
-            {
+            public function isGranted(
+                mixed $attribute,
+                mixed $subject = null,
+                AccessDecision|null $accessDecision = null,
+            ): bool {
                 return \in_array($attribute, $this->attributes, true)
                     && ($subject === null || $subject instanceof JobExecution);
             }

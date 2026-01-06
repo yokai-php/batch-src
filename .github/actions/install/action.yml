@@ -30,9 +30,11 @@ runs:
       run: |
         composer require --quiet --no-update "symfony/console:${{ inputs.symfony-version }}"
         composer require --quiet --no-update "symfony/framework-bundle:${{ inputs.symfony-version }}"
+        composer require --quiet --no-update "symfony/routing:${{ inputs.symfony-version }}"
         composer require --quiet --no-update "symfony/messenger:${{ inputs.symfony-version }}"
         composer require --quiet --no-update "symfony/process:${{ inputs.symfony-version }}"
         composer require --quiet --no-update "symfony/serializer:${{ inputs.symfony-version }}"
+        composer require --quiet --no-update "symfony/property-info:${{ inputs.symfony-version }}"
         composer require --quiet --no-update "symfony/validator:${{ inputs.symfony-version }}"
         composer require --quiet --no-update "symfony/filesystem:${{ inputs.symfony-version }}" --dev
         composer require --quiet --no-update "symfony/finder:${{ inputs.symfony-version }}" --dev
