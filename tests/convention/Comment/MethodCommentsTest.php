@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Sources\Tests\Convention\Comment;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionClass;
 use ReflectionMethod;
 use Yokai\Batch\Sources\Tests\Convention\Autoload;
@@ -12,9 +13,7 @@ use Yokai\Batch\Sources\Tests\Convention\Packages;
 
 final class MethodCommentsTest extends CommentsTestCase
 {
-    /**
-     * @dataProvider publicMethods
-     */
+    #[DataProvider('publicMethods')]
     public function testAllPublicMethodsHasComment(ReflectionMethod $method): void
     {
         // Only true comments are relevant, phpdoc is not.
@@ -31,15 +30,13 @@ final class MethodCommentsTest extends CommentsTestCase
         );
     }
 
-    /**
-     * @dataProvider publicMethods
-     */
+    #[DataProvider('publicMethods')]
     public function testAllSeeDocAreSurroundedWithBrackets(ReflectionMethod $method): void
     {
         self::assertAllSeeDocAreSurroundedWithBrackets((string)$method->getDocComment());
     }
 
-    public function publicMethods(): iterable
+    public static function publicMethods(): iterable
     {
         $magicMethods = \array_fill_keys(['__construct', '__invoke'], true);
 
@@ -84,18 +81,18 @@ final class MethodCommentsTest extends CommentsTestCase
                         continue;
                     }
 
-                    yield $this->methodFQCN($method) => [$method];
+                    yield self::methodFQCN($method) => [$method];
                 }
             }
         }
     }
 
-    private function methodFQCN(ReflectionMethod $method): string
+    private static function methodFQCN(ReflectionMethod $method): string
     {
         return "{$method->getDeclaringClass()->getName()}::{$method->getName()}";
     }
 
-    private function fileAndLine(ReflectionMethod $method): string
+    private static function fileAndLine(ReflectionMethod $method): string
     {
         return "{$method->getDeclaringClass()->getFileName()}:{$method->getStartLine()}";
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Tests\Bridge\Symfony\Framework\UserInterface;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authorization\AccessDecision;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -15,9 +16,7 @@ use Yokai\Batch\JobExecution;
 
 final class TwigExtensionTest extends TestCase
 {
-    /**
-     * @dataProvider security
-     */
+    #[DataProvider('security')]
     public function testSecurity(JobSecurity $security, bool $granted): void
     {
         $twig = new Environment(new ArrayLoader(['default' => <<<TWIG

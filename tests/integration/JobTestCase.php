@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Sources\Tests\Integration;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Factory\JobExecutionFactory;
@@ -42,9 +43,7 @@ abstract class JobTestCase extends TestCase
         }
     }
 
-    /**
-     * @dataProvider variant
-     */
+    #[DataProvider('variant')]
     public function testExecuteJob(JobExecutionStorageInterface $jobExecutionStorage): void
     {
         $job = $this->createJob($jobExecutionStorage);
@@ -63,9 +62,9 @@ abstract class JobTestCase extends TestCase
         $this->assertAgainstExecution($jobExecutionStorage, $jobExecution);
     }
 
-    public function variant(): \Iterator
+    public static function variant(): \Iterator
     {
-        foreach ($this->storages() as $storage) {
+        foreach (self::storages() as $storage) {
             yield [$storage];
         }
     }
@@ -116,7 +115,7 @@ abstract class JobTestCase extends TestCase
         }
     }
 
-    private function storages(): \Iterator
+    private static function storages(): \Iterator
     {
         yield new FilesystemJobExecutionStorage(
             new JsonJobExecutionSerializer(),

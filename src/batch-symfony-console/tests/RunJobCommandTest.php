@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yokai\Batch\Tests\Bridge\Symfony\Console;
 
 use JsonException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -65,9 +66,7 @@ class RunJobCommandTest extends TestCase
         $this->execute('"string"');
     }
 
-    /**
-     * @dataProvider verbosity
-     */
+    #[DataProvider('verbosity')]
     public function testRunWithErrors(int $verbosity): void
     {
         $this->job->execute(Argument::any())
@@ -97,9 +96,7 @@ class RunJobCommandTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider verbosity
-     */
+    #[DataProvider('verbosity')]
     public function testRunWithWarnings(int $verbosity): void
     {
         $this->job->execute(Argument::any())
@@ -128,9 +125,7 @@ class RunJobCommandTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider verbosity
-     */
+    #[DataProvider('verbosity')]
     public function testRunSuccessful(int $verbosity): void
     {
         $this->job->execute(Argument::any())
@@ -147,7 +142,7 @@ class RunJobCommandTest extends TestCase
         }
     }
 
-    public function verbosity(): \Generator
+    public static function verbosity(): \Generator
     {
         yield 'quiet' => [OutputInterface::VERBOSITY_QUIET];
         yield 'normal' => [OutputInterface::VERBOSITY_NORMAL];

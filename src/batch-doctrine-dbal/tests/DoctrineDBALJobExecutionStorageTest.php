@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Types\Types;
 use Generator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use RuntimeException;
 use Throwable;
 use Yokai\Batch\BatchStatus;
@@ -215,9 +216,7 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         $storage->retrieve('export', '456');
     }
 
-    /**
-     * @dataProvider retrieveInvalid
-     */
+    #[DataProvider('retrieveInvalid')]
     public function testRetrieveInvalid(array $data, Throwable $error): void
     {
         $this->expectExceptionObject($error);
@@ -238,7 +237,7 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         $storage->retrieve('export', '123');
     }
 
-    public function retrieveInvalid(): \Generator
+    public static function retrieveInvalid(): \Generator
     {
         yield '"parameters" column value is expected to be array' => [
             ['parameters' => '"string"'],
@@ -272,9 +271,7 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         self::assertExecutionIds(['456', '789', '987'], $storage->list('import'));
     }
 
-    /**
-     * @dataProvider queries
-     */
+    #[DataProvider('queries')]
     public function testQuery(QueryBuilder $queryBuilder, array $expectedCouples): void
     {
         $storage = $this->createStorage();
@@ -285,7 +282,7 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         self::assertSame(\count($expectedCouples), $storage->count($queryBuilder->getQuery()));
     }
 
-    public function queries(): Generator
+    public static function queries(): Generator
     {
         yield 'No filter' => [
             new QueryBuilder(),

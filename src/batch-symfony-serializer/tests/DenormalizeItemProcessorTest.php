@@ -7,6 +7,7 @@ namespace Yokai\Batch\Tests\Bridge\Symfony\Serializer;
 use DateTime;
 use DateTimeImmutable;
 use Generator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Exception\UnsupportedException;
 use Yokai\Batch\Bridge\Symfony\Serializer\DenormalizeItemProcessor;
@@ -17,9 +18,7 @@ use Yokai\Batch\Tests\Bridge\Symfony\Serializer\Dummy\FailingNormalizer;
 
 final class DenormalizeItemProcessorTest extends TestCase
 {
-    /**
-     * @dataProvider sets
-     */
+    #[DataProvider('sets')]
     public function testProcess(string $type, null|string $format, array $context, $item, $expected): void
     {
         $denormalizer = new DummyNormalizer(true, $expected);
@@ -28,9 +27,7 @@ final class DenormalizeItemProcessorTest extends TestCase
         self::assertSame($expected, $processor->process($item));
     }
 
-    /**
-     * @dataProvider sets
-     */
+    #[DataProvider('sets')]
     public function testUnsupported(string $type, null|string $format, array $context, $item): void
     {
         $denormalizer = new DummyNormalizer(false, null);
@@ -51,9 +48,7 @@ final class DenormalizeItemProcessorTest extends TestCase
         self::assertSame('Unable to denormalize item. Not supported.', $cause->getError()->getMessage());
     }
 
-    /**
-     * @dataProvider sets
-     */
+    #[DataProvider('sets')]
     public function testException(string $type, null|string $format, array $context, $item): void
     {
         $denormalizer = new FailingNormalizer($exceptionThrown = new UnsupportedException());

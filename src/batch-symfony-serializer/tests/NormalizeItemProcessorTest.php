@@ -7,6 +7,7 @@ namespace Yokai\Batch\Tests\Bridge\Symfony\Serializer;
 use DateTime;
 use DateTimeImmutable;
 use Generator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Exception\BadMethodCallException;
 use Yokai\Batch\Bridge\Symfony\Serializer\NormalizeItemProcessor;
@@ -17,9 +18,7 @@ use Yokai\Batch\Tests\Bridge\Symfony\Serializer\Dummy\FailingNormalizer;
 
 final class NormalizeItemProcessorTest extends TestCase
 {
-    /**
-     * @dataProvider sets
-     */
+    #[DataProvider('sets')]
     public function testProcess(null|string $format, array $context, $item, $expected): void
     {
         $normalizer = new DummyNormalizer(true, $expected);
@@ -28,9 +27,7 @@ final class NormalizeItemProcessorTest extends TestCase
         self::assertSame($expected, $processor->process($item));
     }
 
-    /**
-     * @dataProvider sets
-     */
+    #[DataProvider('sets')]
     public function testUnsupported(null|string $format, array $context, $item): void
     {
         $normalizer = new DummyNormalizer(false, null);
@@ -51,9 +48,7 @@ final class NormalizeItemProcessorTest extends TestCase
         self::assertSame('Unable to normalize item. Not supported.', $cause->getError()->getMessage());
     }
 
-    /**
-     * @dataProvider sets
-     */
+    #[DataProvider('sets')]
     public function testException(null|string $format, array $context, $item): void
     {
         $normalizer = new FailingNormalizer($exceptionThrown = new BadMethodCallException());

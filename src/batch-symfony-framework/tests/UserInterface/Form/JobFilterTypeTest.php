@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Tests\Bridge\Symfony\Framework\UserInterface\Form;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Form\ChoiceList\View\ChoiceView;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\Test\TypeTestCase;
@@ -48,9 +49,7 @@ final class JobFilterTypeTest extends TypeTestCase
         );
     }
 
-    /**
-     * @dataProvider submit
-     */
+    #[DataProvider('submit')]
     public function testSubmit(array $submit, JobFilter $expected, bool $valid): void
     {
         $form = $this->factory->create(JobFilterType::class, $actual = new JobFilter());

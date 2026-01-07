@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Sources\Tests\Convention\Dependency;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Yokai\Batch\Sources\Tests\Convention\Autoload;
 use Yokai\Batch\Sources\Tests\Convention\Package;
@@ -24,9 +25,8 @@ final class PackagesTest extends TestCase
 
     /**
      * Every individual package must declare explicit dependencies, based on use statements.
-     *
-     * @dataProvider packages
      */
+    #[DataProvider('packages')]
     public function testPackagesAreUsingRequiredClasses(Package $package): void
     {
         // Read package's composer.json and extract autoload prefixes of
@@ -91,7 +91,7 @@ final class PackagesTest extends TestCase
         }
     }
 
-    public function packages(): iterable
+    public static function packages(): iterable
     {
         /** @var Package $package */
         foreach (Packages::listYokaiPackages() as $package) {

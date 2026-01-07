@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Sources\Tests\Convention\Comment;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionClass;
 use Yokai\Batch\Sources\Tests\Convention\Autoload;
 use Yokai\Batch\Sources\Tests\Convention\Package;
@@ -11,9 +12,7 @@ use Yokai\Batch\Sources\Tests\Convention\Packages;
 
 final class ClassCommentsTest extends CommentsTestCase
 {
-    /**
-     * @dataProvider classes
-     */
+    #[DataProvider('classes')]
     public function testAllClassesHasComment(ReflectionClass $class): void
     {
         self::assertNotFalse(
@@ -22,15 +21,13 @@ final class ClassCommentsTest extends CommentsTestCase
         );
     }
 
-    /**
-     * @dataProvider classes
-     */
+    #[DataProvider('classes')]
     public function testAllSeeDocAreSurroundedWithBrackets(ReflectionClass $class): void
     {
         self::assertAllSeeDocAreSurroundedWithBrackets((string)$class->getDocComment());
     }
 
-    public function classes(): iterable
+    public static function classes(): iterable
     {
         /** @var Package $package */
         foreach (Packages::listYokaiPackages() as $package) {

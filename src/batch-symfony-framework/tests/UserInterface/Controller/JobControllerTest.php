@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Tests\Bridge\Symfony\Framework\UserInterface\Controller;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Constraint\LogicalAnd;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\Twig\Extension\FormExtension;
@@ -67,9 +68,7 @@ final class JobControllerTest extends TestCase
         (new Filesystem())->remove(self::STORAGE_DIR);
     }
 
-    /**
-     * @dataProvider list
-     */
+    #[DataProvider('list')]
     public function testList(
         \Closure $fixtures,
         Request $request,
@@ -191,9 +190,7 @@ final class JobControllerTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider view
-     */
+    #[DataProvider('view')]
     public function testView(
         \Closure $fixtures,
         string $job,
@@ -322,9 +319,7 @@ final class JobControllerTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider logs
-     */
+    #[DataProvider('logs')]
     public function testLogs(
         \Closure $fixtures,
         string $job,
