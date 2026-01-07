@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Tests\Bridge\Doctrine\Persistence\Dummy;
 
+use Doctrine\DBAL\LockMode;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ObjectRepository;
 
-class FindOneByCalledOnlyOnceWhenFoundRepositoryDecorator implements ObjectRepository
+class FindOneByCalledOnlyOnceWhenFoundRepositoryDecorator extends EntityRepository
 {
     private array $calls = [];
 
@@ -15,22 +17,26 @@ class FindOneByCalledOnlyOnceWhenFoundRepositoryDecorator implements ObjectRepos
     ) {
     }
 
-    public function find($id)
+    public function find(mixed $id, LockMode|int|null $lockMode = null, int|null $lockVersion = null): object|null
     {
         return $this->decorated->find($id);
     }
 
-    public function findAll()
+    public function findAll(): array
     {
         return $this->decorated->findAll();
     }
 
-    public function findBy(array $criteria, array|null $orderBy = null, $limit = null, $offset = null)
-    {
+    public function findBy(
+        array $criteria,
+        array|null $orderBy = null,
+        int|null $limit = null,
+        int|null $offset = null,
+    ): array {
         return $this->decorated->findBy($criteria, $orderBy, $limit, $offset);
     }
 
-    public function findOneBy(array $criteria)
+    public function findOneBy(array $criteria, array|null $orderBy = null): object|null
     {
         $result = $this->decorated->findOneBy($criteria);
         if ($result === null) {
@@ -42,7 +48,7 @@ class FindOneByCalledOnlyOnceWhenFoundRepositoryDecorator implements ObjectRepos
         return $result;
     }
 
-    public function getClassName()
+    public function getClassName(): string
     {
         return $this->decorated->getClassName();
     }

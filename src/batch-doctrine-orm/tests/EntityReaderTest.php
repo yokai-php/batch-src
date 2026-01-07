@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Tests\Bridge\Doctrine\ORM;
 
+use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Tools\DsnParser;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -24,7 +26,14 @@ class EntityReaderTest extends TestCase
     protected function setUp(): void
     {
         $config = ORMSetup::createAttributeMetadataConfiguration([__DIR__ . '/Entity'], true);
-        $this->manager = EntityManager::create(['url' => \getenv('DATABASE_URL')], $config);
+        if (\PHP_VERSION_ID >= 80400) {
+            $config->enableNativeLazyObjects(true);
+        } else {
+            $config->setProxyDir(\sys_get_temp_dir());
+            $config->setProxyNamespace('DoctrineProxies');
+        }
+        $connection = DriverManager::getConnection((new DsnParser())->parse(\getenv('DATABASE_URL')));
+        $this->manager = new EntityManager($connection, $config);
         $this->doctrine = new SingleManagerRegistry($this->manager);
 
         (new SchemaTool($this->manager))

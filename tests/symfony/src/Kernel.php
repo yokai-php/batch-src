@@ -85,8 +85,7 @@ final class Kernel extends BaseKernel implements CompilerPassInterface
                 'url' => 'sqlite:///%kernel.project_dir%/var/database.sqlite',
                 'logging' => false,
             ],
-            'orm' => [
-                'auto_generate_proxy_classes' => true,
+            'orm' => \array_merge([
                 'naming_strategy' => 'doctrine.orm.naming_strategy.underscore',
                 'mappings' => [
                     'App' => [
@@ -97,7 +96,7 @@ final class Kernel extends BaseKernel implements CompilerPassInterface
                         'alias' => 'App',
                     ],
                 ],
-            ],
+            ], (\PHP_VERSION_ID < 80400 ? ['auto_generate_proxy_classes' => true] : [])),
         ]);
         $container->extension('twig', [
             'default_path' => __DIR__ . '/../templates',
@@ -142,7 +141,7 @@ final class Kernel extends BaseKernel implements CompilerPassInterface
 
     protected function configureRoutes(RoutingConfigurator $routes): void
     {
-        $routes->import('@YokaiBatchBundle/Resources/routing/ui.xml');
+        $routes->import('@YokaiBatchBundle/Resources/routing/ui.php');
     }
 
     public function process(ContainerBuilder $container): void

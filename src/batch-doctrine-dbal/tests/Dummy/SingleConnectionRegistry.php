@@ -16,12 +16,12 @@ final class SingleConnectionRegistry implements ConnectionRegistry
     ) {
     }
 
-    public function getDefaultConnectionName()
+    public function getDefaultConnectionName(): string
     {
         return $this->name;
     }
 
-    public function getConnection($name = null)
+    public function getConnection(string|null $name = null): object
     {
         if ($name === $this->name) {
             return $this->connection;
@@ -30,12 +30,12 @@ final class SingleConnectionRegistry implements ConnectionRegistry
         throw new InvalidArgumentException(\sprintf('Doctrine Connection named "%s" does not exist.', $name));
     }
 
-    public function getConnections()
+    public function getConnections(): array
     {
         return [$this->connection];
     }
 
-    public function getConnectionNames()
+    public function getConnectionNames(): array
     {
         return [$this->name];
     }

@@ -8,41 +8,39 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity()
- */
+#[ORM\Entity]
 class Developer
 {
     /**
      * @var int
-     * @ORM\Column(type="integer")
-     * @ORM\Id()
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
     public $id;
 
     /**
      * @var string
-     * @ORM\Column()
      */
+    #[ORM\Column(type: 'string')]
     public $firstName;
 
     /**
      * @var string
-     * @ORM\Column()
      */
+    #[ORM\Column(type: 'string')]
     public $lastName;
 
     /**
      * @var Collection
-     * @ORM\ManyToMany(targetEntity=Badge::class)
      */
+    #[ORM\ManyToMany(targetEntity: Badge::class)]
     public $badges;
 
     /**
      * @var Collection
-     * @ORM\ManyToMany(targetEntity=Repository::class)
      */
+    #[ORM\ManyToMany(targetEntity: Repository::class)]
     public $repositories;
 
     public function __construct()

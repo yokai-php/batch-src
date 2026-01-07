@@ -4,12 +4,17 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Bridge\Doctrine\DBAL;
 
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Result;
 use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Schema\AbstractAsset;
-use Doctrine\DBAL\Schema\Comparator;
+use Doctrine\DBAL\Schema\Name;
+use Doctrine\DBAL\Schema\Name\Identifier;
+use Doctrine\DBAL\Schema\Name\UnqualifiedName;
+use Doctrine\DBAL\Schema\NamedObject;
+use Doctrine\DBAL\Schema\PrimaryKeyConstraint;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\Persistence\ConnectionRegistry;
@@ -61,38 +66,23 @@ final class DoctrineDBALJobExecutionStorage implements
      */
     public function setup(): void
     {
-        $assetFilter = $this->connection->getConfiguration()->getSchemaAssetsFilter()
-            ?? fn() => true;
+        $assetFilter = $this->connection->getConfiguration()->getSchemaAssetsFilter();
         $this->connection->getConfiguration()->setSchemaAssetsFilter(function (string|AbstractAsset $table) {
-            $table = $table instanceof AbstractAsset ? $table->getName() : $table;
+            $table = $table instanceof AbstractAsset ? $this->getAssetName($table) : $table;
 
             return $table === $this->table;
         });
 
-        $schemaManager = \method_exists($this->connection, 'createSchemaManager')
-            ? $this->connection->createSchemaManager()
-            : $this->connection->getSchemaManager();
-        $comparator = \method_exists($schemaManager, 'createComparator')
-            ? $schemaManager->createComparator()
-            : new Comparator();
-        $fromSchema = \method_exists($schemaManager, 'introspectSchema')
-            ? $schemaManager->introspectSchema()
-            : $schemaManager->createSchema();
+        $schemaManager = $this->connection->createSchemaManager();
+        $comparator = $schemaManager->createComparator();
+        $fromSchema = $schemaManager->introspectSchema();
         $toSchema = $this->getSchema();
-        $schemaDiff = \method_exists($comparator, 'compareSchemas')
-            ? $comparator->compareSchemas($fromSchema, $toSchema)
-            : $comparator->compare($fromSchema, $toSchema);
+        $schemaDiff = $comparator->compareSchemas($fromSchema, $toSchema);
         $platform = $this->connection->getDatabasePlatform();
-        $schemaDiffQueries = \method_exists($platform, 'getAlterSchemaSQL')
-            ? $platform->getAlterSchemaSQL($schemaDiff)
-            : $schemaDiff->toSaveSql($platform);
+        $schemaDiffQueries = $platform->getAlterSchemaSQL($schemaDiff);
 
         foreach ($schemaDiffQueries as $sql) {
-            if (\method_exists($this->connection, 'executeStatement')) {
-                $this->connection->executeStatement($sql);
-            } else {
-                $this->connection->exec($sql);
-            }
+            $this->connection->executeStatement($sql);
         }
 
         $this->connection->getConfiguration()->setSchemaAssetsFilter($assetFilter);
@@ -104,7 +94,7 @@ final class DoctrineDBALJobExecutionStorage implements
             try {
                 $this->fetchRow($execution->getJobName(), $execution->getId());
                 $stored = true;
-            } catch (RuntimeException $exception) {
+            } catch (RuntimeException) {
                 $stored = false;
             }
 
@@ -156,10 +146,6 @@ final class DoctrineDBALJobExecutionStorage implements
         $qb->select('*')
             ->from($this->table);
 
-        /**
-         * @var array<string, mixed> $queryParameters
-         * @var array<string, string|int> $queryTypes
-         */
         [$queryParameters, $queryTypes] = $this->addWheres($query, $qb);
 
         switch ($query->sort()) {
@@ -192,10 +178,6 @@ final class DoctrineDBALJobExecutionStorage implements
         $qb->select('count(*)')
             ->from($this->table);
 
-        /**
-         * @var array<string, mixed> $queryParameters
-         * @var array<string, string|int> $queryTypes
-         */
         [$queryParameters, $queryTypes] = $this->addWheres($query, $qb);
 
         /** @var int $result */
@@ -223,7 +205,13 @@ final class DoctrineDBALJobExecutionStorage implements
         $table->addColumn('warnings', Types::JSON);
         $table->addColumn('child_executions', Types::JSON);
         $table->addColumn('logs', Types::TEXT);
-        $table->setPrimaryKey(['id']);
+        if (\method_exists($table, 'addPrimaryKeyConstraint')) {
+            $table->addPrimaryKeyConstraint(
+                new PrimaryKeyConstraint(null, [new UnqualifiedName(Identifier::unquoted('id'))], false),
+            );
+        } else {
+            $table->setPrimaryKey(['id']);
+        }
         $table->addIndex(['job_name']);
         $table->addIndex(['status']);
         $table->addIndex(['start_time']);
@@ -294,8 +282,8 @@ final class DoctrineDBALJobExecutionStorage implements
     }
 
     /**
-     * @param array<string, mixed>      $parameters
-     * @param array<string, int|string> $types
+     * @param array<string, mixed>                     $parameters
+     * @param array<string, string|ArrayParameterType> $types
      *
      * @return Generator<JobExecution>
      */
@@ -335,7 +323,10 @@ final class DoctrineDBALJobExecutionStorage implements
     }
 
     /**
-     * @return array{array<string, mixed>, array<string, string|int>}
+     * @return array{
+     *     array<string, mixed>,
+     *     array<string, string|ArrayParameterType>,
+     * }
      */
     private function addWheres(Query $query, QueryBuilder $qb): array
     {
@@ -346,21 +337,21 @@ final class DoctrineDBALJobExecutionStorage implements
         if (\count($names) > 0) {
             $qb->andWhere($qb->expr()->in('job_name', ':jobNames'));
             $queryParameters['jobNames'] = $names;
-            $queryTypes['jobNames'] = Connection::PARAM_STR_ARRAY;
+            $queryTypes['jobNames'] = ArrayParameterType::STRING;
         }
 
         $ids = $query->ids();
         if (\count($ids) > 0) {
             $qb->andWhere($qb->expr()->in('id', ':ids'));
             $queryParameters['ids'] = $ids;
-            $queryTypes['ids'] = Connection::PARAM_STR_ARRAY;
+            $queryTypes['ids'] = ArrayParameterType::STRING;
         }
 
         $statuses = $query->statuses();
         if (\count($statuses) > 0) {
             $qb->andWhere($qb->expr()->in('status', ':statuses'));
             $queryParameters['statuses'] = $statuses;
-            $queryTypes['statuses'] = Connection::PARAM_INT_ARRAY;
+            $queryTypes['statuses'] = ArrayParameterType::INTEGER;
         }
 
         if ($query->startTime()) {
@@ -396,5 +387,15 @@ final class DoctrineDBALJobExecutionStorage implements
         }
 
         return [$queryParameters, $queryTypes];
+    }
+
+    /**
+     * @param AbstractAsset<Name> $asset
+     */
+    private function getAssetName(AbstractAsset $asset): string
+    {
+        return $asset instanceof NamedObject
+            ? $asset->getObjectName()->toString()
+            : $asset->getName();
     }
 }

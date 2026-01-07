@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Sources\Tests\Symfony\Tests;
 
+use Doctrine\DBAL\Platforms\Exception\NotSupported;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Generator;
@@ -70,8 +71,13 @@ final class JobTest extends KernelTestCase
         if (\file_exists($database)) {
             \unlink($database);
         }
-        $schema = $connection->createSchemaManager();
-        $schema->createDatabase($database);
+
+        try {
+            $schema = $connection->createSchemaManager();
+            $schema->createDatabase($database);
+        } catch (NotSupported) {
+            // when using sqlite, creating database is implicit
+        }
 
         (new SchemaTool($entityManager))
             ->createSchema($entityManager->getMetadataFactory()->getAllMetadata());
