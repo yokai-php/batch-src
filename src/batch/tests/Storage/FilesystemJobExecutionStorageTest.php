@@ -289,6 +289,23 @@ class FilesystemJobExecutionStorageTest extends TestCase
                 ['export', '20210920'],
             ],
         ];
+        yield 'Pagination with limit' => [
+            (new QueryBuilder())
+                ->limit(3, 0),
+            [
+                ['export', '20210920'],
+                ['export', '20210922'],
+                ['list', '20210910'],
+            ],
+        ];
+        yield 'Pagination limit larger than remaining' => [
+            (new QueryBuilder())
+                ->limit(10, 3),
+            [
+                ['list', '20210915'],
+                ['list', '20210920'],
+            ],
+        ];
     }
 
     public function testRetrieveFilePathNotFound(): void
