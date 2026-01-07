@@ -15,6 +15,7 @@ final class Failure implements \Stringable
     public function __construct(
         /**
          * The exception class
+         * @var class-string<\Throwable> $class
          */
         private string $class,
         /**
@@ -58,6 +59,9 @@ final class Failure implements \Stringable
         return \strtr($this->message, $this->parameters);
     }
 
+    /**
+     * @return class-string<\Throwable>
+     */
     public function getClass(): string
     {
         return $this->class;

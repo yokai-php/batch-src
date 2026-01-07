@@ -16,6 +16,7 @@ use Yokai\Batch\Job\JobInterface;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\Launcher\SimpleJobLauncher;
 use Yokai\Batch\Registry\JobRegistry;
+use Yokai\Batch\Serializer\JsonJobExecutionPartialSerializer;
 use Yokai\Batch\Serializer\JsonJobExecutionSerializer;
 use Yokai\Batch\Storage\FilesystemJobExecutionStorage;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
@@ -120,6 +121,7 @@ abstract class JobTestCase extends TestCase
     {
         yield new FilesystemJobExecutionStorage(
             new JsonJobExecutionSerializer(),
+            new JsonJobExecutionPartialSerializer(),
             self::STORAGE_DIR,
         );
     }

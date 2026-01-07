@@ -8,6 +8,7 @@
          bootstrap="tests/bootstrap.php"
 >
     <php>
+        <ini name="memory_limit" value="256M"/>
         <env name="ARTIFACT_DIR" value="tests/.artifacts"/>
         <env name="DATABASE_URL" value="sqlite:///:memory:"/>
         <env name="KERNEL_CLASS" value="Yokai\Batch\Sources\Tests\Symfony\App\Kernel"/>

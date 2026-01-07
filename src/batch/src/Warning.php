@@ -40,7 +40,7 @@ final class Warning implements \Stringable
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<string, string>
      */
     public function getParameters(): array
     {

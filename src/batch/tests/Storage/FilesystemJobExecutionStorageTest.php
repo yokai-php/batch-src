@@ -13,6 +13,7 @@ use Yokai\Batch\Exception\CannotStoreJobExecutionException;
 use Yokai\Batch\Exception\JobExecutionNotFoundException;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\Serializer\JobExecutionSerializerInterface;
+use Yokai\Batch\Serializer\JsonJobExecutionPartialSerializer;
 use Yokai\Batch\Serializer\JsonJobExecutionSerializer;
 use Yokai\Batch\Storage\FilesystemJobExecutionStorage;
 use Yokai\Batch\Storage\Query;
@@ -32,6 +33,11 @@ class FilesystemJobExecutionStorageTest extends TestCase
      */
     private $serializer;
 
+    /**
+     * @var JobExecutionSerializerInterface|ObjectProphecy
+     */
+    private $partialSerializer;
+
     public static function setUpBeforeClass(): void
     {
         \mkdir(self::READONLY_STORAGE_DIR);
@@ -46,14 +52,20 @@ class FilesystemJobExecutionStorageTest extends TestCase
         $this->serializer = $this->prophesize(JobExecutionSerializerInterface::class);
         $this->serializer->extension()
             ->willReturn('txt');
+
+        $this->partialSerializer = $this->prophesize(JobExecutionSerializerInterface::class);
+        $this->partialSerializer->extension()
+            ->willReturn('txt');
     }
 
     private function createStorage(
         string $dir = self::STORAGE_DIR,
         JobExecutionSerializerInterface|null $serializer = null,
+        JobExecutionSerializerInterface|null $partialSerializer = null,
     ): FilesystemJobExecutionStorage {
         return new FilesystemJobExecutionStorage(
             $serializer ?? $this->serializer->reveal(),
+            $partialSerializer ?? $this->partialSerializer->reveal(),
             $dir,
         );
     }
@@ -115,6 +127,7 @@ class FilesystemJobExecutionStorageTest extends TestCase
         $storage = $this->createStorage(
             __DIR__ . '/fixtures/filesystem-job-execution',
             new JsonJobExecutionSerializer(),
+            new JsonJobExecutionPartialSerializer(),
         );
 
         self::assertExecutions($expectedCouples, $storage->list($jobName));
@@ -147,6 +160,7 @@ class FilesystemJobExecutionStorageTest extends TestCase
         $storage = $this->createStorage(
             __DIR__ . '/fixtures/filesystem-job-execution',
             new JsonJobExecutionSerializer(),
+            new JsonJobExecutionPartialSerializer(),
         );
 
         self::assertExecutions($expectedCouples, $storage->query($query->getQuery()));
@@ -287,6 +301,23 @@ class FilesystemJobExecutionStorageTest extends TestCase
                 ),
             [
                 ['export', '20210920'],
+            ],
+        ];
+        yield 'Pagination with limit' => [
+            (new QueryBuilder())
+                ->limit(3, 0),
+            [
+                ['export', '20210920'],
+                ['export', '20210922'],
+                ['list', '20210910'],
+            ],
+        ];
+        yield 'Pagination limit larger than remaining' => [
+            (new QueryBuilder())
+                ->limit(10, 3),
+            [
+                ['list', '20210915'],
+                ['list', '20210920'],
             ],
         ];
     }

@@ -27,6 +27,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  *      },
  *      filesystem: array{
  *          serializer: string,
+ *          partial_serializer: string,
  *          dir: string,
  *      },
  *  }
@@ -95,6 +96,9 @@ final class Configuration implements ConfigurationInterface
                         ->end()
                         ->scalarNode('serializer')
                             ->defaultValue('yokai_batch.job_execution_serializer.json')
+                        ->end()
+                        ->scalarNode('partial_serializer')
+                            ->defaultValue('yokai_batch.job_execution_partial_serializer.json')
                         ->end()
                     ->end()
                 ->end()
