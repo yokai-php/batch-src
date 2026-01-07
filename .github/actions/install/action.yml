@@ -41,4 +41,6 @@ runs:
         composer require --quiet --no-update "symfony/process:${{ inputs.symfony-version }}" --dev
         composer require --quiet --no-update "symfony/yaml:${{ inputs.symfony-version }}" --dev
         composer require --quiet --no-update "symfony/http-client:${{ inputs.symfony-version }}" --dev
+        composer require --quiet --no-update "symfony/browser-kit:${{ inputs.symfony-version }}" --dev
+        composer require --quiet --no-update "symfony/translation:${{ inputs.symfony-version }}" --dev
         composer update --no-interaction --no-progress
