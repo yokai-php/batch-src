@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Test\Constraint as ResponseConstraint;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Generator\UrlGenerator;
-use Symfony\Component\Routing\Loader\XmlFileLoader;
+use Symfony\Component\Routing\Loader\PhpFileLoader;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Security\Core\Authorization\AccessDecision;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -492,7 +492,7 @@ final class JobControllerTest extends TestCase
         $twig->addExtension(
             new RoutingExtension(
                 new UrlGenerator(
-                    (new XmlFileLoader(new FileLocator()))->load(__DIR__ . '/../../../src/Resources/routing/ui.xml'),
+                    (new PhpFileLoader(new FileLocator()))->load(__DIR__ . '/../../../src/Resources/routing/ui.php'),
                     new RequestContext(),
                 ),
             ),

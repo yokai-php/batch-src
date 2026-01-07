@@ -8,6 +8,8 @@ use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\SonataAdminTemplating;
+use Yokai\Batch\Serializer\JsonJobExecutionSerializer;
 
 /**
  * Configuration for yokai/batch Symfony Bundle.
@@ -94,7 +96,7 @@ final class Configuration implements ConfigurationInterface
                             ->defaultValue('%kernel.project_dir%/var/batch')
                         ->end()
                         ->scalarNode('serializer')
-                            ->defaultValue('yokai_batch.job_execution_serializer.json')
+                            ->defaultValue(JsonJobExecutionSerializer::class)
                         ->end()
                     ->end()
                 ->end()
@@ -234,7 +236,7 @@ final class Configuration implements ConfigurationInterface
                             if (\is_string($value)) {
                                 $value = match ($value) {
                                     'bootstrap4' => ['prefix' => '@YokaiBatch/bootstrap4', 'service' => null],
-                                    'sonata' => ['service' => 'yokai_batch.ui.sonata_templating', 'prefix' => null],
+                                    'sonata' => ['service' => SonataAdminTemplating::class, 'prefix' => null],
                                     default => throw new \InvalidArgumentException(
                                         \sprintf('Unknown templating shortcut "%s".', $value),
                                     ),

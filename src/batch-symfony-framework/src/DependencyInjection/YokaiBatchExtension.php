@@ -26,6 +26,7 @@ use Yokai\Batch\Factory\JobExecutionIdGeneratorInterface;
 use Yokai\Batch\Factory\JobExecutionParametersBuilder\PerJobJobExecutionParametersBuilder;
 use Yokai\Batch\Factory\JobExecutionParametersBuilder\StaticJobExecutionParametersBuilder;
 use Yokai\Batch\Launcher\JobLauncherInterface;
+use Yokai\Batch\Logger\BatchLogger;
 use Yokai\Batch\Storage\FilesystemJobExecutionStorage;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
 
@@ -50,16 +51,15 @@ final class YokaiBatchExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = $this->getLoader($container);
-        $loader->load('global/');
-
         $bridges = [
-            'doctrine/orm/' => $this->installed('doctrine-orm'),
-            'symfony/console/' => $this->installed('symfony-console'),
-            'symfony/messenger/' => $this->installed('symfony-messenger'),
-            'symfony/serializer/' => $this->installed('symfony-serializer'),
-            'symfony/validator/' => $this->installed('symfony-validator'),
+            'core.php' => true,
+            'doctrine-orm.php' => $this->installed('doctrine-orm'),
+            'logger.php' => true,
+            'symfony-console.php' => $this->installed('symfony-console'),
+            'symfony-messenger.php' => $this->installed('symfony-messenger'),
+            'symfony-serializer.php' => $this->installed('symfony-serializer'),
+            'symfony-validator.php' => $this->installed('symfony-validator'),
         ];
-
         foreach (\array_keys(\array_filter($bridges)) as $resource) {
             $loader->load($resource);
         }
@@ -72,7 +72,7 @@ final class YokaiBatchExtension extends Extension
         $jobExecutionIdGeneratorDefinition = JobExecutionIdGeneratorDefinitionFactory::fromType($config['id']);
         $container->setDefinition(JobExecutionIdGeneratorInterface::class, $jobExecutionIdGeneratorDefinition);
 
-        $container->registerAliasForArgument('yokai_batch.logger', LoggerInterface::class, 'yokaiBatchLogger');
+        $container->registerAliasForArgument(BatchLogger::class, LoggerInterface::class, 'yokaiBatchLogger');
     }
 
     private function installed(string $package): bool
@@ -84,12 +84,9 @@ final class YokaiBatchExtension extends Extension
     private function getLoader(ContainerBuilder $container): LoaderInterface
     {
         $locator = new FileLocator(__DIR__ . '/../Resources/services');
-        $resolver = new ConfigLoader\LoaderResolver(
-            [
-                new DependencyInjectionLoader\XmlFileLoader($container, $locator),
-                new DependencyInjectionLoader\DirectoryLoader($container, $locator),
-            ],
-        );
+        $resolver = new ConfigLoader\LoaderResolver([
+            new DependencyInjectionLoader\PhpFileLoader($container, $locator),
+        ]);
 
         return new ConfigLoader\DelegatingLoader($resolver);
     }
@@ -103,7 +100,7 @@ final class YokaiBatchExtension extends Extension
             $defaultStorage = $config['service'];
         } elseif (isset($config['dbal'])) {
             $container
-                ->register('yokai_batch.storage.dbal', DoctrineDBALJobExecutionStorage::class)
+                ->register($defaultStorage = DoctrineDBALJobExecutionStorage::class)
                 ->setArguments(
                     [
                         new Reference('doctrine'),
@@ -114,15 +111,11 @@ final class YokaiBatchExtension extends Extension
                     ],
                 )
             ;
-
-            $defaultStorage = 'yokai_batch.storage.dbal';
         } else {
             $container
-                ->register('yokai_batch.storage.filesystem', FilesystemJobExecutionStorage::class)
+                ->register($defaultStorage = FilesystemJobExecutionStorage::class)
                 ->setArguments([new Reference($config['filesystem']['serializer']), $config['filesystem']['dir']])
             ;
-
-            $defaultStorage = 'yokai_batch.storage.filesystem';
         }
 
         $container
@@ -203,14 +196,14 @@ final class YokaiBatchExtension extends Extension
             return;
         }
 
-        $loader->load('ui.xml');
+        $loader->load('ui.php');
 
         if (\class_exists(AbstractType::class)) {
-            $container->register('yokai_batch.ui.filter_form', JobFilterType::class)
+            $container->register(JobFilterType::class)
                 ->addTag('form.type');
         }
         if (\interface_exists(TemplateRegistryInterface::class)) {
-            $container->register('yokai_batch.ui.sonata_templating', SonataAdminTemplating::class)
+            $container->register(SonataAdminTemplating::class)
                 ->addArgument(new Reference('sonata.admin.global_template_registry'));
         }
 

@@ -14,6 +14,9 @@ use Yokai\Batch\Bridge\Symfony\Console\CommandRunner;
 use Yokai\Batch\Bridge\Symfony\Console\RunCommandJobLauncher;
 use Yokai\Batch\Bridge\Symfony\Messenger\DispatchMessageJobLauncher;
 use Yokai\Batch\Bridge\Symfony\Messenger\MessengerJobsConfiguration;
+use Yokai\Batch\Factory\JobExecutionFactory;
+use Yokai\Batch\Job\JobExecutionAccessor;
+use Yokai\Batch\Job\JobExecutor;
 use Yokai\Batch\Launcher\JobLauncherInterface;
 use Yokai\Batch\Launcher\RoutingJobLauncher;
 use Yokai\Batch\Launcher\SimpleJobLauncher;
@@ -65,8 +68,8 @@ final class JobLauncherDefinitionFactory
     private static function simple(): Definition
     {
         return new Definition(SimpleJobLauncher::class, [
-            '$jobExecutionAccessor' => new Reference('yokai_batch.job_execution_accessor'),
-            '$jobExecutor' => new Reference('yokai_batch.job_executor'),
+            '$jobExecutionAccessor' => new Reference(JobExecutionAccessor::class),
+            '$jobExecutor' => new Reference(JobExecutor::class),
         ]);
     }
 
@@ -78,7 +81,7 @@ final class JobLauncherDefinitionFactory
         $log = $config['log'] ?? 'batch_execute.log';
 
         return new Definition(RunCommandJobLauncher::class, [
-            '$jobExecutionFactory' => new Reference('yokai_batch.job_execution_factory'),
+            '$jobExecutionFactory' => new Reference(JobExecutionFactory::class),
             '$commandRunner' => new Definition(CommandRunner::class, [
                 '$binDir' => '%kernel.project_dir%/bin',
                 '$logDir' => '%kernel.logs_dir%',
@@ -91,7 +94,7 @@ final class JobLauncherDefinitionFactory
     private static function messenger(): Definition
     {
         return new Definition(DispatchMessageJobLauncher::class, [
-            '$jobExecutionFactory' => new Reference('yokai_batch.job_execution_factory'),
+            '$jobExecutionFactory' => new Reference(JobExecutionFactory::class),
             '$jobExecutionStorage' => new Reference(JobExecutionStorageInterface::class),
             '$messageBus' => new Reference(MessageBusInterface::class),
             '$messengerJobsConfiguration' => new Definition(MessengerJobsConfiguration::class, [
