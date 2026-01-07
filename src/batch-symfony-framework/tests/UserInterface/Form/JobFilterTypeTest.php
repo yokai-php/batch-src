@@ -16,6 +16,8 @@ final class JobFilterTypeTest extends TypeTestCase
 {
     public function testBuild(): void
     {
+        $this->dispatcher->expects($this->never())
+            ->method('dispatch');
         $form = $this->factory->create(JobFilterType::class, new JobFilter());
         $view = $form->createView();
 
@@ -52,6 +54,8 @@ final class JobFilterTypeTest extends TypeTestCase
     #[DataProvider('submit')]
     public function testSubmit(array $submit, JobFilter $expected, bool $valid): void
     {
+        $this->dispatcher->expects($this->never())
+            ->method('dispatch');
         $form = $this->factory->create(JobFilterType::class, $actual = new JobFilter());
         $form->submit($submit);
 
