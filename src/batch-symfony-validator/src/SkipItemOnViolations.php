@@ -14,7 +14,7 @@ use Yokai\Batch\Warning;
 /**
  * Skip item when validation fails and leave a warning with violations to the {@see JobExecution}.
  */
-final class SkipItemOnViolations implements SkipItemCauseInterface
+final readonly class SkipItemOnViolations implements SkipItemCauseInterface
 {
     public function __construct(
         /**

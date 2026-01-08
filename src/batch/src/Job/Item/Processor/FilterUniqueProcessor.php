@@ -17,7 +17,7 @@ use Yokai\Batch\Job\Item\ItemProcessorInterface;
  */
 final class FilterUniqueProcessor implements ItemProcessorInterface
 {
-    private Closure $extractUnique;
+    private readonly Closure $extractUnique;
 
     /**
      * @var array<string, bool>

@@ -28,7 +28,7 @@ final class JobFilterType extends AbstractType
         /**
          * @var array<string>
          */
-        private array $jobs,
+        private readonly array $jobs,
     ) {
     }
 

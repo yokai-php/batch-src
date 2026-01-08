@@ -19,7 +19,7 @@ use Yokai\Batch\Warning;
 /**
  * @internal
  */
-final class JobExecutionRowNormalizer
+final readonly class JobExecutionRowNormalizer
 {
     public function __construct(
         private AbstractPlatform $platform,

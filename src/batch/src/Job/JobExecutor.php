@@ -24,7 +24,7 @@ use Yokai\Batch\Storage\JobExecutionStorageInterface;
  * - lifecycle events during execution
  * - JobExecution storage before and after execution
  */
-final class JobExecutor
+final readonly class JobExecutor
 {
     public function __construct(
         private JobRegistry $jobRegistry,

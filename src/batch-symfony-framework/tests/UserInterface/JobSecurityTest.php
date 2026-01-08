@@ -35,7 +35,7 @@ final class JobSecurityTest extends TestCase
     public function testWithSecurity(array $attributes, array $expected): void
     {
         $authorizationChecker = new class($attributes) implements AuthorizationCheckerInterface {
-            public function __construct(private array $attributes)
+            public function __construct(private readonly array $attributes)
             {
             }
 

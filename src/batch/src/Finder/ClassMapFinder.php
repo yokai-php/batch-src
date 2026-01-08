@@ -11,7 +11,7 @@ namespace Yokai\Batch\Finder;
  * @psalm-template T of object
  * @template-extends CallbackFinder<T>
  */
-class ClassMapFinder extends CallbackFinder
+readonly class ClassMapFinder extends CallbackFinder
 {
     /**
      * @param array<class-string, T> $classMap

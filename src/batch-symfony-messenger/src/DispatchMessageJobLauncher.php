@@ -17,7 +17,7 @@ use Yokai\Batch\Storage\JobExecutionStorageInterface;
 /**
  * This {@see JobLauncherInterface} will execute job via a symfony message dispatch.
  */
-final class DispatchMessageJobLauncher implements JobLauncherInterface
+final readonly class DispatchMessageJobLauncher implements JobLauncherInterface
 {
     public function __construct(
         private JobExecutionFactory $jobExecutionFactory,

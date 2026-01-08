@@ -26,7 +26,7 @@ final class ObjectWriter implements ItemWriterInterface
     private array $managerForClass = [];
 
     public function __construct(
-        private ManagerRegistry $doctrine,
+        private readonly ManagerRegistry $doctrine,
     ) {
     }
 

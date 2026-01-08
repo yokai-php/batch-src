@@ -410,7 +410,7 @@ final class JobControllerTest extends TestCase
             yield [
                 new JobSecurity(
                     new class($granted) implements AuthorizationCheckerInterface {
-                        public function __construct(private bool $granted)
+                        public function __construct(private readonly bool $granted)
                         {
                         }
 

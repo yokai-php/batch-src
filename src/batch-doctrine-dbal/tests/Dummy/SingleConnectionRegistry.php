@@ -8,7 +8,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\Persistence\ConnectionRegistry;
 use InvalidArgumentException;
 
-final class SingleConnectionRegistry implements ConnectionRegistry
+final readonly class SingleConnectionRegistry implements ConnectionRegistry
 {
     public function __construct(
         private Connection $connection,

@@ -11,7 +11,7 @@ use Yokai\Batch\Factory\JobExecutionIdGeneratorInterface;
  * This {@see JobExecutionIdGeneratorInterface} will use
  * Symfony's {@see UlidFactory} to ULIDs.
  */
-final class UlidJobExecutionIdGenerator implements JobExecutionIdGeneratorInterface
+final readonly class UlidJobExecutionIdGenerator implements JobExecutionIdGeneratorInterface
 {
     public function __construct(
         private UlidFactory $ulidFactory,

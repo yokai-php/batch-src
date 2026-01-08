@@ -16,7 +16,7 @@ use Yokai\Batch\Trigger\Scheduler\SchedulerInterface;
 /**
  * Watch for the existence of a location on a filesystem to trigger a job.
  */
-final class FileFoundScheduler implements SchedulerInterface
+final readonly class FileFoundScheduler implements SchedulerInterface
 {
     public function __construct(
         private FilesystemReader $filesystem,

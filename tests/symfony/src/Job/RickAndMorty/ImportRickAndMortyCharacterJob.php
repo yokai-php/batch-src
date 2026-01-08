@@ -17,7 +17,7 @@ use Yokai\Batch\Sources\Tests\Symfony\App\Entity\RickAndMorty\Location;
 /**
  * Rick and Morty {@see Character} entity import.
  */
-final class ImportRickAndMortyCharacterJob implements JobInterface, JobWithStaticNameInterface
+final readonly class ImportRickAndMortyCharacterJob implements JobInterface, JobWithStaticNameInterface
 {
     public static function getJobName(): string
     {
@@ -25,7 +25,7 @@ final class ImportRickAndMortyCharacterJob implements JobInterface, JobWithStati
     }
 
     public function __construct(
-        private readonly ImportRickAndMortyJobFactory $factory,
+        private ImportRickAndMortyJobFactory $factory,
     ) {
     }
 

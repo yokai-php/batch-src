@@ -14,7 +14,7 @@ use Yokai\Batch\Job\Item\ItemWriterInterface;
  * via a Doctrine {@see Connection}.
  * All items must be arrays.
  */
-final class DoctrineDBALInsertWriter implements ItemWriterInterface
+final readonly class DoctrineDBALInsertWriter implements ItemWriterInterface
 {
     private Connection $connection;
 

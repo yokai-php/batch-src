@@ -18,7 +18,7 @@ use Yokai\Batch\Job\Item\Processor\ChainProcessor;
 use Yokai\Batch\Job\JobInterface;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
 
-final class ImportRickAndMortyJobFactory
+final readonly class ImportRickAndMortyJobFactory
 {
     public function __construct(
         private ValidatorInterface $validator,

@@ -42,8 +42,8 @@ final class DoctrineDBALJobExecutionStorage implements
         'connection' => null,
     ];
 
-    private Connection $connection;
-    private string $table;
+    private readonly Connection $connection;
+    private readonly string $table;
     private JobExecutionRowNormalizer $normalizer;
 
     /**

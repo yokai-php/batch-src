@@ -20,7 +20,7 @@ use Yokai\Batch\Job\JobInterface;
 use Yokai\Batch\Job\Parameters\StaticValueParameterAccessor;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
 
-final class ImportStarWarsJobFactory
+final readonly class ImportStarWarsJobFactory
 {
     public function __construct(
         private ValidatorInterface $validator,

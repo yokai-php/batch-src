@@ -11,7 +11,7 @@ use Doctrine\Persistence\ObjectManager;
 final class SingleManagerRegistry extends AbstractManagerRegistry
 {
     public function __construct(
-        private ObjectManager $manager,
+        private readonly ObjectManager $manager,
     ) {
         parent::__construct('ORM', ['default'], ['default'], 'default', 'default', Proxy::class);
     }

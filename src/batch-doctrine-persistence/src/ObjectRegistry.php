@@ -21,7 +21,7 @@ final class ObjectRegistry
     private array $identities = [];
 
     public function __construct(
-        private ManagerRegistry $doctrine,
+        private readonly ManagerRegistry $doctrine,
     ) {
     }
 

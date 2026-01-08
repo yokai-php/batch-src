@@ -10,7 +10,7 @@ use Yokai\Batch\JobParameters;
 /**
  * Create a {@see JobExecution} from scalar members.
  */
-final class JobExecutionFactory
+final readonly class JobExecutionFactory
 {
     public function __construct(
         private JobExecutionIdGeneratorInterface $idGenerator,

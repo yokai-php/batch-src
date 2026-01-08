@@ -10,7 +10,7 @@ use Yokai\Batch\Job\JobExecutor;
 /**
  * Answer to {@see LaunchJobMessage} and launch requested job.
  */
-final class LaunchJobMessageHandler
+final readonly class LaunchJobMessageHandler
 {
     public function __construct(
         private JobExecutionAccessor $jobExecutionAccessor,

@@ -12,7 +12,7 @@ use Yokai\Batch\Sources\Tests\Symfony\App\Entity\RickAndMorty\Episode;
 /**
  * Rick and Morty {@see Episode} entity import.
  */
-final class ImportRickAndMortyEpisodeJob implements JobInterface, JobWithStaticNameInterface
+final readonly class ImportRickAndMortyEpisodeJob implements JobInterface, JobWithStaticNameInterface
 {
     public static function getJobName(): string
     {
@@ -20,8 +20,8 @@ final class ImportRickAndMortyEpisodeJob implements JobInterface, JobWithStaticN
     }
 
     public function __construct(
-        private readonly ImportRickAndMortyJobFactory $factory,
-        private readonly ImportRickAndMortyMemory $memory,
+        private ImportRickAndMortyJobFactory $factory,
+        private ImportRickAndMortyMemory $memory,
     ) {
     }
 

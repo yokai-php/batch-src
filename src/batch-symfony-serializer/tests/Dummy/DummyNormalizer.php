@@ -7,7 +7,7 @@ namespace Yokai\Batch\Tests\Bridge\Symfony\Serializer\Dummy;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-final class DummyNormalizer implements NormalizerInterface, DenormalizerInterface
+final readonly class DummyNormalizer implements NormalizerInterface, DenormalizerInterface
 {
     public function __construct(
         private bool $supports,

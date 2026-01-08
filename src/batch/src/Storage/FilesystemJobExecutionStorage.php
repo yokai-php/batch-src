@@ -27,7 +27,7 @@ use Yokai\Batch\Serializer\JobExecutionSerializerInterface;
  *     │   └── 61519f8e0f4a7.json
  *     │   └── 61519f8e46fb3.json
  */
-final class FilesystemJobExecutionStorage implements QueryableJobExecutionStorageInterface
+final readonly class FilesystemJobExecutionStorage implements QueryableJobExecutionStorageInterface
 {
     public function __construct(
         private JobExecutionSerializerInterface $serializer,

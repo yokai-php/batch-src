@@ -11,7 +11,7 @@ use Yokai\Batch\Factory\JobExecutionIdGeneratorInterface;
  * This {@see JobExecutionIdGeneratorInterface} will use
  * Symfony's {@see UuidFactory} to generate random based UUIDs.
  */
-final class RandomBasedUuidJobExecutionIdGenerator implements JobExecutionIdGeneratorInterface
+final readonly class RandomBasedUuidJobExecutionIdGenerator implements JobExecutionIdGeneratorInterface
 {
     public function __construct(
         private UuidFactory $uuidFactory,

@@ -13,7 +13,7 @@ use OpenSpout\Reader\SheetInterface;
  * A sheet filter is used by {@see XLSXOptions} & {@see ODSOptions}
  * so you can tell which sheet is to be read.
  */
-final class SheetFilter
+final readonly class SheetFilter
 {
     private Closure $accept;
 

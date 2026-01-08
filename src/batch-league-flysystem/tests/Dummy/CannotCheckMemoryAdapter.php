@@ -11,7 +11,7 @@ use League\Flysystem\UnableToCheckExistence;
 final class CannotCheckMemoryAdapter extends InMemoryFilesystemAdapter
 {
     public function __construct(
-        private UnableToCheckExistence|FilesystemException $exception,
+        private readonly UnableToCheckExistence|FilesystemException $exception,
     ) {
         parent::__construct();
     }

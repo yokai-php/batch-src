@@ -28,8 +28,8 @@ final class RunJobCommand extends Command
     public const EXIT_WARNING_CODE = 2;
 
     public function __construct(
-        private JobExecutionAccessor $jobExecutionAccessor,
-        private JobExecutor $jobExecutor,
+        private readonly JobExecutionAccessor $jobExecutionAccessor,
+        private readonly JobExecutor $jobExecutor,
     ) {
         parent::__construct();
     }

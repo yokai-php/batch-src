@@ -13,7 +13,7 @@ use Yokai\Batch\Job\Item\ItemProcessorInterface;
 /**
  * This {@see ItemProcessorInterface} uses Symfony's serializer to normalize items.
  */
-final class NormalizeItemProcessor implements ItemProcessorInterface
+final readonly class NormalizeItemProcessor implements ItemProcessorInterface
 {
     public function __construct(
         private NormalizerInterface $normalizer,

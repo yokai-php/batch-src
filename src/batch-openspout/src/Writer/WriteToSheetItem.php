@@ -11,7 +11,7 @@ use OpenSpout\Common\Entity\Style\Style;
  * This model object is used by {@see FlatFileWriter}.
  * It holds sheet and row to write to file.
  */
-final class WriteToSheetItem
+final readonly class WriteToSheetItem
 {
     private function __construct(
         private string $sheet,

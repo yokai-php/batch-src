@@ -12,7 +12,7 @@ use Yokai\Batch\Job\JobInterface;
 use Yokai\Batch\Job\Parameters\StaticValueParameterAccessor;
 use Yokai\Batch\JobExecution;
 
-final class SplitDeveloperXlsxJob implements JobInterface
+final readonly class SplitDeveloperXlsxJob implements JobInterface
 {
     public function __construct(
         private string $inputFile,

@@ -10,7 +10,7 @@ use Throwable;
  * This class represent an exception that occurred during a {@see JobExecution}.
  * Failure can be added to the execution via {@see JobExecution::addFailureException}.
  */
-final class Failure implements \Stringable
+final readonly class Failure implements \Stringable
 {
     public function __construct(
         /**

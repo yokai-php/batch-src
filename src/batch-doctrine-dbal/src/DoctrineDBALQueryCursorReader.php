@@ -25,7 +25,7 @@ use Yokai\Batch\Job\Item\ItemReaderInterface;
  * In that case, {@see DoctrineDBALQueryCursorReader::$column} argument should be "id",
  * and if id is a numeric column {@see DoctrineDBALQueryCursorReader::$start} should be 0.
  */
-final class DoctrineDBALQueryCursorReader implements ItemReaderInterface
+final readonly class DoctrineDBALQueryCursorReader implements ItemReaderInterface
 {
     private Connection $connection;
 

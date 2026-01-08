@@ -19,8 +19,8 @@ class DecoratedRepositoryFactory implements RepositoryFactory
         /**
          * @var class-string<EntityRepository>
          */
-        private string $class,
-        private RepositoryFactory $decorated,
+        private readonly string $class,
+        private readonly RepositoryFactory $decorated,
     ) {
     }
 

@@ -12,7 +12,7 @@ use Yokai\Batch\JobExecution;
  * User interface security facade.
  * The security may not be installed, or configured, but this class will still be called.
  */
-final class JobSecurity
+final readonly class JobSecurity
 {
     public function __construct(
         private null|AuthorizationCheckerInterface $authorizationChecker,

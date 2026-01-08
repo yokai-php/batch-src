@@ -15,7 +15,7 @@ use Yokai\Batch\JobExecution;
 final class TwigExtension extends AbstractExtension
 {
     public function __construct(
-        private JobSecurity $security,
+        private readonly JobSecurity $security,
     ) {
     }
 
