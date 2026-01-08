@@ -99,17 +99,17 @@ final readonly class FilesystemJobExecutionStorage implements QueryableJobExecut
             }
 
             $names = $query->jobs();
-            if (\count($names) > 0 && !\in_array($execution->getJobName(), $names, true)) {
+            if ($names !== [] && !\in_array($execution->getJobName(), $names, true)) {
                 continue;
             }
 
             $ids = $query->ids();
-            if (\count($ids) > 0 && !\in_array($execution->getId(), $ids, true)) {
+            if ($ids !== [] && !\in_array($execution->getId(), $ids, true)) {
                 continue;
             }
 
             $statuses = $query->statuses();
-            if (\count($statuses) > 0 && !$execution->getStatus()->isOneOf($statuses)) {
+            if ($statuses !== [] && !$execution->getStatus()->isOneOf($statuses)) {
                 continue;
             }
 

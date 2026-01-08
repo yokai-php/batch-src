@@ -40,22 +40,15 @@ class ImportDevelopersXlsxToORMTest extends JobTestCase
     private const OUTPUT_DEVELOPER_FILE = self::OUTPUT_BASE_DIR . '/developer.csv';
     private const INPUT_FILE = __DIR__ . '/fixtures/multi-tab-xlsx-to-objects.xslx';
 
-    private $persisted;
+    private EntityManager $entityManager;
 
     /**
-     * @var EntityManager
+     * @var ObjectProphecy<ManagerRegistry>
      */
-    private $entityManager;
-
-    /**
-     * @var ManagerRegistry|ObjectProphecy
-     */
-    private $doctrine;
+    private ObjectProphecy $doctrine;
 
     protected function setUp(): void
     {
-        $this->persisted = [];
-
         $config = ORMSetup::createAttributeMetadataConfiguration([__DIR__ . '/Entity'], true);
         if (\PHP_VERSION_ID >= 80400) {
             $config->enableNativeLazyObjects(true);

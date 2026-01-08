@@ -81,7 +81,7 @@ final readonly class JobExecutor
         }
 
         $summary = $jobExecution->getSummary()->all();
-        if (\count($summary) > 0) {
+        if ($summary !== []) {
             $logger->debug('Job produced summary', \array_merge(['job' => $name], $summary));
         }
 

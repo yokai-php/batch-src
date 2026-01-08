@@ -87,7 +87,7 @@ class UserInterfaceTest extends WebTestCase
         $expected($page);
     }
 
-    public static function view()
+    public static function view(): \Generator
     {
         yield [
             CountryJob::getJobName(),
@@ -126,7 +126,7 @@ class UserInterfaceTest extends WebTestCase
         $expected($http->getResponse()->getContent());
     }
 
-    public static function logs()
+    public static function logs(): \Generator
     {
         yield [
             CountryJob::getJobName(),

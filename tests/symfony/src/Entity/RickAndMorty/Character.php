@@ -6,6 +6,7 @@ namespace Yokai\Batch\Sources\Tests\Symfony\App\Entity\RickAndMorty;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -20,28 +21,28 @@ use Yokai\Batch\Sources\Tests\Symfony\App\Job\RickAndMorty\ImportRickAndMortyCha
 #[UniqueEntity('name')]
 class Character
 {
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
     public int $id;
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: Types::STRING)]
     #[Assert\NotNull]
     public null|string $name = null;
 
-    #[ORM\Column(type: 'string', enumType: CharacterStatus::class)]
+    #[ORM\Column(type: Types::STRING, enumType: CharacterStatus::class)]
     #[Assert\NotNull]
     public null|CharacterStatus $status = null;
 
-    #[ORM\Column(type: 'string', enumType: CharacterSpecie::class)]
+    #[ORM\Column(type: Types::STRING, enumType: CharacterSpecie::class)]
     #[Assert\NotNull]
     public null|CharacterSpecie $specie = null;
 
-    #[ORM\Column(type: 'string', enumType: CharacterGender::class)]
+    #[ORM\Column(type: Types::STRING, enumType: CharacterGender::class)]
     #[Assert\NotNull]
     public null|CharacterGender $gender = null;
 
-    #[ORM\Column(type: 'string', nullable: true)]
+    #[ORM\Column(type: Types::STRING, nullable: true)]
     public null|string $description = null;
 
     #[ORM\ManyToOne(targetEntity: Location::class)]

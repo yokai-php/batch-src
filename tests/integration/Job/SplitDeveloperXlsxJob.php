@@ -89,13 +89,7 @@ final readonly class SplitDeveloperXlsxJob implements JobInterface
     private function sheetToArray(SheetInterface $sheet): array
     {
         return \array_map(
-            function ($row): array {
-                if ($row instanceof Row) {
-                    return $row->toArray();
-                }
-
-                return $row;
-            },
+            fn(Row $row) => $row->toArray(),
             \iterator_to_array(new \LimitIterator($sheet->getRowIterator(), 1), false),
         );
     }

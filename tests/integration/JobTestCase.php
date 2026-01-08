@@ -28,7 +28,7 @@ abstract class JobTestCase extends TestCase
     protected const STORAGE_DIR = self::ARTIFACTS_DIR . '/storage';
     protected const OUTPUT_DIR = self::ARTIFACTS_DIR . '/output';
 
-    private static $run = false;
+    private static bool $run = false;
 
     public static function setUpBeforeClass(): void
     {
@@ -88,7 +88,7 @@ abstract class JobTestCase extends TestCase
         );
     }
 
-    private function compareExecutions(JobExecution $jobExecution, JobExecution $storedJobExecution)
+    private function compareExecutions(JobExecution $jobExecution, JobExecution $storedJobExecution): void
     {
         self::assertSame($jobExecution->getId(), $storedJobExecution->getId());
         self::assertSame($jobExecution->getJobName(), $storedJobExecution->getJobName());
@@ -123,16 +123,16 @@ abstract class JobTestCase extends TestCase
         );
     }
 
-    private static function compareStatuses(BatchStatus $expected, BatchStatus $actual)
+    private static function compareStatuses(BatchStatus $expected, BatchStatus $actual): void
     {
         self::assertSame($expected->getValue(), $actual->getValue());
     }
 
-    private static function compareDates(null|\DateTimeInterface $expected, null|\DateTimeInterface $actual)
+    private static function compareDates(null|\DateTimeInterface $expected, null|\DateTimeInterface $actual): void
     {
         self::assertSame(
-            $expected ? $expected->format(\DateTime::ISO8601) : null,
-            $actual ? $actual->format(\DateTime::ISO8601) : null,
+            $expected?->format(\DateTime::ATOM) ?? null,
+            $actual?->format(\DateTime::ATOM) ?? null,
         );
     }
 
@@ -140,7 +140,7 @@ abstract class JobTestCase extends TestCase
      * @param Failure[] $expected
      * @param Failure[] $actual
      */
-    private static function compareFailures(array $expected, array $actual)
+    private static function compareFailures(array $expected, array $actual): void
     {
         self::assertCount(\count($expected), $actual);
 
@@ -159,7 +159,7 @@ abstract class JobTestCase extends TestCase
      * @param Warning[] $expected
      * @param Warning[] $actual
      */
-    private static function compareWarnings(array $expected, array $actual)
+    private static function compareWarnings(array $expected, array $actual): void
     {
         self::assertCount(\count($expected), $actual);
 

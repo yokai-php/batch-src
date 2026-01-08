@@ -4,28 +4,20 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Sources\Tests\Integration\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 class Badge
 {
-    /**
-     * @var int
-     */
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    public $id;
+    public null|int $id = null;
 
-    /**
-     * @var string
-     */
-    #[ORM\Column(type: 'string')]
-    public $label;
+    #[ORM\Column(type: Types::STRING)]
+    public null|string $label = null;
 
-    /**
-     * @var string
-     */
-    #[ORM\Column(type: 'integer')]
-    public $rank;
+    #[ORM\Column(type: Types::INTEGER)]
+    public null|int $rank = null;
 }

@@ -25,7 +25,7 @@ final readonly class JobExecutionFactory
      */
     public function create(string $name, array $configuration = []): JobExecution
     {
-        $configuration = $configuration + $this->parametersBuilder->build($name);
+        $configuration += $this->parametersBuilder->build($name);
         /** @var string $id */
         $id = $configuration['_id'] ??= $this->idGenerator->generate();
 

@@ -114,8 +114,8 @@ final class JobExecution
         $this->status = $status ?: new BatchStatus(BatchStatus::PENDING);
         $this->parameters = $parameters ?: new JobParameters();
         $this->summary = $summary ?: new Summary();
-        $this->logs = $parentExecution ? $parentExecution->getLogs() : ($logs ?: new JobExecutionLogs());
-        $this->logger = $parentExecution ? $parentExecution->getLogger() : new JobExecutionLogger($this->logs);
+        $this->logs = $parentExecution !== null ? $parentExecution->getLogs() : ($logs ?: new JobExecutionLogs());
+        $this->logger = $parentExecution !== null ? $parentExecution->getLogger() : new JobExecutionLogger($this->logs);
     }
 
     /**
@@ -319,10 +319,7 @@ final class JobExecution
      */
     public function getAllFailures(): array
     {
-        $all = [];
-        foreach ($this->failures as $failure) {
-            $all[] = $failure;
-        }
+        $all = $this->failures;
         foreach ($this->getChildExecutions() as $child) {
             foreach ($child->getAllFailures() as $failure) {
                 $all[] = $failure;
@@ -358,10 +355,7 @@ final class JobExecution
      */
     public function getAllWarnings(): array
     {
-        $all = [];
-        foreach ($this->warnings as $warning) {
-            $all[] = $warning;
-        }
+        $all = $this->warnings;
         foreach ($this->getChildExecutions() as $child) {
             foreach ($child->getAllWarnings() as $warning) {
                 $all[] = $warning;

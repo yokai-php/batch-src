@@ -92,7 +92,7 @@ final readonly class Failure implements \Stringable
             ' (at ' . $exception->getFile() . '(' . $exception->getLine() . '))' . PHP_EOL .
             \str_replace("\n", \PHP_EOL, $exception->getTraceAsString());
 
-        if ($exception->getPrevious()) {
+        if ($exception->getPrevious() !== null) {
             $trace .= \PHP_EOL . self::buildTrace($exception->getPrevious(), true);
         }
 

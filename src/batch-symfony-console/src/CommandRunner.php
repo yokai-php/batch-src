@@ -58,7 +58,7 @@ class CommandRunner
     {
         return \sprintf(
             '%s %s %s %s',
-            $this->phpLocator ? $this->phpLocator->find() : 'php',
+            $this->phpLocator?->find() ?? 'php',
             $this->consolePath,
             $commandName,
             (string)(new ArrayInput($arguments)),

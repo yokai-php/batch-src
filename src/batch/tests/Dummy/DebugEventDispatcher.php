@@ -18,7 +18,7 @@ final class DebugEventDispatcher implements EventDispatcherInterface
      */
     private array $listeners = [];
 
-    public function dispatch(object $event)
+    public function dispatch(object $event): void
     {
         $this->events[] = $event;
         foreach ($this->listeners[$event::class] ?? [] as $listener) {

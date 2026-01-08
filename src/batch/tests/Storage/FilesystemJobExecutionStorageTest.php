@@ -31,7 +31,7 @@ class FilesystemJobExecutionStorageTest extends TestCase
     /**
      * @var JobExecutionSerializerInterface|ObjectProphecy
      */
-    private $serializer;
+    private \Prophecy\Prophecy\ObjectProphecy $serializer;
 
     public static function setUpBeforeClass(): void
     {
@@ -72,7 +72,7 @@ class FilesystemJobExecutionStorageTest extends TestCase
         $file = self::STORAGE_DIR . '/export/123456789.txt';
         self::assertFileExists($file);
         self::assertIsReadable($file);
-        self::assertEquals('serialized job execution', \file_get_contents($file));
+        self::assertSame('serialized job execution', \file_get_contents($file));
     }
 
     public function testStoreFileNotWritable(): void
@@ -147,7 +147,7 @@ class FilesystemJobExecutionStorageTest extends TestCase
         );
 
         self::assertExecutions($expectedCouples, $storage->query($query->getQuery()));
-        self::assertEquals(\count($expectedCouples), $storage->count($query->getQuery()));
+        self::assertCount($storage->count($query->getQuery()), $expectedCouples);
     }
 
     public static function query(): \Generator

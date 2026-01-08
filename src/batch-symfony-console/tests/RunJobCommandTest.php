@@ -70,7 +70,7 @@ class RunJobCommandTest extends TestCase
     public function testRunWithErrors(int $verbosity): void
     {
         $this->job->execute(Argument::any())
-            ->will(function (array $args) {
+            ->will(function (array $args): never {
                 /** @var JobExecution $jobExecution */
                 $jobExecution = $args[0];
                 $jobExecution->addFailureException(new \RuntimeException('1st exception', 100));

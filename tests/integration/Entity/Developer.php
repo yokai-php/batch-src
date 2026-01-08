@@ -6,42 +6,34 @@ namespace Yokai\Batch\Sources\Tests\Integration\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 class Developer
 {
-    /**
-     * @var int
-     */
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    public $id;
+    public null|int $id = null;
+
+    #[ORM\Column(type: Types::STRING)]
+    public null|string $firstName = null;
+
+    #[ORM\Column(type: Types::STRING)]
+    public null|string $lastName = null;
 
     /**
-     * @var string
-     */
-    #[ORM\Column(type: 'string')]
-    public $firstName;
-
-    /**
-     * @var string
-     */
-    #[ORM\Column(type: 'string')]
-    public $lastName;
-
-    /**
-     * @var Collection
+     * @var Collection<int, Badge>
      */
     #[ORM\ManyToMany(targetEntity: Badge::class)]
-    public $badges;
+    public Collection $badges;
 
     /**
-     * @var Collection
+     * @var Collection<int, Repository>
      */
     #[ORM\ManyToMany(targetEntity: Repository::class)]
-    public $repositories;
+    public Collection $repositories;
 
     public function __construct()
     {

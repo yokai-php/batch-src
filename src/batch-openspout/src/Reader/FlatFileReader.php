@@ -59,10 +59,8 @@ final class FlatFileReader implements
         $reader->open($path);
 
         foreach ($this->rows($reader) as $rowIndex => $row) {
-            if ($rowIndex === 1) {
-                if (!$this->headerStrategy->setHeaders($row)) {
-                    continue;
-                }
+            if ($rowIndex === 1 && !$this->headerStrategy->setHeaders($row)) {
+                continue;
             }
 
             try {

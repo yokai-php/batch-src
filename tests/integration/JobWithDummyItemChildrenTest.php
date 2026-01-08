@@ -95,6 +95,6 @@ class JobWithDummyItemChildrenTest extends JobTestCase
 OUT;
 
         self::assertFileExists($output);
-        self::assertEquals($expected, \file_get_contents($output));
+        self::assertSame($expected, \file_get_contents($output));
     }
 }

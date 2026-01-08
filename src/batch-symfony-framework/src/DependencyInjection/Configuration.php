@@ -171,7 +171,7 @@ final class Configuration implements ConfigurationInterface
                 return false;
             }
 
-            foreach ($value as $key => $unused) {
+            foreach (\array_keys($value) as $key) {
                 if (!\is_string($key)) {
                     return false;
                 }
@@ -247,7 +247,9 @@ final class Configuration implements ConfigurationInterface
                                 throw new \InvalidArgumentException(
                                     'You must either configure "service" or "prefix".',
                                 );
-                            } elseif (isset($value['service']) && isset($value['prefix'])) {
+                            }
+
+                            if (isset($value['service']) && isset($value['prefix'])) {
                                 throw new \InvalidArgumentException(
                                     'You cannot configure "service" and "prefix" at the same time.',
                                 );
