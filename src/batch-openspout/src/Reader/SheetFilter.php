@@ -15,15 +15,14 @@ use OpenSpout\Reader\SheetInterface;
  */
 final readonly class SheetFilter
 {
-    private Closure $accept;
-
-    /**
-     * @param Closure $accept A closure with {@see SheetInterface} as single argument,
-     *                        and returning a boolean, telling if the sheet should be read.
-     */
-    public function __construct(Closure $accept)
-    {
-        $this->accept = $accept;
+    public function __construct(
+        /**
+         * A closure with {@see SheetInterface} as single argument,
+         * and returning a boolean, telling if the sheet should be read.
+         * @var Closure
+         */
+        private Closure $accept,
+    ) {
     }
 
     /**

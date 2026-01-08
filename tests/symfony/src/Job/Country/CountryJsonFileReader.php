@@ -13,11 +13,9 @@ final class CountryJsonFileReader implements ItemReaderInterface, JobExecutionAw
 {
     use JobExecutionAwareTrait;
 
-    private JobParameterAccessorInterface $filePath;
-
-    public function __construct(JobParameterAccessorInterface $filePath)
-    {
-        $this->filePath = $filePath;
+    public function __construct(
+        private JobParameterAccessorInterface $filePath,
+    ) {
     }
 
     public function read(): iterable

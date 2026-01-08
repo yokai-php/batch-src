@@ -89,12 +89,10 @@ class ImportDevelopersXlsxToORMTest extends JobTestCase
         $outputRepositoryFile = self::OUTPUT_REPOSITORY_FILE;
         $outputDeveloperFile = self::OUTPUT_DEVELOPER_FILE;
 
-        $csvReader = function (string $file): FlatFileReader {
-            return new FlatFileReader(
-                filePath: new StaticValueParameterAccessor($file),
-                headerStrategy: HeaderStrategy::combine(),
-            );
-        };
+        $csvReader = fn(string $file): FlatFileReader => new FlatFileReader(
+            filePath: new StaticValueParameterAccessor($file),
+            headerStrategy: HeaderStrategy::combine(),
+        );
 
         return new JobWithChildJobs(
             $executionStorage,

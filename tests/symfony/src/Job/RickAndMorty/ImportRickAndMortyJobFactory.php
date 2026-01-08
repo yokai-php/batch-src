@@ -44,9 +44,7 @@ final readonly class ImportRickAndMortyJobFactory
                 new ArrayMapProcessor(
                     fn(mixed $value) => $value === '' ? null : $value,
                 ),
-                new CallbackProcessor(function (mixed $item) use ($process) {
-                    return $process($item, $this->memory);
-                }),
+                new CallbackProcessor(fn(mixed $item) => $process($item, $this->memory)),
                 new SkipInvalidItemProcessor($this->validator),
             ]),
             new ObjectWriter($this->doctrine),

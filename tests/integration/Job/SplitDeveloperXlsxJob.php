@@ -41,8 +41,8 @@ final readonly class SplitDeveloperXlsxJob implements JobInterface
             $developerData = ['firstName' => $firstName, 'lastName' => $lastName, 'badges' => [], 'repositories' => []];
             $developerKey = $firstName . '/' . $lastName;
 
-            $badges[$badgeKey] = $badges[$badgeKey] ?? $badgeData;
-            $developers[$developerKey] = $developers[$developerKey] ?? $developerData;
+            $badges[$badgeKey] ??= $badgeData;
+            $developers[$developerKey] ??= $developerData;
             $developers[$developerKey]['badges'][] = $badgeLabel;
         }
 
@@ -54,8 +54,8 @@ final readonly class SplitDeveloperXlsxJob implements JobInterface
             $developerData = ['firstName' => $firstName, 'lastName' => $lastName, 'badges' => [], 'repositories' => []];
             $developerKey = $firstName . '/' . $lastName;
 
-            $repositories[$repositoryKey] = $repositories[$repositoryKey] ?? $repositoryData;
-            $developers[$developerKey] = $developers[$developerKey] ?? $developerData;
+            $repositories[$repositoryKey] ??= $repositoryData;
+            $developers[$developerKey] ??= $developerData;
             $developers[$developerKey]['repositories'][] = $repositoryUrl;
         }
 

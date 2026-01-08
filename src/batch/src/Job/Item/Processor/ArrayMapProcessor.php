@@ -13,11 +13,9 @@ use Yokai\Batch\Job\Item\ItemProcessorInterface;
  */
 final readonly class ArrayMapProcessor implements ItemProcessorInterface
 {
-    private Closure $callback;
-
-    public function __construct(Closure $callback)
-    {
-        $this->callback = $callback;
+    public function __construct(
+        private Closure $callback,
+    ) {
     }
 
     /**

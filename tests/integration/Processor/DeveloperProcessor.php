@@ -10,22 +10,20 @@ use Yokai\Batch\Sources\Tests\Integration\Entity\Badge;
 use Yokai\Batch\Sources\Tests\Integration\Entity\Developer;
 use Yokai\Batch\Sources\Tests\Integration\Entity\Repository;
 
-final class DeveloperProcessor implements ItemProcessorInterface
+final readonly class DeveloperProcessor implements ItemProcessorInterface
 {
-    private $manager;
-
-    public function __construct(EntityManager $manager)
-    {
-        $this->manager = $manager;
+    public function __construct(
+        private EntityManager $manager,
+    ) {
     }
 
     public function process(mixed $item): Developer
     {
         $badges = $this->manager->getRepository(Badge::class)
-            ->findBy(['label' => \str_getcsv($item['badges'], '|', '"', '\\')])
+            ->findBy(['label' => \str_getcsv((string)$item['badges'], '|', '"', '\\')])
         ;
         $repositories = $this->manager->getRepository(Repository::class)
-            ->findBy(['label' => \str_getcsv($item['repositories'], '|', '"', '\\')])
+            ->findBy(['label' => \str_getcsv((string)$item['repositories'], '|', '"', '\\')])
         ;
 
         $developer = new Developer();

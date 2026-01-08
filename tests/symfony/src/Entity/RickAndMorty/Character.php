@@ -27,28 +27,28 @@ class Character
 
     #[ORM\Column(type: 'string')]
     #[Assert\NotNull]
-    public null|string $name;
+    public null|string $name = null;
 
     #[ORM\Column(type: 'string', enumType: CharacterStatus::class)]
     #[Assert\NotNull]
-    public null|CharacterStatus $status;
+    public null|CharacterStatus $status = null;
 
     #[ORM\Column(type: 'string', enumType: CharacterSpecie::class)]
     #[Assert\NotNull]
-    public null|CharacterSpecie $specie;
+    public null|CharacterSpecie $specie = null;
 
     #[ORM\Column(type: 'string', enumType: CharacterGender::class)]
     #[Assert\NotNull]
-    public null|CharacterGender $gender;
+    public null|CharacterGender $gender = null;
 
     #[ORM\Column(type: 'string', nullable: true)]
-    public null|string $description;
+    public null|string $description = null;
 
     #[ORM\ManyToOne(targetEntity: Location::class)]
-    public null|Location $origin;
+    public null|Location $origin = null;
 
     #[ORM\ManyToOne(targetEntity: Location::class)]
-    public null|Location $location;
+    public null|Location $location = null;
 
     /**
      * @var Collection<int, Episode>

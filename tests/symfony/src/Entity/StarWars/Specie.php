@@ -25,13 +25,13 @@ class Specie
 
     #[ORM\Column(type: 'string', unique: true)]
     #[Assert\NotNull]
-    public null|string $name;
+    public null|string $name = null;
 
     #[ORM\Column(type: 'string', nullable: true)]
-    public null|string $classification;
+    public null|string $classification = null;
 
     #[ORM\Column(type: 'string', nullable: true)]
-    public null|string $language;
+    public null|string $language = null;
 
     #[ORM\ManyToOne(targetEntity: Planet::class)]
     public Planet $homeWorld;

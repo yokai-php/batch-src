@@ -23,14 +23,8 @@ class JobWithDummyItemChildrenTest extends JobTestCase
         $output = self::OUTPUT_FILE;
 
         $fileLineWriter = new class($output) implements ItemWriterInterface {
-            /**
-             * @var string
-             */
-            private $file;
-
-            public function __construct(string $file)
+            public function __construct(private readonly string $file)
             {
-                $this->file = $file;
             }
 
             public function write(iterable $items): void

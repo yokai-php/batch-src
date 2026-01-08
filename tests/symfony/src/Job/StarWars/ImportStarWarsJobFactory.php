@@ -44,9 +44,7 @@ final readonly class ImportStarWarsJobFactory
                 new ArrayMapProcessor(
                     fn(string $value) => $value === 'NA' ? null : $value,
                 ),
-                new CallbackProcessor(function (mixed $item) use ($process) {
-                    return $process($item, $this->objectRegistry);
-                }),
+                new CallbackProcessor(fn(mixed $item) => $process($item, $this->objectRegistry)),
                 new SkipInvalidItemProcessor($this->validator),
             ]),
             new ObjectWriter($this->doctrine),

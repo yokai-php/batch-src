@@ -57,7 +57,6 @@ final class CountryJob extends AbstractDecoratedJob implements
     private ItemWriterInterface $writer;
     private array $countries = [];
     private bool $flushed = false;
-    private LoggerInterface $yokaiBatchLogger;
 
     public static function getJobName(): string
     {
@@ -67,7 +66,7 @@ final class CountryJob extends AbstractDecoratedJob implements
     public function __construct(
         JobExecutionStorageInterface $executionStorage,
         KernelInterface $kernel,
-        LoggerInterface $yokaiBatchLogger,
+        private readonly LoggerInterface $yokaiBatchLogger,
     ) {
         $writePath = fn(string $format) => new StaticValueParameterAccessor(
             ARTIFACT_DIR . '/symfony/country/countries.' . $format,
@@ -86,7 +85,6 @@ final class CountryJob extends AbstractDecoratedJob implements
             new FlatFileWriter($writePath('csv'), null, null, $headers),
             new JsonLinesWriter($writePath('jsonl')),
         ]);
-        $this->yokaiBatchLogger = $yokaiBatchLogger;
 
         parent::__construct(
             new ItemJob(

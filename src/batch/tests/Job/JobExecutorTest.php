@@ -82,7 +82,7 @@ class JobExecutorTest extends TestCase
         self::assertNotNull($execution->getStartTime());
         self::assertNotNull($execution->getEndTime());
         self::assertSame(BatchStatus::FAILED, $execution->getStatus()->getValue());
-        self::assertSame(\get_class($error), $execution->getFailures()[0]->getClass());
+        self::assertSame($error::class, $execution->getFailures()[0]->getClass());
         self::assertSame($error->getMessage(), $execution->getFailures()[0]->getMessage());
         $logs = (string)$execution->getLogs();
         self::assertStringContainsString('DEBUG: Starting job', $logs);

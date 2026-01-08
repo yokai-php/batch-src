@@ -12,23 +12,15 @@ use Yokai\Batch\Storage\Query;
  */
 final class JobFilter
 {
-    /**
-     * @var array<string>
-     */
-    public array $jobs = [];
-
-    /**
-     * @var array<int>
-     */
-    public array $statuses = [];
-
-    /**
-     * @param array<string> $jobs
-     * @param array<int>    $statuses
-     */
-    public function __construct(array $jobs = [], array $statuses = [])
-    {
-        $this->jobs = $jobs;
-        $this->statuses = $statuses;
+    public function __construct(
+        /**
+         * @var array<string>
+         */
+        public array $jobs = [],
+        /**
+         * @var array<int>
+         */
+        public array $statuses = [],
+    ) {
     }
 }
