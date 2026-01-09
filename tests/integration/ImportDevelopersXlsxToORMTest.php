@@ -17,6 +17,7 @@ use Yokai\Batch\Bridge\Doctrine\Persistence\ObjectWriter;
 use Yokai\Batch\Bridge\OpenSpout\Reader\FlatFileReader;
 use Yokai\Batch\Bridge\OpenSpout\Reader\HeaderStrategy;
 use Yokai\Batch\Job\Item\ItemJob;
+use Yokai\Batch\Job\Item\Processor\CallbackProcessor;
 use Yokai\Batch\Job\JobInterface;
 use Yokai\Batch\Job\JobWithChildJobs;
 use Yokai\Batch\Job\Parameters\StaticValueParameterAccessor;
@@ -25,9 +26,6 @@ use Yokai\Batch\Sources\Tests\Integration\Entity\Badge;
 use Yokai\Batch\Sources\Tests\Integration\Entity\Developer;
 use Yokai\Batch\Sources\Tests\Integration\Entity\Repository;
 use Yokai\Batch\Sources\Tests\Integration\Job\SplitDeveloperXlsxJob;
-use Yokai\Batch\Sources\Tests\Integration\Processor\BadgeProcessor;
-use Yokai\Batch\Sources\Tests\Integration\Processor\DeveloperProcessor;
-use Yokai\Batch\Sources\Tests\Integration\Processor\RepositoryProcessor;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
 
 class ImportDevelopersXlsxToORMTest extends JobTestCase
@@ -102,21 +100,50 @@ class ImportDevelopersXlsxToORMTest extends JobTestCase
                         'import-badge' => new ItemJob(
                             PHP_INT_MAX,
                             $csvReader(self::OUTPUT_BADGE_FILE),
-                            new BadgeProcessor(),
+                            new CallbackProcessor(function (array $item) {
+                                $badge = new Badge();
+                                $badge->label = $item['label'];
+                                $badge->rank = (int)$item['rank'];
+
+                                return $badge;
+                            }),
                             $objectWriter,
                             $executionStorage,
                         ),
                         'import-repository' => new ItemJob(
                             PHP_INT_MAX,
                             $csvReader(self::OUTPUT_REPOSITORY_FILE),
-                            new RepositoryProcessor(),
+                            new CallbackProcessor(function (array $item) {
+                                $repository = new Repository();
+                                $repository->label = $item['label'];
+                                $repository->url = $item['url'];
+
+                                return $repository;
+                            }),
                             $objectWriter,
                             $executionStorage,
                         ),
                         'import-developer' => new ItemJob(
                             5,
                             $csvReader(self::OUTPUT_DEVELOPER_FILE),
-                            new DeveloperProcessor($entityManager),
+                            new CallbackProcessor(function (array $item) use ($entityManager) {
+                                $badges = $entityManager->getRepository(Badge::class)
+                                    ->findBy(['label' => \str_getcsv((string)$item['badges'], '|', '"', '\\')]);
+                                $repositories = $entityManager->getRepository(Repository::class)
+                                    ->findBy(['label' => \str_getcsv((string)$item['repositories'], '|', '"', '\\')]);
+
+                                $developer = new Developer();
+                                $developer->firstName = $item['firstName'];
+                                $developer->lastName = $item['lastName'];
+                                foreach ($badges as $badge) {
+                                    $developer->badges->add($badge);
+                                }
+                                foreach ($repositories as $repository) {
+                                    $developer->repositories->add($repository);
+                                }
+
+                                return $developer;
+                            }),
                             $objectWriter,
                             $executionStorage,
                         ),
