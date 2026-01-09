@@ -6,27 +6,20 @@ namespace Yokai\Batch\Tests\Bridge\Symfony\Console;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Yokai\Batch\Bridge\Symfony\Console\CommandRunner;
 
 class CommandRunnerTest extends TestCase
 {
-    use ProphecyTrait;
-
-    /**
-     * @return MockObject|CommandRunner
-     */
-    private function createRunner(): MockObject
+    private function createRunner(): MockObject&CommandRunner
     {
-        /** @var PhpExecutableFinder|ObjectProphecy $phpLocator */
-        $phpLocator = $this->prophesize(PhpExecutableFinder::class);
-        $phpLocator->find()->willReturn('/usr/bin/php');
+        /** @var MockObject&PhpExecutableFinder $phpLocator */
+        $phpLocator = $this->createMock(PhpExecutableFinder::class);
+        $phpLocator->method('find')->willReturn('/usr/bin/php');
 
         return $this->getMockBuilder(CommandRunner::class)
             ->onlyMethods(['exec'])
-            ->setConstructorArgs(['/path/to/bin', '/path/to/logs', $phpLocator->reveal()])
+            ->setConstructorArgs(['/path/to/bin', '/path/to/logs', $phpLocator])
             ->getMock();
     }
 

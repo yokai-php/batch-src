@@ -10,9 +10,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\Persistence\ManagerRegistry;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
+use PHPUnit\Framework\MockObject\MockObject;
 use Yokai\Batch\Bridge\Doctrine\Persistence\ObjectWriter;
 use Yokai\Batch\Bridge\OpenSpout\Reader\FlatFileReader;
 use Yokai\Batch\Bridge\OpenSpout\Reader\HeaderStrategy;
@@ -30,8 +28,6 @@ use Yokai\Batch\Storage\JobExecutionStorageInterface;
 
 class ImportDevelopersXlsxToORMTest extends JobTestCase
 {
-    use ProphecyTrait;
-
     private const OUTPUT_BASE_DIR = self::OUTPUT_DIR . '/multi-tab-xlsx-to-objects';
     private const OUTPUT_BADGE_FILE = self::OUTPUT_BASE_DIR . '/badge.csv';
     private const OUTPUT_REPOSITORY_FILE = self::OUTPUT_BASE_DIR . '/repository.csv';
@@ -40,10 +36,7 @@ class ImportDevelopersXlsxToORMTest extends JobTestCase
 
     private EntityManager $entityManager;
 
-    /**
-     * @var ObjectProphecy<ManagerRegistry>
-     */
-    private ObjectProphecy $doctrine;
+    private MockObject&ManagerRegistry $doctrine;
 
     protected function setUp(): void
     {
@@ -60,8 +53,8 @@ class ImportDevelopersXlsxToORMTest extends JobTestCase
         (new SchemaTool($this->entityManager))
             ->createSchema($this->entityManager->getMetadataFactory()->getAllMetadata());
 
-        $this->doctrine = $this->prophesize(ManagerRegistry::class);
-        $this->doctrine->getManagerForClass(Argument::any())
+        $this->doctrine = $this->createMock(ManagerRegistry::class);
+        $this->doctrine->method('getManagerForClass')
             ->willReturn($this->entityManager);
     }
 
@@ -73,7 +66,7 @@ class ImportDevelopersXlsxToORMTest extends JobTestCase
     protected function createJob(JobExecutionStorageInterface $executionStorage): JobInterface
     {
         $entityManager = $this->entityManager;
-        $objectWriter = new ObjectWriter($this->doctrine->reveal());
+        $objectWriter = new ObjectWriter($this->doctrine);
 
         $inputFile = self::INPUT_FILE;
         $outputBadgeFile = self::OUTPUT_BADGE_FILE;

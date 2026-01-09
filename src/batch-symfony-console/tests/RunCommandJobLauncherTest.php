@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Yokai\Batch\Tests\Bridge\Symfony\Console;
 
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
+use PHPUnit\Framework\MockObject\MockObject;
 use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Bridge\Symfony\Console\CommandRunner;
 use Yokai\Batch\Bridge\Symfony\Console\RunCommandJobLauncher;
@@ -17,21 +16,20 @@ use Yokai\Batch\Test\Storage\InMemoryJobExecutionStorage;
 
 class RunCommandJobLauncherTest extends TestCase
 {
-    use ProphecyTrait;
-
     public function testLaunch(): void
     {
         $config = ['_id' => '123456789', 'foo' => ['bar']];
         $arguments = ['job' => 'testing', 'configuration' => '{"_id":"123456789","foo":["bar"]}'];
 
-        /** @var CommandRunner|ObjectProphecy $commandRunner */
-        $commandRunner = $this->prophesize(CommandRunner::class);
-        $commandRunner->runAsync('yokai:batch:run', 'test.log', $arguments)
-            ->shouldBeCalledTimes(1);
+        /** @var MockObject&CommandRunner $commandRunner */
+        $commandRunner = $this->createMock(CommandRunner::class);
+        $commandRunner->expects($this->once())
+            ->method('runAsync')
+            ->with('yokai:batch:run', 'test.log', $arguments);
 
         $launcher = new RunCommandJobLauncher(
             new JobExecutionFactory(new UniqidJobExecutionIdGenerator(), new NullJobExecutionParametersBuilder()),
-            $commandRunner->reveal(),
+            $commandRunner,
             $storage = new InMemoryJobExecutionStorage(),
             'test.log',
         );
