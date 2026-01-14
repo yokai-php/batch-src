@@ -20,7 +20,7 @@ class SimpleJobLauncherTest extends TestCase
 {
     public function test(): void
     {
-        $job = $this->createMock(JobInterface::class);
+        $job = $this->createStub(JobInterface::class);
 
         $launcher = new SimpleJobLauncher(
             new JobExecutionAccessor(

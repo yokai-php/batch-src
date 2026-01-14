@@ -6,8 +6,8 @@ namespace Yokai\Batch\Tests\Job;
 
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\MockObject\MockObject;
 use Throwable;
 use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Event\ExceptionEvent;
@@ -23,7 +23,7 @@ use Yokai\Batch\Warning;
 
 class JobExecutorTest extends TestCase
 {
-    private MockObject&JobInterface $job;
+    private Stub&JobInterface $job;
     private DebugEventDispatcher $dispatcher;
     private JobExecutor $executor;
 
@@ -69,7 +69,8 @@ class JobExecutorTest extends TestCase
     public function testLaunchJobCatchErrors(Throwable $error): void
     {
         $execution = JobExecution::createRoot('123', 'test.job_executor');
-        $this->job->method('execute')
+        $this->job->expects($this->once())
+            ->method('execute')
             ->with($execution)
             ->willThrowException($error);
 
@@ -93,7 +94,8 @@ class JobExecutorTest extends TestCase
     public function testLaunchErrorWithStatusListener(): void
     {
         $execution = JobExecution::createRoot('123', 'test.job_executor');
-        $this->job->method('execute')
+        $this->job->expects($this->once())
+            ->method('execute')
             ->with($execution)
             ->willThrowException($exception = new \RuntimeException());
 
@@ -122,7 +124,8 @@ class JobExecutorTest extends TestCase
 
     public function testLaunchJobNotExecutable(): void
     {
-        $this->job->expects($this->never())->method('execute');
+        $this->job->expects($this->never())
+            ->method('execute');
 
         $execution = JobExecution::createRoot('123', 'test.job_executor', new BatchStatus(BatchStatus::COMPLETED));
         $this->executor->execute($execution);

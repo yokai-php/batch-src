@@ -10,7 +10,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\Persistence\ManagerRegistry;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Yokai\Batch\Bridge\Doctrine\Persistence\ObjectWriter;
 use Yokai\Batch\Bridge\OpenSpout\Reader\FlatFileReader;
 use Yokai\Batch\Bridge\OpenSpout\Reader\HeaderStrategy;
@@ -36,7 +36,7 @@ class ImportDevelopersXlsxToORMTest extends JobTestCase
 
     private EntityManager $entityManager;
 
-    private MockObject&ManagerRegistry $doctrine;
+    private Stub&ManagerRegistry $doctrine;
 
     protected function setUp(): void
     {
@@ -53,7 +53,7 @@ class ImportDevelopersXlsxToORMTest extends JobTestCase
         (new SchemaTool($this->entityManager))
             ->createSchema($this->entityManager->getMetadataFactory()->getAllMetadata());
 
-        $this->doctrine = $this->createMock(ManagerRegistry::class);
+        $this->doctrine = $this->createStub(ManagerRegistry::class);
         $this->doctrine->method('getManagerForClass')
             ->willReturn($this->entityManager);
     }

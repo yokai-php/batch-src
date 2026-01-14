@@ -13,8 +13,8 @@ class JobRegistryTest extends TestCase
 {
     public function testRegistry(): void
     {
-        $export = $this->createMock(JobInterface::class);
-        $import = $this->createMock(JobInterface::class);
+        $export = $this->createStub(JobInterface::class);
+        $import = $this->createStub(JobInterface::class);
 
         $registry = JobRegistry::fromJobArray(['export' => $export, 'import' => $import]);
         self::assertSame($export, $registry->get('export'));

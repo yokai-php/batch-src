@@ -13,8 +13,8 @@ class JobContainerTest extends TestCase
 {
     public function testGet(): void
     {
-        $foo = $this->createMock(JobInterface::class);
-        $bar = $this->createMock(JobInterface::class);
+        $foo = $this->createStub(JobInterface::class);
+        $bar = $this->createStub(JobInterface::class);
         $container = new JobContainer(['foo' => $foo, 'bar' => $bar]);
         self::assertSame($foo, $container->get('foo'));
         self::assertSame($bar, $container->get('bar'));
@@ -24,14 +24,14 @@ class JobContainerTest extends TestCase
     {
         $this->expectExceptionMessage('You have requested a non-existent job "bar".');
         $this->expectException(NotFoundExceptionInterface::class);
-        $foo = $this->createMock(JobInterface::class);
+        $foo = $this->createStub(JobInterface::class);
         $container = new JobContainer(['foo' => $foo]);
         $container->get('bar');
     }
 
     public function testHas(): void
     {
-        $foo = $this->createMock(JobInterface::class);
+        $foo = $this->createStub(JobInterface::class);
         $container = new JobContainer(['foo' => $foo]);
         self::assertTrue($container->has('foo'));
         self::assertFalse($container->has('bar'));

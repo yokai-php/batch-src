@@ -50,7 +50,8 @@ class RunJobCommandTest extends TestCase
     {
         $this->expectException(JsonException::class);
 
-        $this->job->expects($this->never())->method('execute');
+        $this->job->expects($this->never())
+            ->method('execute');
         $this->execute('{]');
     }
 
@@ -58,14 +59,16 @@ class RunJobCommandTest extends TestCase
     {
         $this->expectException(UnexpectedValueException::class);
 
-        $this->job->expects($this->never())->method('execute');
+        $this->job->expects($this->never())
+            ->method('execute');
         $this->execute('"string"');
     }
 
     #[DataProvider('verbosity')]
     public function testRunWithErrors(int $verbosity): void
     {
-        $this->job->method('execute')
+        $this->job->expects($this->once())
+            ->method('execute')
             ->willReturnCallback(function (JobExecution $jobExecution): never {
                 $jobExecution->addFailureException(new \RuntimeException('1st exception', 100));
                 $jobExecution->addFailureException(new \LogicException('2nd exception', 200));
@@ -93,7 +96,8 @@ class RunJobCommandTest extends TestCase
     #[DataProvider('verbosity')]
     public function testRunWithWarnings(int $verbosity): void
     {
-        $this->job->method('execute')
+        $this->job->expects($this->once())
+            ->method('execute')
             ->willReturnCallback(function (JobExecution $jobExecution) {
                 $jobExecution->addWarning(new Warning('1st warning'));
                 $jobExecution->addWarning(new Warning('2nd warning'));
@@ -120,7 +124,8 @@ class RunJobCommandTest extends TestCase
     #[DataProvider('verbosity')]
     public function testRunSuccessful(int $verbosity): void
     {
-        $this->job->method('execute')
+        $this->job->expects($this->once())
+            ->method('execute')
             ->willReturnCallback(function () {});
 
         [$code, $display] = $this->execute(null, $verbosity);

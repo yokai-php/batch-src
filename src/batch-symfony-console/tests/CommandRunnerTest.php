@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yokai\Batch\Tests\Bridge\Symfony\Console;
 
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Yokai\Batch\Bridge\Symfony\Console\CommandRunner;
@@ -13,8 +14,8 @@ class CommandRunnerTest extends TestCase
 {
     private function createRunner(): MockObject&CommandRunner
     {
-        /** @var MockObject&PhpExecutableFinder $phpLocator */
-        $phpLocator = $this->createMock(PhpExecutableFinder::class);
+        /** @var Stub&PhpExecutableFinder $phpLocator */
+        $phpLocator = $this->createStub(PhpExecutableFinder::class);
         $phpLocator->method('find')->willReturn('/usr/bin/php');
 
         return $this->getMockBuilder(CommandRunner::class)
