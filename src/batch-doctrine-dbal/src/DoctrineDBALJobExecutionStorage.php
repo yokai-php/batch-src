@@ -210,7 +210,7 @@ final class DoctrineDBALJobExecutionStorage implements
                 new PrimaryKeyConstraint(null, [new UnqualifiedName(Identifier::unquoted('id'))], false),
             );
         } else {
-            $table->setPrimaryKey(['id']);
+            $table->setPrimaryKey(['id']); // @codeCoverageIgnore deprecated method, untested in latest versions
         }
         $table->addIndex(['job_name']);
         $table->addIndex(['status']);
@@ -394,8 +394,10 @@ final class DoctrineDBALJobExecutionStorage implements
      */
     private function getAssetName(AbstractAsset $asset): string
     {
-        return $asset instanceof NamedObject
-            ? $asset->getObjectName()->toString()
-            : $asset->getName();
+        if ($asset instanceof NamedObject) {
+            return $asset->getObjectName()->toString();
+        }
+
+        return $asset->getName(); // @codeCoverageIgnore deprecated method, untested in latest versions
     }
 }
