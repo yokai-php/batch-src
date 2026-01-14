@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yokai\Batch\Tests\Bridge\Symfony\Validator;
 
 use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
@@ -15,9 +16,7 @@ use Yokai\Batch\Tests\Bridge\Symfony\Validator\Fixtures\StringableClass;
 
 class SkipItemOnViolationsTest extends TestCase
 {
-    /**
-     * @dataProvider provider
-     */
+    #[DataProvider('provider')]
     public function test(array $violations, array $expectedViolations): void
     {
         $execution = JobExecution::createRoot('123', 'testing');
@@ -34,7 +33,7 @@ class SkipItemOnViolationsTest extends TestCase
         );
     }
 
-    public function provider(): \Generator
+    public static function provider(): \Generator
     {
         $violation = function (string $message, $value) {
             return new ConstraintViolation($message, $message, [], null, 'property.path', $value);

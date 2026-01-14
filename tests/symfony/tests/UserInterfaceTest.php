@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Sources\Tests\Symfony\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Filesystem\Filesystem;
@@ -73,9 +74,7 @@ class UserInterfaceTest extends WebTestCase
         }
     }
 
-    /**
-     * @dataProvider view
-     */
+    #[DataProvider('view')]
     public function testView(string $job, \Closure $expected): void
     {
         $execution = self::$executions[$job];
@@ -115,9 +114,7 @@ class UserInterfaceTest extends WebTestCase
         ];
     }
 
-    /**
-     * @dataProvider logs
-     */
+    #[DataProvider('logs')]
     public function testLogs(string $job, \Closure $expected): void
     {
         $execution = self::$executions[$job];

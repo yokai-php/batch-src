@@ -10,6 +10,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Yokai\Batch\Bridge\Symfony\Framework\JobWithStaticNameInterface;
+use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Form\JobFilterType;
 use Yokai\Batch\Job\JobInterface;
 use Yokai\Batch\Registry\JobRegistry;
 
@@ -28,11 +29,11 @@ final class RegisterJobsCompilerPass implements CompilerPassInterface
             }
         }
 
-        $container->getDefinition('yokai_batch.job_registry')
+        $container->getDefinition(JobRegistry::class)
             ->setArgument('$jobs', ServiceLocatorTagPass::register($container, $jobs));
 
-        if ($container->hasDefinition('yokai_batch.ui.filter_form')) {
-            $container->getDefinition('yokai_batch.ui.filter_form')
+        if ($container->hasDefinition(JobFilterType::class)) {
+            $container->getDefinition(JobFilterType::class)
                 ->setArgument('$jobs', \array_keys($jobs));
         }
     }

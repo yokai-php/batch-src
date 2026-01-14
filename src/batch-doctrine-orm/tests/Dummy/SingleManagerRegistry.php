@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Tests\Bridge\Doctrine\ORM\Dummy;
 
-use Doctrine\ORM\Proxy\Proxy;
+use Doctrine\Persistence\Proxy;
 use Doctrine\Persistence\AbstractManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 
@@ -16,7 +16,7 @@ final class SingleManagerRegistry extends AbstractManagerRegistry
         parent::__construct('ORM', ['default'], ['default'], 'default', 'default', Proxy::class);
     }
 
-    protected function getService($name)
+    protected function getService(string $name): object
     {
         if ($name !== 'default') {
             throw new \InvalidArgumentException('Unknown service "' . $name . '".');
@@ -25,12 +25,7 @@ final class SingleManagerRegistry extends AbstractManagerRegistry
         return $this->manager;
     }
 
-    protected function resetService($name)
+    protected function resetService(string $name): void
     {
-    }
-
-    public function getAliasNamespace($alias)
-    {
-        return $alias;
     }
 }

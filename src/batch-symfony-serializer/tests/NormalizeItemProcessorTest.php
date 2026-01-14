@@ -7,6 +7,7 @@ namespace Yokai\Batch\Tests\Bridge\Symfony\Serializer;
 use DateTime;
 use DateTimeImmutable;
 use Generator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Exception\BadMethodCallException;
 use Yokai\Batch\Bridge\Symfony\Serializer\NormalizeItemProcessor;
@@ -17,10 +18,8 @@ use Yokai\Batch\Tests\Bridge\Symfony\Serializer\Dummy\FailingNormalizer;
 
 final class NormalizeItemProcessorTest extends TestCase
 {
-    /**
-     * @dataProvider sets
-     */
-    public function testProcess(null|string $format, array $context, $item, $expected): void
+    #[DataProvider('withExpected')]
+    public function testProcess(null|string $format, array $context, mixed $item, mixed $expected): void
     {
         $normalizer = new DummyNormalizer(true, $expected);
         $processor = new NormalizeItemProcessor($normalizer, $format, $context);
@@ -28,10 +27,8 @@ final class NormalizeItemProcessorTest extends TestCase
         self::assertSame($expected, $processor->process($item));
     }
 
-    /**
-     * @dataProvider sets
-     */
-    public function testUnsupported(null|string $format, array $context, $item): void
+    #[DataProvider('withoutExpected')]
+    public function testUnsupported(null|string $format, array $context, mixed $item): void
     {
         $normalizer = new DummyNormalizer(false, null);
         $processor = new NormalizeItemProcessor($normalizer, $format, $context);
@@ -51,10 +48,8 @@ final class NormalizeItemProcessorTest extends TestCase
         self::assertSame('Unable to normalize item. Not supported.', $cause->getError()->getMessage());
     }
 
-    /**
-     * @dataProvider sets
-     */
-    public function testException(null|string $format, array $context, $item): void
+    #[DataProvider('withoutExpected')]
+    public function testException(null|string $format, array $context, mixed $item): void
     {
         $normalizer = new FailingNormalizer($exceptionThrown = new BadMethodCallException());
         $processor = new NormalizeItemProcessor($normalizer, $format, $context);
@@ -74,7 +69,7 @@ final class NormalizeItemProcessorTest extends TestCase
         self::assertSame($exceptionThrown, $cause->getError());
     }
 
-    public function sets(): Generator
+    public static function withExpected(): Generator
     {
         yield [
             null,
@@ -94,5 +89,12 @@ final class NormalizeItemProcessorTest extends TestCase
             DateTimeImmutable::createFromFormat(\DATE_RSS, 'Wed, 01 Jan 2020 12:00:00 +0200'),
             'Wed, 01 Jan 2020 12:00:00 +0200',
         ];
+    }
+
+    public static function withoutExpected(): Generator
+    {
+        foreach (self::withExpected() as $set) {
+            yield [$set[0], $set[1], $set[2]];
+        }
     }
 }

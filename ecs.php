@@ -77,5 +77,8 @@ return ECSConfig::configure()
         ArrayOpenerAndCloserNewlineFixer::class,
         ExplicitStringVariableFixer::class,
         StandaloneLineInMultilineArrayFixer::class,
+        NativeFunctionInvocationFixer::class => [
+            'src/batch-symfony-framework/src/Resources/*',
+        ],
     ])
 ;

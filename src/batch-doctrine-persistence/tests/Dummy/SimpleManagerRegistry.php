@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Tests\Bridge\Doctrine\Persistence\Dummy;
 
-use Doctrine\ORM\Proxy\Proxy;
 use Doctrine\Persistence\AbstractManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
+use Doctrine\Persistence\Proxy;
 
 final class SimpleManagerRegistry extends AbstractManagerRegistry
 {
@@ -36,17 +36,25 @@ final class SimpleManagerRegistry extends AbstractManagerRegistry
         );
     }
 
-    protected function getService($name)
+    protected function getService(string $name): object
     {
         return $this->services[$name] ?? throw new \InvalidArgumentException('Unknown service "' . $name . '".');
     }
 
-    protected function resetService($name)
+    protected function resetService(string $name): void
     {
     }
 
-    public function getAliasNamespace($alias)
+    public function getManagerForClass(string $class): ObjectManager|null
     {
-        return $alias;
+        foreach ($this->services as $service) {
+            foreach ($service->getMetadataFactory()->getAllMetadata() as $metadata) {
+                if (\is_a($class, $metadata->name, true)) {
+                    return $service;
+                }
+            }
+        }
+
+        return null;
     }
 }

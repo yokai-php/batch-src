@@ -6,22 +6,16 @@ namespace Yokai\Batch\Tests\Bridge\Doctrine\Persistence\Entity\Shop;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity()
- * @ORM\Table(name="shop_product")
- */
+#[ORM\Entity]
+#[ORM\Table(name: 'shop_product')]
 class Product
 {
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     */
+    #[ORM\Column(type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
     public int $id;
 
-    /**
-     * @ORM\Column(type="string")
-     */
+    #[ORM\Column(type: 'string')]
     public string $name;
 
     public function __construct(string $name)

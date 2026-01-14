@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Sources\Tests\Convention\Documentation;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Yokai\Batch\Job\Item\ItemProcessorInterface;
 use Yokai\Batch\Job\Item\ItemReaderInterface;
@@ -25,9 +26,8 @@ final class DocumentationLinksTest extends TestCase
 
     /**
      * Ensure that all links in Sphinx files points to valid internal resources.
-     *
-     * @dataProvider filesWithLinks
      */
+    #[DataProvider('filesWithLinks')]
     public function testInternalLinksAreValid(DocFile $file): void
     {
         /** @var DocLink $link */
@@ -42,7 +42,7 @@ final class DocumentationLinksTest extends TestCase
         }
     }
 
-    public function filesWithLinks(): iterable
+    public static function filesWithLinks(): iterable
     {
         /** @var DocFile $file */
         foreach (Sphinx::listFiles() as $file) {
@@ -55,9 +55,8 @@ final class DocumentationLinksTest extends TestCase
 
     /**
      * Ensure that all implementations of some yokai batch interfaces are listed in certain files.
-     *
-     * @dataProvider interfaceRules
      */
+    #[DataProvider('interfaceRules')]
     public function testComponentsAreListed(string $filepath, string $interface): void
     {
         $expectedClasses = [];
@@ -98,7 +97,7 @@ final class DocumentationLinksTest extends TestCase
         );
     }
 
-    public function interfaceRules(): iterable
+    public static function interfaceRules(): iterable
     {
         yield 'JobInterface' => [
             'docs/docs/core-concepts/job.rst',

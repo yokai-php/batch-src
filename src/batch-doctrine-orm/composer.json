@@ -11,9 +11,9 @@
         }
     ],
     "require": {
-        "php": "^8.1",
-        "doctrine/orm": "^2.8",
-        "doctrine/persistence": "^2.0|^3.0",
+        "php": "^8.2",
+        "doctrine/orm": "^3.0",
+        "doctrine/persistence": "^4.0",
         "yokai/batch": "^0.7.0"
     },
     "autoload": {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yokai\Batch\Tests\Bridge\Symfony\Framework\DependencyInjection;
 
 use Exception;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
@@ -39,9 +40,7 @@ use Yokai\Batch\Test\Launcher\BufferingJobLauncher;
 
 class YokaiBatchExtensionTest extends TestCase
 {
-    /**
-     * @dataProvider storage
-     */
+    #[DataProvider('storage')]
     public function testStorage(array $config, \Closure|null $configure, string $storage): void
     {
         $container = $this->createContainer($config, $configure);
@@ -51,7 +50,7 @@ class YokaiBatchExtensionTest extends TestCase
         self::assertSame($storage, $jobExecutionStorageService->getClass());
     }
 
-    public function storage(): \Generator
+    public static function storage(): \Generator
     {
         yield 'Default config' => [
             [],
@@ -75,9 +74,7 @@ class YokaiBatchExtensionTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider launcher
-     */
+    #[DataProvider('launcher')]
     public function testLauncher(
         array $config,
         \Closure|null $configure,
@@ -97,7 +94,7 @@ class YokaiBatchExtensionTest extends TestCase
         }
     }
 
-    public function launcher(): \Generator
+    public static function launcher(): \Generator
     {
         yield 'Default config' => [
             [],
@@ -210,9 +207,7 @@ class YokaiBatchExtensionTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider userInterface
-     */
+    #[DataProvider('userInterface')]
     public function testUserInterface(
         array $config,
         \Closure|null $configure,
@@ -250,7 +245,7 @@ class YokaiBatchExtensionTest extends TestCase
         }
     }
 
-    public function userInterface(): \Generator
+    public static function userInterface(): \Generator
     {
         yield 'Default config' => [
             [],
@@ -352,9 +347,7 @@ class YokaiBatchExtensionTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider parameters
-     */
+    #[DataProvider('parameters')]
     public function testParameters(array $config, array|null $global, array|null $perJob): void
     {
         $container = $this->createContainer($config);
@@ -386,7 +379,7 @@ class YokaiBatchExtensionTest extends TestCase
         self::assertSame('yokai_batch.job_execution_parameters_builder', $defaultServiceBuilders->getTag());
     }
 
-    public function parameters(): \Generator
+    public static function parameters(): \Generator
     {
         yield 'Global parameters' => [
             ['parameters' => ['global' => ['global' => true]]],
@@ -408,16 +401,14 @@ class YokaiBatchExtensionTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider errors
-     */
+    #[DataProvider('errors')]
     public function testErrors(array $config, Exception $error): void
     {
         $this->expectExceptionObject($error);
         $this->createContainer($config);
     }
 
-    public function errors(): \Generator
+    public static function errors(): \Generator
     {
         yield 'Templating : Not configured' => [
             ['ui' => ['enabled' => true, 'templating' => []]],
@@ -463,9 +454,7 @@ class YokaiBatchExtensionTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider id
-     */
+    #[DataProvider('id')]
     public function testId(array $config, string $idGenerator): void
     {
         $container = $this->createContainer($config);
@@ -474,7 +463,7 @@ class YokaiBatchExtensionTest extends TestCase
         self::assertSame($idGenerator, $idGeneratorDefinition->getClass());
     }
 
-    public function id(): \Generator
+    public static function id(): \Generator
     {
         yield 'Default config' => [
             [],

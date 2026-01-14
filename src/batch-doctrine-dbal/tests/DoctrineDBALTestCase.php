@@ -8,6 +8,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Schema\Table;
+use Doctrine\DBAL\Tools\DsnParser;
 use Doctrine\Persistence\ConnectionRegistry;
 use PHPUnit\Framework\TestCase;
 use Yokai\Batch\Tests\Bridge\Doctrine\DBAL\Dummy\SingleConnectionRegistry;
@@ -19,7 +20,7 @@ abstract class DoctrineDBALTestCase extends TestCase
 
     protected function setUp(): void
     {
-        $this->connection = DriverManager::getConnection(['url' => \getenv('DATABASE_URL')]);
+        $this->connection = DriverManager::getConnection((new DsnParser())->parse(\getenv('DATABASE_URL')));
         $this->doctrine = new SingleConnectionRegistry($this->connection);
     }
 

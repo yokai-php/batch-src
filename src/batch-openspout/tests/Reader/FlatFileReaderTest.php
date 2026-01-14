@@ -8,6 +8,7 @@ use Generator;
 use OpenSpout\Reader\CSV\Options as CSVOptions;
 use OpenSpout\Reader\ODS\Options as ODSOptions;
 use OpenSpout\Reader\XLSX\Options as XLSXOptions;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Yokai\Batch\Bridge\OpenSpout\Reader\FlatFileReader;
 use Yokai\Batch\Bridge\OpenSpout\Reader\HeaderStrategy;
@@ -17,9 +18,7 @@ use Yokai\Batch\JobExecution;
 
 class FlatFileReaderTest extends TestCase
 {
-    /**
-     * @dataProvider sets
-     */
+    #[DataProvider('sets')]
     public function testRead(
         string $file,
         null|object $options,
@@ -42,7 +41,7 @@ class FlatFileReaderTest extends TestCase
         self::assertSame($expected, \iterator_to_array($got));
     }
 
-    public function sets(): Generator
+    public static function sets(): Generator
     {
         $csv = __DIR__ . '/fixtures/sample.csv';
         $ods = __DIR__ . '/fixtures/sample.ods';
@@ -219,9 +218,7 @@ class FlatFileReaderTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider wrongOptions
-     */
+    #[DataProvider('wrongOptions')]
     public function testWrongOptions(string $file, object $options): void
     {
         $this->expectException(\TypeError::class);
@@ -233,7 +230,7 @@ class FlatFileReaderTest extends TestCase
         \iterator_to_array($reader->read());
     }
 
-    public function wrongOptions(): \Generator
+    public static function wrongOptions(): \Generator
     {
         // with CSV file, CSVOptions is expected
         yield [__DIR__ . '/fixtures/sample.csv', new XLSXOptions()];

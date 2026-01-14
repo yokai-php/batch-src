@@ -11,6 +11,7 @@ use OpenSpout\Common\Entity\Style\Style;
 use OpenSpout\Writer\CSV\Options as CSVOptions;
 use OpenSpout\Writer\ODS\Options as ODSOptions;
 use OpenSpout\Writer\XLSX\Options as XLSXOptions;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Yokai\Batch\Bridge\OpenSpout\Writer\FlatFileWriter;
 use Yokai\Batch\Bridge\OpenSpout\Writer\WriteToSheetItem;
@@ -24,9 +25,7 @@ class FlatFileWriterTest extends TestCase
 {
     private const WRITE_DIR = ARTIFACT_DIR . '/openspout-flat-file-writer';
 
-    /**
-     * @dataProvider sets
-     */
+    #[DataProvider('sets')]
     public function testWrite(
         string $filename,
         null|object $options,
@@ -48,7 +47,7 @@ class FlatFileWriterTest extends TestCase
         self::assertFileContents($file, $expectedContent);
     }
 
-    public function sets(): \Generator
+    public static function sets(): \Generator
     {
         $headers = ['firstName', 'lastName'];
         $items = [
@@ -68,7 +67,7 @@ Jane,Doe
 Jack,Doe
 CSV;
 
-        foreach ($this->types() as [$type]) {
+        foreach (self::types() as [$type]) {
             yield [
                 "no-header.$type",
                 null,
@@ -165,9 +164,7 @@ CSV;
         ];
     }
 
-    /**
-     * @dataProvider types
-     */
+    #[DataProvider('types')]
     public function testWriteInvalidItem(string $type): void
     {
         $this->expectException(UnexpectedValueException::class);
@@ -180,9 +177,7 @@ CSV;
         $writer->write([true]); // writer accept collection of array or \OpenSpout\Common\Entity\Row
     }
 
-    /**
-     * @dataProvider types
-     */
+    #[DataProvider('types')]
     public function testCannotCreateFile(string $type): void
     {
         $this->expectException(RuntimeException::class);
@@ -194,9 +189,7 @@ CSV;
         $writer->initialize();
     }
 
-    /**
-     * @dataProvider types
-     */
+    #[DataProvider('types')]
     public function testShouldInitializeBeforeWrite(string $type): void
     {
         $this->expectException(BadMethodCallException::class);
@@ -206,9 +199,7 @@ CSV;
         $writer->write([true]);
     }
 
-    /**
-     * @dataProvider types
-     */
+    #[DataProvider('types')]
     public function testShouldInitializeBeforeFlush(string $type): void
     {
         $this->expectException(BadMethodCallException::class);
@@ -218,16 +209,14 @@ CSV;
         $writer->flush();
     }
 
-    public function types(): \Generator
+    public static function types(): \Generator
     {
         yield ['csv'];
         yield ['ods'];
         yield ['xlsx'];
     }
 
-    /**
-     * @dataProvider multipleSheets
-     */
+    #[DataProvider('multipleSheets')]
     public function testWriteMultipleSheets(string $type, null|string $defaultSheet): void
     {
         $file = self::WRITE_DIR . '/multiple-sheets.' . $type;
@@ -264,16 +253,14 @@ CSV;
         }
     }
 
-    public function multipleSheets(): \Generator
+    public static function multipleSheets(): \Generator
     {
         yield ['csv', null];
         yield ['xlsx', 'English'];
         yield ['ods', 'English'];
     }
 
-    /**
-     * @dataProvider wrongOptions
-     */
+    #[DataProvider('wrongOptions')]
     public function testWrongOptions(string $type, object $options): void
     {
         $this->expectException(\TypeError::class);
@@ -285,7 +272,7 @@ CSV;
         $reader->initialize();
     }
 
-    public function wrongOptions(): \Generator
+    public static function wrongOptions(): \Generator
     {
         // with CSV file, CSVOptions is expected
         yield ['csv', new XLSXOptions()];
@@ -303,7 +290,12 @@ CSV;
     private static function assertFileContents(string $filePath, string $inlineData): void
     {
         $type = \strtolower(\pathinfo($filePath, PATHINFO_EXTENSION));
-        $strings = \array_merge(...\array_map('str_getcsv', \explode(PHP_EOL, $inlineData)));
+        $strings = \array_merge(
+            ...\array_map(
+                fn(string $string) => \str_getcsv($string, ',', '"', '\\'),
+                \explode(PHP_EOL, $inlineData),
+            ),
+        );
 
         switch ($type) {
             case 'csv':
@@ -337,7 +329,12 @@ CSV;
     private static function assertSheetContents(string $filePath, string $sheet, string $inlineData): void
     {
         $type = \strtolower(\pathinfo($filePath, PATHINFO_EXTENSION));
-        $strings = \array_merge(...\array_map('str_getcsv', \explode(PHP_EOL, $inlineData)));
+        $strings = \array_merge(
+            ...\array_map(
+                fn(string $string) => \str_getcsv($string, ',', '"', '\\'),
+                \explode(PHP_EOL, $inlineData),
+            ),
+        );
 
         switch ($type) {
             case 'csv':

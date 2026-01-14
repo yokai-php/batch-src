@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yokai\Batch\Tests\Bridge\Symfony\Validator;
 
 use Generator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Constraints\Blank;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -16,23 +17,19 @@ use Yokai\Batch\Job\Item\Exception\SkipItemException;
 
 class SkipInvalidItemProcessorTest extends TestCase
 {
-    /**
-     * @dataProvider groups
-     */
+    #[DataProvider('validationGroups')]
     public function testProcessValid(null|array $groups): void
     {
         $validator = Validation::createValidator();
-        $processor = new SkipInvalidItemProcessor($validator, [new NotBlank(['groups' => $groups])], $groups);
+        $processor = new SkipInvalidItemProcessor($validator, [new NotBlank(groups: $groups)], $groups);
         self::assertSame('valid item not blank', $processor->process('valid item not blank'));
     }
 
-    /**
-     * @dataProvider groups
-     */
+    #[DataProvider('validationGroups')]
     public function testProcessInvalid(null|array $groups): void
     {
         $validator = Validation::createValidator();
-        $processor = new SkipInvalidItemProcessor($validator, [new Blank(['groups' => ['Default', 'Full']])], $groups);
+        $processor = new SkipInvalidItemProcessor($validator, [new Blank(groups: ['Default', 'Full'])], $groups);
 
         $exception = null;
 
@@ -57,7 +54,7 @@ class SkipInvalidItemProcessorTest extends TestCase
         self::assertSame('invalid item not blank', $violation->getInvalidValue());
     }
 
-    public function groups(): Generator
+    public static function validationGroups(): Generator
     {
         yield 'No groups specified' => [null];
         yield 'Group "Full" only' => [['Full']];

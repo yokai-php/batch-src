@@ -43,6 +43,11 @@ final class Autoload
         $files = Finder::create()->files()->in($path)->name('*.php');
         /** @var SplFileInfo $file */
         foreach ($files as $file) {
+            $letter = \substr($file->getFilename(), 0, 1);
+            if ($letter !== \strtoupper($letter)) {
+                continue; // file end with .php but do not start with uppercase, probably not a class
+            }
+
             yield $file->getRealpath();
         }
     }

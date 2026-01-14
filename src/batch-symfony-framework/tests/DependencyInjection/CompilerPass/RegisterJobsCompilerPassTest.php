@@ -18,7 +18,7 @@ final class RegisterJobsCompilerPassTest extends TestCase
     public function testProcess(): void
     {
         $container = new ContainerBuilder();
-        $container->register('yokai_batch.job_registry', JobRegistry::class)
+        $container->register(JobRegistry::class)
             ->setPublic(true);
 
         $container->register(DummyJobWithName::class, DummyJobWithName::class)
@@ -42,7 +42,7 @@ final class RegisterJobsCompilerPassTest extends TestCase
     private function getJob(ContainerBuilder $container, string $name): JobInterface|null
     {
         /** @var JobRegistry $registry */
-        $registry = $container->get('yokai_batch.job_registry');
+        $registry = $container->get(JobRegistry::class);
 
         try {
             return $registry->get($name);

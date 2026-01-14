@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Sources\Tests\Symfony\Tests;
 
+use Doctrine\DBAL\Platforms\Exception\NotSupported;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Generator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -15,9 +17,7 @@ use Yokai\Batch\Storage\JobExecutionStorageInterface;
 
 final class JobTest extends KernelTestCase
 {
-    /**
-     * @dataProvider configs
-     */
+    #[DataProvider('configs')]
     public function testUsingCli(string $job, callable $assert): void
     {
         $kernel = self::createKernel();
@@ -37,9 +37,7 @@ final class JobTest extends KernelTestCase
         $assert($storage->retrieve($job, $id), $container);
     }
 
-    /**
-     * @dataProvider configs
-     */
+    #[DataProvider('configs')]
     public function testUsingLauncher(string $job, callable $assert): void
     {
         $container = self::getContainer();
@@ -70,8 +68,13 @@ final class JobTest extends KernelTestCase
         if (\file_exists($database)) {
             \unlink($database);
         }
-        $schema = $connection->createSchemaManager();
-        $schema->createDatabase($database);
+
+        try {
+            $schema = $connection->createSchemaManager();
+            $schema->createDatabase($database);
+        } catch (NotSupported) {
+            // when using sqlite, creating database is implicit
+        }
 
         (new SchemaTool($entityManager))
             ->createSchema($entityManager->getMetadataFactory()->getAllMetadata());

@@ -2,28 +2,18 @@
 
 <!-- https://phpunit.de/manual/current/en/appendixes.configuration.html -->
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
          backupGlobals="false"
          colors="true"
          bootstrap="tests/bootstrap.php"
 >
     <php>
         <env name="ARTIFACT_DIR" value="tests/.artifacts"/>
-        <env name="DATABASE_URL" value="sqlite:///:memory:"/>
+        <env name="DATABASE_URL" value="pdo-sqlite:///:memory:"/>
         <env name="KERNEL_CLASS" value="Yokai\Batch\Sources\Tests\Symfony\App\Kernel"/>
     </php>
 
     <testsuites>
-        <testsuite name="Package">
-            <directory>./src/*/tests</directory>
-        </testsuite>
-        <testsuite name="Integration">
-            <directory>./tests/integration</directory>
-        </testsuite>
-        <testsuite name="Symfony">
-            <directory>./tests/symfony/tests</directory>
-        </testsuite>
-
         <testsuite name="Code">
             <directory>./src/*/tests</directory>
             <directory>./tests/integration</directory>
@@ -34,9 +24,9 @@
         </testsuite>
     </testsuites>
 
-    <coverage>
+    <source>
         <include>
             <directory>./src/*/src</directory>
         </include>
-    </coverage>
+    </source>
 </phpunit>

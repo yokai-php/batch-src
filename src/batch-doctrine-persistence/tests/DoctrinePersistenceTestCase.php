@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yokai\Batch\Tests\Bridge\Doctrine\Persistence;
 
 use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Tools\DsnParser;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,15 +23,21 @@ abstract class DoctrinePersistenceTestCase extends TestCase
 
     protected function setUp(): void
     {
-        // It is important to have both attribute & annotation configurations because
-        // otherwise Doctrine do not seem to be able to find which manager is responsible
-        // to manage an entity or another.
         $authConfig = ORMSetup::createAttributeMetadataConfiguration([__DIR__ . '/Entity/Auth'], true);
-        $shopConfig = ORMSetup::createAnnotationMetadataConfiguration([__DIR__ . '/Entity/Shop'], true);
+        $shopConfig = ORMSetup::createAttributeMetadataConfiguration([__DIR__ . '/Entity/Shop'], true);
+        if (PHP_VERSION_ID >= 80400) {
+            $authConfig->enableNativeLazyObjects(true);
+            $shopConfig->enableNativeLazyObjects(true);
+        } else {
+            $authConfig->setProxyDir(\sys_get_temp_dir());
+            $authConfig->setProxyNamespace('DoctrineProxies');
+            $shopConfig->setProxyDir(\sys_get_temp_dir());
+            $shopConfig->setProxyNamespace('DoctrineProxies');
+        }
 
         $this->setUpConfigs($authConfig, $shopConfig);
 
-        $connection = DriverManager::getConnection(['url' => \getenv('DATABASE_URL')]);
+        $connection = DriverManager::getConnection((new DsnParser())->parse(\getenv('DATABASE_URL')));
         $this->authManager = new EntityManager($connection, $authConfig);
         $this->shopManager = new EntityManager($connection, $shopConfig);
 

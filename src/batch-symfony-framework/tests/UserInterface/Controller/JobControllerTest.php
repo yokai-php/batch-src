@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Tests\Bridge\Symfony\Framework\UserInterface\Controller;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Constraint\LogicalAnd;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\Twig\Extension\FormExtension;
@@ -24,7 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Test\Constraint as ResponseConstraint;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Generator\UrlGenerator;
-use Symfony\Component\Routing\Loader\XmlFileLoader;
+use Symfony\Component\Routing\Loader\PhpFileLoader;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Security\Core\Authorization\AccessDecision;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -67,9 +68,7 @@ final class JobControllerTest extends TestCase
         (new Filesystem())->remove(self::STORAGE_DIR);
     }
 
-    /**
-     * @dataProvider list
-     */
+    #[DataProvider('list')]
     public function testList(
         \Closure $fixtures,
         Request $request,
@@ -191,9 +190,7 @@ final class JobControllerTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider view
-     */
+    #[DataProvider('view')]
     public function testView(
         \Closure $fixtures,
         string $job,
@@ -322,9 +319,7 @@ final class JobControllerTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider logs
-     */
+    #[DataProvider('logs')]
     public function testLogs(
         \Closure $fixtures,
         string $job,
@@ -492,7 +487,7 @@ final class JobControllerTest extends TestCase
         $twig->addExtension(
             new RoutingExtension(
                 new UrlGenerator(
-                    (new XmlFileLoader(new FileLocator()))->load(__DIR__ . '/../../../src/Resources/routing/ui.xml'),
+                    (new PhpFileLoader(new FileLocator()))->load(__DIR__ . '/../../../src/Resources/routing/ui.php'),
                     new RequestContext(),
                 ),
             ),

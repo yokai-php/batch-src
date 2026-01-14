@@ -7,6 +7,7 @@ namespace Yokai\Batch\Tests\Bridge\Symfony\Serializer;
 use DateTime;
 use DateTimeImmutable;
 use Generator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Exception\UnsupportedException;
 use Yokai\Batch\Bridge\Symfony\Serializer\DenormalizeItemProcessor;
@@ -17,10 +18,8 @@ use Yokai\Batch\Tests\Bridge\Symfony\Serializer\Dummy\FailingNormalizer;
 
 final class DenormalizeItemProcessorTest extends TestCase
 {
-    /**
-     * @dataProvider sets
-     */
-    public function testProcess(string $type, null|string $format, array $context, $item, $expected): void
+    #[DataProvider('withExpected')]
+    public function testProcess(string $type, null|string $format, array $context, mixed $item, mixed $expected): void
     {
         $denormalizer = new DummyNormalizer(true, $expected);
         $processor = new DenormalizeItemProcessor($denormalizer, $type, $format, $context);
@@ -28,10 +27,8 @@ final class DenormalizeItemProcessorTest extends TestCase
         self::assertSame($expected, $processor->process($item));
     }
 
-    /**
-     * @dataProvider sets
-     */
-    public function testUnsupported(string $type, null|string $format, array $context, $item): void
+    #[DataProvider('withoutExpected')]
+    public function testUnsupported(string $type, null|string $format, array $context, mixed $item): void
     {
         $denormalizer = new DummyNormalizer(false, null);
         $processor = new DenormalizeItemProcessor($denormalizer, $type, $format, $context);
@@ -51,10 +48,8 @@ final class DenormalizeItemProcessorTest extends TestCase
         self::assertSame('Unable to denormalize item. Not supported.', $cause->getError()->getMessage());
     }
 
-    /**
-     * @dataProvider sets
-     */
-    public function testException(string $type, null|string $format, array $context, $item): void
+    #[DataProvider('withoutExpected')]
+    public function testException(string $type, null|string $format, array $context, mixed $item): void
     {
         $denormalizer = new FailingNormalizer($exceptionThrown = new UnsupportedException());
         $processor = new DenormalizeItemProcessor($denormalizer, $type, $format, $context);
@@ -74,7 +69,7 @@ final class DenormalizeItemProcessorTest extends TestCase
         self::assertSame($exceptionThrown, $cause->getError());
     }
 
-    public function sets(): Generator
+    public static function withExpected(): Generator
     {
         yield [
             'stdClass',
@@ -97,5 +92,12 @@ final class DenormalizeItemProcessorTest extends TestCase
             'Wed, 01 Jan 2020 12:00:00 +0200',
             DateTimeImmutable::createFromFormat(\DATE_RSS, 'Wed, 01 Jan 2020 12:00:00 +0200'),
         ];
+    }
+
+    public static function withoutExpected(): Generator
+    {
+        foreach (self::withExpected() as $set) {
+            yield [$set[0], $set[1], $set[2], $set[3]];
+        }
     }
 }

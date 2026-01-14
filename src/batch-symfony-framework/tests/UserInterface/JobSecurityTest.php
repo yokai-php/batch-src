@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Tests\Bridge\Symfony\Framework\UserInterface;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authorization\AccessDecision;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -30,9 +31,7 @@ final class JobSecurityTest extends TestCase
         self::assertEquals($expected, $this->test($security));
     }
 
-    /**
-     * @dataProvider withSecurity
-     */
+    #[DataProvider('withSecurity')]
     public function testWithSecurity(array $attributes, array $expected): void
     {
         $authorizationChecker = new class($attributes) implements AuthorizationCheckerInterface {
