@@ -14,6 +14,7 @@ What kind of information does it hold?
 * ``JobExecution::$id``: The execution id
 * ``JobExecution::$parameters``: Some parameters with which job was executed
 * ``JobExecution::$status``: A status (pending, running, stopped, completed, abandoned, failed)
+* ``JobExecution::$launchedAt``: The date and time when the job was launched
 * ``JobExecution::$startTime``: Start time
 * ``JobExecution::$endTime``: End time
 * ``JobExecution::$failures``: A list of failures (usually exceptions)
