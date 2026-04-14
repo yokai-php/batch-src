@@ -13,6 +13,7 @@ use Yokai\Batch\Bridge\Symfony\Messenger\DispatchMessageJobLauncher;
 use Yokai\Batch\Bridge\Symfony\Messenger\LaunchJobMessage;
 use Yokai\Batch\Bridge\Symfony\Messenger\MessengerJobsConfiguration;
 use Yokai\Batch\Factory\JobExecutionFactory;
+use Yokai\Batch\Factory\JobExecutionLoggerFactory\InMemoryJobExecutionLoggerFactory;
 use Yokai\Batch\Factory\JobExecutionParametersBuilder\NullJobExecutionParametersBuilder;
 use Yokai\Batch\Factory\UniqidJobExecutionIdGenerator;
 use Yokai\Batch\Test\Factory\SequenceJobExecutionIdGenerator;
@@ -25,7 +26,11 @@ final class DispatchMessageJobLauncherTest extends TestCase
     public function testLaunch(): void
     {
         $jobLauncher = new DispatchMessageJobLauncher(
-            new JobExecutionFactory(new UniqidJobExecutionIdGenerator(), new NullJobExecutionParametersBuilder()),
+            new JobExecutionFactory(
+                new UniqidJobExecutionIdGenerator(),
+                new NullJobExecutionParametersBuilder(),
+                new InMemoryJobExecutionLoggerFactory(),
+            ),
             $storage = new InMemoryJobExecutionStorage(),
             $messageBus = new BufferingMessageBus(),
             new MessengerJobsConfiguration([]),
@@ -49,6 +54,7 @@ final class DispatchMessageJobLauncherTest extends TestCase
             new JobExecutionFactory(
                 new SequenceJobExecutionIdGenerator(['123456789']),
                 new NullJobExecutionParametersBuilder(),
+                new InMemoryJobExecutionLoggerFactory(),
             ),
             $storage = new InMemoryJobExecutionStorage(),
             $messageBus = new BufferingMessageBus(),
@@ -69,7 +75,11 @@ final class DispatchMessageJobLauncherTest extends TestCase
     public function testLaunchAndMessengerFail(): void
     {
         $jobLauncher = new DispatchMessageJobLauncher(
-            new JobExecutionFactory(new UniqidJobExecutionIdGenerator(), new NullJobExecutionParametersBuilder()),
+            new JobExecutionFactory(
+                new UniqidJobExecutionIdGenerator(),
+                new NullJobExecutionParametersBuilder(),
+                new InMemoryJobExecutionLoggerFactory(),
+            ),
             $storage = new InMemoryJobExecutionStorage(),
             new FailingMessageBus(new TransportException('This is a test')),
             new MessengerJobsConfiguration([]),
@@ -91,7 +101,11 @@ final class DispatchMessageJobLauncherTest extends TestCase
     public function testLaunchWithRouting(): void
     {
         $jobLauncher = new DispatchMessageJobLauncher(
-            new JobExecutionFactory(new UniqidJobExecutionIdGenerator(), new NullJobExecutionParametersBuilder()),
+            new JobExecutionFactory(
+                new UniqidJobExecutionIdGenerator(),
+                new NullJobExecutionParametersBuilder(),
+                new InMemoryJobExecutionLoggerFactory(),
+            ),
             $storage = new InMemoryJobExecutionStorage(),
             $messageBus = new BufferingMessageBus(),
             new MessengerJobsConfiguration(['testing' => 'custom_transport', 'unused' => 'unused_transport']),

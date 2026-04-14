@@ -10,6 +10,7 @@ use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Bridge\Symfony\Console\CommandRunner;
 use Yokai\Batch\Bridge\Symfony\Console\RunCommandJobLauncher;
 use Yokai\Batch\Factory\JobExecutionFactory;
+use Yokai\Batch\Factory\JobExecutionLoggerFactory\InMemoryJobExecutionLoggerFactory;
 use Yokai\Batch\Factory\JobExecutionParametersBuilder\NullJobExecutionParametersBuilder;
 use Yokai\Batch\Factory\UniqidJobExecutionIdGenerator;
 use Yokai\Batch\Test\Storage\InMemoryJobExecutionStorage;
@@ -28,7 +29,11 @@ final class RunCommandJobLauncherTest extends TestCase
             ->with('yokai:batch:run', 'test.log', $arguments);
 
         $launcher = new RunCommandJobLauncher(
-            new JobExecutionFactory(new UniqidJobExecutionIdGenerator(), new NullJobExecutionParametersBuilder()),
+            new JobExecutionFactory(
+                new UniqidJobExecutionIdGenerator(),
+                new NullJobExecutionParametersBuilder(),
+                new InMemoryJobExecutionLoggerFactory(),
+            ),
             $commandRunner,
             $storage = new InMemoryJobExecutionStorage(),
             'test.log',

@@ -8,6 +8,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
@@ -189,7 +190,11 @@ final readonly class JobController
         $this->security->denyAccessUnlessGrantedLogs($execution);
 
         $filename = \sprintf('%s-%s.log', $execution->getJobName(), $execution->getId());
-        $response = new Response((string)$execution->getLogs());
+        $response = new StreamedResponse(static function () use ($execution): void {
+            foreach ($execution->getLogger()->getLogs() as $line) {
+                echo $line . \PHP_EOL;
+            }
+        });
         $response->headers->set(
             'Content-Disposition',
             $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filename),

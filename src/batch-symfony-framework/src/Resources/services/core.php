@@ -7,6 +7,8 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Yokai\Batch\Factory\JobExecutionFactory;
 use Yokai\Batch\Factory\JobExecutionIdGeneratorInterface;
+use Yokai\Batch\Factory\JobExecutionLoggerFactory\InMemoryJobExecutionLoggerFactory;
+use Yokai\Batch\Factory\JobExecutionLoggerFactoryInterface;
 use Yokai\Batch\Factory\JobExecutionParametersBuilder\ChainJobExecutionParametersBuilder;
 use Yokai\Batch\Factory\JobExecutionParametersBuilderInterface;
 use Yokai\Batch\Job\JobExecutionAccessor;
@@ -19,12 +21,19 @@ return static function (ContainerConfigurator $container): void {
     $container->services()
 
         ->set(JobRegistry::class)
+
         ->set(JsonJobExecutionSerializer::class)
+            ->args([
+                service(JobExecutionLoggerFactoryInterface::class),
+            ])
+
+        ->set(JobExecutionLoggerFactoryInterface::class, InMemoryJobExecutionLoggerFactory::class)
 
         ->set(JobExecutionFactory::class)
             ->args([
                 service(JobExecutionIdGeneratorInterface::class),
                 service(JobExecutionParametersBuilderInterface::class),
+                service(JobExecutionLoggerFactoryInterface::class),
             ])
 
         ->set(JobExecutionAccessor::class)

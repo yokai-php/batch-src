@@ -43,10 +43,11 @@ use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\JobSecurity;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\ConfigurableTemplating;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\TemplatingInterface;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\TwigExtension;
+use Yokai\Batch\Factory\JobExecutionLoggerFactory\InMemoryJobExecutionLoggerFactory;
 use Yokai\Batch\Failure;
 use Yokai\Batch\JobExecution;
-use Yokai\Batch\JobExecutionLogs;
 use Yokai\Batch\JobParameters;
+use Yokai\Batch\Logger\InMemoryJobExecutionLogger;
 use Yokai\Batch\Serializer\JsonJobExecutionSerializer;
 use Yokai\Batch\Storage\FilesystemJobExecutionStorage;
 use Yokai\Batch\Summary;
@@ -60,7 +61,10 @@ final class JobControllerTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        self::$storage = new FilesystemJobExecutionStorage(new JsonJobExecutionSerializer(), self::STORAGE_DIR);
+        self::$storage = new FilesystemJobExecutionStorage(
+            new JsonJobExecutionSerializer(new InMemoryJobExecutionLoggerFactory()),
+            self::STORAGE_DIR,
+        );
     }
 
     protected function setUp(): void
@@ -341,7 +345,10 @@ final class JobControllerTest extends TestCase
         if ($expectedStatus === Response::HTTP_OK) {
             self::assertSame("attachment; filename={$job}-{$id}.log", $response->headers->get('Content-Disposition'));
             self::assertSame('application/log', $response->headers->get('Content-Type'));
-            self::assertSame($expectedLogs, $response->getContent());
+            \ob_start();
+            $response->sendContent();
+            $content = \ob_get_clean();
+            self::assertSame($expectedLogs, $content);
         }
     }
 
@@ -354,7 +361,7 @@ final class JobControllerTest extends TestCase
                     $execution = JobExecution::createRoot(
                         '64f1f6d5e7e18',
                         'export',
-                        logs: new JobExecutionLogs(
+                        logger: new InMemoryJobExecutionLogger(
                             <<<LOG
                             [2021-01-01T10:00:00.000000+01:00] INFO: Lorem ipsum []
                             [2021-01-01T10:30:00.000000+01:00] DEBUG: Dolor sit amet []
@@ -370,6 +377,7 @@ final class JobControllerTest extends TestCase
                 <<<LOG
                 [2021-01-01T10:00:00.000000+01:00] INFO: Lorem ipsum []
                 [2021-01-01T10:30:00.000000+01:00] DEBUG: Dolor sit amet []
+
                 LOG,
             ];
             yield [
