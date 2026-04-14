@@ -49,6 +49,7 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
                 'parameters',
                 'start_time',
                 'end_time',
+                'launched_at',
                 'summary',
                 'failures',
                 'warnings',
@@ -76,6 +77,7 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
                 'parameters',
                 'start_time',
                 'end_time',
+                'launched_at',
                 'summary',
                 'failures',
                 'warnings',
@@ -107,6 +109,7 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
 
         $export = JobExecution::createRoot('123', 'export', new BatchStatus(BatchStatus::RUNNING));
         $export->setStartTime(new DateTimeImmutable('2021-09-23 11:05:00'));
+        $export->setLaunchedAt(new DateTimeImmutable('2021-09-23 11:04:55'));
         $export->addChildExecution($extract = JobExecution::createChild($export, 'extract'));
         $extract->setStartTime(new DateTimeImmutable('2021-09-23 11:05:01'));
         $export->addChildExecution($upload = JobExecution::createChild($export, 'upload'));
@@ -119,6 +122,7 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         self::assertSame('123', $retrievedExport->getId());
         self::assertSame('2021-09-23 11:05:00', $retrievedExport->getStartTime()->format('Y-m-d H:i:s'));
         self::assertNull($retrievedExport->getEndTime());
+        self::assertSame('2021-09-23 11:04:55', $retrievedExport->getLaunchedAt()->format('Y-m-d H:i:s'));
         self::assertSame(BatchStatus::RUNNING, $retrievedExport->getStatus()->getValue());
         $retrievedExtract = $retrievedExport->getChildExecution('extract');
         self::assertNotNull($retrievedExtract);

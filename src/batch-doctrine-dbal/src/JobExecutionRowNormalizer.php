@@ -40,6 +40,7 @@ final class JobExecutionRowNormalizer
             'parameters' => \iterator_to_array($jobExecution->getParameters()),
             'start_time' => $jobExecution->getStartTime(),
             'end_time' => $jobExecution->getEndTime(),
+            'launched_at' => $jobExecution->getLaunchedAt(),
             'summary' => $jobExecution->getSummary()->all(),
             'failures' => \array_map([$this, 'failureToArray'], $jobExecution->getFailures()),
             'warnings' => \array_map([$this, 'warningToArray'], $jobExecution->getWarnings()),
@@ -83,6 +84,9 @@ final class JobExecutionRowNormalizer
 
         $jobExecution->setStartTime($this->dateFromString($data['start_time']));
         $jobExecution->setEndTime($this->dateFromString($data['end_time']));
+        if ($parent === null) {
+            $jobExecution->setLaunchedAt($this->dateFromString($data['launched_at'] ?? null));
+        }
 
         foreach ($data['failures'] as $failureData) {
             $jobExecution->addFailure($this->failureFromArray($failureData), false);
