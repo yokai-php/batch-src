@@ -1,7 +1,7 @@
 # symfony/uid bridge for Batch processing library
 
-[![Latest Stable Version](https://img.shields.io/packagist/v/yokai/batch-symfony-console?style=flat-square)](https://packagist.org/packages/yokai/batch-symfony-uid)
-[![Downloads Monthly](https://img.shields.io/packagist/dm/yokai/batch-symfony-console?style=flat-square)](https://packagist.org/packages/yokai/batch-symfony-uid)
+[![Latest Stable Version](https://img.shields.io/packagist/v/yokai/batch-symfony-uid?style=flat-square)](https://packagist.org/packages/yokai/batch-symfony-uid)
+[![Downloads Monthly](https://img.shields.io/packagist/dm/yokai/batch-symfony-uid?style=flat-square)](https://packagist.org/packages/yokai/batch-symfony-uid)
 
 Bridge of [`symfony/uid`](https://github.com/symfony/uid) for [Batch](https://github.com/yokai-php/batch).
 
