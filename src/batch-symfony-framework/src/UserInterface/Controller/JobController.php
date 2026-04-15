@@ -25,7 +25,7 @@ use Yokai\Batch\Storage\QueryBuilder;
 /**
  * Controller handling HTTP layer of user interface.
  */
-final class JobController
+final readonly class JobController
 {
     private const LIMIT = 20;
 

@@ -12,11 +12,11 @@ final class InvalidRowSizeException extends LogicException
         /**
          * @var array<int, string>
          */
-        private array $headers,
+        private readonly array $headers,
         /**
          * @var array<int, string>
          */
-        private array $row,
+        private readonly array $row,
     ) {
         parent::__construct('Invalid row size');
     }

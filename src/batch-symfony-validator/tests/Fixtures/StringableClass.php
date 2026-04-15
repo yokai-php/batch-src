@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Tests\Bridge\Symfony\Validator\Fixtures;
 
-final class StringableClass
+final class StringableClass implements \Stringable
 {
     public function __toString(): string
     {

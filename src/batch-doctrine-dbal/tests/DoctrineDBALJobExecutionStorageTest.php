@@ -41,7 +41,7 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         self::assertTrue($schemaManager->tablesExist(['yokai_batch_job_execution']));
 
         $columns = $schemaManager->listTableColumns('yokai_batch_job_execution');
-        self::assertEquals(
+        self::assertSame(
             [
                 'id',
                 'job_name',
@@ -68,7 +68,7 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         self::assertTrue($schemaManager->tablesExist(['acme_job_executions']));
 
         $columns = $schemaManager->listTableColumns('acme_job_executions');
-        self::assertEquals(
+        self::assertSame(
             [
                 'id',
                 'job_name',
@@ -279,7 +279,7 @@ class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         $this->loadFixtures($storage);
 
         self::assertExecutions($expectedCouples, $storage->query($queryBuilder->getQuery()));
-        self::assertSame(\count($expectedCouples), $storage->count($queryBuilder->getQuery()));
+        self::assertCount($storage->count($queryBuilder->getQuery()), $expectedCouples);
     }
 
     public static function queries(): Generator

@@ -18,7 +18,7 @@ use Yokai\Batch\Job\Item\Processor\ChainProcessor;
 use Yokai\Batch\Job\JobInterface;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
 
-final class ImportRickAndMortyJobFactory
+final readonly class ImportRickAndMortyJobFactory
 {
     public function __construct(
         private ValidatorInterface $validator,
@@ -44,9 +44,7 @@ final class ImportRickAndMortyJobFactory
                 new ArrayMapProcessor(
                     fn(mixed $value) => $value === '' ? null : $value,
                 ),
-                new CallbackProcessor(function (mixed $item) use ($process) {
-                    return $process($item, $this->memory);
-                }),
+                new CallbackProcessor(fn(mixed $item) => $process($item, $this->memory)),
                 new SkipInvalidItemProcessor($this->validator),
             ]),
             new ObjectWriter($this->doctrine),

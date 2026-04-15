@@ -8,7 +8,7 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-final class FailingMessageBus implements MessageBusInterface
+final readonly class FailingMessageBus implements MessageBusInterface
 {
     public function __construct(
         private ExceptionInterface $exception,

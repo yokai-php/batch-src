@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Sources\Tests\Symfony\App\Entity\RickAndMorty;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -18,20 +19,20 @@ use Yokai\Batch\Sources\Tests\Symfony\App\Job\RickAndMorty\ImportRickAndMortyEpi
 #[UniqueEntity('code')]
 class Episode
 {
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
     public int $id;
 
-    #[ORM\Column(type: 'string', unique: true)]
+    #[ORM\Column(type: Types::STRING, unique: true)]
     #[Assert\NotNull]
-    public null|string $code;
+    public null|string $code = null;
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: Types::STRING)]
     #[Assert\NotNull]
-    public null|string $name;
+    public null|string $name = null;
 
-    #[ORM\Column(type: 'date_immutable')]
+    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     #[Assert\NotNull]
-    public null|\DateTimeImmutable $date;
+    public null|\DateTimeImmutable $date = null;
 }

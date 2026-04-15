@@ -12,7 +12,7 @@ use Yokai\Batch\Sources\Tests\Symfony\App\Entity\StarWars\Planet;
 /**
  * Star Wars {@see Planet} entity import.
  */
-final class ImportStarWarsPlanetJob implements JobInterface, JobWithStaticNameInterface
+final readonly class ImportStarWarsPlanetJob implements JobInterface, JobWithStaticNameInterface
 {
     public static function getJobName(): string
     {
@@ -20,7 +20,7 @@ final class ImportStarWarsPlanetJob implements JobInterface, JobWithStaticNameIn
     }
 
     public function __construct(
-        private readonly ImportStarWarsJobFactory $factory,
+        private ImportStarWarsJobFactory $factory,
     ) {
     }
 

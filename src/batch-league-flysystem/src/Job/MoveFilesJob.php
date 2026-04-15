@@ -22,10 +22,10 @@ use Yokai\Batch\JobExecution;
 class MoveFilesJob implements JobInterface
 {
     public function __construct(
-        private JobParameterAccessorInterface $location,
-        private FilesystemOperator $source,
-        private FilesystemWriter $destination,
-        private Closure|null $transformLocation = null,
+        private readonly JobParameterAccessorInterface $location,
+        private readonly FilesystemOperator $source,
+        private readonly FilesystemWriter $destination,
+        private readonly Closure|null $transformLocation = null,
     ) {
     }
 

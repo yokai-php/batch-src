@@ -42,8 +42,8 @@ final class DoctrineDBALJobExecutionStorage implements
         'connection' => null,
     ];
 
-    private Connection $connection;
-    private string $table;
+    private readonly Connection $connection;
+    private readonly string $table;
     private JobExecutionRowNormalizer $normalizer;
 
     /**
@@ -334,53 +334,53 @@ final class DoctrineDBALJobExecutionStorage implements
         $queryTypes = [];
 
         $names = $query->jobs();
-        if (\count($names) > 0) {
+        if ($names !== []) {
             $qb->andWhere($qb->expr()->in('job_name', ':jobNames'));
             $queryParameters['jobNames'] = $names;
             $queryTypes['jobNames'] = ArrayParameterType::STRING;
         }
 
         $ids = $query->ids();
-        if (\count($ids) > 0) {
+        if ($ids !== []) {
             $qb->andWhere($qb->expr()->in('id', ':ids'));
             $queryParameters['ids'] = $ids;
             $queryTypes['ids'] = ArrayParameterType::STRING;
         }
 
         $statuses = $query->statuses();
-        if (\count($statuses) > 0) {
+        if ($statuses !== []) {
             $qb->andWhere($qb->expr()->in('status', ':statuses'));
             $queryParameters['statuses'] = $statuses;
             $queryTypes['statuses'] = ArrayParameterType::INTEGER;
         }
 
-        if ($query->startTime()) {
+        if ($query->startTime() !== null) {
             $qb->andWhere($qb->expr()->isNotNull('start_time'));
         }
         $startDateFrom = $query->startTime()?->getFrom();
-        if ($startDateFrom) {
+        if ($startDateFrom !== null) {
             $qb->andWhere($qb->expr()->gte('start_time', ':startDateFrom'));
             $queryParameters['startDateFrom'] = $startDateFrom;
             $queryTypes['startDateFrom'] = Types::DATETIME_IMMUTABLE;
         }
         $startDateTo = $query->startTime()?->getTo();
-        if ($startDateTo) {
+        if ($startDateTo !== null) {
             $qb->andWhere($qb->expr()->lte('start_time', ':startDateTo'));
             $queryParameters['startDateTo'] = $startDateTo;
             $queryTypes['startDateTo'] = Types::DATETIME_IMMUTABLE;
         }
 
-        if ($query->endTime()) {
+        if ($query->endTime() !== null) {
             $qb->andWhere($qb->expr()->isNotNull('start_time'));
         }
         $endDateFrom = $query->endTime()?->getFrom();
-        if ($endDateFrom) {
+        if ($endDateFrom !== null) {
             $qb->andWhere($qb->expr()->gte('end_time', ':endDateFrom'));
             $queryParameters['endDateFrom'] = $endDateFrom;
             $queryTypes['endDateFrom'] = Types::DATETIME_IMMUTABLE;
         }
         $endDateTo = $query->endTime()?->getTo();
-        if ($endDateTo) {
+        if ($endDateTo !== null) {
             $qb->andWhere($qb->expr()->lte('end_time', ':endDateTo'));
             $queryParameters['endDateTo'] = $endDateTo;
             $queryTypes['endDateTo'] = Types::DATETIME_IMMUTABLE;

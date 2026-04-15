@@ -10,13 +10,12 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\Persistence\ManagerRegistry;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
+use PHPUnit\Framework\MockObject\Stub;
 use Yokai\Batch\Bridge\Doctrine\Persistence\ObjectWriter;
 use Yokai\Batch\Bridge\OpenSpout\Reader\FlatFileReader;
 use Yokai\Batch\Bridge\OpenSpout\Reader\HeaderStrategy;
 use Yokai\Batch\Job\Item\ItemJob;
+use Yokai\Batch\Job\Item\Processor\CallbackProcessor;
 use Yokai\Batch\Job\JobInterface;
 use Yokai\Batch\Job\JobWithChildJobs;
 use Yokai\Batch\Job\Parameters\StaticValueParameterAccessor;
@@ -25,37 +24,22 @@ use Yokai\Batch\Sources\Tests\Integration\Entity\Badge;
 use Yokai\Batch\Sources\Tests\Integration\Entity\Developer;
 use Yokai\Batch\Sources\Tests\Integration\Entity\Repository;
 use Yokai\Batch\Sources\Tests\Integration\Job\SplitDeveloperXlsxJob;
-use Yokai\Batch\Sources\Tests\Integration\Processor\BadgeProcessor;
-use Yokai\Batch\Sources\Tests\Integration\Processor\DeveloperProcessor;
-use Yokai\Batch\Sources\Tests\Integration\Processor\RepositoryProcessor;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
 
 class ImportDevelopersXlsxToORMTest extends JobTestCase
 {
-    use ProphecyTrait;
-
     private const OUTPUT_BASE_DIR = self::OUTPUT_DIR . '/multi-tab-xlsx-to-objects';
     private const OUTPUT_BADGE_FILE = self::OUTPUT_BASE_DIR . '/badge.csv';
     private const OUTPUT_REPOSITORY_FILE = self::OUTPUT_BASE_DIR . '/repository.csv';
     private const OUTPUT_DEVELOPER_FILE = self::OUTPUT_BASE_DIR . '/developer.csv';
     private const INPUT_FILE = __DIR__ . '/fixtures/multi-tab-xlsx-to-objects.xslx';
 
-    private $persisted;
+    private EntityManager $entityManager;
 
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
-    /**
-     * @var ManagerRegistry|ObjectProphecy
-     */
-    private $doctrine;
+    private Stub&ManagerRegistry $doctrine;
 
     protected function setUp(): void
     {
-        $this->persisted = [];
-
         $config = ORMSetup::createAttributeMetadataConfiguration([__DIR__ . '/Entity'], true);
         if (\PHP_VERSION_ID >= 80400) {
             $config->enableNativeLazyObjects(true);
@@ -69,8 +53,8 @@ class ImportDevelopersXlsxToORMTest extends JobTestCase
         (new SchemaTool($this->entityManager))
             ->createSchema($this->entityManager->getMetadataFactory()->getAllMetadata());
 
-        $this->doctrine = $this->prophesize(ManagerRegistry::class);
-        $this->doctrine->getManagerForClass(Argument::any())
+        $this->doctrine = $this->createStub(ManagerRegistry::class);
+        $this->doctrine->method('getManagerForClass')
             ->willReturn($this->entityManager);
     }
 
@@ -82,19 +66,17 @@ class ImportDevelopersXlsxToORMTest extends JobTestCase
     protected function createJob(JobExecutionStorageInterface $executionStorage): JobInterface
     {
         $entityManager = $this->entityManager;
-        $objectWriter = new ObjectWriter($this->doctrine->reveal());
+        $objectWriter = new ObjectWriter($this->doctrine);
 
         $inputFile = self::INPUT_FILE;
         $outputBadgeFile = self::OUTPUT_BADGE_FILE;
         $outputRepositoryFile = self::OUTPUT_REPOSITORY_FILE;
         $outputDeveloperFile = self::OUTPUT_DEVELOPER_FILE;
 
-        $csvReader = function (string $file): FlatFileReader {
-            return new FlatFileReader(
-                filePath: new StaticValueParameterAccessor($file),
-                headerStrategy: HeaderStrategy::combine(),
-            );
-        };
+        $csvReader = fn(string $file): FlatFileReader => new FlatFileReader(
+            filePath: new StaticValueParameterAccessor($file),
+            headerStrategy: HeaderStrategy::combine(),
+        );
 
         return new JobWithChildJobs(
             $executionStorage,
@@ -111,21 +93,50 @@ class ImportDevelopersXlsxToORMTest extends JobTestCase
                         'import-badge' => new ItemJob(
                             PHP_INT_MAX,
                             $csvReader(self::OUTPUT_BADGE_FILE),
-                            new BadgeProcessor(),
+                            new CallbackProcessor(function (array $item) {
+                                $badge = new Badge();
+                                $badge->label = $item['label'];
+                                $badge->rank = (int)$item['rank'];
+
+                                return $badge;
+                            }),
                             $objectWriter,
                             $executionStorage,
                         ),
                         'import-repository' => new ItemJob(
                             PHP_INT_MAX,
                             $csvReader(self::OUTPUT_REPOSITORY_FILE),
-                            new RepositoryProcessor(),
+                            new CallbackProcessor(function (array $item) {
+                                $repository = new Repository();
+                                $repository->label = $item['label'];
+                                $repository->url = $item['url'];
+
+                                return $repository;
+                            }),
                             $objectWriter,
                             $executionStorage,
                         ),
                         'import-developer' => new ItemJob(
                             5,
                             $csvReader(self::OUTPUT_DEVELOPER_FILE),
-                            new DeveloperProcessor($entityManager),
+                            new CallbackProcessor(function (array $item) use ($entityManager) {
+                                $badges = $entityManager->getRepository(Badge::class)
+                                    ->findBy(['label' => \str_getcsv((string)$item['badges'], '|', '"', '\\')]);
+                                $repositories = $entityManager->getRepository(Repository::class)
+                                    ->findBy(['label' => \str_getcsv((string)$item['repositories'], '|', '"', '\\')]);
+
+                                $developer = new Developer();
+                                $developer->firstName = $item['firstName'];
+                                $developer->lastName = $item['lastName'];
+                                foreach ($badges as $badge) {
+                                    $developer->badges->add($badge);
+                                }
+                                foreach ($repositories as $repository) {
+                                    $developer->repositories->add($repository);
+                                }
+
+                                return $developer;
+                            }),
                             $objectWriter,
                             $executionStorage,
                         ),

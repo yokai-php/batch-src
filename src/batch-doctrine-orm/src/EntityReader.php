@@ -12,7 +12,7 @@ use Yokai\Batch\Job\Item\ItemReaderInterface;
 /**
  * This {@see ItemReaderInterface} executes an SQL query to a Doctrine connection,
  */
-final class EntityReader implements ItemReaderInterface
+final readonly class EntityReader implements ItemReaderInterface
 {
     public function __construct(
         private ManagerRegistry $doctrine,

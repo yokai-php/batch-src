@@ -20,7 +20,7 @@ use Yokai\Batch\Job\JobInterface;
 use Yokai\Batch\Job\Parameters\StaticValueParameterAccessor;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
 
-final class ImportStarWarsJobFactory
+final readonly class ImportStarWarsJobFactory
 {
     public function __construct(
         private ValidatorInterface $validator,
@@ -44,9 +44,7 @@ final class ImportStarWarsJobFactory
                 new ArrayMapProcessor(
                     fn(string $value) => $value === 'NA' ? null : $value,
                 ),
-                new CallbackProcessor(function (mixed $item) use ($process) {
-                    return $process($item, $this->objectRegistry);
-                }),
+                new CallbackProcessor(fn(mixed $item) => $process($item, $this->objectRegistry)),
                 new SkipInvalidItemProcessor($this->validator),
             ]),
             new ObjectWriter($this->doctrine),

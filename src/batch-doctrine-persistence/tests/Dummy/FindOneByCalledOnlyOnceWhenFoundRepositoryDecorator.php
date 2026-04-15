@@ -13,7 +13,7 @@ class FindOneByCalledOnlyOnceWhenFoundRepositoryDecorator extends EntityReposito
     private array $calls = [];
 
     public function __construct(
-        private ObjectRepository $decorated,
+        private readonly ObjectRepository $decorated,
     ) {
     }
 

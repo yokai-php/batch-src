@@ -8,7 +8,7 @@ use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-final class FailingNormalizer implements NormalizerInterface, DenormalizerInterface
+final readonly class FailingNormalizer implements NormalizerInterface, DenormalizerInterface
 {
     public function __construct(
         private ExceptionInterface $exception,

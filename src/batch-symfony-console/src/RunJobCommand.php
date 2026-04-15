@@ -28,8 +28,8 @@ final class RunJobCommand extends Command
     public const EXIT_WARNING_CODE = 2;
 
     public function __construct(
-        private JobExecutionAccessor $jobExecutionAccessor,
-        private JobExecutor $jobExecutor,
+        private readonly JobExecutionAccessor $jobExecutionAccessor,
+        private readonly JobExecutor $jobExecutor,
     ) {
         parent::__construct();
     }
@@ -62,7 +62,7 @@ final class RunJobCommand extends Command
     private function guessExecutionExitCode(JobExecution $jobExecution): int
     {
         if ($jobExecution->getStatus()->is(BatchStatus::COMPLETED)) {
-            if (\count($jobExecution->getAllWarnings()) === 0) {
+            if ($jobExecution->getAllWarnings() === []) {
                 return self::EXIT_SUCCESS_CODE;
             }
 
@@ -77,7 +77,7 @@ final class RunJobCommand extends Command
         $jobName = $jobExecution->getJobName();
         if ($jobExecution->getStatus()->is(BatchStatus::COMPLETED)) {
             $warnings = $jobExecution->getAllWarnings();
-            if (\count($warnings)) {
+            if ($warnings !== []) {
                 foreach ($warnings as $warning) {
                     $output->writeln(\sprintf('<comment>%s</comment>', $warning), $output::VERBOSITY_VERBOSE);
                 }

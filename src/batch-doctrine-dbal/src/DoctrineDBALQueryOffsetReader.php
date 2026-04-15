@@ -15,7 +15,7 @@ use Yokai\Batch\Job\Item\ItemReaderInterface;
  * This {@see ItemReaderInterface} executes an SQL query to a Doctrine connection,
  * and iterate over each result as an item.
  */
-final class DoctrineDBALQueryOffsetReader implements ItemReaderInterface
+final readonly class DoctrineDBALQueryOffsetReader implements ItemReaderInterface
 {
     private Connection $connection;
     private string $sql;

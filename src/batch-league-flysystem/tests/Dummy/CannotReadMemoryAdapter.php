@@ -11,7 +11,7 @@ use League\Flysystem\UnableToReadFile;
 final class CannotReadMemoryAdapter extends InMemoryFilesystemAdapter
 {
     public function __construct(
-        private UnableToReadFile|FilesystemException $exception,
+        private readonly UnableToReadFile|FilesystemException $exception,
     ) {
         parent::__construct();
     }

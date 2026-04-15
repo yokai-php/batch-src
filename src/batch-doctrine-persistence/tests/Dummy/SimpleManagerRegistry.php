@@ -20,7 +20,7 @@ final class SimpleManagerRegistry extends AbstractManagerRegistry
         $managers = [];
         $defaultConnection = null;
         $defaultEntityManager = null;
-        foreach ($this->services as $id => $service) {
+        foreach (\array_keys($this->services) as $id) {
             $connections[] = $id;
             $managers[] = $id;
             $defaultConnection ??= $id;

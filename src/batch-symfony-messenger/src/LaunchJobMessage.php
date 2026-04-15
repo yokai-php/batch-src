@@ -7,7 +7,7 @@ namespace Yokai\Batch\Bridge\Symfony\Messenger;
 /**
  * A message, dispatched in symfony/messenger's bus, that is requiring to launch a job.
  */
-final class LaunchJobMessage
+final readonly class LaunchJobMessage
 {
     public function __construct(
         private string $jobName,

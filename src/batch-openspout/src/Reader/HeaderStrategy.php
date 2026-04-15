@@ -19,7 +19,7 @@ final class HeaderStrategy
     private const NONE = 'none';
 
     private function __construct(
-        private string $mode,
+        private readonly string $mode,
         /**
          * @var list<string>|null
          */

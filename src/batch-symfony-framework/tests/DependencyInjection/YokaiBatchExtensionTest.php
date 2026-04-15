@@ -89,7 +89,7 @@ class YokaiBatchExtensionTest extends TestCase
             self::assertSame($class, $container->getDefinition($id)->getClass());
         }
 
-        if ($assert) {
+        if ($assert !== null) {
             $assert($container);
         }
     }
@@ -310,7 +310,7 @@ class YokaiBatchExtensionTest extends TestCase
                 ConfigurableTemplating::class,
             ),
             function (Definition $templating, string $id) {
-                self::assertSame($id, 'app.yokai_batch_templating');
+                self::assertSame('app.yokai_batch_templating', $id);
             },
             [
                 'list' => 'IS_AUTHENTICATED',
@@ -374,7 +374,7 @@ class YokaiBatchExtensionTest extends TestCase
         self::assertNotNull($defaultService);
         self::assertSame(ChainJobExecutionParametersBuilder::class, $defaultService->getClass());
         $defaultServiceBuilders = $defaultService->getArgument(0);
-        self::assertTrue($defaultServiceBuilders instanceof TaggedIteratorArgument);
+        self::assertInstanceOf(TaggedIteratorArgument::class, $defaultServiceBuilders);
         /** @var TaggedIteratorArgument $defaultServiceBuilders */
         self::assertSame('yokai_batch.job_execution_parameters_builder', $defaultServiceBuilders->getTag());
     }

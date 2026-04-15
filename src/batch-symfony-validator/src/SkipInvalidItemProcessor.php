@@ -14,7 +14,7 @@ use Yokai\Batch\Job\Item\ItemProcessorInterface;
  * This {@see ItemProcessorInterface} uses Symfony's validator to validate items.
  * When an item is not valid, it throw a {@see SkipItemException} with a {@see SkipItemOnViolations} cause.
  */
-final class SkipInvalidItemProcessor implements ItemProcessorInterface
+final readonly class SkipInvalidItemProcessor implements ItemProcessorInterface
 {
     public function __construct(
         private ValidatorInterface $validator,

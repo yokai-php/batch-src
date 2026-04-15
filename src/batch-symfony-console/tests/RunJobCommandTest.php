@@ -7,9 +7,7 @@ namespace Yokai\Batch\Tests\Bridge\Symfony\Console;
 use JsonException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
 use Yokai\Batch\Bridge\Symfony\Console\RunJobCommand;
@@ -27,24 +25,22 @@ use Yokai\Batch\Warning;
 
 class RunJobCommandTest extends TestCase
 {
-    use ProphecyTrait;
-
     private const JOBNAME = 'testing';
 
-    private JobInterface|ObjectProphecy $job;
+    private MockObject&JobInterface $job;
     private JobExecutionAccessor $accessor;
     private JobExecutor $executor;
 
     protected function setUp(): void
     {
-        $this->job = $this->prophesize(JobInterface::class);
+        $this->job = $this->createMock(JobInterface::class);
 
         $this->accessor = new JobExecutionAccessor(
             new JobExecutionFactory(new UniqidJobExecutionIdGenerator(), new NullJobExecutionParametersBuilder()),
             new InMemoryJobExecutionStorage(),
         );
         $this->executor = new JobExecutor(
-            JobRegistry::fromJobArray([self::JOBNAME => $this->job->reveal()]),
+            JobRegistry::fromJobArray([self::JOBNAME => $this->job]),
             new InMemoryJobExecutionStorage(),
             null,
         );
@@ -54,7 +50,8 @@ class RunJobCommandTest extends TestCase
     {
         $this->expectException(JsonException::class);
 
-        $this->job->execute(Argument::any())->shouldNotBeCalled();
+        $this->job->expects($this->never())
+            ->method('execute');
         $this->execute('{]');
     }
 
@@ -62,17 +59,17 @@ class RunJobCommandTest extends TestCase
     {
         $this->expectException(UnexpectedValueException::class);
 
-        $this->job->execute(Argument::any())->shouldNotBeCalled();
+        $this->job->expects($this->never())
+            ->method('execute');
         $this->execute('"string"');
     }
 
     #[DataProvider('verbosity')]
     public function testRunWithErrors(int $verbosity): void
     {
-        $this->job->execute(Argument::any())
-            ->will(function (array $args) {
-                /** @var JobExecution $jobExecution */
-                $jobExecution = $args[0];
+        $this->job->expects($this->once())
+            ->method('execute')
+            ->willReturnCallback(function (JobExecution $jobExecution): never {
                 $jobExecution->addFailureException(new \RuntimeException('1st exception', 100));
                 $jobExecution->addFailureException(new \LogicException('2nd exception', 200));
 
@@ -99,10 +96,9 @@ class RunJobCommandTest extends TestCase
     #[DataProvider('verbosity')]
     public function testRunWithWarnings(int $verbosity): void
     {
-        $this->job->execute(Argument::any())
-            ->will(function (array $args) {
-                /** @var JobExecution $jobExecution */
-                $jobExecution = $args[0];
+        $this->job->expects($this->once())
+            ->method('execute')
+            ->willReturnCallback(function (JobExecution $jobExecution) {
                 $jobExecution->addWarning(new Warning('1st warning'));
                 $jobExecution->addWarning(new Warning('2nd warning'));
             });
@@ -128,9 +124,9 @@ class RunJobCommandTest extends TestCase
     #[DataProvider('verbosity')]
     public function testRunSuccessful(int $verbosity): void
     {
-        $this->job->execute(Argument::any())
-            ->will(function (array $args) {
-            });
+        $this->job->expects($this->once())
+            ->method('execute')
+            ->willReturnCallback(function () {});
 
         [$code, $display] = $this->execute(null, $verbosity);
 

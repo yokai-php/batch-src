@@ -11,7 +11,7 @@ use League\Flysystem\UnableToDeleteFile;
 final class CannotDeleteMemoryAdapter extends InMemoryFilesystemAdapter
 {
     public function __construct(
-        private UnableToDeleteFile|FilesystemException $exception,
+        private readonly UnableToDeleteFile|FilesystemException $exception,
     ) {
         parent::__construct();
     }

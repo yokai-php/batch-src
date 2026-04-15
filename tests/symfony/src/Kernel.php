@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\HttpKernel\Log\Logger;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Yokai\Batch\Bridge\Doctrine\Persistence\ObjectRegistry;
 use Yokai\Batch\Bridge\Symfony\Framework\YokaiBatchBundle;
 use Yokai\Batch\Job\JobInterface;
@@ -65,7 +66,7 @@ final class Kernel extends BaseKernel implements CompilerPassInterface
         ]);
         $container->extension('security', [
             'password_hashers' => [
-                'Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface' => 'auto',
+                PasswordAuthenticatedUserInterface::class => 'auto',
             ],
             'providers' => [
                 'users_in_memory' => ['memory' => null],

@@ -12,7 +12,7 @@ use Yokai\Batch\Job\JobInterface;
 use Yokai\Batch\Job\Parameters\StaticValueParameterAccessor;
 use Yokai\Batch\JobExecution;
 
-final class SplitDeveloperXlsxJob implements JobInterface
+final readonly class SplitDeveloperXlsxJob implements JobInterface
 {
     public function __construct(
         private string $inputFile,
@@ -41,8 +41,8 @@ final class SplitDeveloperXlsxJob implements JobInterface
             $developerData = ['firstName' => $firstName, 'lastName' => $lastName, 'badges' => [], 'repositories' => []];
             $developerKey = $firstName . '/' . $lastName;
 
-            $badges[$badgeKey] = $badges[$badgeKey] ?? $badgeData;
-            $developers[$developerKey] = $developers[$developerKey] ?? $developerData;
+            $badges[$badgeKey] ??= $badgeData;
+            $developers[$developerKey] ??= $developerData;
             $developers[$developerKey]['badges'][] = $badgeLabel;
         }
 
@@ -54,8 +54,8 @@ final class SplitDeveloperXlsxJob implements JobInterface
             $developerData = ['firstName' => $firstName, 'lastName' => $lastName, 'badges' => [], 'repositories' => []];
             $developerKey = $firstName . '/' . $lastName;
 
-            $repositories[$repositoryKey] = $repositories[$repositoryKey] ?? $repositoryData;
-            $developers[$developerKey] = $developers[$developerKey] ?? $developerData;
+            $repositories[$repositoryKey] ??= $repositoryData;
+            $developers[$developerKey] ??= $developerData;
             $developers[$developerKey]['repositories'][] = $repositoryUrl;
         }
 
@@ -89,13 +89,7 @@ final class SplitDeveloperXlsxJob implements JobInterface
     private function sheetToArray(SheetInterface $sheet): array
     {
         return \array_map(
-            function ($row): array {
-                if ($row instanceof Row) {
-                    return $row->toArray();
-                }
-
-                return $row;
-            },
+            fn(Row $row) => $row->toArray(),
             \iterator_to_array(new \LimitIterator($sheet->getRowIterator(), 1), false),
         );
     }

@@ -19,7 +19,7 @@ use Yokai\Batch\Storage\SetupableJobExecutionStorageInterface;
 final class SetupStorageCommand extends Command
 {
     public function __construct(
-        private JobExecutionStorageInterface $storage,
+        private readonly JobExecutionStorageInterface $storage,
     ) {
         parent::__construct();
     }

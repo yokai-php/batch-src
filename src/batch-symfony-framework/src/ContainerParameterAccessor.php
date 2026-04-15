@@ -13,7 +13,7 @@ use Yokai\Batch\JobExecution;
 /**
  * This job parameter accessor implementation returns container parameter value.
  */
-final class ContainerParameterAccessor implements JobParameterAccessorInterface
+final readonly class ContainerParameterAccessor implements JobParameterAccessorInterface
 {
     public function __construct(
         private ContainerInterface $container,

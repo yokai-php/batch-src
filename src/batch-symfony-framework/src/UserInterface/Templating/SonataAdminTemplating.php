@@ -9,7 +9,7 @@ use Sonata\AdminBundle\Templating\TemplateRegistryInterface;
 /**
  * Add all variables required by a SonataAdminBundle template to the context.
  */
-final class SonataAdminTemplating implements TemplatingInterface
+final readonly class SonataAdminTemplating implements TemplatingInterface
 {
     public function __construct(
         private TemplateRegistryInterface $templates,

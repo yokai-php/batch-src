@@ -12,7 +12,7 @@ use League\Flysystem\UnableToWriteFile;
 final class CannotWriteMemoryAdapter extends InMemoryFilesystemAdapter
 {
     public function __construct(
-        private UnableToWriteFile|FilesystemException $exception,
+        private readonly UnableToWriteFile|FilesystemException $exception,
     ) {
         parent::__construct();
     }

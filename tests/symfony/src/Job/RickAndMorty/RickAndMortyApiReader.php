@@ -7,7 +7,7 @@ namespace Yokai\Batch\Sources\Tests\Symfony\App\Job\RickAndMorty;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Yokai\Batch\Job\Item\ItemReaderInterface;
 
-final class RickAndMortyApiReader implements ItemReaderInterface
+final readonly class RickAndMortyApiReader implements ItemReaderInterface
 {
     public function __construct(
         private HttpClientInterface $httpClient,

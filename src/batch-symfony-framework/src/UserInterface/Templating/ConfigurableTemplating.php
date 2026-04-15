@@ -7,7 +7,7 @@ namespace Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating;
 /**
  * Apply a prefix to every template names.
  */
-final class ConfigurableTemplating implements TemplatingInterface
+final readonly class ConfigurableTemplating implements TemplatingInterface
 {
     /**
      * @param array<string, mixed> $context

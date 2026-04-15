@@ -18,7 +18,7 @@ use Yokai\Batch\Storage\JobExecutionStorageInterface;
  *
  *      php bin/console yokai:batch:run import '{"foo":"bar"}' >> var/log/batch_execute.log 2>&1 &
  */
-final class RunCommandJobLauncher implements JobLauncherInterface
+final readonly class RunCommandJobLauncher implements JobLauncherInterface
 {
     public function __construct(
         private JobExecutionFactory $jobExecutionFactory,

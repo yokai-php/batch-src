@@ -11,7 +11,7 @@ use Yokai\Batch\Factory\JobExecutionIdGeneratorInterface;
  * This {@see JobExecutionIdGeneratorInterface} will use
  * Symfony's {@see UuidFactory} to generate time based UUIDs.
  */
-final class TimeBasedUuidJobExecutionIdGenerator implements JobExecutionIdGeneratorInterface
+final readonly class TimeBasedUuidJobExecutionIdGenerator implements JobExecutionIdGeneratorInterface
 {
     public function __construct(
         private UuidFactory $uuidFactory,
