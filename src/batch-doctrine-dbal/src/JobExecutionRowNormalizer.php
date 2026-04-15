@@ -18,6 +18,33 @@ use Yokai\Batch\Warning;
 
 /**
  * @internal
+ *
+ * @phpstan-type FailureData array{
+ *     class: string,
+ *     message: string,
+ *     code: int,
+ *     parameters: array<string, string>,
+ *     trace: string|null,
+ * }
+ * @phpstan-type WarningData array{
+ *     message: string,
+ *     parameters: array<string, string>,
+ *     context: array<string, mixed>,
+ * }
+ * @phpstan-type RowData array{
+ *     id: string,
+ *     job_name: string,
+ *     status: int|string,
+ *     parameters: array<string, mixed>|string,
+ *     start_time: string|null,
+ *     end_time: string|null,
+ *     launched_at: string|null,
+ *     summary: array<string, mixed>|string,
+ *     failures: array<string, mixed>|string,
+ *     warnings: array<string, mixed>|string,
+ *     child_executions: array<string, mixed>|string,
+ *     logs: string|null,
+ * }
  */
 final readonly class JobExecutionRowNormalizer
 {
@@ -52,21 +79,21 @@ final readonly class JobExecutionRowNormalizer
     /**
      * Convert a row data array to a {@see JobExecution} object.
      *
-     * @param array<string, mixed> $data
+     * @param RowData $data
      */
     public function fromRow(array $data, JobExecution|null $parent = null): JobExecution
     {
-        $data['status'] = \intval($data['status']);
-        $data['parameters'] = $this->jsonFromString($data['parameters']);
-        $data['summary'] = $this->jsonFromString($data['summary']);
-        $data['failures'] = $this->jsonFromString($data['failures']);
-        $data['warnings'] = $this->jsonFromString($data['warnings']);
-        $data['child_executions'] = $this->jsonFromString($data['child_executions']);
-
         $name = $data['job_name'];
-        $status = new BatchStatus(\intval($data['status']));
-        $parameters = new JobParameters($data['parameters']);
-        $summary = new Summary($data['summary']);
+        $status = new BatchStatus((int)$data['status']);
+        $parameters = new JobParameters($this->jsonFromString($data['parameters']));
+        $summary = new Summary($this->jsonFromString($data['summary']));
+
+        /** @var list<FailureData> $failures */
+        $failures = $this->jsonFromString($data['failures']);
+        /** @var list<WarningData> $warnings */
+        $warnings = $this->jsonFromString($data['warnings']);
+        /** @var list<RowData> $childExecutions */
+        $childExecutions = $this->jsonFromString($data['child_executions']);
 
         if ($parent !== null) {
             $jobExecution = JobExecution::createChild($parent, $name, $status, $parameters, $summary);
@@ -78,7 +105,7 @@ final readonly class JobExecutionRowNormalizer
                 $status,
                 $parameters,
                 $summary,
-                new JobExecutionLogs($data['logs']),
+                new JobExecutionLogs($data['logs'] ?? ''),
             );
         }
 
@@ -88,14 +115,14 @@ final readonly class JobExecutionRowNormalizer
             $jobExecution->setLaunchedAt($this->dateFromString($data['launched_at'] ?? null));
         }
 
-        foreach ($data['failures'] as $failureData) {
+        foreach ($failures as $failureData) {
             $jobExecution->addFailure($this->failureFromArray($failureData), false);
         }
-        foreach ($data['warnings'] as $warningData) {
+        foreach ($warnings as $warningData) {
             $jobExecution->addWarning($this->warningFromArray($warningData), false);
         }
 
-        foreach ($data['child_executions'] as $childExecutionData) {
+        foreach ($childExecutions as $childExecutionData) {
             $jobExecution->addChildExecution($this->fromRow($childExecutionData, $jobExecution));
         }
 
@@ -123,7 +150,7 @@ final readonly class JobExecutionRowNormalizer
     /**
      * @param array<int|string, mixed>|string $value
      *
-     * @return array<int|string, mixed>
+     * @return array<string, mixed>
      */
     private function jsonFromString(array|string $value): array
     {
@@ -148,7 +175,7 @@ final readonly class JobExecutionRowNormalizer
     }
 
     /**
-     * @return array<string, mixed>
+     * @return FailureData
      */
     private function failureToArray(Failure $failure): array
     {
@@ -162,7 +189,7 @@ final readonly class JobExecutionRowNormalizer
     }
 
     /**
-     * @param array<string, mixed> $array
+     * @param FailureData $array
      */
     private function failureFromArray(array $array): Failure
     {
@@ -176,7 +203,7 @@ final readonly class JobExecutionRowNormalizer
     }
 
     /**
-     * @return array<string, mixed>
+     * @return WarningData
      */
     private function warningToArray(Warning $warning): array
     {
@@ -188,7 +215,7 @@ final readonly class JobExecutionRowNormalizer
     }
 
     /**
-     * @param array<string, mixed> $array
+     * @param WarningData $array
      */
     private function warningFromArray(array $array): Warning
     {

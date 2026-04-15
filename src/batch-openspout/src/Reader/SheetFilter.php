@@ -61,7 +61,6 @@ final readonly class SheetFilter
      */
     public function list(ReaderInterface $reader): Generator
     {
-        /** @var SheetInterface $sheet */
         foreach ($reader->getSheetIterator() as $sheet) {
             if (($this->accept)($sheet)) {
                 yield $sheet;

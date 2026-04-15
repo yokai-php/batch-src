@@ -76,9 +76,9 @@ final class HeaderStrategy
      *
      * @throws InvalidRowSizeException
      *
-     * @param array<int, string> $row
+     * @param list<string> $row
      *
-     * @return array<int|string, string>
+     * @return array<string, string>|list<string>
      * @internal
      */
     public function getItem(array $row): array

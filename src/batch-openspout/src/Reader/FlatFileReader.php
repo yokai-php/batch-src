@@ -85,7 +85,7 @@ final class FlatFileReader implements
     }
 
     /**
-     * @return Generator<int, array<null|bool|string|int|float|\DateTimeInterface|\DateInterval>>
+     * @return Generator<int, list<null|bool|string|int|float|\DateTimeInterface|\DateInterval>>
      */
     private function rows(ReaderInterface $reader): Generator
     {

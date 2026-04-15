@@ -18,7 +18,7 @@ use Yokai\Batch\JobExecution;
 /**
  * This job allows you to copy files from one filesystem ot another.
  */
-class CopyFilesJob implements JobInterface
+final class CopyFilesJob implements JobInterface
 {
     public function __construct(
         private readonly JobParameterAccessorInterface $location,
