@@ -200,6 +200,8 @@ final class DoctrineDBALJobExecutionStorage implements
             ->setNotnull(false);
         $table->addColumn('end_time', Types::DATETIME_IMMUTABLE)
             ->setNotnull(false);
+        $table->addColumn('launched_at', Types::DATETIME_IMMUTABLE)
+            ->setNotnull(false);
         $table->addColumn('summary', Types::JSON);
         $table->addColumn('failures', Types::JSON);
         $table->addColumn('warnings', Types::JSON);
@@ -216,6 +218,7 @@ final class DoctrineDBALJobExecutionStorage implements
         $table->addIndex(['status']);
         $table->addIndex(['start_time']);
         $table->addIndex(['end_time']);
+        $table->addIndex(['launched_at']);
 
         return $schema;
     }
@@ -232,6 +235,7 @@ final class DoctrineDBALJobExecutionStorage implements
             'parameters' => Types::JSON,
             'start_time' => Types::DATETIME_IMMUTABLE,
             'end_time' => Types::DATETIME_IMMUTABLE,
+            'launched_at' => Types::DATETIME_IMMUTABLE,
             'summary' => Types::JSON,
             'failures' => Types::JSON,
             'warnings' => Types::JSON,
