@@ -18,7 +18,7 @@ use Yokai\Batch\Tests\Bridge\Doctrine\ORM\Dummy\SingleManagerRegistry;
 use Yokai\Batch\Tests\Bridge\Doctrine\ORM\Entity\Unknown;
 use Yokai\Batch\Tests\Bridge\Doctrine\ORM\Entity\User;
 
-class EntityReaderTest extends TestCase
+final class EntityReaderTest extends TestCase
 {
     private EntityManager $manager;
     private ManagerRegistry $doctrine;

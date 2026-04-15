@@ -14,7 +14,7 @@ use Yokai\Batch\Factory\JobExecutionParametersBuilder\NullJobExecutionParameters
 use Yokai\Batch\Factory\UniqidJobExecutionIdGenerator;
 use Yokai\Batch\Test\Storage\InMemoryJobExecutionStorage;
 
-class RunCommandJobLauncherTest extends TestCase
+final class RunCommandJobLauncherTest extends TestCase
 {
     public function testLaunch(): void
     {

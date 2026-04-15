@@ -16,7 +16,7 @@ use Yokai\Batch\Bridge\OpenSpout\Reader\SheetFilter;
 use Yokai\Batch\Job\Parameters\StaticValueParameterAccessor;
 use Yokai\Batch\JobExecution;
 
-class FlatFileReaderTest extends TestCase
+final class FlatFileReaderTest extends TestCase
 {
     #[DataProvider('sets')]
     public function testRead(

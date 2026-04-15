@@ -14,7 +14,7 @@ use Yokai\Batch\Job\JobWithChildJobs;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
 
-class JobWithDummyItemChildrenTest extends JobTestCase
+final class JobWithDummyItemChildrenTest extends JobTestCase
 {
     private const OUTPUT_FILE = self::OUTPUT_DIR . '/job-with-dummy-item-children.txt';
 

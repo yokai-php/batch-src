@@ -15,7 +15,7 @@ use Yokai\Batch\Bridge\Symfony\Validator\SkipInvalidItemProcessor;
 use Yokai\Batch\Bridge\Symfony\Validator\SkipItemOnViolations;
 use Yokai\Batch\Job\Item\Exception\SkipItemException;
 
-class SkipInvalidItemProcessorTest extends TestCase
+final class SkipInvalidItemProcessorTest extends TestCase
 {
     #[DataProvider('validationGroups')]
     public function testProcessValid(null|array $groups): void

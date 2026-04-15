@@ -23,7 +23,7 @@ use Yokai\Batch\Registry\JobRegistry;
 use Yokai\Batch\Test\Storage\InMemoryJobExecutionStorage;
 use Yokai\Batch\Warning;
 
-class RunJobCommandTest extends TestCase
+final class RunJobCommandTest extends TestCase
 {
     private const JOBNAME = 'testing';
 

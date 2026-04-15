@@ -10,7 +10,7 @@ use Yokai\Batch\Bridge\Symfony\Framework\ContainerParameterAccessor;
 use Yokai\Batch\Exception\CannotAccessParameterException;
 use Yokai\Batch\JobExecution;
 
-class ContainerParameterAccessorTest extends TestCase
+final class ContainerParameterAccessorTest extends TestCase
 {
     public function test(): void
     {

@@ -32,6 +32,8 @@ use Yokai\Batch\Storage\SetupableJobExecutionStorageInterface;
 /**
  * This {@see JobExecutionStorageInterface} will store
  * {@see JobExecution} in an SQL database using doctrine/dbal.
+ *
+ * @phpstan-import-type RowData from JobExecutionRowNormalizer
  */
 final class DoctrineDBALJobExecutionStorage implements
     QueryableJobExecutionStorageInterface,
@@ -256,7 +258,7 @@ final class DoctrineDBALJobExecutionStorage implements
     }
 
     /**
-     * @return array<string, string>
+     * @return RowData
      * @throws DBALException
      */
     private function fetchRow(string $jobName, string $id): array
@@ -275,7 +277,7 @@ final class DoctrineDBALJobExecutionStorage implements
             ['jobName' => Types::STRING, 'id' => Types::STRING],
         );
 
-        /** @var array<string, string>|null $row */
+        /** @var RowData|null $row */
         $row = $statement->fetchAllAssociative()[0] ?? null;
 
         if ($row === null) {
@@ -297,6 +299,7 @@ final class DoctrineDBALJobExecutionStorage implements
         $statement = $this->connection->executeQuery($query, $parameters, $types);
 
         while ($row = $statement->fetchAssociative()) {
+            /** @var RowData $row */
             yield $this->fromRow($row);
         }
 
@@ -312,7 +315,7 @@ final class DoctrineDBALJobExecutionStorage implements
     }
 
     /**
-     * @param array<string, mixed> $row
+     * @param RowData $row
      */
     private function fromRow(array $row): JobExecution
     {

@@ -13,7 +13,7 @@ use Yokai\Batch\Launcher\JobLauncherInterface;
 use Yokai\Batch\Sources\Tests\Symfony\App\Job\Country\CountryJob;
 use Yokai\Batch\Sources\Tests\Symfony\App\Job\StarWars\ImportStarWarsJob;
 
-class UserInterfaceTest extends WebTestCase
+final class UserInterfaceTest extends WebTestCase
 {
     private const TRANSLATIONS = [
         'country' => 'Country import',

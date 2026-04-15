@@ -19,7 +19,7 @@ use Yokai\Batch\JobExecution;
 /**
  * This job allows you to move files from one filesystem ot another.
  */
-class MoveFilesJob implements JobInterface
+final class MoveFilesJob implements JobInterface
 {
     public function __construct(
         private readonly JobParameterAccessorInterface $location,

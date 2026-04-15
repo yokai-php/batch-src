@@ -10,7 +10,7 @@ use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\Tests\Bridge\Symfony\Messenger\Dummy\BufferingMessageBus;
 use Yokai\Batch\Tests\Bridge\Symfony\Messenger\Dummy\DummyMessage;
 
-class DispatchEachItemAsMessageWriterTest extends TestCase
+final class DispatchEachItemAsMessageWriterTest extends TestCase
 {
     public function test(): void
     {

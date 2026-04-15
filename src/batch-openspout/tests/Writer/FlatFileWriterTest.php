@@ -21,7 +21,7 @@ use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\Job\Parameters\StaticValueParameterAccessor;
 use Yokai\Batch\JobExecution;
 
-class FlatFileWriterTest extends TestCase
+final class FlatFileWriterTest extends TestCase
 {
     private const WRITE_DIR = ARTIFACT_DIR . '/openspout-flat-file-writer';
 

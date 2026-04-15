@@ -12,7 +12,7 @@ use Yokai\Batch\Bridge\Symfony\Framework\DependencyInjection\CompilerPass\Config
 use Yokai\Batch\Bridge\Symfony\Framework\DependencyInjection\CompilerPass\RegisterJobsCompilerPass;
 use Yokai\Batch\Bridge\Symfony\Framework\YokaiBatchBundle;
 
-class YokaiBatchBundleTest extends TestCase
+final class YokaiBatchBundleTest extends TestCase
 {
     public function testBuild(): void
     {

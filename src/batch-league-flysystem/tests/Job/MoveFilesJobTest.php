@@ -19,7 +19,7 @@ use Yokai\Batch\Tests\Bridge\League\Flysystem\Dummy\CannotDeleteMemoryAdapter;
 use Yokai\Batch\Tests\Bridge\League\Flysystem\Dummy\CannotReadMemoryAdapter;
 use Yokai\Batch\Tests\Bridge\League\Flysystem\Dummy\CannotWriteMemoryAdapter;
 
-class MoveFilesJobTest extends TestCase
+final class MoveFilesJobTest extends TestCase
 {
     public function testWithOneFile(): void
     {

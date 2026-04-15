@@ -10,11 +10,11 @@ final class InvalidRowSizeException extends LogicException
 {
     public function __construct(
         /**
-         * @var array<int, string>
+         * @var list<string>
          */
         private readonly array $headers,
         /**
-         * @var array<int, string>
+         * @var list<mixed>
          */
         private readonly array $row,
     ) {
@@ -22,7 +22,7 @@ final class InvalidRowSizeException extends LogicException
     }
 
     /**
-     * @return array<int, string>
+     * @return list<string>
      */
     public function getHeaders(): array
     {
@@ -30,7 +30,7 @@ final class InvalidRowSizeException extends LogicException
     }
 
     /**
-     * @return array<int, string>
+     * @return list<mixed>
      */
     public function getRow(): array
     {

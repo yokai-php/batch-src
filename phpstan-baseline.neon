@@ -1,112 +1,12 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Parameter \\#1 \\$array of method Yokai\\\\Batch\\\\Bridge\\\\Doctrine\\\\DBAL\\\\JobExecutionRowNormalizer\\:\\:failureFromArray\\(\\) expects array\\<string, mixed\\>, mixed given\\.$#"
-			count: 1
-			path: src/batch-doctrine-dbal/src/JobExecutionRowNormalizer.php
-
-		-
-			message: "#^Parameter \\#1 \\$array of method Yokai\\\\Batch\\\\Bridge\\\\Doctrine\\\\DBAL\\\\JobExecutionRowNormalizer\\:\\:warningFromArray\\(\\) expects array\\<string, mixed\\>, mixed given\\.$#"
-			count: 1
-			path: src/batch-doctrine-dbal/src/JobExecutionRowNormalizer.php
-
-		-
-			message: "#^Parameter \\#1 \\$class of class Yokai\\\\Batch\\\\Failure constructor expects string, mixed given\\.$#"
-			count: 1
-			path: src/batch-doctrine-dbal/src/JobExecutionRowNormalizer.php
-
-		-
-			message: "#^Parameter \\#1 \\$data of method Yokai\\\\Batch\\\\Bridge\\\\Doctrine\\\\DBAL\\\\JobExecutionRowNormalizer\\:\\:fromRow\\(\\) expects array\\<string, mixed\\>, mixed given\\.$#"
-			count: 1
-			path: src/batch-doctrine-dbal/src/JobExecutionRowNormalizer.php
-
-		-
-			message: "#^Parameter \\#1 \\$date of method Yokai\\\\Batch\\\\Bridge\\\\Doctrine\\\\DBAL\\\\JobExecutionRowNormalizer\\:\\:dateFromString\\(\\) expects string\\|null, mixed given\\.$#"
-			count: 3
-			path: src/batch-doctrine-dbal/src/JobExecutionRowNormalizer.php
-
-		-
-			message: "#^Parameter \\#1 \\$id of static method Yokai\\\\Batch\\\\JobExecution\\:\\:createRoot\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/batch-doctrine-dbal/src/JobExecutionRowNormalizer.php
-
-		-
-			message: "#^Parameter \\#1 \\$logs of class Yokai\\\\Batch\\\\JobExecutionLogs constructor expects string, mixed given\\.$#"
-			count: 1
-			path: src/batch-doctrine-dbal/src/JobExecutionRowNormalizer.php
-
-		-
-			message: "#^Parameter \\#1 \\$message of class Yokai\\\\Batch\\\\Warning constructor expects string, mixed given\\.$#"
-			count: 1
-			path: src/batch-doctrine-dbal/src/JobExecutionRowNormalizer.php
-
-		-
-			message: "#^Parameter \\#1 \\$parameters of class Yokai\\\\Batch\\\\JobParameters constructor expects array\\<string, mixed\\>, array\\<int\\|string, mixed\\> given\\.$#"
-			count: 1
-			path: src/batch-doctrine-dbal/src/JobExecutionRowNormalizer.php
-
-		-
-			message: "#^Parameter \\#1 \\$value of function intval expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
-			count: 1
-			path: src/batch-doctrine-dbal/src/JobExecutionRowNormalizer.php
-
-		-
-			message: "#^Parameter \\#1 \\$value of method Yokai\\\\Batch\\\\Bridge\\\\Doctrine\\\\DBAL\\\\JobExecutionRowNormalizer\\:\\:jsonFromString\\(\\) expects array\\<int\\|string, mixed\\>\\|string, mixed given\\.$#"
-			count: 5
-			path: src/batch-doctrine-dbal/src/JobExecutionRowNormalizer.php
-
-		-
-			message: "#^Parameter \\#1 \\$values of class Yokai\\\\Batch\\\\Summary constructor expects array\\<string, mixed\\>, array\\<int\\|string, mixed\\> given\\.$#"
-			count: 1
-			path: src/batch-doctrine-dbal/src/JobExecutionRowNormalizer.php
-
-		-
-			message: "#^Parameter \\#2 \\$jobName of static method Yokai\\\\Batch\\\\JobExecution\\:\\:createChild\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/batch-doctrine-dbal/src/JobExecutionRowNormalizer.php
-
-		-
-			message: "#^Parameter \\#2 \\$jobName of static method Yokai\\\\Batch\\\\JobExecution\\:\\:createRoot\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/batch-doctrine-dbal/src/JobExecutionRowNormalizer.php
-
-		-
-			message: "#^Parameter \\#2 \\$message of class Yokai\\\\Batch\\\\Failure constructor expects string, mixed given\\.$#"
-			count: 1
-			path: src/batch-doctrine-dbal/src/JobExecutionRowNormalizer.php
-
-		-
-			message: "#^Parameter \\#2 \\$parameters of class Yokai\\\\Batch\\\\Warning constructor expects array\\<string, string\\>, mixed given\\.$#"
-			count: 1
-			path: src/batch-doctrine-dbal/src/JobExecutionRowNormalizer.php
-
-		-
-			message: "#^Parameter \\#3 \\$code of class Yokai\\\\Batch\\\\Failure constructor expects int, mixed given\\.$#"
-			count: 1
-			path: src/batch-doctrine-dbal/src/JobExecutionRowNormalizer.php
-
-		-
-			message: "#^Parameter \\#3 \\$context of class Yokai\\\\Batch\\\\Warning constructor expects array\\<string, mixed\\>, mixed given\\.$#"
-			count: 1
-			path: src/batch-doctrine-dbal/src/JobExecutionRowNormalizer.php
-
-		-
-			message: "#^Parameter \\#4 \\$parameters of class Yokai\\\\Batch\\\\Failure constructor expects array\\<string, string\\>, mixed given\\.$#"
-			count: 1
-			path: src/batch-doctrine-dbal/src/JobExecutionRowNormalizer.php
-
-		-
-			message: "#^Parameter \\#5 \\$trace of class Yokai\\\\Batch\\\\Failure constructor expects string\\|null, mixed given\\.$#"
-			count: 1
-			path: src/batch-doctrine-dbal/src/JobExecutionRowNormalizer.php
-
-		-
 			message: "#^Method Yokai\\\\Batch\\\\Bridge\\\\OpenSpout\\\\Reader\\\\FlatFileReader\\:\\:rows\\(\\) has parameter \\$reader with generic interface OpenSpout\\\\Reader\\\\ReaderInterface but does not specify its types\\: T$#"
 			count: 1
 			path: src/batch-openspout/src/Reader/FlatFileReader.php
 
 		-
-			message: "#^Parameter \\#1 \\$headers of method Yokai\\\\Batch\\\\Bridge\\\\OpenSpout\\\\Reader\\\\HeaderStrategy\\:\\:setHeaders\\(\\) expects array\\<int, string\\>, array\\<bool\\|DateInterval\\|DateTimeInterface\\|float\\|int\\|string\\|null\\> given\\.$#"
+			message: "#^Parameter \\#1 \\$headers of method Yokai\\\\Batch\\\\Bridge\\\\OpenSpout\\\\Reader\\\\HeaderStrategy\\:\\:setHeaders\\(\\) expects array\\<int, string\\>, array\\<int, bool\\|DateInterval\\|DateTimeInterface\\|float\\|int\\|string\\|null\\> given\\.$#"
 			count: 1
 			path: src/batch-openspout/src/Reader/FlatFileReader.php
 
@@ -126,7 +26,7 @@ parameters:
 			path: src/batch-openspout/src/Reader/FlatFileReader.php
 
 		-
-			message: "#^Parameter \\#1 \\$row of method Yokai\\\\Batch\\\\Bridge\\\\OpenSpout\\\\Reader\\\\HeaderStrategy\\:\\:getItem\\(\\) expects array\\<int, string\\>, array\\<bool\\|DateInterval\\|DateTimeInterface\\|float\\|int\\|string\\|null\\> given\\.$#"
+			message: "#^Parameter \\#1 \\$row of method Yokai\\\\Batch\\\\Bridge\\\\OpenSpout\\\\Reader\\\\HeaderStrategy\\:\\:getItem\\(\\) expects array\\<int, string\\>, array\\<int, bool\\|DateInterval\\|DateTimeInterface\\|float\\|int\\|string\\|null\\> given\\.$#"
 			count: 1
 			path: src/batch-openspout/src/Reader/FlatFileReader.php
 
@@ -137,11 +37,6 @@ parameters:
 
 		-
 			message: "#^Method Yokai\\\\Batch\\\\Bridge\\\\OpenSpout\\\\Reader\\\\SheetFilter\\:\\:list\\(\\) return type with generic interface OpenSpout\\\\Reader\\\\SheetInterface does not specify its types\\: T$#"
-			count: 1
-			path: src/batch-openspout/src/Reader/SheetFilter.php
-
-		-
-			message: "#^PHPDoc tag @var for variable \\$sheet contains generic interface OpenSpout\\\\Reader\\\\SheetInterface but does not specify its types\\: T$#"
 			count: 1
 			path: src/batch-openspout/src/Reader/SheetFilter.php
 
@@ -159,104 +54,3 @@ parameters:
 			message: "#^Parameter \\#1 \\$options of class OpenSpout\\\\Writer\\\\XLSX\\\\Writer constructor expects OpenSpout\\\\Writer\\\\XLSX\\\\Options\\|null, OpenSpout\\\\Writer\\\\CSV\\\\Options\\|OpenSpout\\\\Writer\\\\ODS\\\\Options\\|OpenSpout\\\\Writer\\\\XLSX\\\\Options\\|null given\\.$#"
 			count: 1
 			path: src/batch-openspout/src/Writer/FlatFileWriter.php
-
-		-
-			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
-			count: 3
-			path: src/batch/src/Serializer/JsonJobExecutionSerializer.php
-
-		-
-			message: "#^Parameter \\#1 \\$array of method Yokai\\\\Batch\\\\Serializer\\\\JsonJobExecutionSerializer\\:\\:failureFromArray\\(\\) expects array\\<string, mixed\\>, mixed given\\.$#"
-			count: 1
-			path: src/batch/src/Serializer/JsonJobExecutionSerializer.php
-
-		-
-			message: "#^Parameter \\#1 \\$array of method Yokai\\\\Batch\\\\Serializer\\\\JsonJobExecutionSerializer\\:\\:warningFromArray\\(\\) expects array\\<string, mixed\\>, mixed given\\.$#"
-			count: 1
-			path: src/batch/src/Serializer/JsonJobExecutionSerializer.php
-
-		-
-			message: "#^Parameter \\#1 \\$class of class Yokai\\\\Batch\\\\Failure constructor expects string, mixed given\\.$#"
-			count: 1
-			path: src/batch/src/Serializer/JsonJobExecutionSerializer.php
-
-		-
-			message: "#^Parameter \\#1 \\$date of method Yokai\\\\Batch\\\\Serializer\\\\JsonJobExecutionSerializer\\:\\:stringToDate\\(\\) expects string\\|null, mixed given\\.$#"
-			count: 3
-			path: src/batch/src/Serializer/JsonJobExecutionSerializer.php
-
-		-
-			message: "#^Parameter \\#1 \\$id of static method Yokai\\\\Batch\\\\JobExecution\\:\\:createRoot\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/batch/src/Serializer/JsonJobExecutionSerializer.php
-
-		-
-			message: "#^Parameter \\#1 \\$jobExecutionData of method Yokai\\\\Batch\\\\Serializer\\\\JsonJobExecutionSerializer\\:\\:fromArray\\(\\) expects array\\<string, mixed\\>, mixed given\\.$#"
-			count: 1
-			path: src/batch/src/Serializer/JsonJobExecutionSerializer.php
-
-		-
-			message: "#^Parameter \\#1 \\$logs of class Yokai\\\\Batch\\\\JobExecutionLogs constructor expects string, mixed given\\.$#"
-			count: 1
-			path: src/batch/src/Serializer/JsonJobExecutionSerializer.php
-
-		-
-			message: "#^Parameter \\#1 \\$message of class Yokai\\\\Batch\\\\Warning constructor expects string, mixed given\\.$#"
-			count: 1
-			path: src/batch/src/Serializer/JsonJobExecutionSerializer.php
-
-		-
-			message: "#^Parameter \\#1 \\$parameters of class Yokai\\\\Batch\\\\JobParameters constructor expects array\\<string, mixed\\>, mixed given\\.$#"
-			count: 1
-			path: src/batch/src/Serializer/JsonJobExecutionSerializer.php
-
-		-
-			message: "#^Parameter \\#1 \\$value of class Yokai\\\\Batch\\\\BatchStatus constructor expects int, mixed given\\.$#"
-			count: 1
-			path: src/batch/src/Serializer/JsonJobExecutionSerializer.php
-
-		-
-			message: "#^Parameter \\#1 \\$values of class Yokai\\\\Batch\\\\Summary constructor expects array\\<string, mixed\\>, mixed given\\.$#"
-			count: 1
-			path: src/batch/src/Serializer/JsonJobExecutionSerializer.php
-
-		-
-			message: "#^Parameter \\#2 \\$jobName of static method Yokai\\\\Batch\\\\JobExecution\\:\\:createChild\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/batch/src/Serializer/JsonJobExecutionSerializer.php
-
-		-
-			message: "#^Parameter \\#2 \\$jobName of static method Yokai\\\\Batch\\\\JobExecution\\:\\:createRoot\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/batch/src/Serializer/JsonJobExecutionSerializer.php
-
-		-
-			message: "#^Parameter \\#2 \\$message of class Yokai\\\\Batch\\\\Failure constructor expects string, mixed given\\.$#"
-			count: 1
-			path: src/batch/src/Serializer/JsonJobExecutionSerializer.php
-
-		-
-			message: "#^Parameter \\#2 \\$parameters of class Yokai\\\\Batch\\\\Warning constructor expects array\\<string, string\\>, mixed given\\.$#"
-			count: 1
-			path: src/batch/src/Serializer/JsonJobExecutionSerializer.php
-
-		-
-			message: "#^Parameter \\#3 \\$code of class Yokai\\\\Batch\\\\Failure constructor expects int, mixed given\\.$#"
-			count: 1
-			path: src/batch/src/Serializer/JsonJobExecutionSerializer.php
-
-		-
-			message: "#^Parameter \\#3 \\$context of class Yokai\\\\Batch\\\\Warning constructor expects array\\<string, mixed\\>, mixed given\\.$#"
-			count: 1
-			path: src/batch/src/Serializer/JsonJobExecutionSerializer.php
-
-		-
-			message: "#^Parameter \\#4 \\$parameters of class Yokai\\\\Batch\\\\Failure constructor expects array\\<string, string\\>, mixed given\\.$#"
-			count: 1
-			path: src/batch/src/Serializer/JsonJobExecutionSerializer.php
-
-		-
-			message: "#^Parameter \\#5 \\$trace of class Yokai\\\\Batch\\\\Failure constructor expects string\\|null, mixed given\\.$#"
-			count: 1
-			path: src/batch/src/Serializer/JsonJobExecutionSerializer.php
-

@@ -23,7 +23,7 @@ use Yokai\Batch\Storage\QueryBuilder;
 use Yokai\Batch\Test\Storage\JobExecutionStorageTestTrait;
 use Yokai\Batch\Warning;
 
-class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
+final class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
 {
     use JobExecutionStorageTestTrait;
 
