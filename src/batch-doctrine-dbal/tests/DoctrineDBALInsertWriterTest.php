@@ -8,7 +8,7 @@ use Doctrine\DBAL\Types\Types;
 use Yokai\Batch\Bridge\Doctrine\DBAL\DoctrineDBALInsertWriter;
 use Yokai\Batch\Exception\UnexpectedValueException;
 
-class DoctrineDBALInsertWriterTest extends DoctrineDBALTestCase
+final class DoctrineDBALInsertWriterTest extends DoctrineDBALTestCase
 {
     public function test(): void
     {

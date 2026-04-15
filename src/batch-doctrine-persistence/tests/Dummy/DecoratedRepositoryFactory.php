@@ -8,7 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Repository\RepositoryFactory;
 
-class DecoratedRepositoryFactory implements RepositoryFactory
+final class DecoratedRepositoryFactory implements RepositoryFactory
 {
     /**
      * @var array<string, EntityRepository>

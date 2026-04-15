@@ -15,7 +15,7 @@ use Yokai\Batch\JobExecution;
 use Yokai\Batch\Tests\Bridge\League\Flysystem\Dummy\CannotCheckMemoryAdapter;
 use Yokai\Batch\Trigger\Scheduler\ScheduledJob;
 
-class FileFoundSchedulerTest extends TestCase
+final class FileFoundSchedulerTest extends TestCase
 {
     public function testNoConfig(): void
     {

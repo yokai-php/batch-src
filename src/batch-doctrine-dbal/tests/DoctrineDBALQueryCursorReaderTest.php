@@ -9,7 +9,7 @@ use Yokai\Batch\Bridge\Doctrine\DBAL\DoctrineDBALQueryCursorReader;
 use Yokai\Batch\Exception\InvalidArgumentException;
 use Yokai\Batch\Exception\LogicException;
 
-class DoctrineDBALQueryCursorReaderTest extends DoctrineDBALTestCase
+final class DoctrineDBALQueryCursorReaderTest extends DoctrineDBALTestCase
 {
     public function test(): void
     {

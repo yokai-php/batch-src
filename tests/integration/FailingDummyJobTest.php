@@ -10,7 +10,7 @@ use Yokai\Batch\JobExecution;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
 use Yokai\Batch\Warning;
 
-class FailingDummyJobTest extends JobTestCase
+final class FailingDummyJobTest extends JobTestCase
 {
     protected function createJob(JobExecutionStorageInterface $executionStorage): JobInterface
     {

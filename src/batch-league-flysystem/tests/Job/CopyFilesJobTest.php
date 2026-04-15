@@ -17,7 +17,7 @@ use Yokai\Batch\JobExecution;
 use Yokai\Batch\Tests\Bridge\League\Flysystem\Dummy\CannotReadMemoryAdapter;
 use Yokai\Batch\Tests\Bridge\League\Flysystem\Dummy\CannotWriteMemoryAdapter;
 
-class CopyFilesJobTest extends TestCase
+final class CopyFilesJobTest extends TestCase
 {
     public function testWithOneFile(): void
     {

@@ -11,7 +11,7 @@ use Yokai\Batch\Tests\Bridge\Doctrine\Persistence\Entity\Auth\User;
 use Yokai\Batch\Tests\Bridge\Doctrine\Persistence\Entity\Shop\Product;
 use Yokai\Batch\Tests\Bridge\Doctrine\Persistence\Entity\Unknown;
 
-class ObjectWriterTest extends DoctrinePersistenceTestCase
+final class ObjectWriterTest extends DoctrinePersistenceTestCase
 {
     public function testWriteSingleManager(): void
     {

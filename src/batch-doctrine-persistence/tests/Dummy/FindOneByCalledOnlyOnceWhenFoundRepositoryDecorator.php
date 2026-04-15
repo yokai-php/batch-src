@@ -8,7 +8,7 @@ use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ObjectRepository;
 
-class FindOneByCalledOnlyOnceWhenFoundRepositoryDecorator extends EntityRepository
+final class FindOneByCalledOnlyOnceWhenFoundRepositoryDecorator extends EntityRepository
 {
     private array $calls = [];
 

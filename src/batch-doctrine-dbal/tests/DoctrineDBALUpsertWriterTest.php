@@ -10,7 +10,7 @@ use Yokai\Batch\Bridge\Doctrine\DBAL\DoctrineDBALUpsertWriter;
 use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\JobExecution;
 
-class DoctrineDBALUpsertWriterTest extends DoctrineDBALTestCase
+final class DoctrineDBALUpsertWriterTest extends DoctrineDBALTestCase
 {
     public function test(): void
     {

@@ -26,7 +26,7 @@ use Yokai\Batch\Sources\Tests\Integration\Entity\Repository;
 use Yokai\Batch\Sources\Tests\Integration\Job\SplitDeveloperXlsxJob;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
 
-class ImportDevelopersXlsxToORMTest extends JobTestCase
+final class ImportDevelopersXlsxToORMTest extends JobTestCase
 {
     private const OUTPUT_BASE_DIR = self::OUTPUT_DIR . '/multi-tab-xlsx-to-objects';
     private const OUTPUT_BADGE_FILE = self::OUTPUT_BASE_DIR . '/badge.csv';

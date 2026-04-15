@@ -14,7 +14,7 @@ use Yokai\Batch\Tests\Bridge\Doctrine\Persistence\Dummy\FindOneByCalledOnlyOnceW
 use Yokai\Batch\Tests\Bridge\Doctrine\Persistence\Entity\Auth\User;
 use Yokai\Batch\Tests\Bridge\Doctrine\Persistence\Entity\Shop\Product;
 
-class ObjectRegistryTest extends DoctrinePersistenceTestCase
+final class ObjectRegistryTest extends DoctrinePersistenceTestCase
 {
     private User $emmet;
     private User $lucy;

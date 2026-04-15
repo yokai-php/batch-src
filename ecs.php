@@ -6,6 +6,7 @@ use PHP_CodeSniffer\Standards\Generic\Sniffs\PHP\ForbiddenFunctionsSniff;
 use PhpCsFixer\Fixer\Basic\SingleLineEmptyBodyFixer;
 use PhpCsFixer\Fixer\CastNotation\CastSpacesFixer;
 use PhpCsFixer\Fixer\ClassNotation\ClassDefinitionFixer;
+use PhpCsFixer\Fixer\ClassNotation\FinalClassFixer;
 use PhpCsFixer\Fixer\ControlStructure\YodaStyleFixer;
 use PhpCsFixer\Fixer\FunctionNotation\FunctionDeclarationFixer;
 use PhpCsFixer\Fixer\FunctionNotation\NativeFunctionInvocationFixer;
@@ -40,6 +41,9 @@ return ECSConfig::configure()
         phpunit: true,
         strict: true,
     )
+    ->withRules([
+        FinalClassFixer::class,
+    ])
     ->withConfiguredRule(BlankLineBeforeStatementFixer::class, [
         'statements' => ['case', 'continue', 'declare', 'default', 'return', 'throw', 'try'],
     ])
@@ -79,6 +83,14 @@ return ECSConfig::configure()
         StandaloneLineInMultilineArrayFixer::class,
         NativeFunctionInvocationFixer::class => [
             'src/batch-symfony-framework/src/Resources/*',
+        ],
+        FinalClassFixer::class => [
+            'src/batch/src/Finder/CallbackFinder.php',
+            'src/batch/src/Trigger/Scheduler/CallbackScheduler.php',
+            'src/batch/src/Exception/RuntimeException.php',
+            'src/batch/src/Exception/LogicException.php',
+            'src/batch/src/Exception/InvalidArgumentException.php',
+            'src/batch-symfony-console/src/CommandRunner.php',
         ],
     ])
 ;

@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Yokai\Batch\Bridge\Symfony\Console\CommandRunner;
 
-class CommandRunnerTest extends TestCase
+final class CommandRunnerTest extends TestCase
 {
     private function createRunner(): MockObject&CommandRunner
     {

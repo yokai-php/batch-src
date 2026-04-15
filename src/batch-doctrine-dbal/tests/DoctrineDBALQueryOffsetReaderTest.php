@@ -8,7 +8,7 @@ use Doctrine\DBAL\Types\Types;
 use Yokai\Batch\Bridge\Doctrine\DBAL\DoctrineDBALQueryOffsetReader;
 use Yokai\Batch\Exception\InvalidArgumentException;
 
-class DoctrineDBALQueryOffsetReaderTest extends DoctrineDBALTestCase
+final class DoctrineDBALQueryOffsetReaderTest extends DoctrineDBALTestCase
 {
     public function test(): void
     {

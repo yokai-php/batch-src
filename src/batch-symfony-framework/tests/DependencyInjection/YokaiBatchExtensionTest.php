@@ -38,7 +38,7 @@ use Yokai\Batch\Storage\JobExecutionStorageInterface;
 use Yokai\Batch\Storage\NullJobExecutionStorage;
 use Yokai\Batch\Test\Launcher\BufferingJobLauncher;
 
-class YokaiBatchExtensionTest extends TestCase
+final class YokaiBatchExtensionTest extends TestCase
 {
     #[DataProvider('storage')]
     public function testStorage(array $config, \Closure|null $configure, string $storage): void

@@ -9,6 +9,9 @@ use Symfony\Component\Process\PhpExecutableFinder;
 
 /**
  * Utility class that knows how to run command asynchronously.
+ *
+ * @internal Please do not use in your project.
+ * @final But only for tests mock.
  */
 class CommandRunner
 {

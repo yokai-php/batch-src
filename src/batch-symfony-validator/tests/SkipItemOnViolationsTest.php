@@ -14,7 +14,7 @@ use Yokai\Batch\JobExecution;
 use Yokai\Batch\Tests\Bridge\Symfony\Validator\Fixtures\EmptyClass;
 use Yokai\Batch\Tests\Bridge\Symfony\Validator\Fixtures\StringableClass;
 
-class SkipItemOnViolationsTest extends TestCase
+final class SkipItemOnViolationsTest extends TestCase
 {
     #[DataProvider('provider')]
     public function test(array $violations, array $expectedViolations): void
