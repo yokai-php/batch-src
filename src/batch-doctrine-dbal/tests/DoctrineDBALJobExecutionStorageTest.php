@@ -427,6 +427,21 @@ final class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         self::assertSame(4, $storage->count($query));
     }
 
+    public function testPurge(): void
+    {
+        $storage = $this->createStorage();
+        $storage->setup();
+        $this->loadFixtures($storage);
+
+        // limit is ignored by purge — all "import" executions must be deleted (3 total)
+        $storage->purge((new QueryBuilder())->jobs(['import'])->limit(1, 0)->getQuery());
+
+        self::assertExecutions(
+            [['export', '123']],
+            $storage->query((new QueryBuilder())->getQuery()),
+        );
+    }
+
     public static function assertExecutionIds(array $ids, iterable $executions): void
     {
         $actualIds = [];

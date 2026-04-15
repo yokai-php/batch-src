@@ -192,6 +192,16 @@ final class DoctrineDBALJobExecutionStorage implements
         return $result;
     }
 
+    public function purge(Query $query): void
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->delete($this->table);
+
+        [$queryParameters, $queryTypes] = $this->addWheres($query, $qb);
+
+        $this->connection->executeStatement($qb->getSQL(), $queryParameters, $queryTypes);
+    }
+
     private function getSchema(): Schema
     {
         $schema = new Schema();
