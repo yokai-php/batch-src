@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Yokai\Batch\Factory\JobExecutionLoggerFactory\InMemoryJobExecutionLoggerFactory;
 use Yokai\Batch\Logger\InMemoryJobExecutionLogger;
 
-class InMemoryJobExecutionLoggerFactoryTest extends TestCase
+final class InMemoryJobExecutionLoggerFactoryTest extends TestCase
 {
     public function testCreatesJobExecutionLogger(): void
     {

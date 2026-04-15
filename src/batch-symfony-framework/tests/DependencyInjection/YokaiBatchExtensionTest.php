@@ -43,8 +43,12 @@ use Yokai\Batch\Test\Launcher\BufferingJobLauncher;
 final class YokaiBatchExtensionTest extends TestCase
 {
     #[DataProvider('storage')]
-    public function testStorage(array $config, \Closure|null $configure, string $storage, \Closure|null $assert = null): void
-    {
+    public function testStorage(
+        array $config,
+        \Closure|null $configure,
+        string $storage,
+        \Closure|null $assert = null,
+    ): void {
         $container = $this->createContainer($config, $configure);
 
         $jobExecutionStorageService = $this->getDefinition($container, JobExecutionStorageInterface::class);

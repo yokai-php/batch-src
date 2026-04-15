@@ -135,7 +135,7 @@ final class JsonJobExecutionSerializer implements JobExecutionSerializerInterfac
                 $status,
                 $parameters,
                 $summary,
-                $this->loggerFactory->restore($jobExecutionData['logs'] ?? ''),
+                $this->loggerFactory->restore($jobExecutionData['logs']),
             );
         }
 

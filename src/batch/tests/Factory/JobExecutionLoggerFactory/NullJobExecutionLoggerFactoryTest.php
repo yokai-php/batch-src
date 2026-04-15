@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Yokai\Batch\Factory\JobExecutionLoggerFactory\NullJobExecutionLoggerFactory;
 use Yokai\Batch\Logger\NullJobExecutionLogger;
 
-class NullJobExecutionLoggerFactoryTest extends TestCase
+final class NullJobExecutionLoggerFactoryTest extends TestCase
 {
     public function testCreateReturnsNullLogger(): void
     {

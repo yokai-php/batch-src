@@ -14,7 +14,7 @@ use Yokai\Batch\Event\PreExecuteEvent;
  * A logger that you can reference in service of your application.
  * It will try to log into the {@see JobExecutionLoggerInterface} if a job is running.
  */
-class YokaiBatchLogger extends AbstractLogger
+final class YokaiBatchLogger extends AbstractLogger
 {
     private LoggerInterface|null $logger = null;
 

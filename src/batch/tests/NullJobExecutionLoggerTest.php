@@ -7,7 +7,7 @@ namespace Yokai\Batch\Tests;
 use PHPUnit\Framework\TestCase;
 use Yokai\Batch\Logger\NullJobExecutionLogger;
 
-class NullJobExecutionLoggerTest extends TestCase
+final class NullJobExecutionLoggerTest extends TestCase
 {
     public function testLogsAreDiscarded(): void
     {
