@@ -23,6 +23,7 @@ use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\ConfigurableTe
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\SonataAdminTemplating;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\TemplatingInterface;
 use Yokai\Batch\Factory\JobExecutionIdGeneratorInterface;
+use Yokai\Batch\Factory\JobExecutionLoggerFactoryInterface;
 use Yokai\Batch\Factory\JobExecutionParametersBuilder\PerJobJobExecutionParametersBuilder;
 use Yokai\Batch\Factory\JobExecutionParametersBuilder\StaticJobExecutionParametersBuilder;
 use Yokai\Batch\Launcher\JobLauncherInterface;
@@ -104,6 +105,7 @@ final class YokaiBatchExtension extends Extension
                 ->setArguments(
                     [
                         new Reference('doctrine'),
+                        new Reference(JobExecutionLoggerFactoryInterface::class),
                         [
                             'connection' => $config['dbal']['connection'],
                             'table' => $config['dbal']['table'],
