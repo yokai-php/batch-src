@@ -76,6 +76,10 @@ final readonly class JobController
             }
         }
 
+        // count total matching executions before applying limit (for pagination)
+        $total = $this->jobExecutionStorage->count($query->getQuery());
+        $totalPages = (int)\ceil($total / self::LIMIT);
+
         try {
             $query->limit(self::LIMIT, self::LIMIT * ($page - 1));
             $query->sort($sort);
@@ -109,14 +113,17 @@ final readonly class JobController
         $pagination = [
             'parameter' => 'page',
             'per_page' => self::LIMIT,
+            'total' => $total,
+            'total_pages' => $totalPages,
             'results' => \count($executions),
             'current' => $page,
             'is' => [
                 'first' => $page === 1,
-                'last' => \count($executions) !== self::LIMIT,
+                'last' => $page >= $totalPages || $totalPages === 0,
             ],
-            'prev' => ['enabled' => $page !== 1, 'value' => $page - 1],
-            'next' => ['enabled' => \count($executions) === self::LIMIT, 'value' => $page + 1],
+            'prev' => ['enabled' => $page > 1, 'value' => $page - 1],
+            'next' => ['enabled' => $page < $totalPages, 'value' => $page + 1],
+            'last' => ['enabled' => $page < $totalPages, 'value' => $totalPages],
         ];
 
         return new Response(

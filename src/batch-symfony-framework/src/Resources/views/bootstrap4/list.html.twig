@@ -111,22 +111,13 @@
 {% endblock %}
 
 {% block pagination %}
-    {% if executions|length > 0 and (pagination.prev.enabled or pagination.next.enabled) %}
+    {% if pagination.total_pages > 1 %}
+        {% set window_start = max(1, pagination.current - 2) %}
+        {% set window_end = min(pagination.total_pages, pagination.current + 2) %}
         <ul class="pagination">
-            {% if pagination.current > 2 %}
-                <li class="page-item">
-                    <a href="{{ path('yokai_batch.job_list', { filter: parameters, (pagination.parameter): 1 }) }}"
-                       class="page-link"
-                       title="{{ 'job.action.pagination_first'|trans }}">
-                        <span aria-hidden="true">&laquo;</span>
-                        <span class="sr-only">{{ 'job.action.pagination_first'|trans }}</span>
-                    </a>
-                </li>
-            {% endif %}
-
             {% if pagination.prev.enabled %}
                 <li class="page-item">
-                    <a href="{{ path('yokai_batch.job_list', { filter: parameters, (pagination.parameter): pagination.prev.value }) }}"
+                    <a href="{{ path('yokai_batch.job_list', { filter: parameters, (pagination.parameter): pagination.prev.value, (sort.parameter): sort.current }) }}"
                        class="page-link"
                        title="{{ 'job.action.pagination_prev'|trans }}">
                         <span aria-hidden="true">&lsaquo;</span>
@@ -135,9 +126,36 @@
                 </li>
             {% endif %}
 
+            {% if window_start > 1 %}
+                <li class="page-item">
+                    <a href="{{ path('yokai_batch.job_list', { filter: parameters, (pagination.parameter): 1, (sort.parameter): sort.current }) }}"
+                       class="page-link">1</a>
+                </li>
+                {% if window_start > 2 %}
+                    <li class="page-item disabled"><span class="page-link">…</span></li>
+                {% endif %}
+            {% endif %}
+
+            {% for p in range(window_start, window_end) %}
+                <li class="page-item {% if p == pagination.current %}active{% endif %}">
+                    <a href="{{ path('yokai_batch.job_list', { filter: parameters, (pagination.parameter): p, (sort.parameter): sort.current }) }}"
+                       class="page-link">{{ p }}</a>
+                </li>
+            {% endfor %}
+
+            {% if window_end < pagination.total_pages %}
+                {% if window_end < pagination.total_pages - 1 %}
+                    <li class="page-item disabled"><span class="page-link">…</span></li>
+                {% endif %}
+                <li class="page-item">
+                    <a href="{{ path('yokai_batch.job_list', { filter: parameters, (pagination.parameter): pagination.total_pages, (sort.parameter): sort.current }) }}"
+                       class="page-link">{{ pagination.total_pages }}</a>
+                </li>
+            {% endif %}
+
             {% if pagination.next.enabled %}
                 <li class="page-item">
-                    <a href="{{ path('yokai_batch.job_list', { filter: parameters, (pagination.parameter): pagination.next.value }) }}"
+                    <a href="{{ path('yokai_batch.job_list', { filter: parameters, (pagination.parameter): pagination.next.value, (sort.parameter): sort.current }) }}"
                        class="page-link"
                        title="{{ 'job.action.pagination_next'|trans }}">
                         <span aria-hidden="true">&rsaquo;</span>

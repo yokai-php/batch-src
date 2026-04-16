@@ -110,7 +110,7 @@ final class JobControllerTest extends TestCase
                         $templating,
                         $status,
                         20,
-                        1,
+                        3,
                     ];
                     yield [
                         fn() => self::fixtures(30),
@@ -120,7 +120,7 @@ final class JobControllerTest extends TestCase
                         $templating,
                         $status,
                         20,
-                        1,
+                        3,
                     ];
                     yield [
                         fn() => null,
@@ -138,7 +138,7 @@ final class JobControllerTest extends TestCase
                         $templating,
                         $status,
                         10,
-                        1,
+                        3,
                     ];
 
                     // filtering is only possible when symfony/form is installed
@@ -182,7 +182,7 @@ final class JobControllerTest extends TestCase
                             $templating,
                             $status,
                             10,
-                            1,
+                            3,
                         ];
                     }
                 }
