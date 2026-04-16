@@ -21,7 +21,7 @@ final readonly class SkipInvalidItemProcessor implements ItemProcessorInterface
         /**
          * @var Constraint[]|null
          */
-        private array|null $contraints = null,
+        private array|null $constraints = null,
         /**
          * @var string[]|null
          */
@@ -31,13 +31,13 @@ final readonly class SkipInvalidItemProcessor implements ItemProcessorInterface
 
     public function process(mixed $item): mixed
     {
-        $violations = $this->validator->validate($item, $this->contraints, $this->groups);
+        $violations = $this->validator->validate($item, $this->constraints, $this->groups);
         if (\count($violations) === 0) {
             return $item;
         }
 
         throw new SkipItemException($item, new SkipItemOnViolations($violations), [
-            'constraints' => \iterator_to_array($this->normalizeConstraints($this->contraints)),
+            'constraints' => \iterator_to_array($this->normalizeConstraints($this->constraints)),
             'groups' => $this->groups,
         ]);
     }
