@@ -22,6 +22,7 @@ use Yokai\Batch\Serializer\JsonJobExecutionSerializer;
  *      ui: UserInterfaceConfig,
  *  }
  * @phpstan-type StorageConfig array{
+ *      dsn?: string,
  *      service?: string,
  *      dbal?: array{
  *          connection: string,
@@ -88,7 +89,18 @@ final class Configuration implements ConfigurationInterface
 
         $node
             ->addDefaultsIfNotSet()
+            ->beforeNormalization()
+                ->ifString()
+                ->then(fn(string $value) => ['dsn' => $value])
+            ->end()
             ->children()
+                ->scalarNode('dsn')
+                    ->defaultNull()
+                    ->validate()
+                        ->ifTrue(fn(string $value) => !Dsn::isValid($value))
+                            ->thenInvalid('Invalid job execution storage DSN.')
+                    ->end()
+                ->end()
                 ->arrayNode('filesystem')
                     ->addDefaultsIfNotSet()
                     ->children()
@@ -123,9 +135,6 @@ final class Configuration implements ConfigurationInterface
         /** @var ArrayNodeDefinition $node */
         $node = (new TreeBuilder('launcher'))->getRootNode();
 
-        $isInvalidDsn = fn(string $value) => \parse_url($value) === false
-            || (\parse_url($value)['scheme'] ?? null) === null;
-
         $node
             ->addDefaultsIfNotSet()
             ->children()
@@ -137,7 +146,8 @@ final class Configuration implements ConfigurationInterface
                     ->useAttributeAsKey('name')
                     ->scalarPrototype()
                         ->validate()
-                            ->ifTrue($isInvalidDsn)->thenInvalid('Invalid job launcher DSN.')
+                            ->ifTrue(fn(string $value) => !Dsn::isValid($value))
+                                ->thenInvalid('Invalid job launcher DSN.')
                         ->end()
                     ->end()
                 ->end()

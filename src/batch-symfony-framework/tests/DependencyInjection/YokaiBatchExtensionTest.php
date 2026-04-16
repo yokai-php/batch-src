@@ -35,6 +35,7 @@ use Yokai\Batch\Factory\UniqidJobExecutionIdGenerator;
 use Yokai\Batch\Launcher\JobLauncherInterface;
 use Yokai\Batch\Launcher\RoutingJobLauncher;
 use Yokai\Batch\Launcher\SimpleJobLauncher;
+use Yokai\Batch\Serializer\JsonJobExecutionSerializer;
 use Yokai\Batch\Storage\FilesystemJobExecutionStorage;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
 use Yokai\Batch\Storage\NullJobExecutionStorage;
@@ -87,6 +88,31 @@ final class YokaiBatchExtensionTest extends TestCase
         ];
         yield 'Custom service' => [
             ['storage' => ['service' => NullJobExecutionStorage::class]],
+            fn(ContainerBuilder $container) => $container->register(NullJobExecutionStorage::class),
+            NullJobExecutionStorage::class,
+        ];
+        yield 'DSN filesystem' => [
+            ['storage' => 'filesystem://%kernel.project_dir%/var/batch'],
+            fn(ContainerBuilder $container) => $container->setParameter('kernel.project_dir', __DIR__),
+            FilesystemJobExecutionStorage::class,
+        ];
+        yield 'DSN filesystem absolute path' => [
+            ['storage' => 'filesystem:///tmp/batch'],
+            null,
+            FilesystemJobExecutionStorage::class,
+        ];
+        yield 'DSN filesystem with serializer' => [
+            ['storage' => 'filesystem://tmp/batch?serializer=' . JsonJobExecutionSerializer::class],
+            null,
+            FilesystemJobExecutionStorage::class,
+        ];
+        yield 'DSN dbal' => [
+            ['storage' => 'dbal://default'],
+            null,
+            DoctrineDBALJobExecutionStorage::class,
+        ];
+        yield 'DSN service' => [
+            ['storage' => 'service://service?id=' . NullJobExecutionStorage::class],
             fn(ContainerBuilder $container) => $container->register(NullJobExecutionStorage::class),
             NullJobExecutionStorage::class,
         ];
