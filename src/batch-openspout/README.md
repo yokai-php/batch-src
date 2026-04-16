@@ -15,7 +15,7 @@ composer require yokai/batch-openspout
 
 ## Documentation
 
-Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/latest/bridges/openspout.html).
+Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/1.x/bridges/openspout.html).
 
 This package provides:
 

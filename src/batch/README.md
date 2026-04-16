@@ -23,7 +23,7 @@ composer require yokai/batch
 
 ## Documentation
 
-Please read the [getting started documentation page](https://yokai-batch.readthedocs.io/en/latest/getting-started/standalone-library.html).
+Please read the [getting started documentation page](https://yokai-batch.readthedocs.io/en/1.x/getting-started/standalone-library.html).
 
 Looking for something more specific ?
 

@@ -15,7 +15,7 @@ composer require yokai/batch-symfony-messenger
 
 ## Documentation
 
-Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/latest/bridges/symfony-messenger.html).
+Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/1.x/bridges/symfony-messenger.html).
 
 This package provides:
 

@@ -15,9 +15,9 @@ composer require yokai/batch-symfony-framework
 
 ## Documentation
 
-Please read the [getting started documentation page](https://yokai-batch.readthedocs.io/en/latest/getting-started/with-symfony.html).
+Please read the [getting started documentation page](https://yokai-batch.readthedocs.io/en/1.x/getting-started/with-symfony.html).
 
-Or the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/latest/bridges/symfony-framework.html).
+Or the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/1.x/bridges/symfony-framework.html).
 
 
 ## Contribution

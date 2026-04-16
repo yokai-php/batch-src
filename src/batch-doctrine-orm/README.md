@@ -15,7 +15,7 @@ composer require yokai/batch-doctrine-orm
 
 ## Documentation
 
-Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/latest/bridges/doctrine-orm.html).
+Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/1.x/bridges/doctrine-orm.html).
 
 This package provides:
 

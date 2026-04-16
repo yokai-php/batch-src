@@ -15,7 +15,7 @@ composer require yokai/batch-symfony-uid
 
 ## Documentation
 
-Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/latest/bridges/symfony-uid.html).
+Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/1.x/bridges/symfony-uid.html).
 
 This package provides:
 

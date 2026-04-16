@@ -15,7 +15,7 @@ composer require yokai/batch-league-flysystem
 
 ## Documentation
 
-Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/latest/bridges/league-flysystem.html).
+Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/1.x/bridges/league-flysystem.html).
 
 This package provides:
 

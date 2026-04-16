@@ -15,7 +15,7 @@ composer require yokai/batch-symfony-serializer
 
 ## Documentation
 
-Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/latest/bridges/symfony-serializer.html).
+Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/1.x/bridges/symfony-serializer.html).
 
 This package provides:
 

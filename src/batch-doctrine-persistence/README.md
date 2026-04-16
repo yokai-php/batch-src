@@ -15,7 +15,7 @@ composer require yokai/batch-doctrine-persistence
 
 ## Documentation
 
-Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/latest/bridges/doctrine-persistence.html).
+Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/1.x/bridges/doctrine-persistence.html).
 
 This package provides:
 

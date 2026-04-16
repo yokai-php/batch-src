@@ -15,7 +15,7 @@ composer require yokai/batch-doctrine-dbal
 
 ## Documentation
 
-Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/latest/bridges/doctrine-dbal.html).
+Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/1.x/bridges/doctrine-dbal.html).
 
 This package provides:
 

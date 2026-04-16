@@ -15,7 +15,7 @@ composer require yokai/batch-symfony-console
 
 ## Documentation
 
-Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/latest/bridges/symfony-console.html).
+Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/1.x/bridges/symfony-console.html).
 
 This package provides:
 
