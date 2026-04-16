@@ -106,7 +106,10 @@ final class MoveFilesJobTest extends TestCase
 
         self::assertFalse($destination->has('file.txt'), 'file.txt still not exists on destination filesystem');
         self::assertCount(1, $execution->getFailures());
-        self::assertStringContainsString('Unable to read file from filesystem.', (string)$execution->getLogs());
+        self::assertStringContainsString(
+            'Unable to read file from filesystem.',
+            $execution->getLogger()->getLogsContent(),
+        );
     }
 
     public function testFilesystemExceptionOnRead(): void
@@ -139,7 +142,10 @@ final class MoveFilesJobTest extends TestCase
         self::assertTrue($source->has('file.txt'), 'file.txt still exists on source filesystem');
         self::assertFalse($destination->has('file.txt'), 'file.txt still not exists on destination filesystem');
         self::assertCount(1, $execution->getFailures());
-        self::assertStringContainsString('Unable to write file to filesystem.', (string)$execution->getLogs());
+        self::assertStringContainsString(
+            'Unable to write file to filesystem.',
+            $execution->getLogger()->getLogsContent(),
+        );
     }
 
     public function testFilesystemExceptionOnWrite(): void
@@ -157,7 +163,7 @@ final class MoveFilesJobTest extends TestCase
         self::assertTrue($source->has('file.txt'), 'file.txt still exists on source filesystem');
         self::assertFalse($destination->has('file.txt'), 'file.txt still not exists on destination filesystem');
         self::assertCount(1, $execution->getFailures());
-        self::assertStringContainsString('Unable to move file.', (string)$execution->getLogs());
+        self::assertStringContainsString('Unable to move file.', $execution->getLogger()->getLogsContent());
     }
 
     public function testCannotDeleteDestination(): void
@@ -175,7 +181,10 @@ final class MoveFilesJobTest extends TestCase
         self::assertTrue($source->has('file.txt'), 'file.txt still exists on source filesystem');
         self::assertTrue($destination->has('file.txt'), 'file.txt now exists on destination filesystem');
         self::assertCount(1, $execution->getFailures());
-        self::assertStringContainsString('Unable to delete file from filesystem.', (string)$execution->getLogs());
+        self::assertStringContainsString(
+            'Unable to delete file from filesystem.',
+            $execution->getLogger()->getLogsContent(),
+        );
     }
 
     public function testFilesystemExceptionOnDelete(): void
@@ -193,7 +202,7 @@ final class MoveFilesJobTest extends TestCase
         self::assertTrue($source->has('file.txt'), 'file.txt still exists on source filesystem');
         self::assertTrue($destination->has('file.txt'), 'file.txt now exists on destination filesystem');
         self::assertCount(1, $execution->getFailures());
-        self::assertStringContainsString('Unable to move file.', (string)$execution->getLogs());
+        self::assertStringContainsString('Unable to move file.', $execution->getLogger()->getLogsContent());
     }
 
     public function testWrongLocationType(): void

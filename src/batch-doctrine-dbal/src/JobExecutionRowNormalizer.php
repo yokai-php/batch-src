@@ -10,8 +10,8 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\Failure;
+use Yokai\Batch\Factory\JobExecutionLoggerFactoryInterface;
 use Yokai\Batch\JobExecution;
-use Yokai\Batch\JobExecutionLogs;
 use Yokai\Batch\JobParameters;
 use Yokai\Batch\Summary;
 use Yokai\Batch\Warning;
@@ -50,6 +50,7 @@ final readonly class JobExecutionRowNormalizer
 {
     public function __construct(
         private AbstractPlatform $platform,
+        private JobExecutionLoggerFactoryInterface $loggerFactory,
     ) {
     }
 
@@ -72,7 +73,7 @@ final readonly class JobExecutionRowNormalizer
             'failures' => \array_map([$this, 'failureToArray'], $jobExecution->getFailures()),
             'warnings' => \array_map([$this, 'warningToArray'], $jobExecution->getWarnings()),
             'child_executions' => \array_map([$this, 'toChildRow'], $jobExecution->getChildExecutions()),
-            'logs' => $jobExecution->getParentExecution() === null ? (string)$jobExecution->getLogs() : null,
+            'logs' => $jobExecution->getParentExecution() === null ? $jobExecution->getLogger()->getReference() : null,
         ];
     }
 
@@ -105,7 +106,7 @@ final readonly class JobExecutionRowNormalizer
                 $status,
                 $parameters,
                 $summary,
-                new JobExecutionLogs($data['logs'] ?? ''),
+                $this->loggerFactory->restore($data['logs'] ?? ''),
             );
         }
 

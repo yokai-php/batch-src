@@ -13,6 +13,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 use Yokai\Batch\Bridge\Symfony\Console\RunJobCommand;
 use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\Factory\JobExecutionFactory;
+use Yokai\Batch\Factory\JobExecutionLoggerFactory\InMemoryJobExecutionLoggerFactory;
 use Yokai\Batch\Factory\JobExecutionParametersBuilder\NullJobExecutionParametersBuilder;
 use Yokai\Batch\Factory\UniqidJobExecutionIdGenerator;
 use Yokai\Batch\Job\JobExecutionAccessor;
@@ -36,7 +37,11 @@ final class RunJobCommandTest extends TestCase
         $this->job = $this->createMock(JobInterface::class);
 
         $this->accessor = new JobExecutionAccessor(
-            new JobExecutionFactory(new UniqidJobExecutionIdGenerator(), new NullJobExecutionParametersBuilder()),
+            new JobExecutionFactory(
+                new UniqidJobExecutionIdGenerator(),
+                new NullJobExecutionParametersBuilder(),
+                new InMemoryJobExecutionLoggerFactory(),
+            ),
             new InMemoryJobExecutionStorage(),
         );
         $this->executor = new JobExecutor(

@@ -121,7 +121,7 @@ final class FileFoundSchedulerTest extends TestCase
         self::assertCount(1, $execution->getFailures());
         self::assertStringContainsString(
             'Unable to assert that location exists on filesystem.',
-            (string)$execution->getLogs(),
+            $execution->getLogger()->getLogsContent(),
         );
     }
 }

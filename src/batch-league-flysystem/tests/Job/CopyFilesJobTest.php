@@ -104,7 +104,10 @@ final class CopyFilesJobTest extends TestCase
 
         self::assertFalse($destination->has('file.txt'), 'file.txt still not exists on destination filesystem');
         self::assertCount(1, $execution->getFailures());
-        self::assertStringContainsString('Unable to read file from filesystem.', (string)$execution->getLogs());
+        self::assertStringContainsString(
+            'Unable to read file from filesystem.',
+            $execution->getLogger()->getReference(),
+        );
     }
 
     public function testFilesystemExceptionOnRead(): void
@@ -118,7 +121,7 @@ final class CopyFilesJobTest extends TestCase
 
         self::assertFalse($destination->has('file.txt'), 'file.txt still not exists on destination filesystem');
         self::assertCount(1, $execution->getFailures());
-        self::assertStringContainsString('Unable to copy file.', (string)$execution->getLogs());
+        self::assertStringContainsString('Unable to copy file.', $execution->getLogger()->getLogsContent());
     }
 
     public function testCannotWriteDestination(): void
@@ -136,7 +139,10 @@ final class CopyFilesJobTest extends TestCase
         self::assertTrue($source->has('file.txt'), 'file.txt still exists on source filesystem');
         self::assertFalse($destination->has('file.txt'), 'file.txt still not exists on destination filesystem');
         self::assertCount(1, $execution->getFailures());
-        self::assertStringContainsString('Unable to write file to filesystem.', (string)$execution->getLogs());
+        self::assertStringContainsString(
+            'Unable to write file to filesystem.',
+            $execution->getLogger()->getLogsContent(),
+        );
     }
 
     public function testFilesystemExceptionOnWrite(): void
@@ -154,7 +160,7 @@ final class CopyFilesJobTest extends TestCase
         self::assertTrue($source->has('file.txt'), 'file.txt still exists on source filesystem');
         self::assertFalse($destination->has('file.txt'), 'file.txt still not exists on destination filesystem');
         self::assertCount(1, $execution->getFailures());
-        self::assertStringContainsString('Unable to copy file.', (string)$execution->getLogs());
+        self::assertStringContainsString('Unable to copy file.', $execution->getLogger()->getLogsContent());
     }
 
     public function testWrongLocationType(): void

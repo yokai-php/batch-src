@@ -13,6 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use Symfony\Component\DependencyInjection\Reference;
 use Yokai\Batch\Bridge\Doctrine\DBAL\DoctrineDBALJobExecutionStorage;
 use Yokai\Batch\Bridge\Symfony\Console\RunCommandJobLauncher;
 use Yokai\Batch\Bridge\Symfony\Framework\DependencyInjection\YokaiBatchExtension;
@@ -25,6 +26,7 @@ use Yokai\Batch\Bridge\Symfony\Uid\Factory\RandomBasedUuidJobExecutionIdGenerato
 use Yokai\Batch\Bridge\Symfony\Uid\Factory\TimeBasedUuidJobExecutionIdGenerator;
 use Yokai\Batch\Bridge\Symfony\Uid\Factory\UlidJobExecutionIdGenerator;
 use Yokai\Batch\Factory\JobExecutionIdGeneratorInterface;
+use Yokai\Batch\Factory\JobExecutionLoggerFactoryInterface;
 use Yokai\Batch\Factory\JobExecutionParametersBuilder\ChainJobExecutionParametersBuilder;
 use Yokai\Batch\Factory\JobExecutionParametersBuilder\PerJobJobExecutionParametersBuilder;
 use Yokai\Batch\Factory\JobExecutionParametersBuilder\StaticJobExecutionParametersBuilder;
@@ -41,13 +43,21 @@ use Yokai\Batch\Test\Launcher\BufferingJobLauncher;
 final class YokaiBatchExtensionTest extends TestCase
 {
     #[DataProvider('storage')]
-    public function testStorage(array $config, \Closure|null $configure, string $storage): void
-    {
+    public function testStorage(
+        array $config,
+        \Closure|null $configure,
+        string $storage,
+        \Closure|null $assert = null,
+    ): void {
         $container = $this->createContainer($config, $configure);
 
         $jobExecutionStorageService = $this->getDefinition($container, JobExecutionStorageInterface::class);
         self::assertNotNull($jobExecutionStorageService);
         self::assertSame($storage, $jobExecutionStorageService->getClass());
+
+        if ($assert !== null) {
+            $assert($container->findDefinition($storage));
+        }
     }
 
     public static function storage(): \Generator
@@ -66,6 +76,14 @@ final class YokaiBatchExtensionTest extends TestCase
             ['storage' => ['dbal' => null]],
             null,
             DoctrineDBALJobExecutionStorage::class,
+            function (Definition $definition) {
+                [$doctrine, $loggerFactory, $options] = $definition->getArguments();
+                self::assertInstanceOf(Reference::class, $doctrine);
+                self::assertSame('doctrine', (string)$doctrine);
+                self::assertInstanceOf(Reference::class, $loggerFactory);
+                self::assertSame(JobExecutionLoggerFactoryInterface::class, (string)$loggerFactory);
+                self::assertIsArray($options);
+            },
         ];
         yield 'Custom service' => [
             ['storage' => ['service' => NullJobExecutionStorage::class]],

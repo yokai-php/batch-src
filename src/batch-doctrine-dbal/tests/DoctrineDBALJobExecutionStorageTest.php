@@ -17,6 +17,7 @@ use Yokai\Batch\Exception\CannotRemoveJobExecutionException;
 use Yokai\Batch\Exception\CannotStoreJobExecutionException;
 use Yokai\Batch\Exception\JobExecutionNotFoundException;
 use Yokai\Batch\Exception\UnexpectedValueException;
+use Yokai\Batch\Factory\JobExecutionLoggerFactory\InMemoryJobExecutionLoggerFactory;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\Storage\Query;
 use Yokai\Batch\Storage\QueryBuilder;
@@ -29,7 +30,7 @@ final class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
 
     private function createStorage(array $options = []): DoctrineDBALJobExecutionStorage
     {
-        return new DoctrineDBALJobExecutionStorage($this->doctrine, $options);
+        return new DoctrineDBALJobExecutionStorage($this->doctrine, new InMemoryJobExecutionLoggerFactory(), $options);
     }
 
     public function testCreateStandardTable(): void

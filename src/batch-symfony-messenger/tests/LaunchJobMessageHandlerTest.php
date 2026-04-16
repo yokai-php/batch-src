@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Yokai\Batch\Bridge\Symfony\Messenger\LaunchJobMessage;
 use Yokai\Batch\Bridge\Symfony\Messenger\LaunchJobMessageHandler;
 use Yokai\Batch\Factory\JobExecutionFactory;
+use Yokai\Batch\Factory\JobExecutionLoggerFactory\InMemoryJobExecutionLoggerFactory;
 use Yokai\Batch\Factory\JobExecutionParametersBuilder\NullJobExecutionParametersBuilder;
 use Yokai\Batch\Job\JobExecutionAccessor;
 use Yokai\Batch\Job\JobExecutor;
@@ -36,6 +37,7 @@ final class LaunchJobMessageHandlerTest extends TestCase
                 new JobExecutionFactory(
                     new SequenceJobExecutionIdGenerator(['123456']),
                     new NullJobExecutionParametersBuilder(),
+                    new InMemoryJobExecutionLoggerFactory(),
                 ),
                 $jobExecutionStorage,
             ),

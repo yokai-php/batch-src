@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Factory\JobExecutionFactory;
+use Yokai\Batch\Factory\JobExecutionLoggerFactory\InMemoryJobExecutionLoggerFactory;
 use Yokai\Batch\Factory\JobExecutionParametersBuilder\NullJobExecutionParametersBuilder;
 use Yokai\Batch\Factory\UniqidJobExecutionIdGenerator;
 use Yokai\Batch\Failure;
@@ -51,7 +52,11 @@ abstract class JobTestCase extends TestCase
 
         $launcher = new SimpleJobLauncher(
             new JobExecutionAccessor(
-                new JobExecutionFactory(new UniqidJobExecutionIdGenerator(), new NullJobExecutionParametersBuilder()),
+                new JobExecutionFactory(
+                    new UniqidJobExecutionIdGenerator(),
+                    new NullJobExecutionParametersBuilder(),
+                    new InMemoryJobExecutionLoggerFactory(),
+                ),
                 $jobExecutionStorage,
             ),
             self::createJobExecutor($jobExecutionStorage, [$jobName => $job]),
@@ -118,7 +123,7 @@ abstract class JobTestCase extends TestCase
     private static function storages(): \Iterator
     {
         yield new FilesystemJobExecutionStorage(
-            new JsonJobExecutionSerializer(),
+            new JsonJobExecutionSerializer(new InMemoryJobExecutionLoggerFactory()),
             self::STORAGE_DIR,
         );
     }

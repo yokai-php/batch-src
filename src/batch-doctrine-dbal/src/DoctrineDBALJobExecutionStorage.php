@@ -20,6 +20,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\Persistence\ConnectionRegistry;
 use Generator;
 use Yokai\Batch\Exception\CannotRemoveJobExecutionException;
+use Yokai\Batch\Factory\JobExecutionLoggerFactoryInterface;
 use Yokai\Batch\Exception\CannotStoreJobExecutionException;
 use Yokai\Batch\Exception\JobExecutionNotFoundException;
 use Yokai\Batch\Exception\RuntimeException;
@@ -51,8 +52,11 @@ final class DoctrineDBALJobExecutionStorage implements
     /**
      * @param array{connection?: string, table?: string} $options
      */
-    public function __construct(ConnectionRegistry $doctrine, array $options)
-    {
+    public function __construct(
+        ConnectionRegistry $doctrine,
+        private JobExecutionLoggerFactoryInterface $loggerFactory,
+        array $options,
+    ) {
         $options = \array_filter($options) + self::DEFAULT_OPTIONS;
         $options['connection'] ??= $doctrine->getDefaultConnectionName();
 
@@ -324,7 +328,10 @@ final class DoctrineDBALJobExecutionStorage implements
 
     private function getNormalizer(): JobExecutionRowNormalizer
     {
-        $this->normalizer ??= new JobExecutionRowNormalizer($this->connection->getDatabasePlatform());
+        $this->normalizer ??= new JobExecutionRowNormalizer(
+            $this->connection->getDatabasePlatform(),
+            $this->loggerFactory,
+        );
 
         return $this->normalizer;
     }

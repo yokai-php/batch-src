@@ -23,10 +23,11 @@ use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\ConfigurableTe
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\SonataAdminTemplating;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\TemplatingInterface;
 use Yokai\Batch\Factory\JobExecutionIdGeneratorInterface;
+use Yokai\Batch\Factory\JobExecutionLoggerFactoryInterface;
 use Yokai\Batch\Factory\JobExecutionParametersBuilder\PerJobJobExecutionParametersBuilder;
 use Yokai\Batch\Factory\JobExecutionParametersBuilder\StaticJobExecutionParametersBuilder;
 use Yokai\Batch\Launcher\JobLauncherInterface;
-use Yokai\Batch\Logger\BatchLogger;
+use Yokai\Batch\Logger\YokaiBatchLogger;
 use Yokai\Batch\Storage\FilesystemJobExecutionStorage;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
 
@@ -72,7 +73,7 @@ final class YokaiBatchExtension extends Extension
         $jobExecutionIdGeneratorDefinition = JobExecutionIdGeneratorDefinitionFactory::fromType($config['id']);
         $container->setDefinition(JobExecutionIdGeneratorInterface::class, $jobExecutionIdGeneratorDefinition);
 
-        $container->registerAliasForArgument(BatchLogger::class, LoggerInterface::class, 'yokaiBatchLogger');
+        $container->registerAliasForArgument(YokaiBatchLogger::class, LoggerInterface::class, 'yokaiBatchLogger');
     }
 
     private function installed(string $package): bool
@@ -104,6 +105,7 @@ final class YokaiBatchExtension extends Extension
                 ->setArguments(
                     [
                         new Reference('doctrine'),
+                        new Reference(JobExecutionLoggerFactoryInterface::class),
                         [
                             'connection' => $config['dbal']['connection'],
                             'table' => $config['dbal']['table'],

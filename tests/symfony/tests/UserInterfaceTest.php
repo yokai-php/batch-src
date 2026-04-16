@@ -123,7 +123,7 @@ final class UserInterfaceTest extends WebTestCase
         $http->request('get', "/jobs/{$execution->getJobName()}/{$execution->getId()}/logs");
 
         self::assertResponseIsSuccessful();
-        $expected($http->getResponse()->getContent());
+        $expected($http->getInternalResponse()->getContent());
     }
 
     public static function logs(): \Generator

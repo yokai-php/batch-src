@@ -7,12 +7,12 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 use Doctrine\Persistence\ManagerRegistry;
 use Yokai\Batch\Event\PostExecuteEvent;
 use Yokai\Batch\Event\PreExecuteEvent;
-use Yokai\Batch\Logger\BatchLogger;
+use Yokai\Batch\Logger\YokaiBatchLogger;
 
 return static function (ContainerConfigurator $container): void {
     $container->services()
 
-        ->set(BatchLogger::class)
+        ->set(YokaiBatchLogger::class)
             ->args([
                 service(ManagerRegistry::class),
             ])
