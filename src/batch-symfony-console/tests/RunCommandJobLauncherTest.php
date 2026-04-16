@@ -46,7 +46,7 @@ final class RunCommandJobLauncherTest extends TestCase
 
         self::assertSame('testing', $jobExecutionFromStorage->getJobName());
         self::assertSame('123456789', $jobExecutionFromStorage->getId());
-        self::assertSame(BatchStatus::PENDING, $jobExecutionFromStorage->getStatus()->getValue());
+        self::assertSame(BatchStatus::Pending, $jobExecutionFromStorage->getStatus());
         self::assertSame(['bar'], $jobExecutionFromStorage->getParameters()->get('foo'));
     }
 }

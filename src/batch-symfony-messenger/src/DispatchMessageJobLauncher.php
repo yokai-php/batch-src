@@ -33,7 +33,7 @@ final readonly class DispatchMessageJobLauncher implements JobLauncherInterface
         // guarantee job execution exists if message bus transport is asynchronous
         $jobExecution = $this->jobExecutionFactory->create($name, $configuration);
         $configuration['_id'] ??= $jobExecution->getId();
-        $jobExecution->setStatus(BatchStatus::PENDING);
+        $jobExecution->setStatus(BatchStatus::Pending);
         $this->jobExecutionStorage->store($jobExecution);
 
         $message = new LaunchJobMessage($name, $configuration);
@@ -49,7 +49,7 @@ final readonly class DispatchMessageJobLauncher implements JobLauncherInterface
             $this->messageBus->dispatch($message);
         } catch (ExceptionInterface $exception) {
             // if a messenger exception occurs, it will be converted to job failure
-            $jobExecution->setStatus(BatchStatus::FAILED);
+            $jobExecution->setStatus(BatchStatus::Failed);
             $jobExecution->addFailureException($exception);
             $this->jobExecutionStorage->store($jobExecution);
 

@@ -178,7 +178,7 @@ final class FilesystemJobExecutionStorageTest extends TestCase
         ];
         yield 'Filter statuses' => [
             (new QueryBuilder())
-                ->statuses([BatchStatus::FAILED]),
+                ->statuses([BatchStatus::Failed]),
             [
                 ['list', '20210910'],
             ],

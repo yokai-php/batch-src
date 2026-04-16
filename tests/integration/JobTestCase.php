@@ -130,7 +130,7 @@ abstract class JobTestCase extends TestCase
 
     private static function compareStatuses(BatchStatus $expected, BatchStatus $actual): void
     {
-        self::assertSame($expected->getValue(), $actual->getValue());
+        self::assertSame($expected, $actual);
     }
 
     private static function compareDates(null|\DateTimeInterface $expected, null|\DateTimeInterface $actual): void

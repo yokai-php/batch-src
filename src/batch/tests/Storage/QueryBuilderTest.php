@@ -54,11 +54,11 @@ final class QueryBuilderTest extends TestCase
             new Query($jobNames, ['id1', 'id2', 'id3'], $statuses, $startTime, $endTime, $sortBy, $limit, $offset),
         ];
         yield 'Query job statuses' => [
-            fn() => (new QueryBuilder())->statuses([BatchStatus::ABANDONED, BatchStatus::STOPPED]),
+            fn() => (new QueryBuilder())->statuses([BatchStatus::Abandoned, BatchStatus::Stopped]),
             new Query(
                 jobs: $jobNames,
                 ids: $ids,
-                statuses: [BatchStatus::ABANDONED, BatchStatus::STOPPED],
+                statuses: [BatchStatus::Abandoned, BatchStatus::Stopped],
                 startTime: $startTime,
                 endTime: $endTime,
                 sort: $sortBy,
@@ -152,7 +152,7 @@ final class QueryBuilderTest extends TestCase
             fn() => (new QueryBuilder())
                 ->ids(['123', '456'])
                 ->jobs(['export', 'import'])
-                ->statuses([BatchStatus::RUNNING, BatchStatus::COMPLETED])
+                ->statuses([BatchStatus::Running, BatchStatus::Completed])
                 ->startTime($startTimeFrom, $startTimeTo)
                 ->endTime($endTimeFrom, $endTimeTo)
                 ->sort(Query::SORT_BY_END_DESC)
@@ -160,7 +160,7 @@ final class QueryBuilderTest extends TestCase
             new Query(
                 jobs: ['export', 'import'],
                 ids: ['123', '456'],
-                statuses: [BatchStatus::RUNNING, BatchStatus::COMPLETED],
+                statuses: [BatchStatus::Running, BatchStatus::Completed],
                 startTime: new TimeFilter($startTimeFrom, $startTimeTo),
                 endTime: new TimeFilter($endTimeFrom, $endTimeTo),
                 sort: Query::SORT_BY_END_DESC,
@@ -187,19 +187,9 @@ final class QueryBuilderTest extends TestCase
             fn() => (new QueryBuilder())->ids(['string', 666]),
             UnexpectedValueException::type('string', 666),
         ];
-        yield 'QueryBuilder::statuses expect BatchStatus::* constant array' => [
-            fn() => (new QueryBuilder())->statuses([BatchStatus::FAILED, 666]),
-            UnexpectedValueException::enum(
-                [
-                    BatchStatus::PENDING,
-                    BatchStatus::RUNNING,
-                    BatchStatus::STOPPED,
-                    BatchStatus::COMPLETED,
-                    BatchStatus::ABANDONED,
-                    BatchStatus::FAILED,
-                ],
-                666,
-            ),
+        yield 'QueryBuilder::statuses expect BatchStatus array' => [
+            fn() => (new QueryBuilder())->statuses([BatchStatus::Failed, 666]),
+            UnexpectedValueException::type(BatchStatus::class, 666),
         ];
         yield 'QueryBuilder::sort expect any Query::SORT_*' => [
             fn() => (new QueryBuilder())->sort('wrong'),

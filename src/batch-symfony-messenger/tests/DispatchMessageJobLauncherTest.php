@@ -43,7 +43,7 @@ final class DispatchMessageJobLauncherTest extends TestCase
 
         self::assertSame('testing', $jobExecutionFromStorage->getJobName());
         self::assertSame('123456789', $jobExecutionFromStorage->getId());
-        self::assertSame(BatchStatus::PENDING, $jobExecutionFromStorage->getStatus()->getValue());
+        self::assertSame(BatchStatus::Pending, $jobExecutionFromStorage->getStatus());
         self::assertSame(['bar'], $jobExecutionFromStorage->getParameters()->get('foo'));
         self::assertJobWasTriggered($messageBus, 'testing', ['_id' => '123456789', 'foo' => ['bar']]);
     }
@@ -68,7 +68,7 @@ final class DispatchMessageJobLauncherTest extends TestCase
 
         self::assertSame('testing', $jobExecutionFromStorage->getJobName());
         self::assertSame('123456789', $jobExecutionFromStorage->getId());
-        self::assertSame(BatchStatus::PENDING, $jobExecutionFromStorage->getStatus()->getValue());
+        self::assertSame(BatchStatus::Pending, $jobExecutionFromStorage->getStatus());
         self::assertJobWasTriggered($messageBus, 'testing', ['_id' => '123456789']);
     }
 
@@ -91,7 +91,7 @@ final class DispatchMessageJobLauncherTest extends TestCase
         self::assertSame($jobExecutionFromLauncher, $jobExecutionFromStorage);
 
         self::assertSame('testing', $jobExecutionFromStorage->getJobName());
-        self::assertSame(BatchStatus::FAILED, $jobExecutionFromStorage->getStatus()->getValue());
+        self::assertSame(BatchStatus::Failed, $jobExecutionFromStorage->getStatus());
         self::assertCount(1, $jobExecutionFromStorage->getFailures());
         $failure = $jobExecutionFromStorage->getFailures()[0];
         self::assertSame(TransportException::class, $failure->getClass());

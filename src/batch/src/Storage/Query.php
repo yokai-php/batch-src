@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Storage;
 
+use Yokai\Batch\BatchStatus;
 use Yokai\Batch\JobExecution;
 
 /**
@@ -17,9 +18,6 @@ final readonly class Query
     public const SORT_BY_END_ASC = 'end_asc';
     public const SORT_BY_END_DESC = 'end_desc';
 
-    /**
-     * @internal Do not use directly, use {@see QueryBuilder} instead.
-     */
     public function __construct(
         /**
          * @var string[]
@@ -30,7 +28,7 @@ final readonly class Query
          */
         private array $ids,
         /**
-         * @var int[]
+         * @var BatchStatus[]
          */
         private array $statuses,
         private TimeFilter|null $startTime,
@@ -58,7 +56,7 @@ final readonly class Query
     }
 
     /**
-     * @return int[]
+     * @return BatchStatus[]
      */
     public function statuses(): array
     {

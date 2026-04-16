@@ -16,7 +16,7 @@ use Yokai\Batch\Exception\UnexpectedValueException;
  *     (new QueryBuilder())
  *         ->ids(['123', '456'])
  *         ->jobs(['export', 'import'])
- *         ->statuses([BatchStatus::RUNNING, BatchStatus::COMPLETED])
+ *         ->statuses([BatchStatus::Running, BatchStatus::Completed])
  *         ->startTime(new \DateTimeImmutable('2023-07-07 15:18'), new \DateTime('2023-07-07 16:30'))
  *         ->endTime(new \DateTimeImmutable('2023-07-07 15:18'), new \DateTime('2023-07-07 16:30'))
  *         ->sort(Query::SORT_BY_END_DESC)
@@ -28,7 +28,7 @@ use Yokai\Batch\Exception\UnexpectedValueException;
  *     $builder = new QueryBuilder();
  *     $builder->ids(['123', '456']);
  *     $builder->jobs(['export', 'import']);
- *     $builder->statuses([BatchStatus::RUNNING, BatchStatus::COMPLETED]);
+ *     $builder->statuses([BatchStatus::Running, BatchStatus::Completed]);
  *     $builder->startTime(new \DateTimeImmutable('2023-07-07 15:18'), new \DateTime('2023-07-07 16:30'));
  *     $builder->endTime(new \DateTimeImmutable('2023-07-07 15:18'), new \DateTime('2023-07-07 16:30'));
  *     $builder->sort(Query::SORT_BY_END_DESC);
@@ -44,15 +44,6 @@ final class QueryBuilder
         Query::SORT_BY_END_DESC,
     ];
 
-    private const STATUSES_ENUM = [
-        BatchStatus::PENDING,
-        BatchStatus::RUNNING,
-        BatchStatus::STOPPED,
-        BatchStatus::COMPLETED,
-        BatchStatus::ABANDONED,
-        BatchStatus::FAILED,
-    ];
-
     /**
      * @var string[]
      */
@@ -64,7 +55,7 @@ final class QueryBuilder
     private array $ids = [];
 
     /**
-     * @var int[]
+     * @var BatchStatus[]
      */
     private array $statuses = [];
 
@@ -119,18 +110,17 @@ final class QueryBuilder
     /**
      * Filter executions that are on given status.
      *
-     * @param int[] $statuses Any of {@see BatchStatus::*}
+     * @param BatchStatus[] $statuses
      */
     public function statuses(array $statuses): self
     {
-        $statuses = \array_unique($statuses);
         foreach ($statuses as $status) {
-            if (!\in_array($status, self::STATUSES_ENUM, true)) {
-                throw UnexpectedValueException::enum(self::STATUSES_ENUM, $status);
+            if (!$status instanceof BatchStatus) {
+                throw UnexpectedValueException::type(BatchStatus::class, $status);
             }
         }
 
-        $this->statuses = $statuses;
+        $this->statuses = \array_unique($statuses, \SORT_REGULAR);
 
         return $this;
     }

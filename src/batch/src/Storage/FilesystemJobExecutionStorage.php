@@ -155,7 +155,7 @@ final readonly class FilesystemJobExecutionStorage implements QueryableJobExecut
             }
 
             $statuses = $query->statuses();
-            if ($statuses !== [] && !$execution->getStatus()->isOneOf($statuses)) {
+            if ($statuses !== [] && !\in_array($execution->getStatus(), $statuses, true)) {
                 continue;
             }
 

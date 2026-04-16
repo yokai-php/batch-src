@@ -32,7 +32,7 @@ final readonly class RunCommandJobLauncher implements JobLauncherInterface
     {
         $jobExecution = $this->jobExecutionFactory->create($name, $configuration);
         $configuration['_id'] ??= $jobExecution->getId();
-        $jobExecution->setStatus(BatchStatus::PENDING);
+        $jobExecution->setStatus(BatchStatus::Pending);
         $this->jobExecutionStorage->store($jobExecution);
 
         $this->commandRunner->runAsync(
