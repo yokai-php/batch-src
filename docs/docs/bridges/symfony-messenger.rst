@@ -11,12 +11,12 @@ Launch Job through Messenger dispatcher
 ------------------------------------------------------------
 
 The
-`DispatchMessageJobLauncher <https://github.com/yokai-php/batch-symfony-messenger/blob/0.x/src/DispatchMessageJobLauncher.php>`__
+`DispatchMessageJobLauncher <https://github.com/yokai-php/batch-symfony-messenger/blob/1.x/src/DispatchMessageJobLauncher.php>`__
 execute jobs via a symfony command message dispatch.
 
-A `LaunchJobMessage <https://github.com/yokai-php/batch-symfony-messenger/blob/0.x/src/LaunchJobMessage.php>`__
+A `LaunchJobMessage <https://github.com/yokai-php/batch-symfony-messenger/blob/1.x/src/LaunchJobMessage.php>`__
 message will be dispatched and handled by the
-`LaunchJobMessageHandler <https://github.com/yokai-php/batch-symfony-messenger/blob/0.x/src/LaunchJobMessageHandler.php>`__
+`LaunchJobMessageHandler <https://github.com/yokai-php/batch-symfony-messenger/blob/1.x/src/LaunchJobMessageHandler.php>`__
 will be called with that message after being routed.
 
 

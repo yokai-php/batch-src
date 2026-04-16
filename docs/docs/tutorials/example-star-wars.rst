@@ -4,10 +4,10 @@ Example: StarWars import
 .. note::
    | The code involved in this example is part of the test suite of **Yokai Batch**.
    | You can find the original code in the source repository:
-     `Data <https://github.com/yokai-php/batch-src/tree/0.x/tests/symfony/data/star-wars>`__,
-     `Entities <https://github.com/yokai-php/batch-src/tree/0.x/tests/symfony/src/Entity/StarWars>`__,
-     `Jobs <https://github.com/yokai-php/batch-src/tree/0.x/tests/symfony/src/Job/StarWars>`__,
-     `Tests <https://github.com/yokai-php/batch-src/blob/0.x/tests/symfony/tests/StarWarsJobSet.php>`__
+     `Data <https://github.com/yokai-php/batch-src/tree/1.x/tests/symfony/data/star-wars>`__,
+     `Entities <https://github.com/yokai-php/batch-src/tree/1.x/tests/symfony/src/Entity/StarWars>`__,
+     `Jobs <https://github.com/yokai-php/batch-src/tree/1.x/tests/symfony/src/Job/StarWars>`__,
+     `Tests <https://github.com/yokai-php/batch-src/blob/1.x/tests/symfony/tests/StarWarsJobSet.php>`__
 
 
 What are we trying to do?

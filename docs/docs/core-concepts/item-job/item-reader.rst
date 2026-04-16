@@ -4,52 +4,52 @@ What is an item reader?
 The item reader is used by the item job to extract item from a source.
 
 It can be any class implementing
-`ItemReaderInterface <https://github.com/yokai-php/batch/blob/0.x/src/Job/Item/ItemReaderInterface.php>`__.
+`ItemReaderInterface <https://github.com/yokai-php/batch/blob/1.x/src/Job/Item/ItemReaderInterface.php>`__.
 
 What types of item readers exists?
 ------------------------------------------------------------
 
 **Built-in item readers:**
 
-* `FixedColumnSizeFileReader <https://github.com/yokai-php/batch/blob/0.x/src/Job/Item/Reader/Filesystem/FixedColumnSizeFileReader.php>`__:
+* `FixedColumnSizeFileReader <https://github.com/yokai-php/batch/blob/1.x/src/Job/Item/Reader/Filesystem/FixedColumnSizeFileReader.php>`__:
   read a file line by line, and decode each line with fixed columns size to an array.
-* `JsonLinesReader <https://github.com/yokai-php/batch/blob/0.x/src/Job/Item/Reader/Filesystem/JsonLinesReader.php>`__:
+* `JsonLinesReader <https://github.com/yokai-php/batch/blob/1.x/src/Job/Item/Reader/Filesystem/JsonLinesReader.php>`__:
   read a file line by line, and decode each line as JSON.
-* `AddMetadataReader <https://github.com/yokai-php/batch/blob/0.x/src/Job/Item/Reader/AddMetadataReader.php>`__:
+* `AddMetadataReader <https://github.com/yokai-php/batch/blob/1.x/src/Job/Item/Reader/AddMetadataReader.php>`__:
   decorates another reader by adding static information to each read item.
-* `IndexWithReader <https://github.com/yokai-php/batch/blob/0.x/src/Job/Item/Reader/IndexWithReader.php>`__:
+* `IndexWithReader <https://github.com/yokai-php/batch/blob/1.x/src/Job/Item/Reader/IndexWithReader.php>`__:
   decorates another reader by changing index of each item.
-* `ParameterAccessorReader <https://github.com/yokai-php/batch/blob/0.x/src/Job/Item/Reader/ParameterAccessorReader.php>`__:
+* `ParameterAccessorReader <https://github.com/yokai-php/batch/blob/1.x/src/Job/Item/Reader/ParameterAccessorReader.php>`__:
   read from an inmemory value located at some configurable place.
-* `SequenceReader <https://github.com/yokai-php/batch/blob/0.x/src/Job/Item/Reader/SequenceReader.php>`__:
+* `SequenceReader <https://github.com/yokai-php/batch/blob/1.x/src/Job/Item/Reader/SequenceReader.php>`__:
   read from multiple item reader, one after the other.
-* `StaticIterableReader <https://github.com/yokai-php/batch/blob/0.x/src/Job/Item/Reader/StaticIterableReader.php>`__:
+* `StaticIterableReader <https://github.com/yokai-php/batch/blob/1.x/src/Job/Item/Reader/StaticIterableReader.php>`__:
   read from an iterable you provide during construction.
-* `CallbackReader <https://github.com/yokai-php/batch/blob/0.x/src/Job/Item/Reader/CallbackReader.php>`__:
+* `CallbackReader <https://github.com/yokai-php/batch/blob/1.x/src/Job/Item/Reader/CallbackReader.php>`__:
   read from a ``Closure`` you provide during construction.
 
 **Item readers from bridges:**
 
 * From ``openspout/openspout`` bridge:
 
-  * `FlatFileReader <https://github.com/yokai-php/batch-openspout/blob/0.x/src/Reader/FlatFileReader.php>`__:
+  * `FlatFileReader <https://github.com/yokai-php/batch-openspout/blob/1.x/src/Reader/FlatFileReader.php>`__:
     read from any CSV/ODS/XLSX file.
 
 * From ``doctrine/dbal`` bridge:
 
-  * `DoctrineDBALQueryOffsetReader <https://github.com/yokai-php/batch-doctrine-dbal/blob/0.x/src/DoctrineDBALQueryOffsetReader.php>`__:
+  * `DoctrineDBALQueryOffsetReader <https://github.com/yokai-php/batch-doctrine-dbal/blob/1.x/src/DoctrineDBALQueryOffsetReader.php>`__:
     execute an SQL query and iterate over results, using a limit + offset pagination strategy.
-  * `DoctrineDBALQueryCursorReader <https://github.com/yokai-php/batch-doctrine-dbal/blob/0.x/src/DoctrineDBALQueryCursorReader.php>`__:
+  * `DoctrineDBALQueryCursorReader <https://github.com/yokai-php/batch-doctrine-dbal/blob/1.x/src/DoctrineDBALQueryCursorReader.php>`__:
     execute an SQL query and iterate over results, using a column based cursor strategy.
 
 * From ``doctrine/orm`` bridge:
 
-  * `EntityReader <https://github.com/yokai-php/batch-doctrine-orm/blob/0.x/src/EntityReader.php>`__:
+  * `EntityReader <https://github.com/yokai-php/batch-doctrine-orm/blob/1.x/src/EntityReader.php>`__:
     read from any Doctrine ORM entity.
 
 **Item readers for testing purpose:**
 
-* `TestDebugReader <https://github.com/yokai-php/batch/blob/0.x/src/Test/Job/Item/Reader/TestDebugReader.php>`__:
+* `TestDebugReader <https://github.com/yokai-php/batch/blob/1.x/src/Test/Job/Item/Reader/TestDebugReader.php>`__:
   dummy item reader that you can use in your unit tests.
 
 .. seealso::
