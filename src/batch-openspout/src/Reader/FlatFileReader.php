@@ -59,12 +59,8 @@ final class FlatFileReader implements
         $reader->open($path);
 
         foreach ($this->rows($reader) as $rowIndex => $row) {
-            if ($rowIndex === 1 && !$this->headerStrategy->setHeaders($row)) {
-                continue;
-            }
-
             try {
-                yield $this->headerStrategy->getItem($row);
+                $item = $this->headerStrategy->process($row, $rowIndex === 1);
             } catch (InvalidRowSizeException $exception) {
                 $this->jobExecution->addWarning(
                     new Warning(
@@ -78,7 +74,15 @@ final class FlatFileReader implements
                         ['headers' => $exception->getHeaders(), 'row' => $exception->getRow()],
                     ),
                 );
+
+                continue;
             }
+
+            if ($item === null) {
+                continue;
+            }
+
+            yield $item;
         }
 
         $reader->close();
@@ -89,7 +93,10 @@ final class FlatFileReader implements
      */
     private function rows(ReaderInterface $reader): Generator
     {
-        foreach ($this->sheetFilter->list($reader) as $sheet) {
+        foreach ($reader->getSheetIterator() as $sheet) {
+            if (!$this->sheetFilter->accepts($sheet)) {
+                continue;
+            }
             /** @var int $rowIndex */
             /** @var Row $row */
             foreach ($sheet->getRowIterator() as $rowIndex => $row) {
