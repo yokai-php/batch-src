@@ -7,7 +7,7 @@ namespace Yokai\Batch\Bridge\Symfony\Messenger;
 /**
  * Holds the Symfony messenger configuration.
  */
-final class MessengerJobsConfiguration
+final readonly class MessengerJobsConfiguration
 {
     public function __construct(
         /**
