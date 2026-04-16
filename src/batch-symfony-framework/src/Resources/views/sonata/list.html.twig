@@ -116,27 +116,38 @@
                 </table>
             </div>
         </div>
-        {% if executions|length > 0 and (pagination.prev.enabled or pagination.next.enabled) %}
+        {% if pagination.total_pages > 1 %}
             <div class="box-footer">
                 <div class="text-center">
+                    {% set window_start = max(1, pagination.current - pagination.page_range) %}
+                    {% set window_end = min(pagination.total_pages, pagination.current + pagination.page_range) %}
                     <ul class="pagination">
-                        {% if pagination.current > 2 %}
-                            <li>
-                                <a href="{{ path('yokai_batch.job_list', { filter: parameters, (pagination.parameter): 1 }) }}"
-                                   title="{{ 'link_first_pager'|trans({}, 'SonataAdminBundle') }}">&laquo;</a>
-                            </li>
-                        {% endif %}
-
                         {% if pagination.prev.enabled %}
                             <li>
-                                <a href="{{ path('yokai_batch.job_list', { filter: parameters, (pagination.parameter): pagination.prev.value }) }}"
+                                <a href="{{ path('yokai_batch.job_list', { filter: parameters, (pagination.parameter): pagination.prev.value, (sort.parameter): sort.current }) }}"
                                    title="{{ 'link_previous_pager'|trans({}, 'SonataAdminBundle') }}">&lsaquo;</a>
                             </li>
                         {% endif %}
 
+                        {% if window_start > 1 %}
+                            <li><a href="{{ path('yokai_batch.job_list', { filter: parameters, (pagination.parameter): 1, (sort.parameter): sort.current }) }}">1</a></li>
+                            {% if window_start > 2 %}<li class="disabled"><span>…</span></li>{% endif %}
+                        {% endif %}
+
+                        {% for p in range(window_start, window_end) %}
+                            <li class="{% if p == pagination.current %}active{% endif %}">
+                                <a href="{{ path('yokai_batch.job_list', { filter: parameters, (pagination.parameter): p, (sort.parameter): sort.current }) }}">{{ p }}</a>
+                            </li>
+                        {% endfor %}
+
+                        {% if window_end < pagination.total_pages %}
+                            {% if window_end < pagination.total_pages - 1 %}<li class="disabled"><span>…</span></li>{% endif %}
+                            <li><a href="{{ path('yokai_batch.job_list', { filter: parameters, (pagination.parameter): pagination.total_pages, (sort.parameter): sort.current }) }}">{{ pagination.total_pages }}</a></li>
+                        {% endif %}
+
                         {% if pagination.next.enabled %}
                             <li>
-                                <a href="{{ path('yokai_batch.job_list', { filter: parameters, (pagination.parameter): pagination.next.value }) }}"
+                                <a href="{{ path('yokai_batch.job_list', { filter: parameters, (pagination.parameter): pagination.next.value, (sort.parameter): sort.current }) }}"
                                    title="{{ 'link_next_pager'|trans({}, 'SonataAdminBundle') }}">&rsaquo;</a>
                             </li>
                         {% endif %}

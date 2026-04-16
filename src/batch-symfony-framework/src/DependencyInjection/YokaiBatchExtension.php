@@ -19,6 +19,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Yokai\Batch\Bridge\Doctrine\DBAL\DoctrineDBALJobExecutionStorage;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Form\JobFilterType;
+use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\PaginationConfiguration;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\ConfigurableTemplating;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\SonataAdminTemplating;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\TemplatingInterface;
@@ -231,5 +232,10 @@ final class YokaiBatchExtension extends Extension
                 ->addArgument(['base_template' => $templating['base_template']]);
             $container->setAlias(TemplatingInterface::class, 'yokai_batch.ui.templating');
         }
+
+        $pagination = $config['pagination'];
+        $container->register(PaginationConfiguration::class)
+            ->addArgument($pagination['page_size'])
+            ->addArgument($pagination['page_range']);
     }
 }

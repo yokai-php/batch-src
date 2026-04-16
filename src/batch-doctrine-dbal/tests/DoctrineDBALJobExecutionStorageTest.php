@@ -409,6 +409,24 @@ final class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         ];
     }
 
+    public function testCountIgnoresLimit(): void
+    {
+        $storage = $this->createStorage();
+        $storage->setup();
+        $this->loadFixtures($storage);
+
+        // Fixtures contain 4 executions in total.
+        // With limit(2, 0), query() must return 2 results while count() must return 4.
+        $query = (new QueryBuilder())->limit(2, 0)->getQuery();
+
+        $results = [];
+        foreach ($storage->query($query) as $execution) {
+            $results[] = $execution;
+        }
+        self::assertCount(2, $results);
+        self::assertSame(4, $storage->count($query));
+    }
+
     public static function assertExecutionIds(array $ids, iterable $executions): void
     {
         $actualIds = [];

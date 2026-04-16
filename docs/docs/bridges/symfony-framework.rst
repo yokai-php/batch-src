@@ -254,6 +254,21 @@ And create the class that will cover the templating:
    ``Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\ConfigurableTemplating``
    that will cover both prefix and static variables at construction.
 
+Pagination
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``JobExecution`` list is paginated. You can configure the number of items per page and the size of
+the page window around the current page:
+
+.. code-block:: yaml
+
+    # config/packages/yokai_batch.yaml
+    yokai_batch:
+      ui:
+        pagination:
+          page_size: 20  # number of job executions per page (default: 20)
+          page_range: 2  # number of pages shown on each side of the current page (default: 2)
+
 Filtering
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
