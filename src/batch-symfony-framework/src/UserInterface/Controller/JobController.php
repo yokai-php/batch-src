@@ -20,9 +20,9 @@ use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\PaginationConfiguration;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\TemplatingInterface;
 use Yokai\Batch\Exception\JobExecutionNotFoundException;
 use Yokai\Batch\JobExecution;
-use Yokai\Batch\Storage\Query;
 use Yokai\Batch\Storage\QueryableJobExecutionStorageInterface;
 use Yokai\Batch\Storage\QueryBuilder;
+use Yokai\Batch\Storage\SortDirection;
 
 /**
  * Controller handling HTTP layer of user interface.
@@ -47,7 +47,7 @@ final readonly class JobController
         $this->security->denyAccessUnlessGrantedList();
 
         $page = $request->query->getInt('page', 1);
-        $sort = (string)$request->query->get('sort', Query::SORT_BY_START_DESC);
+        $sort = (string)$request->query->get('sort', SortDirection::StartDesc->value);
 
         $query = new QueryBuilder();
 
@@ -84,6 +84,7 @@ final readonly class JobController
 
         try {
             $query->limit($pageSize, $pageSize * ($page - 1));
+            $sort = SortDirection::from($sort);
             $query->sort($sort);
         } catch (Throwable $exception) {
             throw new BadRequestHttpException(previous: $exception);
@@ -98,17 +99,17 @@ final readonly class JobController
         // prepare sort variable for view
         $sort = [
             'parameter' => 'sort',
-            'current' => $sort,
-            'desc' => \in_array($sort, [Query::SORT_BY_START_DESC, Query::SORT_BY_END_DESC], true),
+            'current' => $sort->value,
+            'desc' => \in_array($sort, [SortDirection::StartDesc, SortDirection::EndDesc], true),
             // sort by execution start info
             'start' => [
-                'switch' => $sort === Query::SORT_BY_START_DESC ? Query::SORT_BY_START_ASC : Query::SORT_BY_START_DESC,
-                'sorted' => \in_array($sort, [Query::SORT_BY_START_ASC, Query::SORT_BY_START_DESC], true),
+                'switch' => ($sort === SortDirection::StartDesc ? SortDirection::StartAsc : SortDirection::StartDesc)->value,
+                'sorted' => \in_array($sort, [SortDirection::StartAsc, SortDirection::StartDesc], true),
             ],
             // sort by execution end info
             'end' => [
-                'switch' => $sort === Query::SORT_BY_END_DESC ? Query::SORT_BY_END_ASC : Query::SORT_BY_END_DESC,
-                'sorted' => \in_array($sort, [Query::SORT_BY_END_ASC, Query::SORT_BY_END_DESC], true),
+                'switch' => ($sort === SortDirection::EndDesc ? SortDirection::EndAsc : SortDirection::EndDesc)->value,
+                'sorted' => \in_array($sort, [SortDirection::EndAsc, SortDirection::EndDesc], true),
             ],
         ];
         // prepare pagination variable for view

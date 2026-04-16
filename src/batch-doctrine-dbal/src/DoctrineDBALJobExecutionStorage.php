@@ -20,6 +20,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\Persistence\ConnectionRegistry;
 use Generator;
 use Yokai\Batch\BatchStatus;
+use Yokai\Batch\Storage\SortDirection;
 use Yokai\Batch\Exception\CannotRemoveJobExecutionException;
 use Yokai\Batch\Factory\JobExecutionLoggerFactoryInterface;
 use Yokai\Batch\Exception\CannotStoreJobExecutionException;
@@ -155,23 +156,13 @@ final class DoctrineDBALJobExecutionStorage implements
 
         [$queryParameters, $queryTypes] = $this->addWheres($query, $qb);
 
-        switch ($query->sort()) {
-            case Query::SORT_BY_START_ASC:
-                $qb->orderBy('start_time', 'asc');
-                break;
-
-            case Query::SORT_BY_START_DESC:
-                $qb->orderBy('start_time', 'desc');
-                break;
-
-            case Query::SORT_BY_END_ASC:
-                $qb->orderBy('end_time', 'asc');
-                break;
-
-            case Query::SORT_BY_END_DESC:
-                $qb->orderBy('end_time', 'desc');
-                break;
-        }
+        match ($query->sort()) {
+            SortDirection::StartAsc  => $qb->orderBy('start_time', 'asc'),
+            SortDirection::StartDesc => $qb->orderBy('start_time', 'desc'),
+            SortDirection::EndAsc    => $qb->orderBy('end_time', 'asc'),
+            SortDirection::EndDesc   => $qb->orderBy('end_time', 'desc'),
+            default => null,
+        };
 
         $qb->setMaxResults($query->limit());
         $qb->setFirstResult($query->offset());

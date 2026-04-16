@@ -21,6 +21,7 @@ use Yokai\Batch\Factory\JobExecutionLoggerFactory\InMemoryJobExecutionLoggerFact
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\Storage\Query;
 use Yokai\Batch\Storage\QueryBuilder;
+use Yokai\Batch\Storage\SortDirection;
 use Yokai\Batch\Test\Storage\JobExecutionStorageTestTrait;
 use Yokai\Batch\Warning;
 
@@ -322,7 +323,7 @@ final class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         ];
         yield 'Order by start ASC' => [
             (new QueryBuilder())
-                ->sort(Query::SORT_BY_START_ASC),
+                ->sort(SortDirection::StartAsc),
             [
                 ['import', '987'],
                 ['import', '789'],
@@ -332,7 +333,7 @@ final class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         ];
         yield 'Order by start DESC' => [
             (new QueryBuilder())
-                ->sort(Query::SORT_BY_START_DESC),
+                ->sort(SortDirection::StartDesc),
             [
                 ['import', '456'],
                 ['export', '123'],
@@ -342,7 +343,7 @@ final class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         ];
         yield 'Order by end ASC' => [
             (new QueryBuilder())
-                ->sort(Query::SORT_BY_END_ASC),
+                ->sort(SortDirection::EndAsc),
             [
                 ['import', '789'],
                 ['import', '987'],
@@ -352,7 +353,7 @@ final class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         ];
         yield 'Order by end DESC' => [
             (new QueryBuilder())
-                ->sort(Query::SORT_BY_END_DESC),
+                ->sort(SortDirection::EndDesc),
             [
                 ['import', '456'],
                 ['export', '123'],

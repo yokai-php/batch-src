@@ -13,11 +13,6 @@ use Yokai\Batch\JobExecution;
  */
 final readonly class Query
 {
-    public const SORT_BY_START_ASC = 'start_asc';
-    public const SORT_BY_START_DESC = 'start_desc';
-    public const SORT_BY_END_ASC = 'end_asc';
-    public const SORT_BY_END_DESC = 'end_desc';
-
     public function __construct(
         /**
          * @var string[]
@@ -33,7 +28,7 @@ final readonly class Query
         private array $statuses,
         private TimeFilter|null $startTime,
         private TimeFilter|null $endTime,
-        private string|null $sort,
+        private SortDirection|null $sort,
         private int $limit,
         private int $offset,
     ) {
@@ -73,7 +68,7 @@ final readonly class Query
         return $this->endTime;
     }
 
-    public function sort(): string|null
+    public function sort(): SortDirection|null
     {
         return $this->sort;
     }

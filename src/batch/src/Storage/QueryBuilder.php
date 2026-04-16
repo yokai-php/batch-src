@@ -19,7 +19,7 @@ use Yokai\Batch\Exception\UnexpectedValueException;
  *         ->statuses([BatchStatus::Running, BatchStatus::Completed])
  *         ->startTime(new \DateTimeImmutable('2023-07-07 15:18'), new \DateTime('2023-07-07 16:30'))
  *         ->endTime(new \DateTimeImmutable('2023-07-07 15:18'), new \DateTime('2023-07-07 16:30'))
- *         ->sort(Query::SORT_BY_END_DESC)
+ *         ->sort(SortDirection::EndDesc)
  *         ->limit(6, 12)
  *         ->getQuery();
  *
@@ -31,19 +31,12 @@ use Yokai\Batch\Exception\UnexpectedValueException;
  *     $builder->statuses([BatchStatus::Running, BatchStatus::Completed]);
  *     $builder->startTime(new \DateTimeImmutable('2023-07-07 15:18'), new \DateTime('2023-07-07 16:30'));
  *     $builder->endTime(new \DateTimeImmutable('2023-07-07 15:18'), new \DateTime('2023-07-07 16:30'));
- *     $builder->sort(Query::SORT_BY_END_DESC);
+ *     $builder->sort(SortDirection::EndDesc);
  *     $builder->limit(6, 12);
  *     $builder->getQuery();
  */
 final class QueryBuilder
 {
-    private const SORTS_ENUM = [
-        Query::SORT_BY_START_ASC,
-        Query::SORT_BY_START_DESC,
-        Query::SORT_BY_END_ASC,
-        Query::SORT_BY_END_DESC,
-    ];
-
     /**
      * @var string[]
      */
@@ -63,7 +56,7 @@ final class QueryBuilder
 
     private TimeFilter|null $endTime = null;
 
-    private string|null $sortBy = null;
+    private SortDirection|null $sortBy = null;
 
     private int $limit = 10;
 
@@ -165,15 +158,9 @@ final class QueryBuilder
 
     /**
      * Sort executions.
-     *
-     * @param string $by One of {@see QueryBuilder::SORT_BY_*}
      */
-    public function sort(string $by): self
+    public function sort(SortDirection $by): self
     {
-        if (!\in_array($by, self::SORTS_ENUM, true)) {
-            throw UnexpectedValueException::enum(self::SORTS_ENUM, $by);
-        }
-
         $this->sortBy = $by;
 
         return $this;
