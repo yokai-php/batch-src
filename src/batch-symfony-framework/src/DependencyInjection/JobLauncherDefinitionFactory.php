@@ -32,17 +32,15 @@ final class JobLauncherDefinitionFactory
      */
     public static function fromDsn(string $dsn): Definition|Reference
     {
-        $dsnParts = \parse_url($dsn);
-        $launcherType = $dsnParts['scheme'] ?? null;
-        \parse_str($dsnParts['query'] ?? '', $launcherConfig);
-        /** @var array<string, string> $launcherConfig */
+        $parsed = Dsn::parse($dsn);
+        $type = $parsed->getScheme();
 
-        return match ($launcherType) {
+        return match ($type) {
             'simple' => self::simple(),
-            'console' => self::console($launcherConfig),
+            'console' => self::console($parsed),
             'messenger' => self::messenger(),
-            'service' => self::service($launcherConfig),
-            default => throw new LogicException('Unsupported job launcher type "' . $launcherType . '".'),
+            'service' => self::service($parsed),
+            default => throw new LogicException('Unsupported job launcher type "' . $type . '".'),
         };
     }
 
@@ -73,13 +71,8 @@ final class JobLauncherDefinitionFactory
         ]);
     }
 
-    /**
-     * @param array<string, string> $config
-     */
-    private static function console(array $config): Definition
+    private static function console(Dsn $dsn): Definition
     {
-        $log = $config['log'] ?? 'batch_execute.log';
-
         return new Definition(RunCommandJobLauncher::class, [
             '$jobExecutionFactory' => new Reference(JobExecutionFactory::class),
             '$commandRunner' => new Definition(CommandRunner::class, [
@@ -87,7 +80,7 @@ final class JobLauncherDefinitionFactory
                 '$logDir' => '%kernel.logs_dir%',
             ]),
             '$jobExecutionStorage' => new Reference(JobExecutionStorageInterface::class),
-            '$logFilename' => $log,
+            '$logFilename' => $dsn->getOption('log', 'batch_execute.log'),
         ]);
     }
 
@@ -103,12 +96,9 @@ final class JobLauncherDefinitionFactory
         ]);
     }
 
-    /**
-     * @param array<string, string> $config
-     */
-    private static function service(array $config): Reference
+    private static function service(Dsn $dsn): Reference
     {
-        $service = $config['service'] ?? throw new LogicException(
+        $service = $dsn->getOption('service') ?? throw new LogicException(
             'Missing "service" parameter to configure the job launcher.',
         );
 

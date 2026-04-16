@@ -96,7 +96,14 @@ final class YokaiBatchExtension extends Extension
      */
     private function configureStorage(ContainerBuilder $container, array $config): void
     {
-        if (isset($config['service'])) {
+        if (isset($config['dsn'])) {
+            $definitionOrReference = StorageDefinitionFactory::fromDsn($config['dsn']);
+            if ($definitionOrReference instanceof Definition) {
+                $container->setDefinition($defaultStorage = 'yokai_batch.storage', $definitionOrReference);
+            } else {
+                $defaultStorage = (string)$definitionOrReference;
+            }
+        } elseif (isset($config['service'])) {
             $defaultStorage = $config['service'];
         } elseif (isset($config['dbal'])) {
             $container

@@ -101,6 +101,34 @@ You can have only one storage for your ``JobExecution``, and you have several op
    | But if you already have ``doctrine/dbal`` in your project, it is highly recommended to use it instead.
    | Because querying ``JobExecution`` in a filesystem might be slow, specially if you are planing to add UIs on top.
 
+You can also configure the storage using a DSN string, which is especially useful
+to switch storage per environment via an environment variable:
+
+.. code-block:: yaml
+
+    # config/packages/yokai_batch.yaml
+    yokai_batch:
+      storage: '%env(BATCH_STORAGE_DSN)%'
+
+All storage DSN use the ``scheme://...?options`` format. Every scheme has its own associated factory:
+
+* ``filesystem://{dir}``: a `FilesystemJobExecutionStorage <https://github.com/yokai-php/batch/blob/0.x/src/Storage/FilesystemJobExecutionStorage.php>`__, configurable options:
+
+  * ``serializer``: the service id of the serializer to use (defaults to ``JsonJobExecutionSerializer``)
+  * Example: ``filesystem://%kernel.project_dir%/var/batch``
+  * Example with options: ``filesystem://%kernel.project_dir%/var/batch?serializer=Yokai\Batch\Serializer\JsonJobExecutionSerializer``
+
+* ``dbal://{connection}``: a `DoctrineDBALJobExecutionStorage <https://github.com/yokai-php/batch-doctrine-dbal/blob/0.x/src/DoctrineDBALJobExecutionStorage.php>`__, configurable options:
+
+  * ``table``: the table name to use (defaults to built-in default, use ``null`` to keep default)
+  * Example: ``dbal://default``
+  * Example with options: ``dbal://default?table=my_batch_table``
+
+* ``service://service``: pointing to a service of your choice, configurable options:
+
+  * ``id``: the id of the service to use (required, an exception will be thrown otherwise)
+  * Example: ``service://service?id=App\Batch\MyCustomStorage``
+
 .. seealso::
    | :doc:`What is a job execution? </core-concepts/job-execution>`
    | :doc:`What is a job execution storage? </core-concepts/job-execution-storage>`
