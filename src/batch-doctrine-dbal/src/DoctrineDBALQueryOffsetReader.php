@@ -18,32 +18,28 @@ use Yokai\Batch\Job\Item\ItemReaderInterface;
 final readonly class DoctrineDBALQueryOffsetReader implements ItemReaderInterface
 {
     private Connection $connection;
-    private string $sql;
-    private int $batch;
 
     public function __construct(
         ConnectionRegistry $doctrine,
-        string $sql,
+        private readonly string $sql,
         string|null $connection = null,
-        int $batch = 500,
+        private readonly int $batch = 500,
     ) {
-        if (!\str_contains($sql, '{limit}') || !\str_contains($sql, '{offset}')) {
+        if (!\str_contains($this->sql, '{limit}') || !\str_contains($this->sql, '{offset}')) {
             throw new InvalidArgumentException(
                 \sprintf('%s $sql argument must contains "{limit}" and "{offset}" for pagination.', __METHOD__),
             );
         }
-        if ($batch <= 0) {
+        if ($this->batch <= 0) {
             throw new InvalidArgumentException(
                 \sprintf('%s $batch argument must be a positive integer.', __METHOD__),
             );
         }
 
-        $connection ??= $doctrine->getDefaultConnectionName();
+        $connectionName = $connection ?? $doctrine->getDefaultConnectionName();
         /** @var Connection $connection */
-        $connection = $doctrine->getConnection($connection);
+        $connection = $doctrine->getConnection($connectionName);
         $this->connection = $connection;
-        $this->sql = $sql;
-        $this->batch = $batch;
     }
 
     /**
