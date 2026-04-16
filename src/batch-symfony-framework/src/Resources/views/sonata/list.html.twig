@@ -119,8 +119,8 @@
         {% if pagination.total_pages > 1 %}
             <div class="box-footer">
                 <div class="text-center">
-                    {% set window_start = max(1, pagination.current - 2) %}
-                    {% set window_end = min(pagination.total_pages, pagination.current + 2) %}
+                    {% set window_start = max(1, pagination.current - pagination.page_range) %}
+                    {% set window_end = min(pagination.total_pages, pagination.current + pagination.page_range) %}
                     <ul class="pagination">
                         {% if pagination.prev.enabled %}
                             <li>

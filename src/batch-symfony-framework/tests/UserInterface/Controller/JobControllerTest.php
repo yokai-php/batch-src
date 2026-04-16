@@ -40,6 +40,7 @@ use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Controller\JobController;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Form\JobFilterType;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\JobSecurity;
+use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\PaginationConfiguration;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\ConfigurableTemplating;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\TemplatingInterface;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\TwigExtension;
@@ -500,7 +501,14 @@ final class JobControllerTest extends TestCase
             ),
         ]));
 
-        return new JobController(self::$storage, $formFactory, $security, $twig, $templating);
+        return new JobController(
+            self::$storage,
+            $formFactory,
+            $security,
+            $twig,
+            $templating,
+            new PaginationConfiguration(20, 2),
+        );
     }
 
     private static function fixtures(int $count, array $attributes = []): void

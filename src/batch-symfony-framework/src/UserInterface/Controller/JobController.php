@@ -15,6 +15,7 @@ use Twig\Environment;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Form\JobFilter;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Form\JobFilterType;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\JobSecurity;
+use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\PaginationConfiguration;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\TemplatingInterface;
 use Yokai\Batch\Exception\JobExecutionNotFoundException;
 use Yokai\Batch\JobExecution;
@@ -27,14 +28,13 @@ use Yokai\Batch\Storage\QueryBuilder;
  */
 final readonly class JobController
 {
-    private const LIMIT = 20;
-
     public function __construct(
         private QueryableJobExecutionStorageInterface $jobExecutionStorage,
         private null|FormFactoryInterface $formFactory,
         private JobSecurity $security,
         private Environment $twig,
         private TemplatingInterface $templating,
+        private PaginationConfiguration $paginationConfiguration,
     ) {
     }
 
@@ -78,10 +78,11 @@ final readonly class JobController
 
         // count total matching executions before applying limit (for pagination)
         $total = $this->jobExecutionStorage->count($query->getQuery());
-        $totalPages = (int)\ceil($total / self::LIMIT);
+        $pageSize = $this->paginationConfiguration->pageSize;
+        $totalPages = (int)\ceil($total / $pageSize);
 
         try {
-            $query->limit(self::LIMIT, self::LIMIT * ($page - 1));
+            $query->limit($pageSize, $pageSize * ($page - 1));
             $query->sort($sort);
         } catch (Throwable $exception) {
             throw new BadRequestHttpException(previous: $exception);
@@ -112,7 +113,8 @@ final readonly class JobController
         // prepare pagination variable for view
         $pagination = [
             'parameter' => 'page',
-            'per_page' => self::LIMIT,
+            'per_page' => $pageSize,
+            'page_range' => $this->paginationConfiguration->pageRange,
             'total' => $total,
             'total_pages' => $totalPages,
             'results' => \count($executions),

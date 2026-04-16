@@ -9,6 +9,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Twig\Environment;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Controller\JobController;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\JobSecurity;
+use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\PaginationConfiguration;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\TemplatingInterface;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\TwigExtension;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
@@ -23,6 +24,7 @@ return static function (ContainerConfigurator $container): void {
                 service(JobSecurity::class),
                 service(Environment::class),
                 service(TemplatingInterface::class),
+                service(PaginationConfiguration::class),
             ])
             ->tag('controller.service_arguments')
 

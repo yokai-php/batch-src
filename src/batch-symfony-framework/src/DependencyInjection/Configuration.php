@@ -59,6 +59,10 @@ use Yokai\Batch\Serializer\JsonJobExecutionSerializer;
  *          service: string|null,
  *          base_template: string|null,
  *      },
+ *      pagination: array{
+ *          page_size: int,
+ *          page_range: int,
+ *      },
  *  }
  */
 final class Configuration implements ConfigurationInterface
@@ -283,6 +287,19 @@ final class Configuration implements ConfigurationInterface
                                     ->defaultValue('IS_AUTHENTICATED')
                                 ->end()
                             ->end()
+                        ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('pagination')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->integerNode('page_size')
+                            ->defaultValue(20)
+                            ->min(1)
+                        ->end()
+                        ->integerNode('page_range')
+                            ->defaultValue(2)
+                            ->min(1)
                         ->end()
                     ->end()
                 ->end()
