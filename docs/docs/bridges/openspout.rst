@@ -9,7 +9,7 @@ This bridge provides ways to read/write from/to CSV/ODS/XLSX files.
 Item reader
 ------------------------------------------------------------
 
-The `FlatFileReader <https://github.com/yokai-php/batch-openspout/blob/0.x/src/Reader/FlatFileReader.php>`__ is a reader
+The `FlatFileReader <https://github.com/yokai-php/batch-openspout/blob/1.x/src/Reader/FlatFileReader.php>`__ is a reader
 that will read from CSV/ODS/XLSX file and return each line as an array.
 
 .. literalinclude:: openspout/flat-file-reader-xlsx.php
@@ -28,7 +28,7 @@ that will read from CSV/ODS/XLSX file and return each line as an array.
 Item writer
 ------------------------------------------------------------
 
-The `FlatFileWriter <https://github.com/yokai-php/batch-openspout/blob/0.x/src/Writer/FlatFileWriter.php>`__ is a writer
+The `FlatFileWriter <https://github.com/yokai-php/batch-openspout/blob/1.x/src/Writer/FlatFileWriter.php>`__ is a writer
 that will write to CSV/ODS/XLSX file and each item will written its own line.
 
 .. literalinclude:: openspout/flat-file-writer-xlsx.php

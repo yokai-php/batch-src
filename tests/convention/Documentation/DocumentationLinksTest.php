@@ -22,7 +22,7 @@ use Yokai\Batch\Storage\JobExecutionStorageInterface;
  */
 final class DocumentationLinksTest extends TestCase
 {
-    private const DEFAULT_BRANCH = '0.x';
+    private const DEFAULT_BRANCH = '1.x';
 
     /**
      * Ensure that all links in Sphinx files points to valid internal resources.

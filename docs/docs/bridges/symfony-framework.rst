@@ -24,7 +24,7 @@ you will be able to register these using configuration:
 
 .. note::
    If you do not configure anything here, you will be using the
-   `SimpleJobLauncher <https://github.com/yokai-php/batch/blob/0.x/src/Launcher/SimpleJobLauncher.php>`__.
+   `SimpleJobLauncher <https://github.com/yokai-php/batch/blob/1.x/src/Launcher/SimpleJobLauncher.php>`__.
 
 | The ``default`` job launcher, must reference a launcher name, defined in the ``launchers`` list.
 | The ``default`` job launcher will be the autowired instance of job launcher when you ask for one.
@@ -36,9 +36,9 @@ you will be able to register these using configuration:
 
 All ``launchers`` are configured using a DSN, every scheme has it’s own associated factory:
 
-* ``simple://simple``: a `SimpleJobLauncher <https://github.com/yokai-php/batch/blob/0.x/src/Launcher/SimpleJobLauncher.php>`__, no configuration allowed
-* ``messenger://messenger``: a `DispatchMessageJobLauncher <https://github.com/yokai-php/batch-symfony-messenger/blob/0.x/src/DispatchMessageJobLauncher.php>`__, no configuration allowed
-* ``console://console``: a `RunCommandJobLauncher <https://github.com/yokai-php/batch-symfony-console/blob/0.x/src/RunCommandJobLauncher.php>`__, configurable options:
+* ``simple://simple``: a `SimpleJobLauncher <https://github.com/yokai-php/batch/blob/1.x/src/Launcher/SimpleJobLauncher.php>`__, no configuration allowed
+* ``messenger://messenger``: a `DispatchMessageJobLauncher <https://github.com/yokai-php/batch-symfony-messenger/blob/1.x/src/DispatchMessageJobLauncher.php>`__, no configuration allowed
+* ``console://console``: a `RunCommandJobLauncher <https://github.com/yokai-php/batch-symfony-console/blob/1.x/src/RunCommandJobLauncher.php>`__, configurable options:
 
   * ``log``: the filename where command output will be redirected (defaults to ``batch_execute.log``)
 
@@ -112,13 +112,13 @@ to switch storage per environment via an environment variable:
 
 All storage DSN use the ``scheme://...?options`` format. Every scheme has its own associated factory:
 
-* ``filesystem://{dir}``: a `FilesystemJobExecutionStorage <https://github.com/yokai-php/batch/blob/0.x/src/Storage/FilesystemJobExecutionStorage.php>`__, configurable options:
+* ``filesystem://{dir}``: a `FilesystemJobExecutionStorage <https://github.com/yokai-php/batch/blob/1.x/src/Storage/FilesystemJobExecutionStorage.php>`__, configurable options:
 
   * ``serializer``: the service id of the serializer to use (defaults to ``JsonJobExecutionSerializer``)
   * Example: ``filesystem://%kernel.project_dir%/var/batch``
   * Example with options: ``filesystem://%kernel.project_dir%/var/batch?serializer=Yokai\Batch\Serializer\JsonJobExecutionSerializer``
 
-* ``dbal://{connection}``: a `DoctrineDBALJobExecutionStorage <https://github.com/yokai-php/batch-doctrine-dbal/blob/0.x/src/DoctrineDBALJobExecutionStorage.php>`__, configurable options:
+* ``dbal://{connection}``: a `DoctrineDBALJobExecutionStorage <https://github.com/yokai-php/batch-doctrine-dbal/blob/1.x/src/DoctrineDBALJobExecutionStorage.php>`__, configurable options:
 
   * ``table``: the table name to use (defaults to built-in default, use ``null`` to keep default)
   * Example: ``dbal://default``
@@ -139,10 +139,10 @@ Configure the JobExecution id generator
 When it is created, every ``JobExecution`` is assigned with a unique identifier.
 You can configure what your id will be like:
 
-* ``uniqid``: a `UniqidJobExecutionIdGenerator <https://github.com/yokai-php/batch/blob/0.x/src/Factory/UniqidJobExecutionIdGenerator.php>`__
-* ``symfony.uuid.random``: a `RandomBasedUuidJobExecutionIdGenerator <https://github.com/yokai-php/batch-symfony-uid/blob/0.x/src/Factory/RandomBasedUuidJobExecutionIdGenerator.php>`__
-* ``symfony.uuid.time``: a `TimeBasedUuidJobExecutionIdGenerator <https://github.com/yokai-php/batch-symfony-uid/blob/0.x/src/Factory/TimeBasedUuidJobExecutionIdGenerator.php>`__
-* ``symfony.ulid``: a `UlidJobExecutionIdGenerator <https://github.com/yokai-php/batch-symfony-uid/blob/0.x/src/Factory/UlidJobExecutionIdGenerator.php>`__
+* ``uniqid``: a `UniqidJobExecutionIdGenerator <https://github.com/yokai-php/batch/blob/1.x/src/Factory/UniqidJobExecutionIdGenerator.php>`__
+* ``symfony.uuid.random``: a `RandomBasedUuidJobExecutionIdGenerator <https://github.com/yokai-php/batch-symfony-uid/blob/1.x/src/Factory/RandomBasedUuidJobExecutionIdGenerator.php>`__
+* ``symfony.uuid.time``: a `TimeBasedUuidJobExecutionIdGenerator <https://github.com/yokai-php/batch-symfony-uid/blob/1.x/src/Factory/TimeBasedUuidJobExecutionIdGenerator.php>`__
+* ``symfony.ulid``: a `UlidJobExecutionIdGenerator <https://github.com/yokai-php/batch-symfony-uid/blob/1.x/src/Factory/UlidJobExecutionIdGenerator.php>`__
 
 .. note::
    | The default storage is ``uniqid``, because it only requires the function with the same name that is a PHP standard.
@@ -197,7 +197,7 @@ Templating
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 | The templating service is used by the
-  `JobController <https://github.com/yokai-php/batch-symfony-framework/blob/0.x/src/UserInterface/Controller/JobController.php>`__
+  `JobController <https://github.com/yokai-php/batch-symfony-framework/blob/1.x/src/UserInterface/Controller/JobController.php>`__
   to render its templates.
 | It’s a wrapper around `Twig <https://twig.symfony.com/>`__, for you to control templates used,
   and variables passed.

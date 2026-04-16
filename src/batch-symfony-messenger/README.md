@@ -6,13 +6,6 @@
 [`symfony/messenger`](https://github.com/symfony/messenger) bridge for [Batch](https://github.com/yokai-php/batch) processing library.
 
 
-## :warning: BETA
-
-This library is following [semver](https://semver.org/).
-However before we reach the first stable version (`v1.0.0`), we may decide to introduce **API changes in minor versions**.
-This is why you should stick to a `v0.[minor].*` requirement !
-
-
 # Installation
 
 ```
@@ -22,12 +15,12 @@ composer require yokai/batch-symfony-messenger
 
 ## Documentation
 
-Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/0.x/bridges/symfony-messenger.html).
+Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/1.x/bridges/symfony-messenger.html).
 
 This package provides:
 
-- a [job launcher](https://github.com/yokai-php/batch-symfony-messenger/blob/0.x/src/DispatchMessageJobLauncher.php) that uses messages to launch jobs
-- an [item job writer](https://github.com/yokai-php/batch-symfony-messenger/blob/0.x/src/Writer/DispatchEachItemAsMessageWriter.php) that will write each item as a message
+- a [job launcher](https://github.com/yokai-php/batch-symfony-messenger/blob/1.x/src/DispatchMessageJobLauncher.php) that uses messages to launch jobs
+- an [item job writer](https://github.com/yokai-php/batch-symfony-messenger/blob/1.x/src/Writer/DispatchEachItemAsMessageWriter.php) that will write each item as a message
 
 
 ## Contribution

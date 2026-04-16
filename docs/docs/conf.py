@@ -6,8 +6,8 @@ project = 'Yokai Batch'
 copyright = '2019, Yann Eugoné'
 author = 'Yann Eugoné'
 
-release = '0.5.0'
-version = '0.5.0'
+release = '1.0.0'
+version = '1.0.0'
 
 # -- General configuration
 

@@ -13,7 +13,7 @@
     "require": {
         "php": "^8.2",
         "symfony/uid": "^7.4|^8.0",
-        "yokai/batch": "^0.7.0"
+        "yokai/batch": "^1.0.0"
     },
     "autoload": {
         "psr-4": {

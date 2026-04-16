@@ -9,7 +9,7 @@ This bridge provides ways to interact with the library within a CLI command.
 Launch Job command
 ------------------------------------------------------------
 
-The `RunJobCommand <https://github.com/yokai-php/batch-symfony-console/blob/0.x/src/RunJobCommand.php>`__
+The `RunJobCommand <https://github.com/yokai-php/batch-symfony-console/blob/1.x/src/RunJobCommand.php>`__
 can execute any job.
 
 The command accepts 2 arguments:
@@ -31,7 +31,7 @@ Examples:
 Launch job with an asynchronous command
 ------------------------------------------------------------
 
-The `RunCommandJobLauncher <https://github.com/yokai-php/batch-symfony-console/blob/0.x/src/RunCommandJobLauncher.php>`__
+The `RunCommandJobLauncher <https://github.com/yokai-php/batch-symfony-console/blob/1.x/src/RunCommandJobLauncher.php>`__
 execute jobs via an asynchronous symfony command.
 
 The command called is ``yokai:batch:run``, and the command will actually execute the job.
@@ -45,7 +45,7 @@ Additionally, the command will run with an output redirect (``>>``) to ``var/log
 Setup JobExecution storage command
 ------------------------------------------------------------
 
-The `SetupStorageCommand <https://github.com/yokai-php/batch-symfony-console/blob/0.x/src/SetupStorageCommand.php>`__
+The `SetupStorageCommand <https://github.com/yokai-php/batch-symfony-console/blob/1.x/src/SetupStorageCommand.php>`__
 can prepare required infrastructure for the configured ``JobExecution`` storage.
 
 Usage:

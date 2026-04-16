@@ -48,5 +48,6 @@ splits:
 
 # List of references to split (defined as regexp)
 origins:
-  - ^(0\.x)$ # the default branch
+  - ^(0\.x)$ # the 0.x maintenance branch
+  - ^(1\.x)$ # the default branch
   - ^\d+\.\d+\.\d+$ # the version tags

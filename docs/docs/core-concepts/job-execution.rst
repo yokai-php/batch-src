@@ -4,7 +4,7 @@ Job execution
 What is a Job execution?
 ------------------------------------------------------------
 
-A `JobExecution <https://github.com/yokai-php/batch/tree/0.x/src/JobExecution.php>`__ is the class that holds
+A `JobExecution <https://github.com/yokai-php/batch/tree/1.x/src/JobExecution.php>`__ is the class that holds
 information about one execution of a :doc:`job </core-concepts/job>`.
 
 What kind of information does it hold?

@@ -6,13 +6,6 @@
 Bridge of [`symfony/console`](https://github.com/symfony/console) for [Batch](https://github.com/yokai-php/batch).
 
 
-## :warning: BETA
-
-This library is following [semver](https://semver.org/).
-However before we reach the first stable version (`v1.0.0`), we may decide to introduce **API changes in minor versions**.
-This is why you should stick to a `v0.[minor].*` requirement !
-
-
 # Installation
 
 ```
@@ -22,11 +15,11 @@ composer require yokai/batch-symfony-console
 
 ## Documentation
 
-Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/0.x/bridges/symfony-console.html).
+Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/1.x/bridges/symfony-console.html).
 
 This package provides:
 
-- a [job launcher](https://github.com/yokai-php/batch-symfony-console/blob/0.x/src/RunCommandJobLauncher.php) that uses CLI command to launch jobs
+- a [job launcher](https://github.com/yokai-php/batch-symfony-console/blob/1.x/src/RunCommandJobLauncher.php) that uses CLI command to launch jobs
 
 
 ## Contribution

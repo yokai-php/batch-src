@@ -28,29 +28,29 @@ How to create a job?
     }
 
 The only requirement is implementing
-`JobInterface <https://github.com/yokai-php/batch/tree/0.x/src/Job/JobInterface.php>`__,
+`JobInterface <https://github.com/yokai-php/batch/tree/1.x/src/Job/JobInterface.php>`__,
 
 What types of job exists?
 ------------------------------------------------------------
 
 **Built-in jobs:**
 
-* `AbstractDecoratedJob <https://github.com/yokai-php/batch/tree/0.x/src/Job/AbstractDecoratedJob.php>`__: a job
+* `AbstractDecoratedJob <https://github.com/yokai-php/batch/tree/1.x/src/Job/AbstractDecoratedJob.php>`__: a job
   that is designed to be extended, helps job construction.
-* `ItemJob <https://github.com/yokai-php/batch/tree/0.x/src/Job/Item/ItemJob.php>`__: ETL like, batch processing
+* `ItemJob <https://github.com/yokai-php/batch/tree/1.x/src/Job/Item/ItemJob.php>`__: ETL like, batch processing
   job (:doc:`documentation </core-concepts/item-job>`).
-* `JobWithChildJobs <https://github.com/yokai-php/batch/tree/0.x/src/Job/JobWithChildJobs.php>`__: a job that
+* `JobWithChildJobs <https://github.com/yokai-php/batch/tree/1.x/src/Job/JobWithChildJobs.php>`__: a job that
   trigger other jobs (:doc:`documentation </core-concepts/job-with-children>`).
-* `TriggerScheduledJobsJob <https://github.com/yokai-php/batch/tree/0.x/src/Trigger/TriggerScheduledJobsJob.php>`__:
+* `TriggerScheduledJobsJob <https://github.com/yokai-php/batch/tree/1.x/src/Trigger/TriggerScheduledJobsJob.php>`__:
   a job that trigger other jobs when schedule is due (todo documentation).
 
 **Jobs from bridges:**
 
 * From ``league/flysystem`` bridge:
 
-  * `CopyFilesJob <https://github.com/yokai-php/batch-league-flysystem/blob/0.x/src/Job/CopyFilesJob.php>`__:
+  * `CopyFilesJob <https://github.com/yokai-php/batch-league-flysystem/blob/1.x/src/Job/CopyFilesJob.php>`__:
     copy files from one filesystem to another.
-  * `MoveFilesJob <https://github.com/yokai-php/batch-league-flysystem/blob/0.x/src/Job/MoveFilesJob.php>`__:
+  * `MoveFilesJob <https://github.com/yokai-php/batch-league-flysystem/blob/1.x/src/Job/MoveFilesJob.php>`__:
     move files from one filesystem to another.
 
 .. seealso::

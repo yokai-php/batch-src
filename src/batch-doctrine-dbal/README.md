@@ -6,13 +6,6 @@
 [`doctrine/dbal`](https://github.com/doctrine/dbal) bridge for [Batch](https://github.com/yokai-php/batch) processing library.
 
 
-## :warning: BETA
-
-This library is following [semver](https://semver.org/).
-However before we reach the first stable version (`v1.0.0`), we may decide to introduce **API changes in minor versions**.
-This is why you should stick to a `v0.[minor].*` requirement !
-
-
 # Installation
 
 ```
@@ -22,15 +15,15 @@ composer require yokai/batch-doctrine-dbal
 
 ## Documentation
 
-Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/0.x/bridges/doctrine-dbal.html).
+Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/1.x/bridges/doctrine-dbal.html).
 
 This package provides:
 
-- an [item job writer](https://github.com/yokai-php/batch-doctrine-dbal/blob/0.x/src/DoctrineDBALInsertWriter.php) that insert into an SQL table
-- a [job execution storage](https://github.com/yokai-php/batch-doctrine-dbal/blob/0.x/src/DoctrineDBALJobExecutionStorage.php) that stores job executions to a relational database
-- an [item job reader](https://github.com/yokai-php/batch-doctrine-dbal/blob/0.x/src/DoctrineDBALQueryCursorReader.php) that read from an SQL table using cursor pagination
-- an [item job reader](https://github.com/yokai-php/batch-doctrine-dbal/blob/0.x/src/DoctrineDBALQueryOffsetReader.php) that read from an SQL table using limit + offset pagination
-- an [item job writer](https://github.com/yokai-php/batch-doctrine-dbal/blob/0.x/src/DoctrineDBALUpsertWriter.php) that insert or update into an SQL table
+- an [item job writer](https://github.com/yokai-php/batch-doctrine-dbal/blob/1.x/src/DoctrineDBALInsertWriter.php) that insert into an SQL table
+- a [job execution storage](https://github.com/yokai-php/batch-doctrine-dbal/blob/1.x/src/DoctrineDBALJobExecutionStorage.php) that stores job executions to a relational database
+- an [item job reader](https://github.com/yokai-php/batch-doctrine-dbal/blob/1.x/src/DoctrineDBALQueryCursorReader.php) that read from an SQL table using cursor pagination
+- an [item job reader](https://github.com/yokai-php/batch-doctrine-dbal/blob/1.x/src/DoctrineDBALQueryOffsetReader.php) that read from an SQL table using limit + offset pagination
+- an [item job writer](https://github.com/yokai-php/batch-doctrine-dbal/blob/1.x/src/DoctrineDBALUpsertWriter.php) that insert or update into an SQL table
 
 
 ## Contribution
