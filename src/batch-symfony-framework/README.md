@@ -6,13 +6,6 @@
 Bridge of [`symfony/framework-bundle`](https://github.com/symfony/framework-bundle) for [Batch](https://github.com/yokai-php/batch).
 
 
-## :warning: BETA
-
-This library is following [semver](https://semver.org/).
-However before we reach the first stable version (`v1.0.0`), we may decide to introduce **API changes in minor versions**.
-This is why you should stick to a `v0.[minor].*` requirement !
-
-
 # Installation
 
 ```
@@ -22,9 +15,9 @@ composer require yokai/batch-symfony-framework
 
 ## Documentation
 
-Please read the [getting started documentation page](https://yokai-batch.readthedocs.io/en/0.x/getting-started/with-symfony.html).
+Please read the [getting started documentation page](https://yokai-batch.readthedocs.io/en/latest/getting-started/with-symfony.html).
 
-Or the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/0.x/bridges/symfony-framework.html).
+Or the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/latest/bridges/symfony-framework.html).
 
 
 ## Contribution

@@ -6,13 +6,6 @@
 Bridge of [`doctrine/orm`](https://github.com/doctrine/orm) for [Batch](https://github.com/yokai-php/batch).
 
 
-## :warning: BETA
-
-This library is following [semver](https://semver.org/).
-However before we reach the first stable version (`v1.0.0`), we may decide to introduce **API changes in minor versions**.
-This is why you should stick to a `v0.[minor].*` requirement !
-
-
 # Installation
 
 ```
@@ -22,11 +15,11 @@ composer require yokai/batch-doctrine-orm
 
 ## Documentation
 
-Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/0.x/bridges/doctrine-orm.html).
+Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/latest/bridges/doctrine-orm.html).
 
 This package provides:
 
-- an [item job reader](https://github.com/yokai-php/batch-doctrine-orm/blob/0.x/src/EntityReader.php) that read all entities of a type
+- an [item job reader](https://github.com/yokai-php/batch-doctrine-orm/blob/1.x/src/EntityReader.php) that read all entities of a type
 
 
 ## Contribution

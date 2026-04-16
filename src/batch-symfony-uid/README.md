@@ -6,13 +6,6 @@
 Bridge of [`symfony/uid`](https://github.com/symfony/uid) for [Batch](https://github.com/yokai-php/batch).
 
 
-## :warning: BETA
-
-This library is following [semver](https://semver.org/).
-However before we reach the first stable version (`v1.0.0`), we may decide to introduce **API changes in minor versions**.
-This is why you should stick to a `v0.[minor].*` requirement !
-
-
 # Installation
 
 ```
@@ -22,13 +15,13 @@ composer require yokai/batch-symfony-uid
 
 ## Documentation
 
-Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/0.x/bridges/symfony-uid.html).
+Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/latest/bridges/symfony-uid.html).
 
 This package provides:
 
-- a [job execution id generator](https://github.com/yokai-php/batch-symfony-uid/blob/0.x/src/RandomBasedUuidJobExecutionIdGenerator.php) that uses random based uuids
-- a [job execution id generator](https://github.com/yokai-php/batch-symfony-uid/blob/0.x/src/TimeBasedUuidJobExecutionIdGenerator.php) that uses time based uuids
-- a [job execution id generator](https://github.com/yokai-php/batch-symfony-uid/blob/0.x/src/UlidJobExecutionIdGenerator.php) that uses ulids
+- a [job execution id generator](https://github.com/yokai-php/batch-symfony-uid/blob/1.x/src/RandomBasedUuidJobExecutionIdGenerator.php) that uses random based uuids
+- a [job execution id generator](https://github.com/yokai-php/batch-symfony-uid/blob/1.x/src/TimeBasedUuidJobExecutionIdGenerator.php) that uses time based uuids
+- a [job execution id generator](https://github.com/yokai-php/batch-symfony-uid/blob/1.x/src/UlidJobExecutionIdGenerator.php) that uses ulids
 
 
 ## Contribution

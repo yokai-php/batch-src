@@ -6,13 +6,6 @@
 Bridge of [`doctrine/persistence`](https://github.com/doctrine/persistence) for [Batch](https://github.com/yokai-php/batch).
 
 
-## :warning: BETA
-
-This library is following [semver](https://semver.org/).
-However before we reach the first stable version (`v1.0.0`), we may decide to introduce **API changes in minor versions**.
-This is why you should stick to a `v0.[minor].*` requirement !
-
-
 # Installation
 
 ```
@@ -22,12 +15,12 @@ composer require yokai/batch-doctrine-persistence
 
 ## Documentation
 
-Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/0.x/bridges/doctrine-persistence.html).
+Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/latest/bridges/doctrine-persistence.html).
 
 This package provides:
 
-- an [object registry](https://github.com/yokai-php/batch-doctrine-persistence/blob/0.x/src/ObjectRegistry.php) that remembers found objects identities
-- an [item writer](https://github.com/yokai-php/batch-doctrine-persistence/blob/0.x/src/ObjectWriter.php) that persists objects through object manager
+- an [object registry](https://github.com/yokai-php/batch-doctrine-persistence/blob/1.x/src/ObjectRegistry.php) that remembers found objects identities
+- an [item writer](https://github.com/yokai-php/batch-doctrine-persistence/blob/1.x/src/ObjectWriter.php) that persists objects through object manager
 
 
 ## Contribution

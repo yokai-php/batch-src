@@ -6,13 +6,6 @@
 [`openspout/openspout`](https://github.com/openspout/openspout) bridge for [Batch](https://github.com/yokai-php/batch) processing library.
 
 
-## :warning: BETA
-
-This library is following [semver](https://semver.org/).
-However before we reach the first stable version (`v1.0.0`), we may decide to introduce **API changes in minor versions**.
-This is why you should stick to a `v0.[minor].*` requirement !
-
-
 # Installation
 
 ```
@@ -22,12 +15,12 @@ composer require yokai/batch-openspout
 
 ## Documentation
 
-Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/0.x/bridges/openspout.html).
+Please read the [dedicated documentation page](https://yokai-batch.readthedocs.io/en/latest/bridges/openspout.html).
 
 This package provides:
 
-- an [item job reader](https://github.com/yokai-php/batch-openspout/blob/0.x/src/Reader/FlatFileReader.php) that read from CSV/XLSX/ODS files
-- an [item job writer](https://github.com/yokai-php/batch-openspout/blob/0.x/src/Writer/FlatFileWriter.php) that write to CSV/XLSX/ODS files
+- an [item job reader](https://github.com/yokai-php/batch-openspout/blob/1.x/src/Reader/FlatFileReader.php) that read from CSV/XLSX/ODS files
+- an [item job writer](https://github.com/yokai-php/batch-openspout/blob/1.x/src/Writer/FlatFileWriter.php) that write to CSV/XLSX/ODS files
 
 
 ## Contribution
