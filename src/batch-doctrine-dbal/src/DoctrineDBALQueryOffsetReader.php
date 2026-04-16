@@ -27,7 +27,7 @@ final readonly class DoctrineDBALQueryOffsetReader implements ItemReaderInterfac
         string|null $connection = null,
         int $batch = 500,
     ) {
-        if (\mb_strpos($sql, '{limit}') === false || \mb_strpos($sql, '{offset}') === false) {
+        if (!\str_contains($sql, '{limit}') || !\str_contains($sql, '{offset}')) {
             throw new InvalidArgumentException(
                 \sprintf('%s $sql argument must contains "{limit}" and "{offset}" for pagination.', __METHOD__),
             );
