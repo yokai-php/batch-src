@@ -200,3 +200,45 @@ yokai_batch:
             page_size: 20   # number of executions per page
             page_range: 2   # number of page links shown on each side of the current page
 ```
+
+---
+
+### New method: `QueryableJobExecutionStorageInterface::purge()` (BREAKING for custom implementations)
+
+A new method has been added to `QueryableJobExecutionStorageInterface`:
+
+```php
+public function purge(Query $query): void;
+```
+
+It deletes **all** job executions that match the given query.
+
+> **Note:** `limit` and `offset` from the `Query` are intentionally ignored — every matching
+> execution is deleted, regardless of pagination settings.
+
+#### Usage
+
+```php
+use Yokai\Batch\Storage\QueryBuilder;
+
+// Delete all failed "import" executions
+$storage->purge(
+    (new QueryBuilder())
+        ->jobs(['import'])
+        ->statuses([BatchStatus::FAILED])
+        ->getQuery()
+);
+```
+
+#### Impact on custom implementations
+
+If you have a class that implements `QueryableJobExecutionStorageInterface`, you must add a `purge()` method:
+
+```php
+public function purge(Query $query): void
+{
+    // Delete all executions matching $query (ignore $query->getLimit() / $query->getOffset())
+}
+```
+
+The built-in `DoctrineDBALJobExecutionStorage` and `FilesystemJobExecutionStorage` already implement this method — no action required if you use either of them.
