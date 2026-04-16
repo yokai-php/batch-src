@@ -9,25 +9,25 @@ use Symfony\Component\Process\PhpExecutableFinder;
 
 /**
  * Utility class that knows how to run command asynchronously.
- *
- * @internal Please do not use in your project.
- * @final But only for tests mock.
  */
-class CommandRunner
+final class CommandRunner implements CommandRunnerInterface
 {
     private readonly string $consolePath;
     private readonly null|PhpExecutableFinder $phpLocator;
+    private readonly ShellRunnerInterface $shellRunner;
 
     public function __construct(
         string $binDir,
         private readonly string $logDir,
         PhpExecutableFinder|null $phpLocator = null,
+        ShellRunnerInterface|null $shellRunner = null,
     ) {
-        $this->consolePath = \implode(DIRECTORY_SEPARATOR, [$binDir, 'console']);
+        $this->consolePath = \implode(\DIRECTORY_SEPARATOR, [$binDir, 'console']);
         if (\class_exists(PhpExecutableFinder::class)) {
             $phpLocator ??= new PhpExecutableFinder();
         }
         $this->phpLocator = $phpLocator;
+        $this->shellRunner = $shellRunner ?? new ShellRunner();
     }
 
     /**
@@ -37,21 +37,13 @@ class CommandRunner
      */
     public function runAsync(string $commandName, string $logFilename, array $arguments = []): void
     {
-        $this->exec(
+        $this->shellRunner->exec(
             \sprintf(
                 '%s >> %s 2>&1 &',
                 $this->buildCommand($commandName, $arguments),
                 \implode(DIRECTORY_SEPARATOR, [$this->logDir, $logFilename]),
             ),
         );
-    }
-
-    /**
-     * @codeCoverageIgnore
-     */
-    protected function exec(string $command): void
-    {
-        \exec($command);
     }
 
     /**
