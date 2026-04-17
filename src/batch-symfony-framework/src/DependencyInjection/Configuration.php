@@ -20,6 +20,18 @@ use Yokai\Batch\Serializer\JsonJobExecutionSerializer;
  *      parameters: ParametersConfig,
  *      id: string,
  *      ui: UserInterfaceConfig,
+ *      logging: LoggingConfig,
+ *  }
+ * @phpstan-type LoggingConfig array{
+ *      type: 'memory'|'null'|'stream'|'service',
+ *      service: string|null,
+ *      stream: array{
+ *          directory: string,
+ *          sub_directories: int,
+ *          chars_per_directory: int,
+ *          processors: list<string>,
+ *          formatter: string|null,
+ *      },
  *  }
  * @phpstan-type StorageConfig array{
  *      dsn?: string,
@@ -80,6 +92,7 @@ final class Configuration implements ConfigurationInterface
                 ->append($this->parameters())
                 ->append($this->id())
                 ->append($this->ui())
+                ->append($this->logging())
             ->end()
         ;
 
@@ -310,6 +323,49 @@ final class Configuration implements ConfigurationInterface
                         ->integerNode('page_range')
                             ->defaultValue(2)
                             ->min(1)
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
+
+        return $node;
+    }
+
+    private function logging(): ArrayNodeDefinition
+    {
+        /** @var ArrayNodeDefinition $node */
+        $node = (new TreeBuilder('logging'))->getRootNode();
+
+        $node
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->enumNode('type')
+                    ->values(['memory', 'null', 'stream', 'service'])
+                    ->defaultValue('memory')
+                ->end()
+                ->scalarNode('service')
+                    ->defaultNull()
+                ->end()
+                ->arrayNode('stream')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('directory')
+                            ->defaultValue('%kernel.logs_dir%/batch')
+                        ->end()
+                        ->integerNode('sub_directories')
+                            ->defaultValue(0)
+                            ->min(0)
+                        ->end()
+                        ->integerNode('chars_per_directory')
+                            ->defaultValue(0)
+                            ->min(0)
+                        ->end()
+                        ->arrayNode('processors')
+                            ->scalarPrototype()->end()
+                        ->end()
+                        ->scalarNode('formatter')
+                            ->defaultNull()
                         ->end()
                     ->end()
                 ->end()
