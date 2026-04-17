@@ -18,34 +18,60 @@ use Yokai\Batch\Logger\JobExecutionLoggerInterface;
 final readonly class StreamJobExecutionLoggerFactory implements JobExecutionLoggerFactoryInterface
 {
     /**
-     * @param string                   $directory  Directory where log files are stored.
-     * @param list<ProcessorInterface> $processors Monolog processors added to every logger instance.
-     * @param FormatterInterface|null  $formatter  Optional Monolog formatter applied to the stream handler.
+     * @param string                   $directory       Directory where log files are stored.
+     * @param list<ProcessorInterface> $processors      Monolog processors added to every logger instance.
+     * @param FormatterInterface|null  $formatter       Optional Monolog formatter applied to the stream handler.
+     * @param int                      $subDirectories  Number of subdirectory levels to create from the job execution id.
+     * @param int                      $charsPerDirectory Number of characters from the job execution id used per subdirectory level.
      */
     public function __construct(
         private string $directory,
         private array $processors = [],
         private FormatterInterface|null $formatter = null,
+        private int $subDirectories = 0,
+        private int $charsPerDirectory = 0,
     ) {
     }
 
     public function create(string $jobExecutionId): JobExecutionLoggerInterface
     {
-        return $this->createLogger("{$jobExecutionId}.log");
+        $subdir = $this->subdir($jobExecutionId);
+        $reference = ($subdir !== '' ? $subdir . \DIRECTORY_SEPARATOR : '') . $jobExecutionId . '.log';
+
+        return $this->buildLogger($reference);
     }
 
     public function restore(string $logsReference): JobExecutionLoggerInterface
     {
-        return $this->createLogger($logsReference);
+        return $this->buildLogger($logsReference);
     }
 
-    private function createLogger(string $logsReference): StreamJobExecutionLogger
+    private function buildLogger(string $reference): StreamJobExecutionLogger
     {
         return new StreamJobExecutionLogger(
-            absolutePath: $this->directory . \DIRECTORY_SEPARATOR . $logsReference,
-            reference: $logsReference,
+            absolutePath: $this->directory . \DIRECTORY_SEPARATOR . $reference,
+            reference: $reference,
             processors: $this->processors,
             formatter: $this->formatter,
         );
+    }
+
+    /**
+     * Splits the job execution id into subdirectory segments based on configured depth and segment length.
+     * For example, with subDirectories=2 and charsPerDirectory=2, the id
+     *   60996f72-4f54-4184-9268-35ffdecf0de6
+     * is stored at:
+     *   └─ 60/
+     *     └─ 99/
+     *       └─ 60996f72-4f54-4184-9268-35ffdecf0de6.log
+     */
+    private function subdir(string $id): string
+    {
+        $parts = [];
+        for ($i = 0, $start = 0; $i < $this->subDirectories; $i++, $start += $this->charsPerDirectory) {
+            $parts[] = \substr($id, $start, $this->charsPerDirectory);
+        }
+
+        return \implode(\DIRECTORY_SEPARATOR, $parts);
     }
 }
