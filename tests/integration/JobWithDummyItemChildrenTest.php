@@ -75,9 +75,9 @@ final class JobWithDummyItemChildrenTest extends JobTestCase
     ): void {
         parent::assertAgainstExecution($jobExecutionStorage, $jobExecution);
 
-        self::assertSame(BatchStatus::COMPLETED, $jobExecution->getStatus()->getValue());
+        self::assertSame(BatchStatus::Completed, $jobExecution->getStatus());
         foreach ($jobExecution->getChildExecutions() as $childExecution) {
-            self::assertSame(BatchStatus::COMPLETED, $childExecution->getStatus()->getValue());
+            self::assertSame(BatchStatus::Completed, $childExecution->getStatus());
         }
 
         $output = self::OUTPUT_FILE;

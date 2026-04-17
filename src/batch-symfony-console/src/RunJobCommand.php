@@ -61,7 +61,7 @@ final class RunJobCommand extends Command
 
     private function guessExecutionExitCode(JobExecution $jobExecution): int
     {
-        if ($jobExecution->getStatus()->is(BatchStatus::COMPLETED)) {
+        if ($jobExecution->getStatus() === BatchStatus::Completed) {
             if ($jobExecution->getAllWarnings() === []) {
                 return self::EXIT_SUCCESS_CODE;
             }
@@ -75,7 +75,7 @@ final class RunJobCommand extends Command
     private function outputExecution(JobExecution $jobExecution, OutputInterface $output): void
     {
         $jobName = $jobExecution->getJobName();
-        if ($jobExecution->getStatus()->is(BatchStatus::COMPLETED)) {
+        if ($jobExecution->getStatus() === BatchStatus::Completed) {
             $warnings = $jobExecution->getAllWarnings();
             if ($warnings !== []) {
                 foreach ($warnings as $warning) {

@@ -32,7 +32,7 @@ final class DummyJobTest extends JobTestCase
     ): void {
         parent::assertAgainstExecution($jobExecutionStorage, $jobExecution);
 
-        self::assertSame(BatchStatus::COMPLETED, $jobExecution->getStatus()->getValue());
+        self::assertSame(BatchStatus::Completed, $jobExecution->getStatus());
         self::assertTrue($jobExecution->getSummary()->get('done'));
     }
 }

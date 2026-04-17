@@ -6,6 +6,7 @@ namespace Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Yokai\Batch\BatchStatus;
@@ -15,15 +16,6 @@ use Yokai\Batch\BatchStatus;
  */
 final class JobFilterType extends AbstractType
 {
-    private const STATUSES = [
-        'pending' => BatchStatus::PENDING,
-        'running' => BatchStatus::RUNNING,
-        'stopped' => BatchStatus::STOPPED,
-        'completed' => BatchStatus::COMPLETED,
-        'abandoned' => BatchStatus::ABANDONED,
-        'failed' => BatchStatus::FAILED,
-    ];
-
     public function __construct(
         /**
          * @var array<string>
@@ -47,11 +39,11 @@ final class JobFilterType extends AbstractType
         );
         $builder->add(
             'statuses',
-            ChoiceType::class,
+            EnumType::class,
             [
+                'class' => BatchStatus::class,
                 'label' => 'job.field.status',
-                'choice_label' => fn($choice, string $key, $value) => \sprintf('job.status.%s', $key),
-                'choices' => self::STATUSES,
+                'choice_label' => fn(BatchStatus $case) => \sprintf('job.status.%s', \strtolower($case->name)),
                 'required' => false,
                 'multiple' => true,
             ],

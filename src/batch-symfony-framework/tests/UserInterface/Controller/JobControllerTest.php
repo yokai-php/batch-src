@@ -163,9 +163,9 @@ final class JobControllerTest extends TestCase
                         ];
                         yield [
                             function () {
-                                self::fixtures(6, ['status' => BatchStatus::PENDING]);
-                                self::fixtures(4, ['status' => BatchStatus::RUNNING]);
-                                self::fixtures(10, ['status' => BatchStatus::COMPLETED]);
+                                self::fixtures(6, ['status' => BatchStatus::Pending]);
+                                self::fixtures(4, ['status' => BatchStatus::Running]);
+                                self::fixtures(10, ['status' => BatchStatus::Completed]);
                             },
                             Request::create('/jobs?filter[statuses][]=1'),
                             $formFactory,
@@ -177,9 +177,9 @@ final class JobControllerTest extends TestCase
                         ];
                         yield [
                             function () {
-                                self::fixtures(30, ['jobName' => 'export', 'status' => BatchStatus::PENDING]);
+                                self::fixtures(30, ['jobName' => 'export', 'status' => BatchStatus::Pending]);
                                 self::fixtures(5, ['jobName' => 'import']);
-                                self::fixtures(5, ['status' => BatchStatus::COMPLETED]);
+                                self::fixtures(5, ['status' => BatchStatus::Completed]);
                             },
                             Request::create('/jobs?filter[jobs][]=export&filter[statuses][]=1&page=2'),
                             $formFactory,
@@ -233,7 +233,7 @@ final class JobControllerTest extends TestCase
                     $exportExecution = JobExecution::createRoot(
                         '64edbe399b58e',
                         'export',
-                        new BatchStatus(BatchStatus::COMPLETED),
+                        BatchStatus::Completed,
                         new JobParameters(['type' => 'complete']),
                         new Summary(['count' => 156]),
                     );
@@ -247,21 +247,21 @@ final class JobControllerTest extends TestCase
                         JobExecution::createChild(
                             $exportExecution,
                             'download',
-                            new BatchStatus(BatchStatus::COMPLETED),
+                            BatchStatus::Completed,
                         ),
                     );
                     $exportExecution->addChildExecution(
                         JobExecution::createChild(
                             $exportExecution,
                             'transform',
-                            new BatchStatus(BatchStatus::RUNNING),
+                            BatchStatus::Running,
                         ),
                     );
                     $exportExecution->addChildExecution(
                         JobExecution::createChild(
                             $exportExecution,
                             'upload',
-                            new BatchStatus(BatchStatus::PENDING),
+                            BatchStatus::Pending,
                         ),
                     );
                     self::$storage->store($exportExecution);
@@ -526,12 +526,12 @@ final class JobControllerTest extends TestCase
                 [
                     'id' => \uniqid(),
                     'jobName' => \array_rand(\array_flip(['export', 'import'])),
-                    'status' => \array_rand(\array_flip([
-                        BatchStatus::PENDING,
-                        BatchStatus::RUNNING,
-                        BatchStatus::COMPLETED,
-                        BatchStatus::FAILED,
-                    ])),
+                    'status' => BatchStatus::from(\array_rand(\array_flip([
+                        BatchStatus::Pending->value,
+                        BatchStatus::Running->value,
+                        BatchStatus::Completed->value,
+                        BatchStatus::Failed->value,
+                    ]))),
                     'startTime' => $start = (new \DateTimeImmutable())->setTimestamp(\random_int(0, \time() - 10)),
                     'endTime' => (new \DateTimeImmutable())->setTimestamp(
                         \random_int($start->getTimestamp(), \time() - 10),
@@ -543,11 +543,11 @@ final class JobControllerTest extends TestCase
             $execution = JobExecution::createRoot(
                 $values['id'],
                 $values['jobName'],
-                new BatchStatus($values['status']),
+                $values['status'],
             );
-            if (!$execution->getStatus()->is(BatchStatus::PENDING)) {
+            if ($execution->getStatus() !== BatchStatus::Pending) {
                 $execution->setStartTime($values['startTime']);
-                if (!$execution->getStatus()->is(BatchStatus::RUNNING)) {
+                if ($execution->getStatus() !== BatchStatus::Running) {
                     $execution->setEndTime($values['endTime']);
                 }
             }

@@ -40,12 +40,12 @@ final class JobFilterTypeTest extends TypeTestCase
         );
         self::assertSame(
             [
-                'job.status.pending' => BatchStatus::PENDING,
-                'job.status.running' => BatchStatus::RUNNING,
-                'job.status.stopped' => BatchStatus::STOPPED,
-                'job.status.completed' => BatchStatus::COMPLETED,
-                'job.status.abandoned' => BatchStatus::ABANDONED,
-                'job.status.failed' => BatchStatus::FAILED,
+                'job.status.pending' => BatchStatus::Pending,
+                'job.status.running' => BatchStatus::Running,
+                'job.status.stopped' => BatchStatus::Stopped,
+                'job.status.completed' => BatchStatus::Completed,
+                'job.status.abandoned' => BatchStatus::Abandoned,
+                'job.status.failed' => BatchStatus::Failed,
             ],
             $choices($view->children['statuses']),
         );
@@ -79,8 +79,8 @@ final class JobFilterTypeTest extends TypeTestCase
         ];
 
         yield [
-            ['jobs' => ['export'], 'statuses' => [BatchStatus::PENDING]],
-            new JobFilter(['export'], [BatchStatus::PENDING]),
+            ['jobs' => ['export'], 'statuses' => [BatchStatus::Pending->value]],
+            new JobFilter(['export'], [BatchStatus::Pending]),
             true,
         ];
 

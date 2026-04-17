@@ -2,13 +2,13 @@
 
 {# @var execution \Yokai\Batch\JobExecution #}
 {% set classMap = {
-    (constant('PENDING', execution.status)): 'light',
-    (constant('RUNNING', execution.status)): 'warning',
-    (constant('STOPPED', execution.status)): 'info',
-    (constant('COMPLETED', execution.status)): 'success',
-    (constant('ABANDONED', execution.status)): 'info',
-    (constant('FAILED', execution.status)): 'danger',
+    'Pending': 'light',
+    'Running': 'warning',
+    'Stopped': 'info',
+    'Completed': 'success',
+    'Abandoned': 'info',
+    'Failed': 'danger',
 } %}
-<span class="badge badge-{{ classMap[execution.status.value] }}">
-    {{ ('job.status.'~execution.status|lower)|trans }}
+<span class="badge badge-{{ classMap[execution.status.name] }}">
+    {{ ('job.status.'~execution.status.name|lower)|trans }}
 </span>

@@ -36,7 +36,7 @@ final class FailingDummyJobTest extends JobTestCase
     ): void {
         parent::assertAgainstExecution($jobExecutionStorage, $jobExecution);
 
-        self::assertTrue($jobExecution->getStatus()->is(BatchStatus::FAILED));
+        self::assertTrue($jobExecution->getStatus() === BatchStatus::Failed);
         self::assertCount(2, $jobExecution->getFailures());
         self::assertCount(1, $jobExecution->getWarnings());
     }

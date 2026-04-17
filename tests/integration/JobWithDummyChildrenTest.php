@@ -45,14 +45,14 @@ final class JobWithDummyChildrenTest extends JobTestCase
     ): void {
         parent::assertAgainstExecution($jobExecutionStorage, $jobExecution);
 
-        self::assertSame(BatchStatus::COMPLETED, $jobExecution->getStatus()->getValue());
+        self::assertSame(BatchStatus::Completed, $jobExecution->getStatus());
 
         $prepareChildExecution = $jobExecution->getChildExecution('prepare');
-        self::assertSame(BatchStatus::COMPLETED, $prepareChildExecution->getStatus()->getValue());
+        self::assertSame(BatchStatus::Completed, $prepareChildExecution->getStatus());
         self::assertTrue($prepareChildExecution->getSummary()->get('done'));
 
         $doChildExecution = $jobExecution->getChildExecution('do');
-        self::assertSame(BatchStatus::COMPLETED, $doChildExecution->getStatus()->getValue());
+        self::assertSame(BatchStatus::Completed, $doChildExecution->getStatus());
         self::assertTrue($doChildExecution->getSummary()->get('done'));
     }
 }

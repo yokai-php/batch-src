@@ -21,6 +21,7 @@ use Yokai\Batch\Factory\JobExecutionLoggerFactory\InMemoryJobExecutionLoggerFact
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\Storage\Query;
 use Yokai\Batch\Storage\QueryBuilder;
+use Yokai\Batch\Storage\SortDirection;
 use Yokai\Batch\Test\Storage\JobExecutionStorageTestTrait;
 use Yokai\Batch\Warning;
 
@@ -108,7 +109,7 @@ final class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         $storage = $this->createStorage();
         $storage->setup();
 
-        $export = JobExecution::createRoot('123', 'export', new BatchStatus(BatchStatus::RUNNING));
+        $export = JobExecution::createRoot('123', 'export', BatchStatus::Running);
         $export->setStartTime(new DateTimeImmutable('2021-09-23 11:05:00'));
         $export->setLaunchedAt(new DateTimeImmutable('2021-09-23 11:04:55'));
         $export->addChildExecution($extract = JobExecution::createChild($export, 'extract'));
@@ -124,7 +125,7 @@ final class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         self::assertSame('2021-09-23 11:05:00', $retrievedExport->getStartTime()->format('Y-m-d H:i:s'));
         self::assertNull($retrievedExport->getEndTime());
         self::assertSame('2021-09-23 11:04:55', $retrievedExport->getLaunchedAt()->format('Y-m-d H:i:s'));
-        self::assertSame(BatchStatus::RUNNING, $retrievedExport->getStatus()->getValue());
+        self::assertSame(BatchStatus::Running, $retrievedExport->getStatus());
         $retrievedExtract = $retrievedExport->getChildExecution('extract');
         self::assertNotNull($retrievedExtract);
         self::assertSame('2021-09-23 11:05:01', $retrievedExtract->getStartTime()->format('Y-m-d H:i:s'));
@@ -146,13 +147,13 @@ final class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         $storage = $this->createStorage();
         $storage->setup();
         $storage->store($execution = JobExecution::createRoot('123', 'export'));
-        $execution->setStatus(BatchStatus::COMPLETED);
+        $execution->setStatus(BatchStatus::Completed);
         $storage->store($execution);
 
         $retrievedExecution = $storage->retrieve('export', '123');
         self::assertSame('export', $retrievedExecution->getJobName());
         self::assertSame('123', $retrievedExecution->getId());
-        self::assertSame(BatchStatus::COMPLETED, $retrievedExecution->getStatus()->getValue());
+        self::assertSame(BatchStatus::Completed, $retrievedExecution->getStatus());
     }
 
     public function testStoreFailing(): void
@@ -228,7 +229,7 @@ final class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
 
         $data['id'] = '123';
         $data['job_name'] = 'export';
-        $data['status'] ??= BatchStatus::COMPLETED;
+        $data['status'] ??= BatchStatus::Completed->value;
         $data['parameters'] ??= '[]';
         $data['summary'] ??= '[]';
         $data['failures'] ??= '[]';
@@ -315,14 +316,14 @@ final class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         ];
         yield 'Filter statuses' => [
             (new QueryBuilder())
-                ->statuses([BatchStatus::FAILED]),
+                ->statuses([BatchStatus::Failed]),
             [
                 ['import', '456'],
             ],
         ];
         yield 'Order by start ASC' => [
             (new QueryBuilder())
-                ->sort(Query::SORT_BY_START_ASC),
+                ->sort(SortDirection::StartAsc),
             [
                 ['import', '987'],
                 ['import', '789'],
@@ -332,7 +333,7 @@ final class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         ];
         yield 'Order by start DESC' => [
             (new QueryBuilder())
-                ->sort(Query::SORT_BY_START_DESC),
+                ->sort(SortDirection::StartDesc),
             [
                 ['import', '456'],
                 ['export', '123'],
@@ -342,7 +343,7 @@ final class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         ];
         yield 'Order by end ASC' => [
             (new QueryBuilder())
-                ->sort(Query::SORT_BY_END_ASC),
+                ->sort(SortDirection::EndAsc),
             [
                 ['import', '789'],
                 ['import', '987'],
@@ -352,7 +353,7 @@ final class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         ];
         yield 'Order by end DESC' => [
             (new QueryBuilder())
-                ->sort(Query::SORT_BY_END_DESC),
+                ->sort(SortDirection::EndDesc),
             [
                 ['import', '456'],
                 ['export', '123'],
@@ -473,19 +474,19 @@ final class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
     private function loadFixtures(DoctrineDBALJobExecutionStorage $storage): void
     {
         // completed export started at 2019-07-01 13:00 and ended at 2019-07-01 13:30
-        $completedExport = JobExecution::createRoot('123', 'export', new BatchStatus(BatchStatus::COMPLETED));
+        $completedExport = JobExecution::createRoot('123', 'export', BatchStatus::Completed);
         $completedExport->setStartTime(\DateTimeImmutable::createFromFormat(DATE_ISO8601, '2019-07-01T13:00:00+0200'));
         $completedExport->setEndTime(\DateTimeImmutable::createFromFormat(DATE_ISO8601, '2019-07-01T13:30:00+0200'));
         $storage->store($completedExport);
 
         // failed import started at 2019-07-01 17:30 and ended at 2019-07-01 18:30
-        $failedImport = JobExecution::createRoot('456', 'import', new BatchStatus(BatchStatus::FAILED));
+        $failedImport = JobExecution::createRoot('456', 'import', BatchStatus::Failed);
         $failedImport->setStartTime(\DateTimeImmutable::createFromFormat(DATE_ISO8601, '2019-07-01T17:30:00+0200'));
         $failedImport->setEndTime(\DateTimeImmutable::createFromFormat(DATE_ISO8601, '2019-07-01T18:30:00+0200'));
         $storage->store($failedImport);
 
         // running import started at 2019-06-30 22:00 and not ended
-        $runningImport = JobExecution::createRoot('789', 'import', new BatchStatus(BatchStatus::RUNNING));
+        $runningImport = JobExecution::createRoot('789', 'import', BatchStatus::Running);
         $runningImport->setStartTime(\DateTimeImmutable::createFromFormat(DATE_ISO8601, '2019-06-30T22:00:00+0200'));
         $runningImport->getLogger()->debug('Importing things');
         $runningImport->getLogger()->info('Thing imported');
@@ -493,7 +494,7 @@ final class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
         $storage->store($runningImport);
 
         // pending import not started and not ended
-        $pendingImport = JobExecution::createRoot('987', 'import', new BatchStatus(BatchStatus::PENDING));
+        $pendingImport = JobExecution::createRoot('987', 'import', BatchStatus::Pending);
         $storage->store($pendingImport);
     }
 }

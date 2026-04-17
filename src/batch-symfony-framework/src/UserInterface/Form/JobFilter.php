@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Form;
 
+use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Storage\Query;
 
 /**
@@ -18,7 +19,7 @@ final class JobFilter
          */
         public array $jobs = [],
         /**
-         * @var array<int>
+         * @var array<BatchStatus>
          */
         public array $statuses = [],
     ) {

@@ -64,7 +64,7 @@ final readonly class JobExecutionRowNormalizer
         return [
             'id' => $jobExecution->getId(),
             'job_name' => $jobExecution->getJobName(),
-            'status' => $jobExecution->getStatus()->getValue(),
+            'status' => $jobExecution->getStatus()->value,
             'parameters' => \iterator_to_array($jobExecution->getParameters()),
             'start_time' => $jobExecution->getStartTime(),
             'end_time' => $jobExecution->getEndTime(),
@@ -85,7 +85,7 @@ final readonly class JobExecutionRowNormalizer
     public function fromRow(array $data, JobExecution|null $parent = null): JobExecution
     {
         $name = $data['job_name'];
-        $status = new BatchStatus((int)$data['status']);
+        $status = BatchStatus::from((int)$data['status']);
         $parameters = new JobParameters($this->jsonFromString($data['parameters']));
         $summary = new Summary($this->jsonFromString($data['summary']));
 
@@ -137,7 +137,7 @@ final readonly class JobExecutionRowNormalizer
     {
         return [
             'job_name' => $jobExecution->getJobName(),
-            'status' => $jobExecution->getStatus()->getValue(),
+            'status' => $jobExecution->getStatus()->value,
             'parameters' => \iterator_to_array($jobExecution->getParameters()),
             'start_time' => $this->toDateString($jobExecution->getStartTime()),
             'end_time' => $this->toDateString($jobExecution->getEndTime()),
