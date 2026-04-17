@@ -18,12 +18,15 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Yokai\Batch\Bridge\Doctrine\DBAL\DoctrineDBALJobExecutionStorage;
+use Yokai\Batch\Bridge\Monolog\StreamJobExecutionLoggerFactory;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Form\JobFilterType;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\PaginationConfiguration;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\ConfigurableTemplating;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\SonataAdminTemplating;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\TemplatingInterface;
 use Yokai\Batch\Factory\JobExecutionIdGeneratorInterface;
+use Yokai\Batch\Factory\JobExecutionLoggerFactory\InMemoryJobExecutionLoggerFactory;
+use Yokai\Batch\Factory\JobExecutionLoggerFactory\NullJobExecutionLoggerFactory;
 use Yokai\Batch\Factory\JobExecutionLoggerFactoryInterface;
 use Yokai\Batch\Factory\JobExecutionParametersBuilder\PerJobJobExecutionParametersBuilder;
 use Yokai\Batch\Factory\JobExecutionParametersBuilder\StaticJobExecutionParametersBuilder;
@@ -40,6 +43,7 @@ use Yokai\Batch\Storage\JobExecutionStorageInterface;
  * @phpstan-import-type LauncherConfig from Configuration
  * @phpstan-import-type ParametersConfig from Configuration
  * @phpstan-import-type UserInterfaceConfig from Configuration
+ * @phpstan-import-type LoggingConfig from Configuration
  */
 final class YokaiBatchExtension extends Extension
 {
@@ -70,6 +74,7 @@ final class YokaiBatchExtension extends Extension
         $this->configureLauncher($container, $config['launcher']);
         $this->configureParameters($container, $config['parameters']);
         $this->configureUserInterface($container, $loader, $config['ui']);
+        $this->configureLogging($container, $config['logging']);
 
         $jobExecutionIdGeneratorDefinition = JobExecutionIdGeneratorDefinitionFactory::fromType($config['id']);
         $container->setDefinition(JobExecutionIdGeneratorInterface::class, $jobExecutionIdGeneratorDefinition);
@@ -237,5 +242,50 @@ final class YokaiBatchExtension extends Extension
         $container->register(PaginationConfiguration::class)
             ->addArgument($pagination['page_size'])
             ->addArgument($pagination['page_range']);
+    }
+
+    /**
+     * @param LoggingConfig $config
+     */
+    private function configureLogging(ContainerBuilder $container, array $config): void
+    {
+        if ($config['type'] === 'service') {
+            if ($config['service'] === null) {
+                throw new LogicException(
+                    'Cannot configure service logging: provide a service to use.',
+                );
+            }
+
+            $container->setAlias(JobExecutionLoggerFactoryInterface::class, $config['service']);
+
+            return;
+        }
+
+        if ($config['type'] === 'stream') {
+            if (!$this->installed('monolog')) {
+                throw new LogicException(
+                    'Cannot configure stream logging: install "yokai/batch-monolog" first.',
+                );
+            }
+
+            $container->register(JobExecutionLoggerFactoryInterface::class, StreamJobExecutionLoggerFactory::class)
+                ->setArguments([
+                    $config['stream']['directory'],
+                    \array_map(fn(string $id) => new Reference($id), $config['stream']['processors']),
+                    $config['stream']['formatter'] !== null ? new Reference($config['stream']['formatter']) : null,
+                    $config['stream']['sub_directories'],
+                    $config['stream']['chars_per_directory'],
+                ]);
+
+            return;
+        }
+
+        if ($config['type'] === 'null') {
+            $container->register(JobExecutionLoggerFactoryInterface::class, NullJobExecutionLoggerFactory::class);
+
+            return;
+        }
+
+        $container->register(JobExecutionLoggerFactoryInterface::class, InMemoryJobExecutionLoggerFactory::class);
     }
 }

@@ -15,6 +15,7 @@ use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\Reference;
 use Yokai\Batch\Bridge\Doctrine\DBAL\DoctrineDBALJobExecutionStorage;
+use Yokai\Batch\Bridge\Monolog\StreamJobExecutionLoggerFactory;
 use Yokai\Batch\Bridge\Symfony\Console\RunCommandJobLauncher;
 use Yokai\Batch\Bridge\Symfony\Framework\DependencyInjection\YokaiBatchExtension;
 use Yokai\Batch\Bridge\Symfony\Framework\UserInterface\Templating\ConfigurableTemplating;
@@ -26,6 +27,8 @@ use Yokai\Batch\Bridge\Symfony\Uid\Factory\RandomBasedUuidJobExecutionIdGenerato
 use Yokai\Batch\Bridge\Symfony\Uid\Factory\TimeBasedUuidJobExecutionIdGenerator;
 use Yokai\Batch\Bridge\Symfony\Uid\Factory\UlidJobExecutionIdGenerator;
 use Yokai\Batch\Factory\JobExecutionIdGeneratorInterface;
+use Yokai\Batch\Factory\JobExecutionLoggerFactory\InMemoryJobExecutionLoggerFactory;
+use Yokai\Batch\Factory\JobExecutionLoggerFactory\NullJobExecutionLoggerFactory;
 use Yokai\Batch\Factory\JobExecutionLoggerFactoryInterface;
 use Yokai\Batch\Factory\JobExecutionParametersBuilder\ChainJobExecutionParametersBuilder;
 use Yokai\Batch\Factory\JobExecutionParametersBuilder\PerJobJobExecutionParametersBuilder;
@@ -528,6 +531,97 @@ final class YokaiBatchExtensionTest extends TestCase
         yield 'Symfony ULID' => [
             ['id' => 'symfony.ulid'],
             UlidJobExecutionIdGenerator::class,
+        ];
+    }
+
+    #[DataProvider('logging')]
+    public function testLogging(
+        array $config,
+        \Closure|null $configure,
+        string $expectedClass,
+        \Closure|null $assert = null,
+    ): void {
+        $container = $this->createContainer($config, $configure);
+
+        $definition = $this->getDefinition($container, JobExecutionLoggerFactoryInterface::class);
+        self::assertNotNull($definition);
+        self::assertSame($expectedClass, $definition->getClass());
+
+        if ($assert !== null) {
+            $assert($container->findDefinition(JobExecutionLoggerFactoryInterface::class));
+        }
+    }
+
+    public static function logging(): \Generator
+    {
+        yield 'Default config' => [
+            [],
+            null,
+            InMemoryJobExecutionLoggerFactory::class,
+        ];
+        yield 'Memory explicit' => [
+            ['logging' => ['type' => 'memory']],
+            null,
+            InMemoryJobExecutionLoggerFactory::class,
+        ];
+        yield 'Null' => [
+            ['logging' => ['type' => 'null']],
+            null,
+            NullJobExecutionLoggerFactory::class,
+        ];
+        yield 'Stream default directory' => [
+            ['logging' => ['type' => 'stream']],
+            null,
+            StreamJobExecutionLoggerFactory::class,
+            function (Definition $definition) {
+                [$directory] = $definition->getArguments();
+                self::assertSame('%kernel.logs_dir%/batch', $directory);
+            },
+        ];
+        yield 'Stream custom directory' => [
+            ['logging' => ['type' => 'stream', 'stream' => ['directory' => '/custom/logs']]],
+            null,
+            StreamJobExecutionLoggerFactory::class,
+            function (Definition $definition) {
+                [$directory] = $definition->getArguments();
+                self::assertSame('/custom/logs', $directory);
+            },
+        ];
+        yield 'Stream with subdirectories' => [
+            ['logging' => ['type' => 'stream', 'stream' => ['directory' => '/tmp', 'sub_directories' => 2, 'chars_per_directory' => 3]]],
+            null,
+            StreamJobExecutionLoggerFactory::class,
+            function (Definition $definition) {
+                [, , , $subDirectories, $charsPerDirectory] = $definition->getArguments();
+                self::assertSame(2, $subDirectories);
+                self::assertSame(3, $charsPerDirectory);
+            },
+        ];
+        yield 'Stream with processors' => [
+            ['logging' => ['type' => 'stream', 'stream' => ['processors' => ['my.processor']]]],
+            fn(ContainerBuilder $container) => $container->register('my.processor'),
+            StreamJobExecutionLoggerFactory::class,
+            function (Definition $definition) {
+                [, $processors] = $definition->getArguments();
+                self::assertCount(1, $processors);
+                self::assertInstanceOf(Reference::class, $processors[0]);
+                self::assertSame('my.processor', (string)$processors[0]);
+            },
+        ];
+        yield 'Stream with formatter' => [
+            ['logging' => ['type' => 'stream', 'stream' => ['formatter' => 'my.formatter']]],
+            fn(ContainerBuilder $container) => $container->register('my.formatter'),
+            StreamJobExecutionLoggerFactory::class,
+            function (Definition $definition) {
+                [, , $formatter] = $definition->getArguments();
+                self::assertInstanceOf(Reference::class, $formatter);
+                self::assertSame('my.formatter', (string)$formatter);
+            },
+        ];
+        yield 'Custom service' => [
+            ['logging' => ['type' => 'service', 'service' => NullJobExecutionLoggerFactory::class]],
+            fn(ContainerBuilder $container) => $container->register(NullJobExecutionLoggerFactory::class),
+            NullJobExecutionLoggerFactory::class,
         ];
     }
 
