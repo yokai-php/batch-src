@@ -242,3 +242,32 @@ public function purge(Query $query): void
 ```
 
 The built-in `DoctrineDBALJobExecutionStorage` and `FilesystemJobExecutionStorage` already implement this method — no action required if you use either of them.
+
+---
+
+### OpenSpout — `HeaderStrategy` and `SheetFilter` interface changes (BREAKING)
+
+The two interfaces have new, intentional public contracts. The previous `@internal` methods have been removed.
+
+#### `HeaderStrategy`
+
+`setHeaders()` and `getItem()` are replaced by a single method:
+
+```diff
+-public function setHeaders(array $headers): bool;
+-public function getItem(array $row): array;
++public function process(array $row, bool $isFirstRow): array|null;
+```
+
+`process()` receives the raw row and whether it is the first row of the sheet. Return `null` to skip the row (e.g. it is a header row), or return an array to yield it as an item.
+
+#### `SheetFilter`
+
+`list()` is replaced by `accepts()`:
+
+```diff
+-public function list(ReaderInterface $reader): Generator;
++public function accepts(SheetInterface $sheet): bool;
+```
+
+`accepts()` receives a single sheet and returns whether it should be read.
