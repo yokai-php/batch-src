@@ -387,7 +387,7 @@ final class DoctrineDBALJobExecutionStorage implements
         }
 
         if ($query->endTime() !== null) {
-            $qb->andWhere($qb->expr()->isNotNull('start_time'));
+            $qb->andWhere($qb->expr()->isNotNull('end_time'));
         }
         $endDateFrom = $query->endTime()?->getFrom();
         if ($endDateFrom !== null) {
