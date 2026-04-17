@@ -5,29 +5,31 @@ declare(strict_types=1);
 namespace Yokai\Batch\Tests\Bridge\Symfony\Console;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Yokai\Batch\Bridge\Symfony\Console\CommandRunner;
+use Yokai\Batch\Bridge\Symfony\Console\ShellRunnerInterface;
 
 final class CommandRunnerTest extends TestCase
 {
-    private function createRunner(): MockObject&CommandRunner
+    private function createRunner(): array
     {
-        /** @var Stub&PhpExecutableFinder $phpLocator */
+        /** @var MockObject&ShellRunnerInterface $shellRunner */
+        $shellRunner = $this->createMock(ShellRunnerInterface::class);
+
         $phpLocator = $this->createStub(PhpExecutableFinder::class);
         $phpLocator->method('find')->willReturn('/usr/bin/php');
 
-        return $this->getMockBuilder(CommandRunner::class)
-            ->onlyMethods(['exec'])
-            ->setConstructorArgs(['/path/to/bin', '/path/to/logs', $phpLocator])
-            ->getMock();
+        $runner = new CommandRunner('/path/to/bin', '/path/to/logs', $phpLocator, $shellRunner);
+
+        return [$runner, $shellRunner];
     }
 
     public function testRunAsync(): void
     {
-        $runner = $this->createRunner();
-        $runner->expects($this->once())
+        [$runner, $shellRunner] = $this->createRunner();
+
+        $shellRunner->expects($this->once())
             ->method('exec')
             ->with(
                 '/usr/bin/php /path/to/bin/console yokai:testing:test 1 ' .

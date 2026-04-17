@@ -7,7 +7,7 @@ namespace Yokai\Batch\Tests\Bridge\Symfony\Console;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Yokai\Batch\BatchStatus;
-use Yokai\Batch\Bridge\Symfony\Console\CommandRunner;
+use Yokai\Batch\Bridge\Symfony\Console\CommandRunnerInterface;
 use Yokai\Batch\Bridge\Symfony\Console\RunCommandJobLauncher;
 use Yokai\Batch\Factory\JobExecutionFactory;
 use Yokai\Batch\Factory\JobExecutionLoggerFactory\InMemoryJobExecutionLoggerFactory;
@@ -22,8 +22,8 @@ final class RunCommandJobLauncherTest extends TestCase
         $config = ['_id' => '123456789', 'foo' => ['bar']];
         $arguments = ['job' => 'testing', 'configuration' => '{"_id":"123456789","foo":["bar"]}'];
 
-        /** @var MockObject&CommandRunner $commandRunner */
-        $commandRunner = $this->createMock(CommandRunner::class);
+        /** @var MockObject&CommandRunnerInterface $commandRunner */
+        $commandRunner = $this->createMock(CommandRunnerInterface::class);
         $commandRunner->expects($this->once())
             ->method('runAsync')
             ->with('yokai:batch:run', 'test.log', $arguments);

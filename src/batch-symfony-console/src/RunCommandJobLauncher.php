@@ -22,7 +22,7 @@ final readonly class RunCommandJobLauncher implements JobLauncherInterface
 {
     public function __construct(
         private JobExecutionFactory $jobExecutionFactory,
-        private CommandRunner $commandRunner,
+        private CommandRunnerInterface $commandRunner,
         private JobExecutionStorageInterface $jobExecutionStorage,
         private string $logFilename = 'batch_execute.log',
     ) {

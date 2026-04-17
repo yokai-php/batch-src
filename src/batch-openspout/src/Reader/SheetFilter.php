@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Yokai\Batch\Bridge\OpenSpout\Reader;
 
 use Closure;
-use Generator;
-use OpenSpout\Reader\ReaderInterface;
+use OpenSpout\Reader\RowIteratorInterface;
 use OpenSpout\Reader\SheetInterface;
 
 /**
@@ -54,17 +53,12 @@ final readonly class SheetFilter
     }
 
     /**
-     * Iterate over valid sheets for the provided filter.
+     * Whether the given sheet should be read.
      *
-     * @return Generator<SheetInterface>
-     * @internal
+     * @param SheetInterface<RowIteratorInterface> $sheet
      */
-    public function list(ReaderInterface $reader): Generator
+    public function accepts(SheetInterface $sheet): bool
     {
-        foreach ($reader->getSheetIterator() as $sheet) {
-            if (($this->accept)($sheet)) {
-                yield $sheet;
-            }
-        }
+        return ($this->accept)($sheet);
     }
 }

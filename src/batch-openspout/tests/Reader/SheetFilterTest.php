@@ -14,11 +14,7 @@ final class SheetFilterTest extends TestCase
 
     public function testAllAcceptsEverySheet(): void
     {
-        $reader = new XLSXReader();
-        $reader->open(self::MULTI_TABS);
-
-        $sheets = \array_values(\iterator_to_array(SheetFilter::all()->list($reader)));
-        $reader->close();
+        $sheets = $this->filterSheets(SheetFilter::all());
 
         self::assertCount(2, $sheets);
         self::assertSame(0, $sheets[0]->getIndex());
@@ -27,11 +23,7 @@ final class SheetFilterTest extends TestCase
 
     public function testIndexIsFiltersToSingleIndex(): void
     {
-        $reader = new XLSXReader();
-        $reader->open(self::MULTI_TABS);
-
-        $sheets = \array_values(\iterator_to_array(SheetFilter::indexIs(1)->list($reader)));
-        $reader->close();
+        $sheets = $this->filterSheets(SheetFilter::indexIs(1));
 
         self::assertCount(1, $sheets);
         self::assertSame(1, $sheets[0]->getIndex());
@@ -39,11 +31,7 @@ final class SheetFilterTest extends TestCase
 
     public function testIndexIsFiltersToMultipleIndexes(): void
     {
-        $reader = new XLSXReader();
-        $reader->open(self::MULTI_TABS);
-
-        $sheets = \array_values(\iterator_to_array(SheetFilter::indexIs(0, 1)->list($reader)));
-        $reader->close();
+        $sheets = $this->filterSheets(SheetFilter::indexIs(0, 1));
 
         self::assertCount(2, $sheets);
         self::assertSame(0, $sheets[0]->getIndex());
@@ -52,11 +40,7 @@ final class SheetFilterTest extends TestCase
 
     public function testNameIsFiltersToMatchingSheet(): void
     {
-        $reader = new XLSXReader();
-        $reader->open(self::MULTI_TABS);
-
-        $sheets = \array_values(\iterator_to_array(SheetFilter::nameIs('Français')->list($reader)));
-        $reader->close();
+        $sheets = $this->filterSheets(SheetFilter::nameIs('Français'));
 
         self::assertCount(1, $sheets);
         self::assertSame('Français', $sheets[0]->getName());
@@ -64,32 +48,36 @@ final class SheetFilterTest extends TestCase
 
     public function testNameIsFiltersToMultipleNames(): void
     {
-        $reader = new XLSXReader();
-        $reader->open(self::MULTI_TABS);
-
-        // Retrieve both sheet names to avoid hardcoding the first sheet's name
-        $allSheets = \array_values(\iterator_to_array(SheetFilter::all()->list($reader)));
-        $reader->close();
-
+        // Retrieve first sheet name dynamically to avoid hardcoding it
+        $allSheets = $this->filterSheets(SheetFilter::all());
         $firstName = $allSheets[0]->getName();
 
-        $reader = new XLSXReader();
-        $reader->open(self::MULTI_TABS);
-
-        $sheets = \array_values(\iterator_to_array(SheetFilter::nameIs($firstName, 'Français')->list($reader)));
-        $reader->close();
+        $sheets = $this->filterSheets(SheetFilter::nameIs($firstName, 'Français'));
 
         self::assertCount(2, $sheets);
     }
 
     public function testFilterWithNoMatch(): void
     {
+        $sheets = $this->filterSheets(SheetFilter::nameIs('NonExistent'));
+
+        self::assertCount(0, $sheets);
+    }
+
+    private function filterSheets(SheetFilter $filter): array
+    {
         $reader = new XLSXReader();
         $reader->open(self::MULTI_TABS);
 
-        $sheets = \iterator_to_array(SheetFilter::nameIs('NonExistent')->list($reader));
+        $sheets = [];
+        foreach ($reader->getSheetIterator() as $sheet) {
+            if ($filter->accepts($sheet)) {
+                $sheets[] = $sheet;
+            }
+        }
+
         $reader->close();
 
-        self::assertCount(0, $sheets);
+        return $sheets;
     }
 }

@@ -56,35 +56,32 @@ final class HeaderStrategy
     }
 
     /**
-     * @param list<string> $headers
-     * @internal
-     */
-    public function setHeaders(array $headers): bool
-    {
-        if ($this->mode === self::NONE) {
-            return true; // row should be read, will be considered as an item
-        }
-        if ($this->mode === self::COMBINE) {
-            $this->headers = $headers;
-        }
-
-        return false; // row should be skipped, will not be considered as an item
-    }
-
-    /**
-     * Build the associative item, a combination of headers and values.
-     *
-     * @throws InvalidRowSizeException
+     * Process a row from the file.
+     * Returns null if the row should be skipped (e.g. it is a header row).
+     * Returns an array if the row should be yielded as an item.
      *
      * @param list<string> $row
      *
-     * @return array<string, string>|list<string>
-     * @internal
+     * @return array<string, string>|list<string>|null
+     *
+     * @throws InvalidRowSizeException
      */
-    public function getItem(array $row): array
+    public function process(array $row, bool $isFirstRow): array|null
     {
+        if ($isFirstRow) {
+            if ($this->mode === self::COMBINE) {
+                $this->headers = $row;
+
+                return null;
+            }
+            if ($this->mode === self::SKIP) {
+                return null;
+            }
+            // NONE mode: fall through and treat first row as a regular item
+        }
+
         if ($this->headers === null) {
-            return $row; // headers were not set, read row as is
+            return $row;
         }
 
         try {
