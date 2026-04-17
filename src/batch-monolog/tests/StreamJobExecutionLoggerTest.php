@@ -7,6 +7,7 @@ namespace Yokai\Batch\Tests\Bridge\Monolog;
 use Monolog\Formatter\JsonFormatter;
 use Monolog\Processor\PsrLogMessageProcessor;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Filesystem\Filesystem;
 use Yokai\Batch\Bridge\Monolog\StreamJobExecutionLogger;
 
 final class StreamJobExecutionLoggerTest extends TestCase
@@ -15,16 +16,13 @@ final class StreamJobExecutionLoggerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->tmpDir = \sys_get_temp_dir() . '/yokai-batch-monolog-test-' . \uniqid();
+        $this->tmpDir = ARTIFACT_DIR . '/stream-job-execution-logger-' . \uniqid();
         \mkdir($this->tmpDir, 0755, true);
     }
 
     protected function tearDown(): void
     {
-        foreach (\glob($this->tmpDir . '/*') ?: [] as $file) {
-            \unlink($file);
-        }
-        \rmdir($this->tmpDir);
+        (new Filesystem())->remove($this->tmpDir);
     }
 
     public function testGetReferenceReturnsTheGivenReference(): void
@@ -129,11 +127,56 @@ final class StreamJobExecutionLoggerTest extends TestCase
         self::assertSame('json log', $decoded['message']);
     }
 
+    public function testGetReferenceReturnsNestedReferenceAsIs(): void
+    {
+        $logger = $this->createLogger('60/99/exec-1.log', subdir: '60/99');
+
+        self::assertSame('60/99/exec-1.log', $logger->getReference());
+    }
+
+    public function testLogWritesToFileInSubdirectory(): void
+    {
+        $logger = $this->createLogger('60/99/exec-1.log', subdir: '60/99');
+
+        $logger->info('nested message');
+
+        self::assertFileExists($this->tmpDir . '/60/99/exec-1.log');
+        self::assertStringContainsString('nested message', $logger->getLogsContent());
+    }
+
+    public function testGetLogsReadsFromNestedPath(): void
+    {
+        $logger = $this->createLogger('60/99/exec-1.log', subdir: '60/99');
+
+        $logger->info('first line');
+        $logger->warning('second line');
+
+        $lines = \iterator_to_array($logger->getLogs());
+
+        self::assertCount(2, $lines);
+        self::assertStringContainsString('first line', $lines[0]);
+        self::assertStringContainsString('second line', $lines[1]);
+    }
+
+    public function testGetLogsContentReadsFromNestedPath(): void
+    {
+        $logger = $this->createLogger('60/99/exec-1.log', subdir: '60/99');
+
+        $logger->error('nested error');
+
+        self::assertStringContainsString('nested error', $logger->getLogsContent());
+    }
+
     private function createLogger(
         string $filename,
         array $processors = [],
         mixed $formatter = null,
+        string $subdir = '',
     ): StreamJobExecutionLogger {
+        if ($subdir !== '') {
+            \mkdir($this->tmpDir . '/' . $subdir, 0755, true);
+        }
+
         return new StreamJobExecutionLogger(
             $this->tmpDir . '/' . $filename,
             $filename,

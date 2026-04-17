@@ -7,6 +7,7 @@ namespace Yokai\Batch\Tests\Bridge\Monolog;
 use Monolog\Formatter\JsonFormatter;
 use Monolog\Processor\PsrLogMessageProcessor;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Filesystem\Filesystem;
 use Yokai\Batch\Bridge\Monolog\StreamJobExecutionLogger;
 use Yokai\Batch\Bridge\Monolog\StreamJobExecutionLoggerFactory;
 
@@ -16,16 +17,13 @@ final class StreamJobExecutionLoggerFactoryTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->tmpDir = \sys_get_temp_dir() . '/yokai-batch-monolog-factory-test-' . \uniqid();
+        $this->tmpDir = ARTIFACT_DIR . '/stream-job-execution-logger-factory-' . \uniqid();
         \mkdir($this->tmpDir, 0755, true);
     }
 
     protected function tearDown(): void
     {
-        foreach (\glob($this->tmpDir . '/*') ?: [] as $file) {
-            \unlink($file);
-        }
-        \rmdir($this->tmpDir);
+        (new Filesystem())->remove($this->tmpDir);
     }
 
     public function testCreateReturnsStreamJobExecutionLogger(): void
@@ -64,21 +62,6 @@ final class StreamJobExecutionLoggerFactoryTest extends TestCase
         self::assertSame('', $logger->getLogsContent());
     }
 
-    public function testCreateCreatesDirectoryIfMissing(): void
-    {
-        $nestedDir = $this->tmpDir . '/nested/dir';
-        $factory = new StreamJobExecutionLoggerFactory($nestedDir);
-
-        $logger = $factory->create('exec-1');
-        $logger->info('hello');
-
-        self::assertDirectoryExists($nestedDir);
-
-        \unlink($nestedDir . '/exec-1.log');
-        \rmdir($nestedDir);
-        \rmdir(\dirname($nestedDir));
-    }
-
     public function testRestoreReturnsLoggerWithGivenReference(): void
     {
         $factory = new StreamJobExecutionLoggerFactory($this->tmpDir);
@@ -111,8 +94,6 @@ final class StreamJobExecutionLoggerFactoryTest extends TestCase
         $logger->info('value is {val}', ['val' => 'hello']);
 
         self::assertStringContainsString('value is hello', $logger->getLogsContent());
-
-        \unlink($this->tmpDir . '/exec-proc.log');
     }
 
     public function testFormatterIsPassedToLogger(): void
@@ -130,7 +111,50 @@ final class StreamJobExecutionLoggerFactoryTest extends TestCase
 
         self::assertIsArray($decoded);
         self::assertSame('json log', $decoded['message']);
+    }
 
-        \unlink($this->tmpDir . '/exec-fmt.log');
+    public function testCreateWithSubDirectoriesBuildsNestedReference(): void
+    {
+        $factory = new StreamJobExecutionLoggerFactory(
+            $this->tmpDir,
+            subDirectories: 2,
+            charsPerDirectory: 2,
+        );
+
+        $logger = $factory->create('60996f72-4f54-4184-9268-35ffdecf0de6');
+
+        self::assertSame('60/99/60996f72-4f54-4184-9268-35ffdecf0de6.log', $logger->getReference());
+    }
+
+    public function testCreateWithSubDirectoriesWritesFileInSubdirectory(): void
+    {
+        $factory = new StreamJobExecutionLoggerFactory(
+            $this->tmpDir,
+            subDirectories: 2,
+            charsPerDirectory: 2,
+        );
+
+        $logger = $factory->create('60996f72-4f54-4184-9268-35ffdecf0de6');
+        $logger->info('nested log');
+
+        self::assertFileExists($this->tmpDir . '/60/99/60996f72-4f54-4184-9268-35ffdecf0de6.log');
+        self::assertStringContainsString('nested log', $logger->getLogsContent());
+    }
+
+    public function testRestoreWithSubDirectoryReferenceReadsFileContent(): void
+    {
+        $factory = new StreamJobExecutionLoggerFactory(
+            $this->tmpDir,
+            subDirectories: 2,
+            charsPerDirectory: 2,
+        );
+
+        \mkdir($this->tmpDir . '/60/99', 0755, true);
+        \file_put_contents($this->tmpDir . '/60/99/exec.log', "restored line\n");
+
+        $logger = $factory->restore('60/99/exec.log');
+
+        self::assertSame('60/99/exec.log', $logger->getReference());
+        self::assertStringContainsString('restored line', $logger->getLogsContent());
     }
 }
