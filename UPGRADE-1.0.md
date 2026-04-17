@@ -203,6 +203,17 @@ yokai_batch:
 
 ---
 
+### Concrete classes are now `final` and/or `readonly` (BREAKING for subclasses)
+
+As part of the PHP 8.2 modernization, **all concrete classes** in the codebase have been made `final`
+and/or `readonly` wherever that was appropriate. Classes that were only marked `@final` in their
+docblock now enforce it at the language level.
+
+**Action required:** If you extend any concrete class from this library, refactor your code to use
+composition instead. Extending `final` classes or `readonly` classes is a PHP compile error.
+
+---
+
 ### New method: `QueryableJobExecutionStorageInterface::purge()` (BREAKING for custom implementations)
 
 A new method has been added to `QueryableJobExecutionStorageInterface`:
