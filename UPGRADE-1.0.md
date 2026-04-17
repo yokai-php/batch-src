@@ -214,6 +214,107 @@ composition instead. Extending `final` classes or `readonly` classes is a PHP co
 
 ---
 
+### `BatchStatus` is now a backed enum (BREAKING)
+
+`BatchStatus` has been converted from a `readonly class` with integer constants to a PHP 8.1
+`backed int enum`.
+
+#### Before / After
+
+```diff
+-use Yokai\Batch\BatchStatus;
+
+-$status = new BatchStatus(BatchStatus::PENDING);
+-$status->getValue(); // int
+-(string) $status;    // "PENDING"
+
++$status = BatchStatus::Pending;
++$status->value;  // int (1)
++$status->name;   // "Pending"
+```
+
+#### Removed
+
+| Removed | Replacement |
+|---------|-------------|
+| `BatchStatus::PENDING` (int constant) | `BatchStatus::Pending` (enum case) |
+| `BatchStatus::RUNNING` | `BatchStatus::Running` |
+| `BatchStatus::STOPPED` | `BatchStatus::Stopped` |
+| `BatchStatus::COMPLETED` | `BatchStatus::Completed` |
+| `BatchStatus::ABANDONED` | `BatchStatus::Abandoned` |
+| `BatchStatus::FAILED` | `BatchStatus::Failed` |
+| `BatchStatus::__construct(int $value)` | — |
+| `BatchStatus::getValue(): int` | `BatchStatus->value` (enum property) |
+| `BatchStatus::is(int $value): bool` | `=== BatchStatus::CaseName` |
+| `BatchStatus::isOneOf(int ...$values): bool` | `in_array($status, [...], true)` |
+| `BatchStatus::__toString()` | `BatchStatus->name` |
+
+#### Signature changes
+
+```diff
+-JobExecution::setStatus(BatchStatus $status)   // was: setStatus(int $value)
+-ExceptionEvent::getStatus(): BatchStatus       // was: getStatus(): int (via BatchStatus object)
+-ExceptionEvent::setStatus(BatchStatus $status) // was: setStatus(int $value)
+
+// QueryBuilder / Query
+-QueryBuilder::statuses(int ...$statuses): self
++QueryBuilder::statuses(BatchStatus ...$statuses): self
+
+-Query::statuses(): int[]
++Query::statuses(): BatchStatus[]
+```
+
+#### Usage example
+
+```php
+use Yokai\Batch\Storage\QueryBuilder;
+use Yokai\Batch\BatchStatus;
+
+$storage->purge(
+    (new QueryBuilder())
+        ->statuses(BatchStatus::Failed, BatchStatus::Abandoned)
+        ->getQuery()
+);
+```
+
+---
+
+### `SortDirection` is now a backed enum (BREAKING)
+
+The `SORT_BY_*` string constants on `Query` have been removed and replaced by the
+`SortDirection` backed string enum.
+
+#### Before / After
+
+```diff
+-use Yokai\Batch\Storage\Query;
++use Yokai\Batch\Storage\SortDirection;
+
+-(new QueryBuilder())->sort(Query::SORT_BY_END_DESC);
++(new QueryBuilder())->sort(SortDirection::EndDesc);
+```
+
+#### Removed
+
+| Removed | Replacement |
+|---------|-------------|
+| `Query::SORT_BY_START_ASC` | `SortDirection::StartAsc` |
+| `Query::SORT_BY_START_DESC` | `SortDirection::StartDesc` |
+| `Query::SORT_BY_END_ASC` | `SortDirection::EndAsc` |
+| `Query::SORT_BY_END_DESC` | `SortDirection::EndDesc` |
+
+#### Signature changes
+
+```diff
+-QueryBuilder::sort(string $by): self  // threw UnexpectedValueException on invalid values
++QueryBuilder::sort(SortDirection $by): self
+
+-Query::sort(): string|null
++Query::sort(): SortDirection|null
+```
+
+---
+
 ### New method: `QueryableJobExecutionStorageInterface::purge()` (BREAKING for custom implementations)
 
 A new method has been added to `QueryableJobExecutionStorageInterface`:
@@ -236,7 +337,7 @@ use Yokai\Batch\Storage\QueryBuilder;
 $storage->purge(
     (new QueryBuilder())
         ->jobs(['import'])
-        ->statuses([BatchStatus::FAILED])
+        ->statuses(BatchStatus::Failed)
         ->getQuery()
 );
 ```
