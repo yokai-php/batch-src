@@ -6,6 +6,7 @@ namespace Yokai\Batch\Sources\Tests\Convention\Documentation;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Yokai\Batch\Factory\JobExecutionLoggerFactoryInterface;
 use Yokai\Batch\Job\Item\ItemProcessorInterface;
 use Yokai\Batch\Job\Item\ItemReaderInterface;
 use Yokai\Batch\Job\Item\ItemWriterInterface;
@@ -126,6 +127,10 @@ final class DocumentationLinksTest extends TestCase
         yield 'ItemWriterInterface' => [
             'docs/docs/core-concepts/item-job/item-writer.rst',
             ItemWriterInterface::class,
+        ];
+        yield 'JobExecutionLoggerFactoryInterface' => [
+            'docs/docs/core-concepts/job-execution-logger.rst',
+            JobExecutionLoggerFactoryInterface::class,
         ];
     }
 }

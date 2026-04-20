@@ -12,6 +12,7 @@ Here is the complete list of what to expect:
    Doctrine ORM </bridges/doctrine-orm>
    Doctrine Persistence </bridges/doctrine-persistence>
    Flysystem </bridges/league-flysystem>
+   Monolog </bridges/monolog>
    OpenSpout </bridges/openspout>
    Symfony Console </bridges/symfony-console>
    Symfony Messenger </bridges/symfony-messenger>
