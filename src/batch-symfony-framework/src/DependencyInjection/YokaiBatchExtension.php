@@ -48,6 +48,19 @@ use Yokai\Batch\Storage\JobExecutionStorageInterface;
 final class YokaiBatchExtension extends Extension
 {
     /**
+     * @var \Closure(string): bool
+     */
+    private \Closure $packageChecker;
+
+    /**
+     * @param (\Closure(string): bool)|null $packageChecker Optional override for package detection, defaults to {@see InstalledVersions::isInstalled()}.
+     */
+    public function __construct(\Closure|null $packageChecker = null)
+    {
+        $this->packageChecker = $packageChecker ?? InstalledVersions::isInstalled(...);
+    }
+
+    /**
      * @param list<array<string, mixed>> $configs
      */
     public function load(array $configs, ContainerBuilder $container): void
@@ -84,8 +97,8 @@ final class YokaiBatchExtension extends Extension
 
     private function installed(string $package): bool
     {
-        return InstalledVersions::isInstalled('yokai/batch-src')
-            || InstalledVersions::isInstalled('yokai/batch-' . $package);
+        return ($this->packageChecker)('yokai/batch-src')
+            || ($this->packageChecker)('yokai/batch-' . $package);
     }
 
     private function getLoader(ContainerBuilder $container): LoaderInterface
