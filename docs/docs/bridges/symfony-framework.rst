@@ -157,6 +157,69 @@ You can configure what your id will be like:
       # id: symfony.uuid.time
       # id: symfony.ulid
 
+Configure job execution log storage
+------------------------------------------------------------
+
+| By default, job execution logs are kept in memory and are lost when the process ends.
+| You can configure a different strategy using the ``logging`` key:
+
+.. code-block:: yaml
+
+    # config/packages/yokai_batch.yaml
+    yokai_batch:
+      logging:
+        type: memory  # memory (default) | null | stream | service
+
+* ``memory``: stores logs in memory (default) — suitable when you have few logs per job
+* ``null``: discards all logs
+* ``stream``: writes one log file per job execution via Monolog (requires ``yokai/batch-monolog``)
+* ``service``: delegates to a custom service implementing ``JobExecutionLoggerFactoryInterface``
+
+Stream logging (file-based)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``stream`` type writes one log file per job execution via Monolog's ``StreamHandler``.
+It requires the ``yokai/batch-monolog`` package:
+
+.. code-block:: shell
+
+    composer require yokai/batch-monolog
+
+.. code-block:: yaml
+
+    # config/packages/yokai_batch.yaml
+    yokai_batch:
+      logging:
+        type: stream
+        stream:
+          directory: '%kernel.logs_dir%/batch'  # where log files are stored
+          sub_directories: 0                     # number of subdirectory levels (0 = flat)
+          chars_per_directory: 0                 # characters from the id used per level
+          processors: []                         # list of Monolog processor service ids
+          formatter: ~                           # Monolog formatter service id (optional)
+
+.. note::
+   With ``sub_directories: 2`` and ``chars_per_directory: 2``, a job execution with id
+   ``60996f72`` would be stored at ``{directory}/60/99/60996f72.log``.
+   This is useful when a large number of job executions are expected.
+
+.. seealso::
+   | :doc:`Bridge with Monolog </bridges/monolog>`
+
+Custom logger factory service
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If none of the built-in types fit your needs, you can point to your own service:
+
+.. code-block:: yaml
+
+    # config/packages/yokai_batch.yaml
+    yokai_batch:
+      logging:
+        type: service
+        service: App\Batch\MyJobExecutionLoggerFactory
+
+
 User interface to visualize ``JobExecution``
 ------------------------------------------------------------
 

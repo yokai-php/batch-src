@@ -104,7 +104,7 @@ a small, pluggable interface hierarchy.
 | Class / Interface | Description |
 |-------------------|-------------|
 | `Yokai\Batch\Logger\JobExecutionLoggerInterface` | PSR-3 logger + `getReference()`, `getLogs()`, `getLogsContent()` |
-| `Yokai\Batch\Factory\JobExecutionLoggerFactoryInterface` | Creates and restores loggers (`create()` / `restore(string $ref)`) |
+| `Yokai\Batch\Factory\JobExecutionLoggerFactoryInterface` | Creates and restores loggers (`create(string $id)` / `restore(string $ref)`) |
 | `Yokai\Batch\Logger\InMemoryJobExecutionLogger` | Default implementation — accumulates logs in-memory |
 | `Yokai\Batch\Logger\NullJobExecutionLogger` | Discards all logs — useful in tests |
 | `Yokai\Batch\Factory\JobExecutionLoggerFactory\InMemoryJobExecutionLoggerFactory` | Factory for the in-memory logger (registered by default by the Symfony bundle) |
@@ -166,6 +166,79 @@ In a Symfony application the bundle wires this automatically.
 `BatchLogger` and `YokaiBatchLogger` are functionally identical — both are PSR-3 loggers that
 forward to the current job execution logger during job execution. Replace any references to
 `BatchLogger` with `YokaiBatchLogger`.
+
+---
+
+### New bridge: `yokai/batch-monolog`
+
+A new optional bridge package adds file-based log storage for job executions via
+[Monolog](https://seldaek.github.io/monolog)'s `StreamHandler`.
+
+```bash
+composer require yokai/batch-monolog
+```
+
+Each job execution gets its own log file named after its id:
+
+```php
+use Yokai\Batch\Bridge\Monolog\StreamJobExecutionLoggerFactory;
+
+new StreamJobExecutionLoggerFactory(
+    directory: '/var/log/batch',
+);
+```
+
+For large workloads, files can be spread across nested subdirectories (git-object style):
+
+```php
+new StreamJobExecutionLoggerFactory(
+    directory: '/var/log/batch',
+    subDirectories: 2,
+    charsPerDirectory: 2,
+    // a job "60996f72" is stored at /var/log/batch/60/99/60996f72.log
+);
+```
+
+Monolog processors and a custom formatter can also be injected to control how records are written.
+
+In a Symfony application, configure the bridge through the bundle (see below).
+
+---
+
+### Symfony bundle configuration — job execution log storage
+
+A new `logging` key controls how job execution logs are stored.
+The default behaviour is unchanged (`memory` — in-memory, lost at process end):
+
+```yaml
+# config/packages/yokai_batch.yaml
+yokai_batch:
+    logging:
+        type: memory   # memory (default) | null | stream | service
+```
+
+To persist logs to files (requires `yokai/batch-monolog`):
+
+```yaml
+yokai_batch:
+    logging:
+        type: stream
+        stream:
+            directory: '%kernel.logs_dir%/batch'
+            sub_directories: 0        # subdirectory depth (0 = flat)
+            chars_per_directory: 0    # characters per subdirectory level
+            processors: []            # Monolog processor service ids
+            formatter: ~              # Monolog formatter service id (optional)
+```
+
+To use a custom service implementing `JobExecutionLoggerFactoryInterface`:
+
+```yaml
+yokai_batch:
+    logging:
+        type: service
+        service: App\Batch\MyJobExecutionLoggerFactory
+```
 
 ---
 

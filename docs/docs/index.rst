@@ -67,6 +67,7 @@ Explore some of the things that could be built with **Yokai Batch**:
    core-concepts/item-job
    core-concepts/job-execution
    core-concepts/job-execution-storage
+   core-concepts/job-execution-logger
    core-concepts/job-with-children
    core-concepts/job-parameter-accessor
    core-concepts/aware-interfaces
@@ -98,6 +99,7 @@ Explore some of the things that could be built with **Yokai Batch**:
    Doctrine ORM </bridges/doctrine-orm>
    Doctrine Persistence </bridges/doctrine-persistence>
    Flysystem </bridges/league-flysystem>
+   Monolog </bridges/monolog>
    OpenSpout </bridges/openspout>
    Symfony Console </bridges/symfony-console>
    Symfony Framework </bridges/symfony-framework>
