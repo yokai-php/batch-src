@@ -449,10 +449,10 @@ final class YokaiBatchExtensionTest extends TestCase
     }
 
     #[DataProvider('errors')]
-    public function testErrors(array $config, Exception $error): void
+    public function testErrors(array $config, Exception $error, \Closure|null $packageChecker = null): void
     {
         $this->expectExceptionObject($error);
-        $this->createContainer($config);
+        $this->createContainer($config, packageChecker: $packageChecker);
     }
 
     public static function errors(): \Generator
@@ -486,6 +486,15 @@ final class YokaiBatchExtensionTest extends TestCase
         yield 'Job Launcher : Unsupported launcher type' => [
             ['launcher' => ['default' => 'invalid', 'launchers' => ['invalid' => 'unknown://unknown']]],
             new LogicException('Unsupported job launcher type "unknown".'),
+        ];
+        yield 'Logging : Service type without service id' => [
+            ['logging' => ['type' => 'service']],
+            new LogicException('Cannot configure service logging: provide a service to use.'),
+        ];
+        yield 'Logging : Stream type without monolog installed' => [
+            ['logging' => ['type' => 'stream']],
+            new LogicException('Cannot configure stream logging: install "yokai/batch-monolog" first.'),
+            static fn(string $package): bool => false,
         ];
         yield 'Per job parameters value must be an array' => [
             ['parameters' => ['per_job' => ['job.foo' => 'string']]],
@@ -625,14 +634,19 @@ final class YokaiBatchExtensionTest extends TestCase
         ];
     }
 
-    private function createContainer(array $config, \Closure|null $configure = null): ContainerBuilder
-    {
+    private function createContainer(
+        array $config,
+        \Closure|null $configure = null,
+        \Closure|null $packageChecker = null,
+    ): ContainerBuilder {
         $container = new ContainerBuilder();
         if ($configure !== null) {
             $configure($container);
         }
         $bundle = new YokaiBatchBundle();
-        $extension = $bundle->getContainerExtension();
+        $extension = $packageChecker !== null
+            ? new YokaiBatchExtension($packageChecker)
+            : $bundle->getContainerExtension();
         \assert($extension instanceof YokaiBatchExtension);
         $container->registerExtension($extension);
         $container->loadFromExtension('yokai_batch', $config);
