@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yokai\Batch\Bridge\Doctrine\DBAL;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\Result;
 use Doctrine\Persistence\ConnectionRegistry;
 use Generator;
 use Yokai\Batch\Exception\InvalidArgumentException;
@@ -62,7 +61,6 @@ final class DoctrineDBALQueryCursorReader implements ItemReaderInterface
         $after = $this->start;
 
         do {
-            /** @var Result $statement */
             $statement = $this->connection->executeQuery(
                 \strtr($this->sql, ['{limit}' => $this->batch, '{after}' => $after]),
             );
