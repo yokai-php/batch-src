@@ -6,7 +6,6 @@ namespace Yokai\Batch\Bridge\Doctrine\DBAL;
 
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\Result;
 use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Schema\AbstractAsset;
@@ -276,7 +275,6 @@ final class DoctrineDBALJobExecutionStorage implements
             ->andWhere($qb->expr()->eq('id', ':id'))
             ->setMaxResults(1);
 
-        /** @var Result $statement */
         $statement = $this->connection->executeQuery(
             $qb->getSQL(),
             ['jobName' => $jobName, 'id' => $id],
@@ -301,7 +299,6 @@ final class DoctrineDBALJobExecutionStorage implements
      */
     private function queryList(string $query, array $parameters, array $types): Generator
     {
-        /** @var Result $statement */
         $statement = $this->connection->executeQuery($query, $parameters, $types);
 
         while ($row = $statement->fetchAssociative()) {

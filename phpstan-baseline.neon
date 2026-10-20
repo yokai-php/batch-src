@@ -1,41 +1,229 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Method Yokai\\\\Batch\\\\Bridge\\\\OpenSpout\\\\Reader\\\\FlatFileReader\\:\\:rows\\(\\) has parameter \\$reader with generic interface OpenSpout\\\\Reader\\\\ReaderInterface but does not specify its types\\: T$#"
+			message: '#^Parameter \#2 \$data of method Doctrine\\DBAL\\Connection\:\:insert\(\) expects array\<string, mixed\>, array\<mixed, mixed\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/batch-doctrine-dbal/src/DoctrineDBALInsertWriter.php
+
+		-
+			message: '#^Call to function method_exists\(\) with Doctrine\\DBAL\\Schema\\Table and ''addPrimaryKeyConstr…'' will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/batch-doctrine-dbal/src/DoctrineDBALJobExecutionStorage.php
+
+		-
+			message: '#^Method Yokai\\Batch\\Bridge\\Doctrine\\DBAL\\JobExecutionRowNormalizer\:\:jsonFromString\(\) should return array\<string, mixed\> but returns array\<mixed, mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/batch-doctrine-dbal/src/JobExecutionRowNormalizer.php
+
+		-
+			message: '#^Parameter \#1 \$location of method League\\Flysystem\\FilesystemReader\:\:readStream\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/batch-league-flysystem/src/Job/CopyFilesJob.php
+
+		-
+			message: '#^Parameter \#1 \$location of method League\\Flysystem\\FilesystemReader\:\:readStream\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/batch-league-flysystem/src/Job/MoveFilesJob.php
+
+		-
+			message: '#^Parameter \#1 \$location of method League\\Flysystem\\FilesystemWriter\:\:delete\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/batch-league-flysystem/src/Job/MoveFilesJob.php
+
+		-
+			message: '#^Parameter \#2 \$parameters of class Yokai\\Batch\\Trigger\\Scheduler\\ScheduledJob constructor expects array\<string, mixed\>, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/batch-league-flysystem/src/Scheduler/FileFoundScheduler.php
+
+		-
+			message: '#^Parameter \#3 \$id of class Yokai\\Batch\\Trigger\\Scheduler\\ScheduledJob constructor expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/batch-league-flysystem/src/Scheduler/FileFoundScheduler.php
+
+		-
+			message: '#^Method Yokai\\Batch\\Bridge\\OpenSpout\\Reader\\FlatFileReader\:\:rows\(\) has parameter \$reader with generic interface OpenSpout\\Reader\\ReaderInterface but does not specify its types\: T$#'
+			identifier: missingType.generics
 			count: 1
 			path: src/batch-openspout/src/Reader/FlatFileReader.php
 
 		-
-			message: "#^Parameter \\#1 \\$options of class OpenSpout\\\\Reader\\\\CSV\\\\Reader constructor expects OpenSpout\\\\Reader\\\\CSV\\\\Options\\|null, OpenSpout\\\\Reader\\\\CSV\\\\Options\\|OpenSpout\\\\Reader\\\\ODS\\\\Options\\|OpenSpout\\\\Reader\\\\XLSX\\\\Options\\|null given\\.$#"
+			message: '#^Parameter \#1 \$options of class OpenSpout\\Reader\\CSV\\Reader constructor expects OpenSpout\\Reader\\CSV\\Options\|null, OpenSpout\\Reader\\CSV\\Options\|OpenSpout\\Reader\\ODS\\Options\|OpenSpout\\Reader\\XLSX\\Options\|null given\.$#'
+			identifier: argument.type
 			count: 1
 			path: src/batch-openspout/src/Reader/FlatFileReader.php
 
 		-
-			message: "#^Parameter \\#1 \\$options of class OpenSpout\\\\Reader\\\\ODS\\\\Reader constructor expects OpenSpout\\\\Reader\\\\ODS\\\\Options\\|null, OpenSpout\\\\Reader\\\\CSV\\\\Options\\|OpenSpout\\\\Reader\\\\ODS\\\\Options\\|OpenSpout\\\\Reader\\\\XLSX\\\\Options\\|null given\\.$#"
+			message: '#^Parameter \#1 \$options of class OpenSpout\\Reader\\ODS\\Reader constructor expects OpenSpout\\Reader\\ODS\\Options\|null, OpenSpout\\Reader\\CSV\\Options\|OpenSpout\\Reader\\ODS\\Options\|OpenSpout\\Reader\\XLSX\\Options\|null given\.$#'
+			identifier: argument.type
 			count: 1
 			path: src/batch-openspout/src/Reader/FlatFileReader.php
 
 		-
-			message: "#^Parameter \\#1 \\$options of class OpenSpout\\\\Reader\\\\XLSX\\\\Reader constructor expects OpenSpout\\\\Reader\\\\XLSX\\\\Options\\|null, OpenSpout\\\\Reader\\\\CSV\\\\Options\\|OpenSpout\\\\Reader\\\\ODS\\\\Options\\|OpenSpout\\\\Reader\\\\XLSX\\\\Options\\|null given\\.$#"
+			message: '#^Parameter \#1 \$options of class OpenSpout\\Reader\\XLSX\\Reader constructor expects OpenSpout\\Reader\\XLSX\\Options\|null, OpenSpout\\Reader\\CSV\\Options\|OpenSpout\\Reader\\ODS\\Options\|OpenSpout\\Reader\\XLSX\\Options\|null given\.$#'
+			identifier: argument.type
 			count: 1
 			path: src/batch-openspout/src/Reader/FlatFileReader.php
 
 		-
-			message: "#^Parameter \\#1 \\$row of method Yokai\\\\Batch\\\\Bridge\\\\OpenSpout\\\\Reader\\\\HeaderStrategy\\:\\:process\\(\\) expects array\\<int, string\\>, array\\<int, bool\\|DateInterval\\|DateTimeInterface\\|float\\|int\\|string\\|null\\> given\\.$#"
+			message: '#^Parameter \#1 \$row of method Yokai\\Batch\\Bridge\\OpenSpout\\Reader\\HeaderStrategy\:\:process\(\) expects list\<string\>, list\<bool\|DateInterval\|DateTimeInterface\|float\|int\|string\|null\> given\.$#'
+			identifier: argument.type
 			count: 1
 			path: src/batch-openspout/src/Reader/FlatFileReader.php
 
 		-
-			message: "#^Parameter \\#1 \\$options of class OpenSpout\\\\Writer\\\\CSV\\\\Writer constructor expects OpenSpout\\\\Writer\\\\CSV\\\\Options\\|null, OpenSpout\\\\Writer\\\\CSV\\\\Options\\|OpenSpout\\\\Writer\\\\ODS\\\\Options\\|OpenSpout\\\\Writer\\\\XLSX\\\\Options\\|null given\\.$#"
+			message: '#^Method Yokai\\Batch\\Bridge\\OpenSpout\\Reader\\SheetFilter\:\:accepts\(\) should return bool but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/batch-openspout/src/Reader/SheetFilter.php
+
+		-
+			message: '#^Parameter \#1 \$cellValues of static method OpenSpout\\Common\\Entity\\Row\:\:fromValues\(\) expects list\<bool\|DateInterval\|DateTimeInterface\|float\|int\|string\|null\>, array\<mixed, mixed\> given\.$#'
+			identifier: argument.type
 			count: 1
 			path: src/batch-openspout/src/Writer/FlatFileWriter.php
 
 		-
-			message: "#^Parameter \\#1 \\$options of class OpenSpout\\\\Writer\\\\ODS\\\\Writer constructor expects OpenSpout\\\\Writer\\\\ODS\\\\Options\\|null, OpenSpout\\\\Writer\\\\CSV\\\\Options\\|OpenSpout\\\\Writer\\\\ODS\\\\Options\\|OpenSpout\\\\Writer\\\\XLSX\\\\Options\\|null given\\.$#"
+			message: '#^Parameter \#1 \$options of class OpenSpout\\Writer\\CSV\\Writer constructor expects OpenSpout\\Writer\\CSV\\Options\|null, OpenSpout\\Writer\\CSV\\Options\|OpenSpout\\Writer\\ODS\\Options\|OpenSpout\\Writer\\XLSX\\Options\|null given\.$#'
+			identifier: argument.type
 			count: 1
 			path: src/batch-openspout/src/Writer/FlatFileWriter.php
 
 		-
-			message: "#^Parameter \\#1 \\$options of class OpenSpout\\\\Writer\\\\XLSX\\\\Writer constructor expects OpenSpout\\\\Writer\\\\XLSX\\\\Options\\|null, OpenSpout\\\\Writer\\\\CSV\\\\Options\\|OpenSpout\\\\Writer\\\\ODS\\\\Options\\|OpenSpout\\\\Writer\\\\XLSX\\\\Options\\|null given\\.$#"
+			message: '#^Parameter \#1 \$options of class OpenSpout\\Writer\\ODS\\Writer constructor expects OpenSpout\\Writer\\ODS\\Options\|null, OpenSpout\\Writer\\CSV\\Options\|OpenSpout\\Writer\\ODS\\Options\|OpenSpout\\Writer\\XLSX\\Options\|null given\.$#'
+			identifier: argument.type
 			count: 1
 			path: src/batch-openspout/src/Writer/FlatFileWriter.php
+
+		-
+			message: '#^Parameter \#1 \$options of class OpenSpout\\Writer\\XLSX\\Writer constructor expects OpenSpout\\Writer\\XLSX\\Options\|null, OpenSpout\\Writer\\CSV\\Options\|OpenSpout\\Writer\\ODS\\Options\|OpenSpout\\Writer\\XLSX\\Options\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/batch-openspout/src/Writer/FlatFileWriter.php
+
+		-
+			message: '#^Parameter \#1 \$cellValues of static method OpenSpout\\Common\\Entity\\Row\:\:fromValues\(\) expects list\<bool\|DateInterval\|DateTimeInterface\|float\|int\|string\|null\>, array\<int, bool\|DateInterval\|DateTimeInterface\|float\|int\|string\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/batch-openspout/src/Writer/WriteToSheetItem.php
+
+		-
+			message: '#^Method Yokai\\Batch\\Bridge\\Symfony\\Console\\RunJobCommand\:\:decodeConfiguration\(\) should return array\<string, mixed\> but returns array\<mixed, mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/batch-symfony-console/src/RunJobCommand.php
+
+		-
+			message: '#^Parameter \#2 \$options of method Symfony\\Component\\Console\\Output\\OutputInterface\:\:writeln\(\) expects int\<0, 511\>, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/batch-symfony-console/src/RunJobCommand.php
+
+		-
+			message: '#^Parameter \#3 \$attributes of method Yokai\\Batch\\Bridge\\Symfony\\Framework\\DependencyInjection\\CompilerPass\\RegisterJobsCompilerPass\:\:getJobName\(\) expects array\<string, mixed\>, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/batch-symfony-framework/src/DependencyInjection/CompilerPass/RegisterJobsCompilerPass.php
+
+		-
+			message: '#^Parameter \#2 \$array of function implode expects array\<string\>, array\<mixed\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/batch/src/Exception/UnexpectedValueException.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: src/batch/src/Job/Item/Processor/FilterUniqueProcessor.php
+
+		-
+			message: '#^Instanceof between Yokai\\Batch\\Job\\Item\\ItemProcessorInterface and Yokai\\Batch\\Job\\Item\\ItemProcessorInterface will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: src/batch/src/Job/Item/Processor/RoutingProcessor.php
+
+		-
+			message: '#^Parameter \#2 \$configuration of method Yokai\\Batch\\Launcher\\JobLauncherInterface\:\:launch\(\) expects array\<string, mixed\>, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/batch/src/Job/Item/Writer/LaunchJobForEachItemWriter.php
+
+		-
+			message: '#^Parameter \#2 \$configuration of method Yokai\\Batch\\Launcher\\JobLauncherInterface\:\:launch\(\) expects array\<string, mixed\>, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/batch/src/Job/Item/Writer/LaunchJobForItemsBatchWriter.php
+
+		-
+			message: '#^Instanceof between Yokai\\Batch\\Job\\Item\\ItemWriterInterface and Yokai\\Batch\\Job\\Item\\ItemWriterInterface will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: src/batch/src/Job/Item/Writer/RoutingWriter.php
+
+		-
+			message: '#^Trait Yokai\\Batch\\Job\\JobParametersAwareTrait is used zero times and is not analysed\.$#'
+			identifier: trait.unused
+			count: 1
+			path: src/batch/src/Job/JobParametersAwareTrait.php
+
+		-
+			message: '#^Trait Yokai\\Batch\\Job\\SummaryAwareTrait is used zero times and is not analysed\.$#'
+			identifier: trait.unused
+			count: 1
+			path: src/batch/src/Job/SummaryAwareTrait.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: src/batch/src/Logger/InMemoryJobExecutionLogger.php
+
+		-
+			message: '#^Method Yokai\\Batch\\Serializer\\JsonJobExecutionSerializer\:\:toArray\(\) should return array\{id\: string, jobName\: string, status\: int, parameters\: array\<string, mixed\>, startTime\: string\|null, endTime\: string\|null, launchedAt\: string\|null, summary\: array\<string, mixed\>, \.\.\.\} but returns array\{id\: string, jobName\: string, status\: 1\|2\|3\|4\|5\|6, parameters\: array\<string, mixed\>, startTime\: string\|null, endTime\: string\|null, launchedAt\: string\|null, summary\: array\<string, mixed\>, \.\.\.\}\.$#'
+			identifier: return.type
+			count: 1
+			path: src/batch/src/Serializer/JsonJobExecutionSerializer.php
+
+		-
+			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 2
+			path: src/batch/src/Storage/QueryBuilder.php
+
+		-
+			message: '#^Instanceof between Yokai\\Batch\\BatchStatus and Yokai\\Batch\\BatchStatus will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: src/batch/src/Storage/QueryBuilder.php
+
+		-
+			message: '#^Binary operation "\+" between mixed and float\|int results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/batch/src/Summary.php
+
+		-
+			message: '#^Parameter \#1 \$array \(list\<string\>\) of array_values is already a list, call has no effect\.$#'
+			identifier: arrayValues.list
+			count: 1
+			path: src/batch/src/Test/Factory/SequenceJobExecutionIdGenerator.php
+
+		-
+			message: '#^Trait Yokai\\Batch\\Test\\Storage\\JobExecutionStorageTestTrait is used zero times and is not analysed\.$#'
+			identifier: trait.unused
+			count: 1
+			path: src/batch/src/Test/Storage/JobExecutionStorageTestTrait.php
+
+		-
+			message: '#^Parameter \#2 \$parameters of class Yokai\\Batch\\Trigger\\Scheduler\\ScheduledJob constructor expects array\<string, mixed\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/batch/src/Trigger/Scheduler/CallbackScheduler.php
