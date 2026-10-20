@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yokai\Batch\Sources\Tests\Symfony\App\Job\Country;
 
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Yokai\Batch\Bridge\OpenSpout\Writer\FlatFileWriter;
 use Yokai\Batch\Bridge\Symfony\Framework\JobWithStaticNameInterface;
@@ -67,6 +68,7 @@ final class CountryJob extends AbstractDecoratedJob implements
     public function __construct(
         JobExecutionStorageInterface $executionStorage,
         KernelInterface $kernel,
+        #[Target('yokaiBatchLogger')]
         LoggerInterface $yokaiBatchLogger,
     ) {
         $writePath = fn(string $format) => new StaticValueParameterAccessor(

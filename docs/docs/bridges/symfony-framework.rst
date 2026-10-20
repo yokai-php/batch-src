@@ -29,6 +29,8 @@ you will be able to register these using configuration:
 | The ``default`` job launcher, must reference a launcher name, defined in the ``launchers`` list.
 | The ``default`` job launcher will be the autowired instance of job launcher when you ask for one.
 | All ``launchers`` will be registered as a service, and an autowire named alias will be configured for it.
+| Use the ``#[Target]`` attribute with ``{name}JobLauncher`` to inject one of them
+  (relying on the argument name only is deprecated since Symfony 8.1).
 | For instance, in the example below, you will be able to register all these launchers like this:
 
 .. literalinclude:: symfony-framework/job-launcher-usage.php
@@ -318,7 +320,8 @@ Logger service that log in ``JobExecution``
 
 | The batch logger will log inside the JobExecution.
 | In a Symfony project, you can use that with the symfony autowiring
-  by naming your variable as ``$yokaiBatchLogger``
+  by adding the ``#[Target('yokaiBatchLogger')]`` attribute to your argument
+  (relying on the argument name only is deprecated since Symfony 8.1).
 
 .. literalinclude:: symfony-framework/logger-usage.php
    :language: php
