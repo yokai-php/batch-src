@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yokai\Batch\Bridge\Doctrine\DBAL;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\Result;
 use Doctrine\Persistence\ConnectionRegistry;
 use Generator;
 use Yokai\Batch\Exception\InvalidArgumentException;
@@ -54,7 +53,6 @@ final class DoctrineDBALQueryOffsetReader implements ItemReaderInterface
         $iteration = 0;
 
         do {
-            /** @var Result $statement */
             $statement = $this->connection->executeQuery(
                 \strtr($this->sql, ['{limit}' => $this->batch, '{offset}' => $iteration * $this->batch]),
             );
