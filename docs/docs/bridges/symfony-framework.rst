@@ -165,7 +165,7 @@ You will also need to import bundle routes:
 
     # config/routes/yokai_batch.yaml
     _yokai_batch:
-      resource: "@YokaiBatchBundle/Resources/routing/ui.xml"
+      resource: "@YokaiBatchBundle/Resources/routing/ui.php"
 
 Templating
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
