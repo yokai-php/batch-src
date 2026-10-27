@@ -14,9 +14,52 @@ jobs:
 
     steps:
       - name: "Checkout"
-        run: git clone https://github.com/yokai-php/batch-src /home/runner/work/yokai-php/batch-src && cd $_
+        # gitsplit only splits the local refs matching the origins of .gitsplit.yml,
+        # but a clone only creates the default branch locally
+        run: |
+          git clone https://github.com/yokai-php/batch-src .
+          git fetch origin '+refs/heads/*:refs/heads/*' --update-head-ok
 
       - name: "Gitsplit"
-        run: docker run --rm -t -e GH_TOKEN -v /cache/gitsplit:/cache/gitsplit -v /home/runner/work/yokai-php/batch-src:/srv jderusse/gitsplit gitsplit
+        run: docker run --rm -t -e GH_TOKEN -v /cache/gitsplit:/cache/gitsplit -v "$GITHUB_WORKSPACE:/srv" jderusse/gitsplit gitsplit
         env:
           GH_TOKEN: ${{ secrets.GITSPLIT_TOKEN }}
+
+      - name: "Create releases on split repositories"
+        if: github.event_name == 'release'
+        run: |
+          # Packages are the splits of src/, their GitHub repository is parsed from the target URL
+          repos=$(yq '.splits[] | select(.prefix | test("^src/")) | .target' .gitsplit.yml | sed -nE 's#^.*github\.com/([^/]+/[^/]+)\.git$#\1#p')
+          if [ -z "$repos" ]; then
+            echo "::error::No package repository found in .gitsplit.yml"
+            exit 1
+          fi
+          latest_tag=$(gh release view --repo "$GITHUB_REPOSITORY" --json tagName --jq .tagName)
+          latest=false
+          if [ "$latest_tag" = "$TAG" ]; then
+            latest=true
+          fi
+          # Only version tags are split (see origins in .gitsplit.yml)
+          previous=$(git describe --tags --abbrev=0 --exclude '*[!0-9.]*' "$TAG^" 2>/dev/null || true)
+          for repo in $repos; do
+            # The tag is missing when it is not a version tag, or when the package does not exist at this tag
+            if ! gh api "repos/$repo/git/ref/tags/$TAG" >/dev/null 2>&1; then
+              echo "Tag $TAG not found on $repo, skipped"
+              continue
+            fi
+            if gh release view "$TAG" --repo "$repo" >/dev/null 2>&1; then
+              echo "Release $TAG already exists on $repo"
+              continue
+            fi
+            notes="See $RELEASE_URL"
+            # The previous tag is missing on packages introduced by this release
+            if [ -n "$previous" ] && gh api "repos/$repo/git/ref/tags/$previous" >/dev/null 2>&1; then
+              notes+=$'\n\n'"**Full Changelog**: https://github.com/$repo/compare/$previous...$TAG"
+            fi
+            gh release create "$TAG" --repo "$repo" --verify-tag --title "$TAG" --notes "$notes" --latest="$latest" --prerelease="$PRERELEASE"
+          done
+        env:
+          GH_TOKEN: ${{ secrets.GITSPLIT_TOKEN }}
+          TAG: ${{ github.event.release.tag_name }}
+          RELEASE_URL: ${{ github.event.release.html_url }}
+          PRERELEASE: ${{ github.event.release.prerelease }}
