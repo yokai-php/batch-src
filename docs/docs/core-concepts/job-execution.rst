@@ -20,9 +20,10 @@ What kind of information does it hold?
 * ``JobExecution::$failures``: A list of failures (usually exceptions)
 * ``JobExecution::$warnings``: A list of warnings (usually skipped items)
 * ``JobExecution::$summary``: A summary (can contain any data you wish to store)
-* ``JobExecution::$logs``: Some logs
+* ``JobExecution::$logger``: The associated logger
 * ``JobExecution::$childExecutions``: Some child execution
 
 .. seealso::
    | :doc:`How is a job execution created? </core-concepts/job-launcher>`
    | :doc:`How can I retrieve a job execution afterwards? </core-concepts/job-execution-storage>`
+   | :doc:`How are job execution logs stored? </core-concepts/job-execution-logger>`
