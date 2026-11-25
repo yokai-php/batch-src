@@ -3,6 +3,8 @@ includes:
 
 parameters:
   level: max
+  # Public API validates arguments at runtime, even when PHPDoc already restricts their types
+  treatPhpDocTypesAsCertain: false
   paths:
     - src/batch/src/
     - src/batch-doctrine-dbal/src/

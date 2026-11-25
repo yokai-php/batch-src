@@ -145,12 +145,6 @@ parameters:
 			path: src/batch/src/Job/Item/Processor/FilterUniqueProcessor.php
 
 		-
-			message: '#^Instanceof between Yokai\\Batch\\Job\\Item\\ItemProcessorInterface and Yokai\\Batch\\Job\\Item\\ItemProcessorInterface will always evaluate to true\.$#'
-			identifier: instanceof.alwaysTrue
-			count: 1
-			path: src/batch/src/Job/Item/Processor/RoutingProcessor.php
-
-		-
 			message: '#^Parameter \#2 \$configuration of method Yokai\\Batch\\Launcher\\JobLauncherInterface\:\:launch\(\) expects array\<string, mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -161,12 +155,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/batch/src/Job/Item/Writer/LaunchJobForItemsBatchWriter.php
-
-		-
-			message: '#^Instanceof between Yokai\\Batch\\Job\\Item\\ItemWriterInterface and Yokai\\Batch\\Job\\Item\\ItemWriterInterface will always evaluate to true\.$#'
-			identifier: instanceof.alwaysTrue
-			count: 1
-			path: src/batch/src/Job/Item/Writer/RoutingWriter.php
 
 		-
 			message: '#^Trait Yokai\\Batch\\Job\\JobParametersAwareTrait is used zero times and is not analysed\.$#'
@@ -193,28 +181,10 @@ parameters:
 			path: src/batch/src/Serializer/JsonJobExecutionSerializer.php
 
 		-
-			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 2
-			path: src/batch/src/Storage/QueryBuilder.php
-
-		-
-			message: '#^Instanceof between Yokai\\Batch\\BatchStatus and Yokai\\Batch\\BatchStatus will always evaluate to true\.$#'
-			identifier: instanceof.alwaysTrue
-			count: 1
-			path: src/batch/src/Storage/QueryBuilder.php
-
-		-
 			message: '#^Binary operation "\+" between mixed and float\|int results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
 			path: src/batch/src/Summary.php
-
-		-
-			message: '#^Parameter \#1 \$array \(list\<string\>\) of array_values is already a list, call has no effect\.$#'
-			identifier: arrayValues.list
-			count: 1
-			path: src/batch/src/Test/Factory/SequenceJobExecutionIdGenerator.php
 
 		-
 			message: '#^Trait Yokai\\Batch\\Test\\Storage\\JobExecutionStorageTestTrait is used zero times and is not analysed\.$#'
