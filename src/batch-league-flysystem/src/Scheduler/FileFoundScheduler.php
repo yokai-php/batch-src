@@ -23,9 +23,12 @@ final readonly class FileFoundScheduler implements SchedulerInterface
         private JobParameterAccessorInterface $location,
         private string $jobName,
         /**
-         * @var array<string, mixed>|Closure|null
+         * @var array<string, mixed>|(Closure(JobExecution): array<string, mixed>)|null
          */
         private array|Closure|null $parameters = null,
+        /**
+         * @var string|(Closure(JobExecution): (string|null))|null
+         */
         private string|Closure|null $executionId = null,
     ) {
     }

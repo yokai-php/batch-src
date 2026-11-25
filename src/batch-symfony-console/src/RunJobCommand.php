@@ -79,7 +79,7 @@ final class RunJobCommand extends Command
             $warnings = $jobExecution->getAllWarnings();
             if ($warnings !== []) {
                 foreach ($warnings as $warning) {
-                    $output->writeln(\sprintf('<comment>%s</comment>', $warning), $output::VERBOSITY_VERBOSE);
+                    $output->writeln(\sprintf('<comment>%s</comment>', $warning), OutputInterface::VERBOSITY_VERBOSE);
                 }
                 $output->writeln(
                     \sprintf('<comment>%s has been executed with %d warnings.</comment>', $jobName, \count($warnings)),
@@ -99,7 +99,10 @@ final class RunJobCommand extends Command
                     ),
                 );
                 if ($failure->getTrace() !== null) {
-                    $output->writeln(\sprintf('<error>%s</error>', $failure->getTrace()), $output::VERBOSITY_VERBOSE);
+                    $output->writeln(
+                        \sprintf('<error>%s</error>', $failure->getTrace()),
+                        OutputInterface::VERBOSITY_VERBOSE,
+                    );
                 }
             }
         }
@@ -113,10 +116,18 @@ final class RunJobCommand extends Command
     private function decodeConfiguration(string $data): array
     {
         $config = \json_decode($data, true, 512, \JSON_THROW_ON_ERROR);
-        if (\is_array($config)) {
-            return $config;
+        if (!\is_array($config)) {
+            throw UnexpectedValueException::type('array', $config);
         }
 
-        throw UnexpectedValueException::type('array', $config);
+        $configuration = [];
+        foreach ($config as $name => $value) {
+            if (!\is_string($name)) {
+                throw UnexpectedValueException::type('string', $name, 'Job configuration keys must be strings.');
+            }
+            $configuration[$name] = $value;
+        }
+
+        return $configuration;
     }
 }

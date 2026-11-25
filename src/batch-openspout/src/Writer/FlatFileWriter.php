@@ -99,7 +99,7 @@ final class FlatFileWriter implements
                 $this->changeSheet($this->defaultSheet);
             }
             if (\is_array($row)) {
-                $row = Row::fromValues($row);
+                $row = self::rowFromValues($row);
             }
             if (!$row instanceof Row) {
                 throw UnexpectedValueException::type('array|' . Row::class, $row);
@@ -118,6 +118,27 @@ final class FlatFileWriter implements
         $this->writer->close();
         $this->writer = null;
         $this->headersAdded = false;
+    }
+
+    /**
+     * @param array<mixed> $values
+     */
+    private static function rowFromValues(array $values): Row
+    {
+        $cells = [];
+        foreach ($values as $value) {
+            if (
+                $value !== null
+                && !\is_scalar($value)
+                && !$value instanceof \DateTimeInterface
+                && !$value instanceof \DateInterval
+            ) {
+                throw UnexpectedValueException::type('scalar|DateTimeInterface|DateInterval|null', $value);
+            }
+            $cells[] = $value;
+        }
+
+        return Row::fromValues($cells);
     }
 
     private function changeSheet(string $name): void

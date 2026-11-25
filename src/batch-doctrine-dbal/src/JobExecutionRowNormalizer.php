@@ -86,8 +86,12 @@ final readonly class JobExecutionRowNormalizer
     {
         $name = $data['job_name'];
         $status = BatchStatus::from((int)$data['status']);
-        $parameters = new JobParameters($this->jsonFromString($data['parameters']));
-        $summary = new Summary($this->jsonFromString($data['summary']));
+        /** @var array<string, mixed> $parametersData */
+        $parametersData = $this->jsonFromString($data['parameters']);
+        $parameters = new JobParameters($parametersData);
+        /** @var array<string, mixed> $summaryData */
+        $summaryData = $this->jsonFromString($data['summary']);
+        $summary = new Summary($summaryData);
 
         /** @var list<FailureData> $failures */
         $failures = $this->jsonFromString($data['failures']);
@@ -151,7 +155,7 @@ final readonly class JobExecutionRowNormalizer
     /**
      * @param array<int|string, mixed>|string $value
      *
-     * @return array<string, mixed>
+     * @return array<mixed>
      */
     private function jsonFromString(array|string $value): array
     {

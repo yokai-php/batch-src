@@ -214,6 +214,7 @@ final class DoctrineDBALJobExecutionStorage implements
         $table->addColumn('warnings', Types::JSON);
         $table->addColumn('child_executions', Types::JSON);
         $table->addColumn('logs', Types::TEXT);
+        // @phpstan-ignore function.alreadyNarrowedType (method was added in doctrine/dbal 4.3, and we support ^4.0)
         if (\method_exists($table, 'addPrimaryKeyConstraint')) {
             $table->addPrimaryKeyConstraint(
                 new PrimaryKeyConstraint(null, [new UnqualifiedName(Identifier::unquoted('id'))], false),

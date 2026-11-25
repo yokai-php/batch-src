@@ -232,4 +232,17 @@ final class MoveFilesJobTest extends TestCase
         $job = new MoveFilesJob($location, $source, $destination, $transformation);
         $job->execute(JobExecution::createRoot('123456', 'phpunit-move-file'));
     }
+
+    public function testWrongLocationTypeInList(): void
+    {
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage('Expecting argument to be string, but got int.');
+
+        $source = new Filesystem(new InMemoryFilesystemAdapter());
+        $destination = new Filesystem(new InMemoryFilesystemAdapter());
+        $location = new StaticValueParameterAccessor([123]);
+
+        $job = new MoveFilesJob($location, $source, $destination);
+        $job->execute(JobExecution::createRoot('123456', 'phpunit-move-file'));
+    }
 }

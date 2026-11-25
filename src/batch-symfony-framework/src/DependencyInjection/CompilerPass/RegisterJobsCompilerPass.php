@@ -25,7 +25,13 @@ final class RegisterJobsCompilerPass implements CompilerPassInterface
         foreach ($container->findTaggedServiceIds('yokai_batch.job') as $serviceId => $tags) {
             $serviceDefinition = $container->findDefinition($serviceId);
             foreach ($tags as $attributes) {
-                $jobs[$this->getJobName($serviceId, $serviceDefinition, $attributes)] = new Reference($serviceId);
+                $jobs[$this->getJobName(
+                    $serviceId,
+                    $serviceDefinition,
+                    \is_array($attributes) ? $attributes : [],
+                )] = new Reference(
+                    $serviceId,
+                );
             }
         }
 
@@ -39,7 +45,7 @@ final class RegisterJobsCompilerPass implements CompilerPassInterface
     }
 
     /**
-     * @param array<string, mixed> $attributes
+     * @param array<mixed> $attributes
      */
     private function getJobName(string $id, Definition $definition, array $attributes): string
     {

@@ -167,4 +167,14 @@ final class RunJobCommandTest extends TestCase
 
         return [$tester->getStatusCode(), $tester->getDisplay()];
     }
+
+    public function testRunWithNonStringConfigurationKeys(): void
+    {
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage('Job configuration keys must be strings.');
+
+        $this->job->expects($this->never())
+            ->method('execute');
+        $this->execute('["value"]');
+    }
 }

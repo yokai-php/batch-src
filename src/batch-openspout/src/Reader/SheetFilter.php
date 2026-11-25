@@ -18,7 +18,7 @@ final readonly class SheetFilter
         /**
          * A closure with {@see SheetInterface} as single argument,
          * and returning a boolean, telling if the sheet should be read.
-         * @var Closure
+         * @var Closure(SheetInterface<RowIteratorInterface>): bool
          */
         private Closure $accept,
     ) {
