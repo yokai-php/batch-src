@@ -7,12 +7,6 @@ parameters:
 			path: src/batch-doctrine-dbal/src/DoctrineDBALInsertWriter.php
 
 		-
-			message: '#^Method Yokai\\Batch\\Bridge\\Doctrine\\DBAL\\JobExecutionRowNormalizer\:\:jsonFromString\(\) should return array\<string, mixed\> but returns array\<mixed, mixed\>\.$#'
-			identifier: return.type
-			count: 1
-			path: src/batch-doctrine-dbal/src/JobExecutionRowNormalizer.php
-
-		-
 			message: '#^Parameter \#1 \$location of method League\\Flysystem\\FilesystemReader\:\:readStream\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
