@@ -19,7 +19,7 @@ jobs:
           - php-version: '8.4'
             symfony-version: '7.4.*'
           - php-version: '8.4'
-            symfony-version: '8.0.*'
+            symfony-version: '8.1.*'
     steps:
       - name: "Checkout"
         uses: actions/checkout@v2
@@ -41,7 +41,7 @@ jobs:
         uses: ./.github/actions/install
         with:
           php-version: '8.4'
-          symfony-version: '8.0.*'
+          symfony-version: '8.1.*'
       - name: "Run static analyzis with phpstan/phpstan"
         run: vendor/bin/phpstan analyze
 
@@ -55,7 +55,7 @@ jobs:
         uses: ./.github/actions/install
         with:
           php-version: '8.4'
-          symfony-version: '8.0.*'
+          symfony-version: '8.1.*'
       - name: "Run checkstyle with symplify/easy-coding-standard"
         run: vendor/bin/ecs
 
@@ -69,7 +69,7 @@ jobs:
         uses: ./.github/actions/install
         with:
           php-version: '8.4'
-          symfony-version: '8.0.*'
+          symfony-version: '8.1.*'
       - name: "Run tests with phpunit/phpunit"
         run: vendor/bin/phpunit --testsuite=Convention
 
@@ -84,7 +84,7 @@ jobs:
         uses: ./.github/actions/install
         with:
           php-version: '8.4'
-          symfony-version: '8.0.*'
+          symfony-version: '8.1.*'
           coverage-mode: 'xdebug'
       - name: "Run tests with phpunit/phpunit"
         run: |
