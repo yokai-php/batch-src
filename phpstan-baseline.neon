@@ -127,12 +127,6 @@ parameters:
 			path: src/batch/src/Logger/InMemoryJobExecutionLogger.php
 
 		-
-			message: '#^Method Yokai\\Batch\\Serializer\\JsonJobExecutionSerializer\:\:toArray\(\) should return array\{id\: string, jobName\: string, status\: int, parameters\: array\<string, mixed\>, startTime\: string\|null, endTime\: string\|null, launchedAt\: string\|null, summary\: array\<string, mixed\>, \.\.\.\} but returns array\{id\: string, jobName\: string, status\: 1\|2\|3\|4\|5\|6, parameters\: array\<string, mixed\>, startTime\: string\|null, endTime\: string\|null, launchedAt\: string\|null, summary\: array\<string, mixed\>, \.\.\.\}\.$#'
-			identifier: return.type
-			count: 1
-			path: src/batch/src/Serializer/JsonJobExecutionSerializer.php
-
-		-
 			message: '#^Binary operation "\+" between mixed and float\|int results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
