@@ -358,8 +358,8 @@ final class Configuration implements ConfigurationInterface
                             ->min(0)
                         ->end()
                         ->integerNode('chars_per_directory')
-                            ->defaultValue(0)
-                            ->min(0)
+                            ->defaultValue(2)
+                            ->min(1)
                         ->end()
                         ->arrayNode('processors')
                             ->scalarPrototype()->end()
@@ -367,6 +367,13 @@ final class Configuration implements ConfigurationInterface
                         ->scalarNode('formatter')
                             ->defaultNull()
                         ->end()
+                    ->end()
+                    ->validate()
+                        ->ifTrue(function (array $value): bool {
+                            /** @var array{sub_directories: int, chars_per_directory: int} $value */
+                            return $value['sub_directories'] * $value['chars_per_directory'] > 32;
+                        })
+                            ->thenInvalid('"sub_directories" * "chars_per_directory" must not exceed 32.')
                     ->end()
                 ->end()
             ->end()

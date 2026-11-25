@@ -496,6 +496,18 @@ final class YokaiBatchExtensionTest extends TestCase
             new LogicException('Cannot configure stream logging: install "yokai/batch-monolog" first.'),
             static fn(string $package): bool => false,
         ];
+        yield 'Logging : Stream with no chars per directory' => [
+            ['logging' => ['type' => 'stream', 'stream' => ['sub_directories' => 2, 'chars_per_directory' => 0]]],
+            new InvalidConfigurationException(
+                'The value 0 is too small for path "yokai_batch.logging.stream.chars_per_directory". Should be greater than or equal to 1',
+            ),
+        ];
+        yield 'Logging : Stream subdirectories longer than the hash' => [
+            ['logging' => ['type' => 'stream', 'stream' => ['sub_directories' => 5, 'chars_per_directory' => 7]]],
+            new InvalidConfigurationException(
+                'Invalid configuration for path "yokai_batch.logging.stream": "sub_directories" * "chars_per_directory" must not exceed 32.',
+            ),
+        ];
         yield 'Per job parameters value must be an array' => [
             ['parameters' => ['per_job' => ['job.foo' => 'string']]],
             new InvalidConfigurationException(
@@ -583,8 +595,10 @@ final class YokaiBatchExtensionTest extends TestCase
             null,
             StreamJobExecutionLoggerFactory::class,
             function (Definition $definition) {
-                [$directory] = $definition->getArguments();
+                [$directory, , , $subDirectories, $charsPerDirectory] = $definition->getArguments();
                 self::assertSame('%kernel.logs_dir%/batch', $directory);
+                self::assertSame(0, $subDirectories);
+                self::assertSame(2, $charsPerDirectory);
             },
         ];
         yield 'Stream custom directory' => [

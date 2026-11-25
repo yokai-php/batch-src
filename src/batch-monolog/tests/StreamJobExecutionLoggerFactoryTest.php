@@ -6,10 +6,13 @@ namespace Yokai\Batch\Tests\Bridge\Monolog;
 
 use Monolog\Formatter\JsonFormatter;
 use Monolog\Processor\PsrLogMessageProcessor;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Yokai\Batch\Bridge\Monolog\StreamJobExecutionLogger;
 use Yokai\Batch\Bridge\Monolog\StreamJobExecutionLoggerFactory;
+use Yokai\Batch\Exception\InvalidArgumentException;
+use Yokai\Batch\Logger\InMemoryJobExecutionLogger;
 
 final class StreamJobExecutionLoggerFactoryTest extends TestCase
 {
@@ -123,7 +126,8 @@ final class StreamJobExecutionLoggerFactoryTest extends TestCase
 
         $logger = $factory->create('60996f72-4f54-4184-9268-35ffdecf0de6');
 
-        self::assertSame('60/99/60996f72-4f54-4184-9268-35ffdecf0de6.log', $logger->getReference());
+        // xxh128('60996f72-4f54-4184-9268-35ffdecf0de6') starts with "4469"
+        self::assertSame('44/69/60996f72-4f54-4184-9268-35ffdecf0de6.log', $logger->getReference());
     }
 
     public function testCreateWithSubDirectoriesWritesFileInSubdirectory(): void
@@ -137,7 +141,7 @@ final class StreamJobExecutionLoggerFactoryTest extends TestCase
         $logger = $factory->create('60996f72-4f54-4184-9268-35ffdecf0de6');
         $logger->info('nested log');
 
-        self::assertFileExists($this->tmpDir . '/60/99/60996f72-4f54-4184-9268-35ffdecf0de6.log');
+        self::assertFileExists($this->tmpDir . '/44/69/60996f72-4f54-4184-9268-35ffdecf0de6.log');
         self::assertStringContainsString('nested log', $logger->getLogsContent());
     }
 
@@ -156,5 +160,75 @@ final class StreamJobExecutionLoggerFactoryTest extends TestCase
 
         self::assertSame('60/99/exec.log', $logger->getReference());
         self::assertStringContainsString('restored line', $logger->getLogsContent());
+    }
+
+    public function testSubDirectoriesSpreadIdsSharingTheSamePrefix(): void
+    {
+        $factory = new StreamJobExecutionLoggerFactory(
+            $this->tmpDir,
+            subDirectories: 2,
+            charsPerDirectory: 2,
+        );
+
+        // uniqid() values generated a few seconds apart share their first characters
+        $first = $factory->create('6b06b4beac5f3')->getReference();
+        $second = $factory->create('6b06b4c01d2e7')->getReference();
+
+        self::assertNotSame(\dirname($first), \dirname($second));
+    }
+
+    public function testCharsPerDirectoryDefaultsToTwo(): void
+    {
+        $factory = new StreamJobExecutionLoggerFactory($this->tmpDir, subDirectories: 3);
+
+        self::assertSame(
+            '44/69/e7/60996f72-4f54-4184-9268-35ffdecf0de6.log',
+            $factory->create('60996f72-4f54-4184-9268-35ffdecf0de6')->getReference(),
+        );
+    }
+
+    #[DataProvider('invalidSubDirectories')]
+    public function testInvalidSubDirectoriesConfiguration(int $subDirectories, int $charsPerDirectory): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        new StreamJobExecutionLoggerFactory(
+            $this->tmpDir,
+            subDirectories: $subDirectories,
+            charsPerDirectory: $charsPerDirectory,
+        );
+    }
+
+    public static function invalidSubDirectories(): \Generator
+    {
+        yield 'negative depth' => [-1, 2];
+        yield 'no chars per directory' => [2, 0];
+        yield 'negative chars per directory' => [2, -1];
+        yield 'longer than the hash' => [5, 7];
+    }
+
+    public function testRestoreEmptyReferenceFallsBackToInMemoryLogger(): void
+    {
+        // A job execution stored by the in-memory logger before anything was logged,
+        // for instance a pending execution waiting in a message queue when switching to this factory.
+        $logger = (new StreamJobExecutionLoggerFactory($this->tmpDir))->restore('');
+
+        self::assertInstanceOf(InMemoryJobExecutionLogger::class, $logger);
+
+        $logger->info('Job started');
+
+        self::assertStringContainsString('Job started', $logger->getLogsContent());
+    }
+
+    public function testRestoreInMemoryLogsReferenceFallsBackToInMemoryLogger(): void
+    {
+        // A job execution which logs were stored by the in-memory logger before switching to this factory.
+        $logs = "[2026-11-25T10:00:00+00:00] INFO: Job started []\n[2026-11-25T10:00:01+00:00] INFO: Job ended []\n";
+
+        $logger = (new StreamJobExecutionLoggerFactory($this->tmpDir))->restore($logs);
+
+        self::assertInstanceOf(InMemoryJobExecutionLogger::class, $logger);
+        self::assertSame($logs, $logger->getLogsContent());
+        self::assertSame([], \glob($this->tmpDir . '/*'));
     }
 }
