@@ -73,12 +73,6 @@ parameters:
 			path: src/batch-openspout/src/Writer/FlatFileWriter.php
 
 		-
-			message: '#^Method Yokai\\Batch\\Bridge\\Symfony\\Console\\RunJobCommand\:\:decodeConfiguration\(\) should return array\<string, mixed\> but returns array\<mixed, mixed\>\.$#'
-			identifier: return.type
-			count: 1
-			path: src/batch-symfony-console/src/RunJobCommand.php
-
-		-
 			message: '#^Cannot cast mixed to string\.$#'
 			identifier: cast.string
 			count: 1

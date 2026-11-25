@@ -116,10 +116,18 @@ final class RunJobCommand extends Command
     private function decodeConfiguration(string $data): array
     {
         $config = \json_decode($data, true, 512, \JSON_THROW_ON_ERROR);
-        if (\is_array($config)) {
-            return $config;
+        if (!\is_array($config)) {
+            throw UnexpectedValueException::type('array', $config);
         }
 
-        throw UnexpectedValueException::type('array', $config);
+        $configuration = [];
+        foreach ($config as $name => $value) {
+            if (!\is_string($name)) {
+                throw UnexpectedValueException::type('string', $name, 'Job configuration keys must be strings.');
+            }
+            $configuration[$name] = $value;
+        }
+
+        return $configuration;
     }
 }
