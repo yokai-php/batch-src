@@ -14,6 +14,15 @@ Store job execution logs in files
   creates one log file per job execution, named after the job execution id.
 | Logs written during execution are readable afterwards via the same reference.
 
+.. warning::
+   The directory must be shared by every process that launches, executes or displays job executions.
+   Otherwise, logs of executions which ran elsewhere are read as empty.
+
+.. note::
+   | A job execution which logs were stored by another logger (the in-memory one, for instance)
+     is restored with an in-memory logger, so its logs remain readable.
+   | This happens with job executions stored before switching to this factory.
+
 .. literalinclude:: monolog/stream-logger-factory.php
    :language: php
 
@@ -28,7 +37,7 @@ Organize log files in subdirectories
 | By default, all log files land in the same directory.
 | For large workloads this can become a filesystem performance issue.
 | You can configure the factory to spread files across nested subdirectories,
-  similarly to how Git stores objects:
+  named after a hash of the job execution id, so files are spread evenly whatever the id generator:
 
 .. literalinclude:: monolog/stream-logger-factory-with-subdirectories.php
    :language: php

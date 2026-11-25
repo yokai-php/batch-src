@@ -192,14 +192,14 @@ new StreamJobExecutionLoggerFactory(
 );
 ```
 
-For large workloads, files can be spread across nested subdirectories (git-object style):
+For large workloads, files can be spread across nested subdirectories, named after a hash of the job execution id:
 
 ```php
 new StreamJobExecutionLoggerFactory(
     directory: '/var/log/batch',
     subDirectories: 2,
     charsPerDirectory: 2,
-    // a job "60996f72" is stored at /var/log/batch/60/99/60996f72.log
+    // a job "60996f72" is stored at /var/log/batch/38/06/60996f72.log
 );
 ```
 
@@ -212,7 +212,7 @@ In a Symfony application, configure the bridge through the bundle (see below).
 ### Symfony bundle configuration — job execution log storage
 
 A new `logging` key controls how job execution logs are stored.
-The default behaviour is unchanged (`memory` — in-memory, lost at process end):
+The default behaviour is unchanged (`memory` — logs kept in memory, then stored with the job execution):
 
 ```yaml
 # config/packages/yokai_batch.yaml
@@ -230,10 +230,14 @@ yokai_batch:
         stream:
             directory: '%kernel.logs_dir%/batch'
             sub_directories: 0        # subdirectory depth (0 = flat)
-            chars_per_directory: 0    # characters per subdirectory level
+            chars_per_directory: 2    # characters in each subdirectory name
             processors: []            # Monolog processor service ids
             formatter: ~              # Monolog formatter service id (optional)
 ```
+
+The directory must be shared by every process that launches, executes or displays job executions
+(web server, Messenger workers, etc.).
+Job executions stored before the switch keep the logs they were stored with, and remain readable.
 
 To use a custom service implementing `JobExecutionLoggerFactoryInterface`:
 

@@ -38,7 +38,8 @@ What implementations exist?
 **Built-in implementations:**
 
 * `InMemoryJobExecutionLoggerFactory <https://github.com/yokai-php/batch/tree/1.x/src/Factory/JobExecutionLoggerFactory/InMemoryJobExecutionLoggerFactory.php>`__
-  (default): keeps logs in memory. Logs are lost when the process ends.
+  (default): keeps logs in memory during the execution.
+  The logs themselves are the reference, so they are stored with the job execution by the job execution storage.
 * `NullJobExecutionLoggerFactory <https://github.com/yokai-php/batch/tree/1.x/src/Factory/JobExecutionLoggerFactory/NullJobExecutionLoggerFactory.php>`__:
   discards all log messages.
 
