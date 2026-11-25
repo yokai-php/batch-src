@@ -85,12 +85,6 @@ parameters:
 			path: src/batch-openspout/src/Writer/FlatFileWriter.php
 
 		-
-			message: '#^Parameter \#1 \$cellValues of static method OpenSpout\\Common\\Entity\\Row\:\:fromValues\(\) expects list\<bool\|DateInterval\|DateTimeInterface\|float\|int\|string\|null\>, array\<int, bool\|DateInterval\|DateTimeInterface\|float\|int\|string\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/batch-openspout/src/Writer/WriteToSheetItem.php
-
-		-
 			message: '#^Method Yokai\\Batch\\Bridge\\Symfony\\Console\\RunJobCommand\:\:decodeConfiguration\(\) should return array\<string, mixed\> but returns array\<mixed, mixed\>\.$#'
 			identifier: return.type
 			count: 1
