@@ -157,18 +157,6 @@ parameters:
 			path: src/batch/src/Job/Item/Writer/LaunchJobForItemsBatchWriter.php
 
 		-
-			message: '#^Trait Yokai\\Batch\\Job\\JobParametersAwareTrait is used zero times and is not analysed\.$#'
-			identifier: trait.unused
-			count: 1
-			path: src/batch/src/Job/JobParametersAwareTrait.php
-
-		-
-			message: '#^Trait Yokai\\Batch\\Job\\SummaryAwareTrait is used zero times and is not analysed\.$#'
-			identifier: trait.unused
-			count: 1
-			path: src/batch/src/Job/SummaryAwareTrait.php
-
-		-
 			message: '#^Possibly invalid array key type mixed\.$#'
 			identifier: offsetAccess.invalidOffset
 			count: 1
@@ -185,12 +173,6 @@ parameters:
 			identifier: binaryOp.invalid
 			count: 1
 			path: src/batch/src/Summary.php
-
-		-
-			message: '#^Trait Yokai\\Batch\\Test\\Storage\\JobExecutionStorageTestTrait is used zero times and is not analysed\.$#'
-			identifier: trait.unused
-			count: 1
-			path: src/batch/src/Test/Storage/JobExecutionStorageTestTrait.php
 
 		-
 			message: '#^Parameter \#2 \$parameters of class Yokai\\Batch\\Trigger\\Scheduler\\ScheduledJob constructor expects array\<string, mixed\>, array given\.$#'

@@ -5,6 +5,9 @@ parameters:
   level: max
   # Public API validates arguments at runtime, even when PHPDoc already restricts their types
   treatPhpDocTypesAsCertain: false
+  ignoreErrors:
+    # These traits are provided for end users, nothing uses them in the analysed code
+    - identifier: trait.unused
   paths:
     - src/batch/src/
     - src/batch-doctrine-dbal/src/
