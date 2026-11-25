@@ -97,12 +97,6 @@ parameters:
 			path: src/batch/src/Job/Item/Processor/FilterUniqueProcessor.php
 
 		-
-			message: '#^Possibly invalid array key type mixed\.$#'
-			identifier: offsetAccess.invalidOffset
-			count: 1
-			path: src/batch/src/Logger/InMemoryJobExecutionLogger.php
-
-		-
 			message: '#^Binary operation "\+" between mixed and float\|int results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
