@@ -22,6 +22,9 @@ splits:
     prefix: "src/batch-league-flysystem"
     target: "https://${GH_TOKEN}@github.com/yokai-php/batch-league-flysystem.git"
   -
+    prefix: "src/batch-monolog"
+    target: "https://${GH_TOKEN}@github.com/yokai-php/batch-monolog.git"
+  -
     prefix: "src/batch-openspout"
     target: "https://${GH_TOKEN}@github.com/yokai-php/batch-openspout.git"
   -

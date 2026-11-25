@@ -22,6 +22,7 @@ Some bridges to popular packages :
 | [`doctrine/orm`](https://github.com/yokai-php/batch-doctrine-orm)                  | Read from Doctrine ORM entities                                |
 | [`doctrine/persistence`](https://github.com/yokai-php/batch-doctrine-persistence)  | Write to Doctrine ORM/ODM objects                              |
 | [`league/flysystem`](https://github.com/yokai-php/batch-league-flysystem)          | Copy/Move files in a job / Trigger job when file found         |
+| [`monolog/monolog`](https://github.com/yokai-php/batch-monolog)                    | Write job execution logs to files                              |
 | [`openspout/openspout`](https://github.com/yokai-php/batch-openspout)              | Read/Write from/to CSV/ODS/XLSX                                |
 | [`symfony/console`](https://github.com/yokai-php/batch-symfony-console)            | Add command to trigger jobs and async job launcher via command |
 | [`symfony/framework-bundle`](https://github.com/yokai-php/batch-symfony-framework) | Bundle to integrate with Symfony framework                     |
