@@ -91,12 +91,6 @@ parameters:
 			path: src/batch-symfony-console/src/RunJobCommand.php
 
 		-
-			message: '#^Parameter \#3 \$attributes of method Yokai\\Batch\\Bridge\\Symfony\\Framework\\DependencyInjection\\CompilerPass\\RegisterJobsCompilerPass\:\:getJobName\(\) expects array\<string, mixed\>, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/batch-symfony-framework/src/DependencyInjection/CompilerPass/RegisterJobsCompilerPass.php
-
-		-
 			message: '#^Cannot cast mixed to string\.$#'
 			identifier: cast.string
 			count: 1
