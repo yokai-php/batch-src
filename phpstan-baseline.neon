@@ -47,9 +47,3 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/batch-openspout/src/Writer/FlatFileWriter.php
-
-		-
-			message: '#^Binary operation "\+" between mixed and float\|int results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/batch/src/Summary.php
