@@ -31,12 +31,6 @@ parameters:
 			path: src/batch-openspout/src/Reader/FlatFileReader.php
 
 		-
-			message: '#^Parameter \#1 \$cellValues of static method OpenSpout\\Common\\Entity\\Row\:\:fromValues\(\) expects list\<bool\|DateInterval\|DateTimeInterface\|float\|int\|string\|null\>, array\<mixed, mixed\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/batch-openspout/src/Writer/FlatFileWriter.php
-
-		-
 			message: '#^Parameter \#1 \$options of class OpenSpout\\Writer\\CSV\\Writer constructor expects OpenSpout\\Writer\\CSV\\Options\|null, OpenSpout\\Writer\\CSV\\Options\|OpenSpout\\Writer\\ODS\\Options\|OpenSpout\\Writer\\XLSX\\Options\|null given\.$#'
 			identifier: argument.type
 			count: 1

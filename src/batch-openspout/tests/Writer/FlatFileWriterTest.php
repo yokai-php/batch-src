@@ -178,6 +178,19 @@ CSV;
     }
 
     #[DataProvider('types')]
+    public function testWriteInvalidCellValue(string $type): void
+    {
+        $this->expectException(UnexpectedValueException::class);
+
+        $file = self::WRITE_DIR . '/invalid-cell-value.' . $type;
+        $writer = new FlatFileWriter(new StaticValueParameterAccessor($file));
+        $writer->setJobExecution(JobExecution::createRoot('123456789', 'export'));
+
+        $writer->initialize();
+        $writer->write([['valid', ['invalid']]]);
+    }
+
+    #[DataProvider('types')]
     public function testCannotCreateFile(string $type): void
     {
         $this->expectException(RuntimeException::class);
