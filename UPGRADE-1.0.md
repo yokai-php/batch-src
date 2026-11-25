@@ -387,3 +387,20 @@ The two interfaces have new, intentional public contracts. The previous `@intern
 ```
 
 `accepts()` receives a single sheet and returns whether it should be read.
+
+---
+
+### Stricter checks on invalid values (BREAKING for invalid usages)
+
+Some components used to accept invalid values silently. They now throw an
+`Yokai\Batch\Exception\UnexpectedValueException`.
+
+| Component | Invalid value | Before |
+|-----------|---------------|--------|
+| `FilterUniqueProcessor` | the closure returns a value that cannot be cast to string (array, non `Stringable` object) | an array was cast to `"Array"` (with a PHP warning), so every such item was considered a duplicate of the first one |
+| `Summary::increment()` | the current value is not numeric | a boolean or a leading-numeric string (`"5abc"`) was incremented |
+| `RunJobCommand` | the JSON configuration has non string keys, a JSON list for instance (`'["value"]'`) | the list was passed to the job as parameters named `0`, `1`… |
+
+**Action required:** none if your jobs only use valid values. Otherwise, make the `FilterUniqueProcessor`
+closure return a scalar, a `Stringable` or `null`, only increment numeric summary values, and pass a JSON
+object to `yokai:batch:run`.
