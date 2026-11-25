@@ -5,6 +5,9 @@ Refer to the `official documentation <https://github.com/openspout/openspout>`__
 
 This bridge provides ways to read/write from/to CSV/ODS/XLSX files.
 
+It supports both ``openspout/openspout`` 4.x and 5.x.
+The examples below are written for 5.x, the 4.x equivalent is given in comments when it differs.
+
 
 Item reader
 ------------------------------------------------------------

@@ -15,6 +15,7 @@ use Yokai\Batch\Bridge\OpenSpout\Reader\HeaderStrategy;
 use Yokai\Batch\Bridge\OpenSpout\Reader\SheetFilter;
 use Yokai\Batch\Job\Parameters\StaticValueParameterAccessor;
 use Yokai\Batch\JobExecution;
+use Yokai\Batch\Tests\Bridge\OpenSpout\OpenSpoutCompat;
 
 final class FlatFileReaderTest extends TestCase
 {
@@ -113,13 +114,12 @@ final class FlatFileReaderTest extends TestCase
         }
 
         // non-standard CSV (delimiter and enclosure changed) encoded in ISO-8859
-        $options = new CSVOptions();
-        $options->FIELD_DELIMITER = ';';
-        $options->FIELD_ENCLOSURE = '|';
-        $options->ENCODING = 'ISO-8859-1';
         yield [
             __DIR__ . '/fixtures/iso-8859-1.csv',
-            $options,
+            OpenSpoutCompat::options(
+                CSVOptions::class,
+                ['FIELD_DELIMITER' => ';', 'FIELD_ENCLOSURE' => '|', 'ENCODING' => 'ISO-8859-1'],
+            ),
             null,
             null,
             [

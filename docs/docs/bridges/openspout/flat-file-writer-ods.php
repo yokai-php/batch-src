@@ -11,8 +11,10 @@ use Yokai\Batch\Job\Parameters\StaticValueParameterAccessor;
 // That file will contain a header line with: static | header | keys
 // Change the sheet name data will be written
 // Change the default style of each cell
-$options = new ODSOptions();
-$options->DEFAULT_ROW_STYLE = (new Style())->setFontBold();
+$options = new ODSOptions(FALLBACK_STYLE: new Style(fontBold: true));
+// With openspout/openspout 4.x, options and styles are configured with properties and setters:
+// $options = new ODSOptions();
+// $options->DEFAULT_ROW_STYLE = (new Style())->setFontBold();
 new FlatFileWriter(
     filePath: new StaticValueParameterAccessor('/path/to/file.ods'),
     options: $options,
