@@ -1,8 +1,12 @@
-# UPGRADE FROM 0.7 to 1.0
+# UPGRADE FROM 0.8 to 1.0
+
+If you are upgrading from 0.7, follow the [0.7 to 0.8 upgrade guide](UPGRADE-0.8.md) first.
 
 ## Requirements
 
-- PHP **8.2** or higher is now required (readonly classes and properties are used throughout the codebase).
+All `yokai/batch*` packages must be upgraded together: they now require each other with `^1.0.0`.
+
+PHP, Symfony and Doctrine requirements are the same as in 0.8.
 
 ## Code changes
 
