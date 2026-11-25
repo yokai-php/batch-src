@@ -7,7 +7,6 @@ namespace Yokai\Batch\Tests\Bridge\OpenSpout\Writer;
 use OpenSpout\Common\Entity\Row;
 use OpenSpout\Common\Entity\Style\CellAlignment;
 use OpenSpout\Common\Entity\Style\Color;
-use OpenSpout\Common\Entity\Style\Style;
 use OpenSpout\Writer\CSV\Options as CSVOptions;
 use OpenSpout\Writer\ODS\Options as ODSOptions;
 use OpenSpout\Writer\XLSX\Options as XLSXOptions;
@@ -20,6 +19,7 @@ use Yokai\Batch\Exception\RuntimeException;
 use Yokai\Batch\Exception\UnexpectedValueException;
 use Yokai\Batch\Job\Parameters\StaticValueParameterAccessor;
 use Yokai\Batch\JobExecution;
+use Yokai\Batch\Tests\Bridge\OpenSpout\OpenSpoutCompat;
 
 final class FlatFileWriterTest extends TestCase
 {
@@ -86,9 +86,7 @@ CSV;
             ];
         }
 
-        $options = new CSVOptions();
-        $options->FIELD_DELIMITER = ';';
-        $options->FIELD_ENCLOSURE = '|';
+        $options = OpenSpoutCompat::options(CSVOptions::class, ['FIELD_DELIMITER' => ';', 'FIELD_ENCLOSURE' => '|']);
         $content = <<<CSV
 John;Doe
 Jane;Doe
@@ -103,48 +101,39 @@ CSV;
             $content,
         ];
 
-        $style = (new Style())
-            ->setFontBold()
-            ->setFontSize(15)
-            ->setFontColor(Color::BLUE)
-            ->setShouldWrapText()
-            ->setCellAlignment(CellAlignment::RIGHT)
-            ->setBackgroundColor(Color::YELLOW);
+        $style = OpenSpoutCompat::style([
+            'fontBold' => true,
+            'fontSize' => 15,
+            'fontColor' => Color::BLUE,
+            'shouldWrapText' => true,
+            'cellAlignment' => CellAlignment::RIGHT,
+            'backgroundColor' => Color::YELLOW,
+        ]);
 
-        $options = new XLSXOptions();
-        $options->DEFAULT_ROW_STYLE = $style;
         yield [
             "total-style.xlsx",
-            $options,
+            OpenSpoutCompat::writerOptionsWithStyle(XLSXOptions::class, $style),
             'Sheet1 with styles',
             null,
             $items,
             $contentWithoutHeader,
         ];
-        $options = new ODSOptions();
-        $options->DEFAULT_ROW_STYLE = $style;
         yield [
             "total-style.ods",
-            $options,
+            OpenSpoutCompat::writerOptionsWithStyle(ODSOptions::class, $style),
             'Sheet1 with styles',
             null,
             $items,
             $contentWithoutHeader,
         ];
 
-        $blue = (new Style())
-            ->setFontBold()
-            ->setFontColor(Color::BLUE);
-        $red = (new Style())
-            ->setFontBold()
-            ->setFontColor(Color::RED);
-        $green = (new Style())
-            ->setFontBold()
-            ->setFontColor(Color::GREEN);
+        $blue = OpenSpoutCompat::style(['fontBold' => true, 'fontColor' => Color::BLUE]);
+        $red = OpenSpoutCompat::style(['fontBold' => true, 'fontColor' => Color::RED]);
+        $green = OpenSpoutCompat::style(['fontBold' => true, 'fontColor' => Color::GREEN]);
         $styledItems = [
-            Row::fromValues(['John', 'Doe'], $blue),
-            Row::fromValues(['Jane', 'Doe'], $red),
-            Row::fromValues(['Jack', 'Doe'], $green),
+            OpenSpoutCompat::row(['John', 'Doe'], $blue),
+            OpenSpoutCompat::row(['Jane', 'Doe'], $red),
+            OpenSpoutCompat::row(['Jack', 'Doe'], $green),
         ];
         yield [
             "partial-style.xlsx",
@@ -241,7 +230,7 @@ CSV;
         $writer->initialize();
         $writer->write([
             WriteToSheetItem::array('English', ['John', 'Doe']),
-            WriteToSheetItem::array('Français', ['Jean', 'Aimar']),
+            WriteToSheetItem::array('Français', ['Jean', 'Aimar'], OpenSpoutCompat::style(['fontBold' => true])),
             WriteToSheetItem::row('English', Row::fromValues(['Jack', 'Doe'])),
             WriteToSheetItem::row('Français', Row::fromValues(['Jacques', 'Ouzi'])),
         ]);

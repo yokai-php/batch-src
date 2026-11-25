@@ -25,7 +25,7 @@ parameters:
 			path: src/batch-openspout/src/Reader/FlatFileReader.php
 
 		-
-			message: '#^Parameter \#1 \$row of method Yokai\\Batch\\Bridge\\OpenSpout\\Reader\\HeaderStrategy\:\:process\(\) expects list\<string\>, list\<bool\|DateInterval\|DateTimeInterface\|float\|int\|string\|null\> given\.$#'
+			message: '#^Parameter \#1 \$row of method Yokai\\Batch\\Bridge\\OpenSpout\\Reader\\HeaderStrategy\:\:process\(\) expects list\<string\>, array\<int, array\<OpenSpout\\Common\\Entity\\Comment\\TextRun\>\|bool\|DateInterval\|DateTimeInterface\|float\|int\|string\|null\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/batch-openspout/src/Reader/FlatFileReader.php

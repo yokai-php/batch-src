@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yokai\Batch\Bridge\OpenSpout\Reader;
 
 use Generator;
+use OpenSpout\Common\Entity\Comment\TextRun;
 use OpenSpout\Common\Entity\Row;
 use OpenSpout\Common\Exception\UnsupportedTypeException;
 use OpenSpout\Reader\CSV\Options as CSVOptions;
@@ -89,7 +90,9 @@ final class FlatFileReader implements
     }
 
     /**
-     * @return Generator<int, list<null|bool|string|int|float|\DateTimeInterface|\DateInterval>>
+     * Since openspout/openspout 5.0, cells may also contain rich text (a list of {@see TextRun}).
+     *
+     * @return Generator<int, array<int, null|bool|string|int|float|\DateTimeInterface|\DateInterval|array<TextRun>>>
      */
     private function rows(ReaderInterface $reader): Generator
     {

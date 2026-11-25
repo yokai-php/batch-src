@@ -26,6 +26,18 @@ final readonly class WriteToSheetItem
      */
     public static function array(string $sheet, array $item, Style|null $style = null): self
     {
+        if ($style === null) {
+            return new self($sheet, Row::fromValues($item));
+        }
+
+        // OpenSpout 5 removed row styles: the style is applied to each cell instead
+        // @phpstan-ignore function.alreadyNarrowedType (method was added in openspout/openspout 5.0, and we support ^4.0)
+        if (\method_exists(Row::class, 'fromValuesWithStyle')) {
+            return new self($sheet, Row::fromValuesWithStyle($item, $style));
+        }
+
+        // OpenSpout 4: the second argument of Row::fromValues() is the row style
+        // @phpstan-ignore argument.type (in openspout/openspout 5.0, the second argument became the row height)
         return new self($sheet, Row::fromValues($item, $style));
     }
 

@@ -9,9 +9,11 @@ use Yokai\Batch\Job\Parameters\StaticValueParameterAccessor;
 // Write items to .csv file
 // That file will not contain a header line
 // The CSV delimiter and enclosure has been changed from default (respectively ',' & '"')
-$options = new CSVOptions();
-$options->FIELD_DELIMITER = ';';
-$options->FIELD_ENCLOSURE = '|';
+$options = new CSVOptions(FIELD_DELIMITER: ';', FIELD_ENCLOSURE: '|');
+// With openspout/openspout 4.x, options are configured with properties:
+// $options = new CSVOptions();
+// $options->FIELD_DELIMITER = ';';
+// $options->FIELD_ENCLOSURE = '|';
 new FlatFileWriter(
     filePath: new StaticValueParameterAccessor('/path/to/file.csv'),
     options: $options,
