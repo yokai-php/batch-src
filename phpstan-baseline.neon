@@ -7,12 +7,6 @@ parameters:
 			path: src/batch-doctrine-dbal/src/DoctrineDBALInsertWriter.php
 
 		-
-			message: '#^Call to function method_exists\(\) with Doctrine\\DBAL\\Schema\\Table and ''addPrimaryKeyConstr…'' will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/batch-doctrine-dbal/src/DoctrineDBALJobExecutionStorage.php
-
-		-
 			message: '#^Method Yokai\\Batch\\Bridge\\Doctrine\\DBAL\\JobExecutionRowNormalizer\:\:jsonFromString\(\) should return array\<string, mixed\> but returns array\<mixed, mixed\>\.$#'
 			identifier: return.type
 			count: 1
