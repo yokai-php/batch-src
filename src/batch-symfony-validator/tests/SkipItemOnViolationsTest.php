@@ -35,8 +35,14 @@ final class SkipItemOnViolationsTest extends TestCase
 
     public static function provider(): \Generator
     {
-        $violation = fn(string $message, $value)
-            => new ConstraintViolation($message, $message, [], null, 'property.path', $value);
+        $violation = fn(string $message, $value) => new ConstraintViolation(
+            $message,
+            $message,
+            [],
+            null,
+            'property.path',
+            $value
+        );
         $message = fn(string $message, string $value) => "property.path: $message (invalid value: $value)";
 
         yield 'empty string' => [

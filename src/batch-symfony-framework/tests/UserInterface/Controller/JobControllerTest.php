@@ -77,7 +77,7 @@ final class JobControllerTest extends TestCase
     public function testList(
         \Closure $fixtures,
         Request $request,
-        null|FormFactoryInterface $formFactory,
+        FormFactoryInterface|null $formFactory,
         JobSecurity $security,
         TemplatingInterface $templating,
         int $expectedStatus,
@@ -200,7 +200,7 @@ final class JobControllerTest extends TestCase
         \Closure $fixtures,
         string $job,
         string $id,
-        null|string $path,
+        string|null $path,
         JobSecurity $security,
         TemplatingInterface $templating,
         int $expectedStatus,
@@ -447,7 +447,7 @@ final class JobControllerTest extends TestCase
     private static function templatings(): \Generator
     {
         yield new ConfigurableTemplating('@YokaiBatch/bootstrap4', ['base_template' => 'base.html.twig']);
-        //todo one day, test with sonata, but it is too much pain to setup actually
+        // todo one day, test with sonata, but it is too much pain to setup actually
     }
 
     /**
@@ -455,7 +455,7 @@ final class JobControllerTest extends TestCase
      */
     private function response(
         \Closure $closure,
-        null|FormFactoryInterface $formFactory,
+        FormFactoryInterface|null $formFactory,
         JobSecurity $security,
         TemplatingInterface $templating,
     ): Response {
@@ -469,7 +469,7 @@ final class JobControllerTest extends TestCase
     }
 
     private function controller(
-        null|FormFactoryInterface $formFactory,
+        FormFactoryInterface|null $formFactory,
         JobSecurity $security,
         TemplatingInterface $templating,
     ): JobController {

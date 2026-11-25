@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Tests\Bridge\Symfony\Console;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Bridge\Symfony\Console\CommandRunnerInterface;
 use Yokai\Batch\Bridge\Symfony\Console\RunCommandJobLauncher;

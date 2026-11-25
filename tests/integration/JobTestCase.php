@@ -133,7 +133,7 @@ abstract class JobTestCase extends TestCase
         self::assertSame($expected, $actual);
     }
 
-    private static function compareDates(null|\DateTimeInterface $expected, null|\DateTimeInterface $actual): void
+    private static function compareDates(\DateTimeInterface|null $expected, \DateTimeInterface|null $actual): void
     {
         self::assertSame(
             $expected?->format(\DateTime::ATOM) ?? null,

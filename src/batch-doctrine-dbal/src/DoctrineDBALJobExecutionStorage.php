@@ -19,17 +19,17 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\Persistence\ConnectionRegistry;
 use Generator;
 use Yokai\Batch\BatchStatus;
-use Yokai\Batch\Storage\SortDirection;
 use Yokai\Batch\Exception\CannotRemoveJobExecutionException;
-use Yokai\Batch\Factory\JobExecutionLoggerFactoryInterface;
 use Yokai\Batch\Exception\CannotStoreJobExecutionException;
 use Yokai\Batch\Exception\JobExecutionNotFoundException;
 use Yokai\Batch\Exception\RuntimeException;
+use Yokai\Batch\Factory\JobExecutionLoggerFactoryInterface;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\Storage\JobExecutionStorageInterface;
 use Yokai\Batch\Storage\Query;
 use Yokai\Batch\Storage\QueryableJobExecutionStorageInterface;
 use Yokai\Batch\Storage\SetupableJobExecutionStorageInterface;
+use Yokai\Batch\Storage\SortDirection;
 
 /**
  * This {@see JobExecutionStorageInterface} will store
@@ -130,7 +130,7 @@ final class DoctrineDBALJobExecutionStorage implements
     {
         try {
             $row = $this->fetchRow($jobName, $executionId);
-        } catch (RuntimeException | DBALException $exception) {
+        } catch (RuntimeException|DBALException $exception) {
             throw new JobExecutionNotFoundException($jobName, $executionId, $exception);
         }
 

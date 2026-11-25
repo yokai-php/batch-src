@@ -13,7 +13,7 @@ use Symfony\Component\Process\PhpExecutableFinder;
 final class CommandRunner implements CommandRunnerInterface
 {
     private readonly string $consolePath;
-    private readonly null|PhpExecutableFinder $phpLocator;
+    private readonly PhpExecutableFinder|null $phpLocator;
     private readonly ShellRunnerInterface $shellRunner;
 
     public function __construct(

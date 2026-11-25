@@ -31,7 +31,7 @@ final readonly class JobController
 {
     public function __construct(
         private QueryableJobExecutionStorageInterface $jobExecutionStorage,
-        private null|FormFactoryInterface $formFactory,
+        private FormFactoryInterface|null $formFactory,
         private JobSecurity $security,
         private Environment $twig,
         private TemplatingInterface $templating,

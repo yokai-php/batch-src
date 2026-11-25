@@ -24,12 +24,12 @@ class Location
 
     #[ORM\Column(type: Types::STRING)]
     #[Assert\NotNull]
-    public null|string $name = null;
+    public string|null $name = null;
 
     #[ORM\Column(type: Types::STRING, enumType: LocationType::class)]
     #[Assert\NotNull]
-    public null|LocationType $type = null;
+    public LocationType|null $type = null;
 
     #[ORM\Column(type: Types::STRING, nullable: true)]
-    public null|string $dimension = null;
+    public string|null $dimension = null;
 }

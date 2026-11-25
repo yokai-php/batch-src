@@ -21,9 +21,9 @@ final class FlatFileReaderTest extends TestCase
     #[DataProvider('sets')]
     public function testRead(
         string $file,
-        null|object $options,
-        null|callable $sheetFilter,
-        null|callable $headers,
+        object|null $options,
+        callable|null $sheetFilter,
+        callable|null $headers,
         array $expected,
     ): void {
         $jobExecution = JobExecution::createRoot('123456789', 'parent');

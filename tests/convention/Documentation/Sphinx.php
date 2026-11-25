@@ -65,7 +65,7 @@ final class Sphinx
                 }
                 [, $package, , $branch, $linkPath] = $internalLink;
             } else {
-                throw new \LogicException($fileLinks[0][$idx]);//todo
+                throw new \LogicException($fileLinks[0][$idx]);// todo
             }
 
             $linkFile = self::getFileFromMembers($package, $linkPath);

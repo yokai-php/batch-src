@@ -35,8 +35,8 @@ final class DocumentationLinksTest extends TestCase
         foreach ($file->links as $link) {
             self::assertNotFalse(
                 $link->pointsToFile->getRealPath(),
-                "Link \"{$link->label}\" in \"{$link->pointsToFile->getPathname()}\"," .
-                " is pointing to \"{$link->uri}\" which reference an internal file that do not exists.",
+                "Link \"{$link->label}\" in \"{$link->pointsToFile->getPathname()}\","
+                . " is pointing to \"{$link->uri}\" which reference an internal file that do not exists.",
             );
 
             self::assertSame(self::DEFAULT_BRANCH, $link->branch, 'All links must be wired on default branch.');

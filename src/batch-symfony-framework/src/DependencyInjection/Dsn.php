@@ -49,7 +49,6 @@ final readonly class Dsn
             $options = [];
         }
         /** @var array<string, string> $options */
-
         $slashPos = \strpos($authorityPath, '/');
         if ($slashPos !== false) {
             $host = \substr($authorityPath, 0, $slashPos);

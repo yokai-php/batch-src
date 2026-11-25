@@ -9,8 +9,8 @@ use DateTimeInterface;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Yokai\Batch\BatchStatus;
 use Yokai\Batch\Exception\UnexpectedValueException;
-use Yokai\Batch\Failure;
 use Yokai\Batch\Factory\JobExecutionLoggerFactoryInterface;
+use Yokai\Batch\Failure;
 use Yokai\Batch\JobExecution;
 use Yokai\Batch\JobParameters;
 use Yokai\Batch\Summary;
@@ -170,7 +170,7 @@ final readonly class JobExecutionRowNormalizer
         return $value;
     }
 
-    private function dateFromString(null|string $date): null|DateTimeImmutable
+    private function dateFromString(string|null $date): DateTimeImmutable|null
     {
         if ($date === null) {
             return null;
@@ -227,7 +227,7 @@ final readonly class JobExecutionRowNormalizer
         return new Warning($array['message'], $array['parameters'], $array['context']);
     }
 
-    private function toDateString(null|DateTimeInterface $date): null|string
+    private function toDateString(DateTimeInterface|null $date): string|null
     {
         if ($date === null) {
             return null;

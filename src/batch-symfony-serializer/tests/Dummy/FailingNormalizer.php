@@ -42,7 +42,7 @@ final readonly class FailingNormalizer implements NormalizerInterface, Denormali
         throw $this->exception;
     }
 
-    public function getSupportedTypes(null|string $format): array
+    public function getSupportedTypes(string|null $format): array
     {
         return ['*' => true];
     }

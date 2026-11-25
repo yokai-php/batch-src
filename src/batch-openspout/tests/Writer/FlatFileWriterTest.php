@@ -28,9 +28,9 @@ final class FlatFileWriterTest extends TestCase
     #[DataProvider('sets')]
     public function testWrite(
         string $filename,
-        null|object $options,
-        null|string $defaultSheet,
-        null|array $headers,
+        object|null $options,
+        string|null $defaultSheet,
+        array|null $headers,
         iterable $itemsToWrite,
         string $expectedContent,
     ): void {
@@ -230,7 +230,7 @@ CSV;
     }
 
     #[DataProvider('multipleSheets')]
-    public function testWriteMultipleSheets(string $type, null|string $defaultSheet): void
+    public function testWriteMultipleSheets(string $type, string|null $defaultSheet): void
     {
         $file = self::WRITE_DIR . '/multiple-sheets.' . $type;
         self::assertFileDoesNotExist($file);
