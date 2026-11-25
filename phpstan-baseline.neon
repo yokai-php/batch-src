@@ -1,12 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Parameter \#2 \$data of method Doctrine\\DBAL\\Connection\:\:insert\(\) expects array\<string, mixed\>, array\<mixed, mixed\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/batch-doctrine-dbal/src/DoctrineDBALInsertWriter.php
-
-		-
 			message: '#^Parameter \#1 \$location of method League\\Flysystem\\FilesystemReader\:\:readStream\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1

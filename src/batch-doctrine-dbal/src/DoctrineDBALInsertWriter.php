@@ -56,7 +56,15 @@ final class DoctrineDBALInsertWriter implements ItemWriterInterface
                 throw UnexpectedValueException::type('array', $item);
             }
 
-            $this->connection->insert($this->table, $item, $this->types);
+            $row = [];
+            foreach ($item as $column => $value) {
+                if (!\is_string($column)) {
+                    throw UnexpectedValueException::type('string', $column, 'Column names must be strings.');
+                }
+                $row[$column] = $value;
+            }
+
+            $this->connection->insert($this->table, $row, $this->types);
         }
     }
 

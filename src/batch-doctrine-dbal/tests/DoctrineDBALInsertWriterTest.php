@@ -107,4 +107,16 @@ final class DoctrineDBALInsertWriterTest extends DoctrineDBALTestCase
             ['firstName' => 'Jane', 'lastName' => 'Doe'],
         ]);
     }
+
+    public function testItemWithNonStringColumnName(): void
+    {
+        $this->createTable('persons', [
+            'firstName' => Types::STRING,
+            'lastName' => Types::STRING,
+        ]);
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage('Column names must be strings.');
+        $writer = new DoctrineDBALInsertWriter($this->doctrine, 'persons');
+        $writer->write([['John', 'Doe']]);
+    }
 }
