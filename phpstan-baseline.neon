@@ -31,18 +31,6 @@ parameters:
 			path: src/batch-league-flysystem/src/Job/MoveFilesJob.php
 
 		-
-			message: '#^Parameter \#2 \$parameters of class Yokai\\Batch\\Trigger\\Scheduler\\ScheduledJob constructor expects array\<string, mixed\>, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/batch-league-flysystem/src/Scheduler/FileFoundScheduler.php
-
-		-
-			message: '#^Parameter \#3 \$id of class Yokai\\Batch\\Trigger\\Scheduler\\ScheduledJob constructor expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/batch-league-flysystem/src/Scheduler/FileFoundScheduler.php
-
-		-
 			message: '#^Method Yokai\\Batch\\Bridge\\OpenSpout\\Reader\\FlatFileReader\:\:rows\(\) has parameter \$reader with generic interface OpenSpout\\Reader\\ReaderInterface but does not specify its types\: T$#'
 			identifier: missingType.generics
 			count: 1
@@ -71,12 +59,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/batch-openspout/src/Reader/FlatFileReader.php
-
-		-
-			message: '#^Method Yokai\\Batch\\Bridge\\OpenSpout\\Reader\\SheetFilter\:\:accepts\(\) should return bool but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/batch-openspout/src/Reader/SheetFilter.php
 
 		-
 			message: '#^Parameter \#1 \$cellValues of static method OpenSpout\\Common\\Entity\\Row\:\:fromValues\(\) expects list\<bool\|DateInterval\|DateTimeInterface\|float\|int\|string\|null\>, array\<mixed, mixed\> given\.$#'
@@ -137,18 +119,6 @@ parameters:
 			identifier: cast.string
 			count: 1
 			path: src/batch/src/Job/Item/Processor/FilterUniqueProcessor.php
-
-		-
-			message: '#^Parameter \#2 \$configuration of method Yokai\\Batch\\Launcher\\JobLauncherInterface\:\:launch\(\) expects array\<string, mixed\>, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/batch/src/Job/Item/Writer/LaunchJobForEachItemWriter.php
-
-		-
-			message: '#^Parameter \#2 \$configuration of method Yokai\\Batch\\Launcher\\JobLauncherInterface\:\:launch\(\) expects array\<string, mixed\>, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/batch/src/Job/Item/Writer/LaunchJobForItemsBatchWriter.php
 
 		-
 			message: '#^Possibly invalid array key type mixed\.$#'
