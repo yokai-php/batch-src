@@ -97,12 +97,6 @@ parameters:
 			path: src/batch-symfony-framework/src/DependencyInjection/CompilerPass/RegisterJobsCompilerPass.php
 
 		-
-			message: '#^Parameter \#2 \$array of function implode expects array\<string\>, array\<mixed\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/batch/src/Exception/UnexpectedValueException.php
-
-		-
 			message: '#^Cannot cast mixed to string\.$#'
 			identifier: cast.string
 			count: 1
