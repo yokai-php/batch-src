@@ -11,6 +11,8 @@ changelog:
       labels: ['yokai/batch-doctrine-persistence']
     - title: 'Changes made to the `league/flysystem` bridge: `yokai/batch-league-flysystem`'
       labels: ['yokai/batch-league-flysystem']
+    - title: 'Changes made to the `monolog/monolog` bridge: `yokai/batch-monolog`'
+      labels: ['yokai/batch-monolog']
     - title: 'Changes made to the `openspout/openspout` bridge: `yokai/batch-openspout`'
       labels: ['yokai/batch-openspout']
     - title: 'Changes made to the `symfony/console` bridge: `yokai/batch-symfony-console`'

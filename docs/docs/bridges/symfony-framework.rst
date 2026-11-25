@@ -159,6 +159,81 @@ You can configure what your id will be like:
       # id: symfony.uuid.time
       # id: symfony.ulid
 
+Configure job execution log storage
+------------------------------------------------------------
+
+| By default, job execution logs are kept in memory during the execution,
+  and stored with the job execution by the job execution storage.
+| You can configure a different strategy using the ``logging`` key:
+
+.. code-block:: yaml
+
+    # config/packages/yokai_batch.yaml
+    yokai_batch:
+      logging:
+        type: memory  # memory (default) | null | stream | service
+
+* ``memory``: keeps logs in memory, then stores them with the job execution (default) — suitable when you have few logs per job
+* ``null``: discards all logs
+* ``stream``: writes one log file per job execution via Monolog (requires ``yokai/batch-monolog``)
+* ``service``: delegates to a custom service implementing ``JobExecutionLoggerFactoryInterface``
+
+Stream logging (file-based)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``stream`` type writes one log file per job execution via Monolog's ``StreamHandler``.
+It requires the ``yokai/batch-monolog`` package:
+
+.. code-block:: shell
+
+    composer require yokai/batch-monolog
+
+.. code-block:: yaml
+
+    # config/packages/yokai_batch.yaml
+    yokai_batch:
+      logging:
+        type: stream
+        stream:
+          directory: '%kernel.logs_dir%/batch'  # where log files are stored
+          sub_directories: 0                     # number of subdirectory levels (0 = flat)
+          chars_per_directory: 2                 # characters in each subdirectory name
+          processors: []                         # list of Monolog processor service ids
+          formatter: ~                           # Monolog formatter service id (optional)
+
+.. note::
+   Subdirectory names are taken from a hash of the job execution id, so files are spread evenly
+   whatever the id generator.
+   With ``sub_directories: 2`` and ``chars_per_directory: 2``, a job execution with id
+   ``60996f72`` would be stored at ``{directory}/38/06/60996f72.log``.
+   This is useful when a large number of job executions are expected.
+
+.. warning::
+   The directory must be shared by every process that launches, executes or displays job executions
+   (web server, Messenger workers, etc.).
+   Otherwise, the user interface shows empty logs for executions which ran elsewhere.
+
+.. note::
+   Job executions stored before switching to ``stream`` keep the logs they were stored with:
+   their logs are still displayed, and logs written to them afterwards are stored with the job execution.
+
+.. seealso::
+   | :doc:`Bridge with Monolog </bridges/monolog>`
+
+Custom logger factory service
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If none of the built-in types fit your needs, you can point to your own service:
+
+.. code-block:: yaml
+
+    # config/packages/yokai_batch.yaml
+    yokai_batch:
+      logging:
+        type: service
+        service: App\Batch\MyJobExecutionLoggerFactory
+
+
 User interface to visualize ``JobExecution``
 ------------------------------------------------------------
 

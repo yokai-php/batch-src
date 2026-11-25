@@ -18,6 +18,7 @@
     "doctrine/orm": "^3.0",
     "doctrine/persistence": "^4.0",
     "league/flysystem": "^3.0",
+    "monolog/monolog": "^3.0",
     "openspout/openspout": "^4.0",
     "psr/container": "^1.0",
     "psr/event-dispatcher": "^1.0",
@@ -63,7 +64,8 @@
     "yokai/batch-symfony-messenger": "self.version",
     "yokai/batch-symfony-serializer": "self.version",
     "yokai/batch-symfony-uid": "self.version",
-    "yokai/batch-symfony-validator": "self.version"
+    "yokai/batch-symfony-validator": "self.version",
+    "yokai/batch-monolog": "self.version"
   },
   "autoload": {
     "psr-4": {
@@ -78,7 +80,8 @@
       "Yokai\\Batch\\Bridge\\Symfony\\Messenger\\": "src/batch-symfony-messenger/src/",
       "Yokai\\Batch\\Bridge\\Symfony\\Serializer\\": "src/batch-symfony-serializer/src/",
       "Yokai\\Batch\\Bridge\\Symfony\\Uid\\": "src/batch-symfony-uid/src/",
-      "Yokai\\Batch\\Bridge\\Symfony\\Validator\\": "src/batch-symfony-validator/src/"
+      "Yokai\\Batch\\Bridge\\Symfony\\Validator\\": "src/batch-symfony-validator/src/",
+      "Yokai\\Batch\\Bridge\\Monolog\\": "src/batch-monolog/src/"
     }
   },
   "autoload-dev": {
@@ -98,7 +101,8 @@
       "Yokai\\Batch\\Tests\\Bridge\\Symfony\\Messenger\\": "src/batch-symfony-messenger/tests/",
       "Yokai\\Batch\\Tests\\Bridge\\Symfony\\Serializer\\": "src/batch-symfony-serializer/tests/",
       "Yokai\\Batch\\Tests\\Bridge\\Symfony\\Uid\\": "src/batch-symfony-uid/tests/",
-      "Yokai\\Batch\\Tests\\Bridge\\Symfony\\Validator\\": "src/batch-symfony-validator/tests/"
+      "Yokai\\Batch\\Tests\\Bridge\\Symfony\\Validator\\": "src/batch-symfony-validator/tests/",
+      "Yokai\\Batch\\Tests\\Bridge\\Monolog\\": "src/batch-monolog/tests/"
     }
   }
 }

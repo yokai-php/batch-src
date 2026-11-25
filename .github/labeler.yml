@@ -9,6 +9,8 @@
   - 'src/batch-doctrine-persistence/**'
 'yokai/batch-league-flysystem':
   - 'src/batch-league-flysystem/**'
+'yokai/batch-monolog':
+  - 'src/batch-monolog/**'
 'yokai/batch-openspout':
   - 'src/batch-openspout/**'
 'yokai/batch-symfony-console':
