@@ -1,24 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Parameter \#1 \$location of method League\\Flysystem\\FilesystemReader\:\:readStream\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/batch-league-flysystem/src/Job/CopyFilesJob.php
-
-		-
-			message: '#^Parameter \#1 \$location of method League\\Flysystem\\FilesystemReader\:\:readStream\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/batch-league-flysystem/src/Job/MoveFilesJob.php
-
-		-
-			message: '#^Parameter \#1 \$location of method League\\Flysystem\\FilesystemWriter\:\:delete\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/batch-league-flysystem/src/Job/MoveFilesJob.php
-
-		-
 			message: '#^Method Yokai\\Batch\\Bridge\\OpenSpout\\Reader\\FlatFileReader\:\:rows\(\) has parameter \$reader with generic interface OpenSpout\\Reader\\ReaderInterface but does not specify its types\: T$#'
 			identifier: missingType.generics
 			count: 1

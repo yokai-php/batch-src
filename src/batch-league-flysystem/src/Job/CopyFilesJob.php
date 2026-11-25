@@ -41,6 +41,9 @@ final class CopyFilesJob implements JobInterface
 
         $transformLocation = $this->transformLocation ?? fn($sourceLocation) => $sourceLocation;
         foreach ($locations as $sourceLocation) {
+            if (!\is_string($sourceLocation)) {
+                throw UnexpectedValueException::type('string', $sourceLocation);
+            }
             $destinationLocation = $transformLocation($sourceLocation);
             if (!\is_string($destinationLocation)) {
                 throw UnexpectedValueException::type('string', $destinationLocation);
