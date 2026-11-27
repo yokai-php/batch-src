@@ -92,27 +92,20 @@ final class PackagesTest extends TestCase
     }
 
     /**
-     * Packages must require the same dev dependencies versions as the monorepo root,
-     * so a package can not drift away (ex: PHPUnit) from what is actually tested.
+     * Packages must require PHPUnit in the same version as the monorepo root,
+     * so a package can not drift away from what is actually tested.
+     * (Other dependencies can not be compared: CI pins root Symfony versions.)
      */
     #[DataProvider('packages')]
-    public function testPackagesDevDependenciesVersionsMatchRoot(Package $package): void
+    public function testPackagesPhpunitVersionMatchesRoot(Package $package): void
     {
-        $rootRequirements = \array_merge(
-            Packages::getRootComposer()->require(),
-            Packages::getRootComposer()->requireDev(),
-        );
+        $expected = Packages::getRootComposer()->requireDev()['phpunit/phpunit'];
 
-        foreach ($package->composer->requireDev() as $dependency => $version) {
-            if (!isset($rootRequirements[$dependency])) {
-                continue; // php, extensions, or yokai packages
-            }
-            self::assertSame(
-                $rootRequirements[$dependency],
-                $version,
-                "{$package->name} requires {$dependency} in a different version than the root composer.json",
-            );
-        }
+        self::assertSame(
+            $expected,
+            $package->composer->requireDev()['phpunit/phpunit'] ?? null,
+            "{$package->name} requires phpunit/phpunit in a different version than the root composer.json",
+        );
     }
 
     /**
@@ -126,7 +119,7 @@ final class PackagesTest extends TestCase
 
             return \file_get_contents($path);
         };
-        $schema = static function (string $xml): null|string {
+        $schema = static function (string $xml): string|null {
             \preg_match('#noNamespaceSchemaLocation="([^"]+)"#', $xml, $matches);
 
             return $matches[1] ?? null;
