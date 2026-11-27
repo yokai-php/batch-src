@@ -38,7 +38,7 @@
     "doctrine/doctrine-bundle": "^2.0|^3.0",
     "league/flysystem-memory": "^3.0",
     "phpstan/phpstan": "^2.1",
-    "phpunit/phpunit": "^11.0|^12.0",
+    "phpunit/phpunit": "^11.0|^12.0|^13.0",
     "sonata-project/admin-bundle": "^4.0",
     "symfony/browser-kit": "^7.4|^8.0",
     "symfony/css-selector": "^7.4|^8.0",
