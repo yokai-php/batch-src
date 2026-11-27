@@ -47,7 +47,7 @@ final readonly class SkipInvalidItemProcessor implements ItemProcessorInterface
      *
      * @return Iterator<string>
      */
-    private function normalizeConstraints(null|array $constraints): Iterator
+    private function normalizeConstraints(array|null $constraints): Iterator
     {
         foreach ($constraints ?? [] as $constraint) {
             yield $constraint::class;

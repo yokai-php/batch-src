@@ -13,11 +13,11 @@ class Badge
     #[ORM\Column(type: Types::INTEGER)]
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    public null|int $id = null;
+    public int|null $id = null;
 
     #[ORM\Column(type: Types::STRING)]
-    public null|string $label = null;
+    public string|null $label = null;
 
     #[ORM\Column(type: Types::INTEGER)]
-    public null|int $rank = null;
+    public int|null $rank = null;
 }

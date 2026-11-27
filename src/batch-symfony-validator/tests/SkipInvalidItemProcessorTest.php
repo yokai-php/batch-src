@@ -18,7 +18,7 @@ use Yokai\Batch\Job\Item\Exception\SkipItemException;
 final class SkipInvalidItemProcessorTest extends TestCase
 {
     #[DataProvider('validationGroups')]
-    public function testProcessValid(null|array $groups): void
+    public function testProcessValid(array|null $groups): void
     {
         $validator = Validation::createValidator();
         $processor = new SkipInvalidItemProcessor($validator, [new NotBlank(groups: $groups)], $groups);
@@ -26,7 +26,7 @@ final class SkipInvalidItemProcessorTest extends TestCase
     }
 
     #[DataProvider('validationGroups')]
-    public function testProcessInvalid(null|array $groups): void
+    public function testProcessInvalid(array|null $groups): void
     {
         $validator = Validation::createValidator();
         $processor = new SkipInvalidItemProcessor($validator, [new Blank(groups: ['Default', 'Full'])], $groups);

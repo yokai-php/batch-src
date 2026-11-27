@@ -32,8 +32,8 @@ final class CommandRunnerTest extends TestCase
         $shellRunner->expects($this->once())
             ->method('exec')
             ->with(
-                '/usr/bin/php /path/to/bin/console yokai:testing:test 1 ' .
-                '\'{"json":["value",2]}"\' --opt --option=foo >> /path/to/logs/test.log 2>&1 &',
+                '/usr/bin/php /path/to/bin/console yokai:testing:test 1 '
+                . '\'{"json":["value",2]}"\' --opt --option=foo >> /path/to/logs/test.log 2>&1 &',
             );
 
         $runner->runAsync(

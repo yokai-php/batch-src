@@ -405,8 +405,7 @@ final class DoctrineDBALJobExecutionStorageTest extends DoctrineDBALTestCase
                     new \DateTimeImmutable('2019-07-01T13:30:01+0200'),
                     new \DateTimeImmutable('2019-07-01T18:29:59+0200'),
                 ),
-            [
-            ],
+            [],
         ];
     }
 

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Yokai\Batch\Tests\Bridge\Doctrine\ORM\Dummy;
 
-use Doctrine\Persistence\Proxy;
 use Doctrine\Persistence\AbstractManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
+use Doctrine\Persistence\Proxy;
 
 final class SingleManagerRegistry extends AbstractManagerRegistry
 {

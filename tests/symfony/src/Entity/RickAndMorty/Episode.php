@@ -26,13 +26,13 @@ class Episode
 
     #[ORM\Column(type: Types::STRING, unique: true)]
     #[Assert\NotNull]
-    public null|string $code = null;
+    public string|null $code = null;
 
     #[ORM\Column(type: Types::STRING)]
     #[Assert\NotNull]
-    public null|string $name = null;
+    public string|null $name = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     #[Assert\NotNull]
-    public null|\DateTimeImmutable $date = null;
+    public \DateTimeImmutable|null $date = null;
 }

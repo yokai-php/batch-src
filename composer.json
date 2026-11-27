@@ -49,7 +49,7 @@
     "symfony/translation": "^7.4|^8.0",
     "symfony/twig-bundle": "^7.4|^8.0",
     "symfony/yaml": "^7.4|^8.0",
-    "symplify/easy-coding-standard": "^12.5",
+    "symplify/easy-coding-standard": "^13.0",
     "symfony/http-client": "^7.4|^8.0"
   },
   "replace": {

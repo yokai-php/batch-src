@@ -15,7 +15,7 @@ use Yokai\Batch\JobExecution;
 final readonly class JobSecurity
 {
     public function __construct(
-        private null|AuthorizationCheckerInterface $authorizationChecker,
+        private AuthorizationCheckerInterface|null $authorizationChecker,
         private string $listAttribute,
         private string $viewAttribute,
         private string $tracesAttribute,

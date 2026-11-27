@@ -6,8 +6,8 @@ namespace Yokai\Batch\Tests\Bridge\Symfony\Console;
 
 use JsonException;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
 use Yokai\Batch\Bridge\Symfony\Console\RunJobCommand;

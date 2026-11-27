@@ -42,7 +42,7 @@ final readonly class DummyNormalizer implements NormalizerInterface, Denormalize
         return $this->value;
     }
 
-    public function getSupportedTypes(null|string $format): array
+    public function getSupportedTypes(string|null $format): array
     {
         return ['*' => true];
     }

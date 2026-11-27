@@ -15,13 +15,13 @@ class Developer
     #[ORM\Column(type: Types::INTEGER)]
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    public null|int $id = null;
+    public int|null $id = null;
 
     #[ORM\Column(type: Types::STRING)]
-    public null|string $firstName = null;
+    public string|null $firstName = null;
 
     #[ORM\Column(type: Types::STRING)]
-    public null|string $lastName = null;
+    public string|null $lastName = null;
 
     /**
      * @var Collection<int, Badge>

@@ -26,16 +26,16 @@ class Planet
 
     #[ORM\Column(type: Types::STRING, unique: true)]
     #[Assert\NotNull]
-    public null|string $name = null;
+    public string|null $name = null;
 
     #[ORM\Column(type: Types::INTEGER, nullable: true)]
-    public null|int $rotationPeriod = null;
+    public int|null $rotationPeriod = null;
 
     #[ORM\Column(type: Types::INTEGER, nullable: true)]
-    public null|int $orbitalPeriod = null;
+    public int|null $orbitalPeriod = null;
 
     #[ORM\Column(type: Types::INTEGER, nullable: true)]
-    public null|int $population = null;
+    public int|null $population = null;
 
     #[ORM\Column(type: Types::JSON)]
     #[Assert\NotNull]

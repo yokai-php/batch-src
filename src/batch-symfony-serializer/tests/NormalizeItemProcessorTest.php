@@ -19,7 +19,7 @@ use Yokai\Batch\Tests\Bridge\Symfony\Serializer\Dummy\FailingNormalizer;
 final class NormalizeItemProcessorTest extends TestCase
 {
     #[DataProvider('withExpected')]
-    public function testProcess(null|string $format, array $context, mixed $item, mixed $expected): void
+    public function testProcess(string|null $format, array $context, mixed $item, mixed $expected): void
     {
         $normalizer = new DummyNormalizer(true, $expected);
         $processor = new NormalizeItemProcessor($normalizer, $format, $context);
@@ -28,7 +28,7 @@ final class NormalizeItemProcessorTest extends TestCase
     }
 
     #[DataProvider('withoutExpected')]
-    public function testUnsupported(null|string $format, array $context, mixed $item): void
+    public function testUnsupported(string|null $format, array $context, mixed $item): void
     {
         $normalizer = new DummyNormalizer(false, null);
         $processor = new NormalizeItemProcessor($normalizer, $format, $context);
@@ -49,7 +49,7 @@ final class NormalizeItemProcessorTest extends TestCase
     }
 
     #[DataProvider('withoutExpected')]
-    public function testException(null|string $format, array $context, mixed $item): void
+    public function testException(string|null $format, array $context, mixed $item): void
     {
         $normalizer = new FailingNormalizer($exceptionThrown = new BadMethodCallException());
         $processor = new NormalizeItemProcessor($normalizer, $format, $context);
