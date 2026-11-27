@@ -91,6 +91,58 @@ final class PackagesTest extends TestCase
         }
     }
 
+    /**
+     * Packages must require the same dev dependencies versions as the monorepo root,
+     * so a package can not drift away (ex: PHPUnit) from what is actually tested.
+     */
+    #[DataProvider('packages')]
+    public function testPackagesDevDependenciesVersionsMatchRoot(Package $package): void
+    {
+        $rootRequirements = \array_merge(
+            Packages::getRootComposer()->require(),
+            Packages::getRootComposer()->requireDev(),
+        );
+
+        foreach ($package->composer->requireDev() as $dependency => $version) {
+            if (!isset($rootRequirements[$dependency])) {
+                continue; // php, extensions, or yokai packages
+            }
+            self::assertSame(
+                $rootRequirements[$dependency],
+                $version,
+                "{$package->name} requires {$dependency} in a different version than the root composer.json",
+            );
+        }
+    }
+
+    /**
+     * Packages PHPUnit configuration must follow the monorepo one (schema, and modern "source" element).
+     */
+    #[DataProvider('packages')]
+    public function testPackagesPhpunitConfigurationMatchesRoot(Package $package): void
+    {
+        $load = static function (string $path): string {
+            self::assertFileExists($path);
+
+            return \file_get_contents($path);
+        };
+        $schema = static function (string $xml): null|string {
+            \preg_match('#noNamespaceSchemaLocation="([^"]+)"#', $xml, $matches);
+
+            return $matches[1] ?? null;
+        };
+
+        $root = $load(__DIR__ . '/../../../phpunit.xml');
+        $xml = $load($package->path . '/phpunit.xml');
+
+        self::assertSame($schema($root), $schema($xml), "{$package->name} phpunit.xml uses another schema than root");
+        self::assertStringNotContainsString(
+            '<coverage>',
+            $xml,
+            "{$package->name} phpunit.xml uses deprecated <coverage>, use <source>",
+        );
+    }
+
     public static function packages(): iterable
     {
         /** @var Package $package */
