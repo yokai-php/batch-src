@@ -33,7 +33,7 @@
         "symfony/security-bundle": "^7.4|^8.0",
         "symfony/translation": "^7.4|^8.0",
         "symfony/twig-bundle": "^7.4|^8.0",
-        "phpunit/phpunit": "^9.5"
+        "phpunit/phpunit": "^11.0|^12.0"
     },
     "suggest": {
         "sonata-project/admin-bundle": "If you want a SonataAdmin like rendering in the user interface",

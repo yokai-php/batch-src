@@ -91,6 +91,51 @@ final class PackagesTest extends TestCase
         }
     }
 
+    /**
+     * Packages must require PHPUnit in the same version as the monorepo root,
+     * so a package can not drift away from what is actually tested.
+     * (Other dependencies can not be compared: CI pins root Symfony versions.)
+     */
+    #[DataProvider('packages')]
+    public function testPackagesPhpunitVersionMatchesRoot(Package $package): void
+    {
+        $expected = Packages::getRootComposer()->requireDev()['phpunit/phpunit'];
+
+        self::assertSame(
+            $expected,
+            $package->composer->requireDev()['phpunit/phpunit'] ?? null,
+            "{$package->name} requires phpunit/phpunit in a different version than the root composer.json",
+        );
+    }
+
+    /**
+     * Packages PHPUnit configuration must follow the monorepo one (schema, and modern "source" element).
+     */
+    #[DataProvider('packages')]
+    public function testPackagesPhpunitConfigurationMatchesRoot(Package $package): void
+    {
+        $load = static function (string $path): string {
+            self::assertFileExists($path);
+
+            return \file_get_contents($path);
+        };
+        $schema = static function (string $xml): string|null {
+            \preg_match('#noNamespaceSchemaLocation="([^"]+)"#', $xml, $matches);
+
+            return $matches[1] ?? null;
+        };
+
+        $root = $load(__DIR__ . '/../../../phpunit.xml');
+        $xml = $load($package->path . '/phpunit.xml');
+
+        self::assertSame($schema($root), $schema($xml), "{$package->name} phpunit.xml uses another schema than root");
+        self::assertStringNotContainsString(
+            '<coverage>',
+            $xml,
+            "{$package->name} phpunit.xml uses deprecated <coverage>, use <source>",
+        );
+    }
+
     public static function packages(): iterable
     {
         /** @var Package $package */
