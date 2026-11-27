@@ -65,7 +65,7 @@ final class ObjectRegistry
             throw new InvalidArgumentException(\sprintf('Class "%s" is not a managed Doctrine entity.', $class));
         }
 
-        $key ??= \spl_object_hash($closure);
+        $key ??= \sprintf('closure#%d', \spl_object_id($closure));
         $key = \md5($key);
 
         $identity = $this->identities[$class][$key] ?? null;
