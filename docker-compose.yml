@@ -1,4 +1,24 @@
 services:
+  php86:
+    container_name: yokai-batch-php86
+    extends:
+      file: $HOME/.led/docker-base.yaml
+      service: localuser
+    hostname: php86
+    image: ledup/php:8.6-rl9
+    volumes:
+      - .:/src
+    working_dir: /src
+  php85:
+    container_name: yokai-batch-php85
+    extends:
+      file: $HOME/.led/docker-base.yaml
+      service: localuser
+    hostname: php85
+    image: ledup/php:8.5-rl9
+    volumes:
+      - .:/src
+    working_dir: /src
   php84:
     container_name: yokai-batch-php84
     extends:
